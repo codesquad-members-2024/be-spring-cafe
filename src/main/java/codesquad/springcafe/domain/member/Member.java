@@ -1,15 +1,22 @@
 package codesquad.springcafe.domain.member;
 
+import jakarta.validation.constraints.NotEmpty;
 import java.util.Objects;
 
 public class Member {
     private long id;
+
+    @NotEmpty
     private String loginId;
+    @NotEmpty
     private String password;
+    @NotEmpty
     private String userName;
+    @NotEmpty
     private String email;
 
-
+    public Member() {
+    }
 
     public Member(String loginId, String password, String userName, String email) {
         this.loginId = loginId;

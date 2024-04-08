@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,13 +35,15 @@ public class MemberController {
     }
 
     @GetMapping("/add")
-    public String form(@ModelAttribute("form") MemberForm form) {
+    public String form(@ModelAttribute("member") Member member) {
         return "members/form";
     }
 
     @PostMapping("/add")
-    public String join(@ModelAttribute("form") MemberForm form) {
-        Member member = createMember(form);
+    public String join(@Validated @ModelAttribute("member") Member member, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "members/form";
+        }
 
         memberService.join(member);
 
@@ -60,15 +64,6 @@ public class MemberController {
         model.addAttribute("member", responseMember);
 
         return "members/profile";
-    }
-
-    private Member createMember(MemberForm form) {
-        String loginId = form.getLoginId();
-        String password = form.getPassword();
-        String userName = form.getUserName();
-        String email = form.getEmail();
-
-        return new Member(loginId, password, userName, email);
     }
 
     private ResponseMember convertToDTO(Member member) {
