@@ -1,13 +1,13 @@
 package codesquad.springcafe.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class User {
     private String email;
     private String nickname;
     private String password;
     private LocalDate joinDate;
-    private Long sid;
 
     public User(String email, String nickname, String password) {
         this.email = email;
@@ -50,22 +50,30 @@ public class User {
         this.joinDate = joinDate;
     }
 
-    public Long getSid() {
-        return sid;
-    }
-
-    public void setSid(Long sid) {
-        this.sid = sid;
-    }
-
     @Override
     public String toString() {
         return "User{" +
                 "email='" + email + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", password='" + password + '\'' +
-                ", joinDate='" + joinDate + '\'' +
-                ", sid=" + sid +
+                ", joinDate=" + joinDate +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
+        User user = (User) object;
+        return Objects.equals(nickname, user.nickname);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nickname);
     }
 }
