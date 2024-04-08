@@ -5,7 +5,7 @@
     <!-- STDOUT appender 설정 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{HH:mm:ss.SSS} %clr(%-5level) %clr(${PID:-}){magenta} %clr(---){faint} %clr([%thread]){faint} %clr(%-40.40logger{36}){cyan} %clr(:){faint} %msg%n</Pattern>
+            <Pattern>%d{HH:mm:ss.SSS} %clr(%-5level) %clr(${PID:-}){magenta} %clr(---){faint} %clr([%thread]){faint} %clr(%logger{36}){cyan} %clr(:){faint} %msg%n</Pattern>
         </layout>
     </appender>
 
