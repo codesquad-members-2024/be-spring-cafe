@@ -19,6 +19,10 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public User getUser(String userId) {
+        return userRepository.findByUserId(userId).get();
+    }
+
     public Map<Long, User> getUsers() {
         return userRepository.getUsers();
     }
