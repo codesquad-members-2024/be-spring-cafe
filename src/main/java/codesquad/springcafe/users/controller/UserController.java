@@ -40,7 +40,7 @@ public class UserController {
 
     @GetMapping("/list")
     public String showUsers(Model model) {
-        ArrayList<User> users = UserDatabase.getAllUsers();
+        ArrayList<User> users = userService.getAllUsers();
 
         model.addAttribute("users", users);
         model.addAttribute("totalUsers", users.size());

@@ -1,6 +1,5 @@
 package codesquad.springcafe.users.service;
 
-import codesquad.springcafe.users.controller.UserController;
 import db.UserDatabase;
 import model.User;
 import model.UserVO;
@@ -8,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.ArrayList;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,7 +26,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public ArrayList<User> getAllUsers() {
         return UserDatabase.getAllUsers();
     }
 }

@@ -8,5 +8,5 @@ import java.util.*;
 public interface UserService {
     void createUser(UserVO userVO);
 
-    List<User> getAllUsers();
+    ArrayList<User> getAllUsers();
 }
