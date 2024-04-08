@@ -25,4 +25,9 @@ public class UserController {
         userService.join(user);
         return "redirect:/users";
     }
+
+    @GetMapping("/users")
+    public String userList() {
+        return "/user/list";
+    }
 }
