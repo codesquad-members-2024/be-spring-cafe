@@ -6,12 +6,16 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.ArrayList;
 
 @Controller
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     @GetMapping("/users")
     public String showUserForm() {
         return "/user/form";
@@ -30,6 +34,17 @@ public class UserController {
 
         UserDatabase.addUser(user);
 
-        return "redirect:/users"; // 처리가 성공적으로 완료되면 리다이렉트할 경로를 반환합니다.
+        return "redirect:/users/list"; // 처리가 성공적으로 완료되면 리다이렉트할 경로를 반환합니다.
     }
+
+    @GetMapping("/users/list")
+    public String showUsers(Model model) {
+        ArrayList<User> users = UserDatabase.getAllUsers();
+
+        model.addAttribute("users", users);
+        model.addAttribute("totalUsers", users.size());
+
+        return "/user/list";
+    }
+
 }

@@ -15,7 +15,7 @@
     <logger name="model" level="DEBUG" />
 
     <!-- 나머지 로그는 루트 로거에 따라 처리하지 않음 -->
-    <root level="OFF">
+    <root level="ERROR">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>
