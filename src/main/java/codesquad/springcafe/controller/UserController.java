@@ -5,6 +5,7 @@ import codesquad.springcafe.service.UserService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @org.springframework.stereotype.Controller
@@ -31,5 +32,11 @@ public class UserController {
     public String userList(Model model) {
         model.addAttribute("users", userService.getUsers());
         return "/user/list";
+    }
+
+    @GetMapping("/users/{userId}")
+    public String userDetails(@PathVariable String userId, Model model) {
+        model.addAttribute("user", userService.getUser(userId));
+        return "/user/profile";
     }
 }
