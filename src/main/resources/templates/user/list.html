@@ -84,7 +84,13 @@
               </thead>
               <tbody>
                 <tr th:each="user : ${users}">
-                    <th scope="row" th:text="${user.getKey()}">sequence</th> <td th:text="${user.getValue().getUserId()}">userId</td> <td th:text="${user.getValue().getName()}">name</td> <td th:text="${user.getValue().getEmail()}">email</td><td><a href="#" class="btn btn-success" role="button">수정</a></td>
+                    <th scope="row" th:text="${user.getKey()}">sequence</th>
+                    <td>
+                        <a th:href="@{/users/{userId}(userId=${user.getValue().getUserId()})}" th:text="${user.getValue().getUserId()}">userId</a>
+                    </td>
+                    <td th:text="${user.getValue().getName()}">name</td>
+                    <td th:text="${user.getValue().getEmail()}">email</td>
+                    <td><a href="#" class="btn btn-success" role="button">수정</a></td>
                 </tr>
               </tbody>
           </table>
