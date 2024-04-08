@@ -11,20 +11,18 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserMemoryDatabase implements UserDatabase {
-    private final Map<Long, User> store = new ConcurrentHashMap<>();
-    private long sid = 0L;
+    private final Map<String, User> store = new ConcurrentHashMap<>();
 
     @Override
     public User save(User user) {
         user.setJoinDate(LocalDate.now());
-        user.setSid(++sid);
-        store.put(sid, user);
+        store.put(user.getNickname(), user);
         return user;
     }
 
     @Override
-    public Optional<User> findBySid(Long sid) {
-        return Optional.ofNullable(store.get(sid));
+    public Optional<User> findByNickname(String nickname) {
+        return Optional.ofNullable(store.get(nickname));
     }
 
     @Override
@@ -35,6 +33,5 @@ public class UserMemoryDatabase implements UserDatabase {
     @Override
     public void clear() {
         store.clear();
-        sid = 0L;
     }
 }
