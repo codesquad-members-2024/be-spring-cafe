@@ -4,6 +4,8 @@ import codesquad.springcafe.domain.User;
 import codesquad.springcafe.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 public class UserService {
 
@@ -15,5 +17,9 @@ public class UserService {
 
     public void join(User user) {
         userRepository.save(user);
+    }
+
+    public Map<Long, User> getUsers() {
+        return userRepository.getUsers();
     }
 }

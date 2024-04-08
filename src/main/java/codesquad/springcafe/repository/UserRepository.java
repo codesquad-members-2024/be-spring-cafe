@@ -21,4 +21,8 @@ public class UserRepository {
     public void save(User user) {
         users.put(sequence.getAndIncrement(), user);
     }
+
+    public Map<Long, User> getUsers() {
+        return users;
+    }
 }
