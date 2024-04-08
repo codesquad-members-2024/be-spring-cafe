@@ -1,10 +1,12 @@
 package codesquad.springcafe.model;
 
+import java.time.LocalDate;
+
 public class User {
     private String email;
     private String nickname;
     private String password;
-    private String joinDate;
+    private LocalDate joinDate;
     private Long sid;
 
     public User(String email, String nickname, String password) {
@@ -40,11 +42,11 @@ public class User {
         this.password = password;
     }
 
-    public String getJoinDate() {
+    public LocalDate getJoinDate() {
         return joinDate;
     }
 
-    public void setJoinDate(String joinDate) {
+    public void setJoinDate(LocalDate joinDate) {
         this.joinDate = joinDate;
     }
 

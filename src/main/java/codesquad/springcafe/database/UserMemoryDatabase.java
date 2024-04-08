@@ -2,10 +2,10 @@ package codesquad.springcafe.database;
 
 import codesquad.springcafe.model.User;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Repository;
 
@@ -15,17 +15,16 @@ public class UserMemoryDatabase implements UserDatabase {
     private long sid = 0L;
 
     @Override
-    public void save(User user) {
-        String joinDate = LocalDate.now()
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        user.setJoinDate(joinDate);
+    public User save(User user) {
+        user.setJoinDate(LocalDate.now());
         user.setSid(++sid);
         store.put(sid, user);
+        return user;
     }
 
     @Override
-    public User findByUserId(String userId) {
-        return null;
+    public Optional<User> findBySid(Long sid) {
+        return Optional.ofNullable(store.get(sid));
     }
 
     @Override
@@ -35,6 +34,7 @@ public class UserMemoryDatabase implements UserDatabase {
 
     @Override
     public void clear() {
-
+        store.clear();
+        sid = 0L;
     }
 }
