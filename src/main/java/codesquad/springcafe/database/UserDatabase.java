@@ -2,11 +2,12 @@ package codesquad.springcafe.database;
 
 import codesquad.springcafe.model.User;
 import java.util.List;
+import java.util.Optional;
 
 public interface UserDatabase {
-    void save(User user);
+    User save(User user);
 
-    User findByUserId(String userId);
+    Optional<User> findBySid(Long sid);
 
     List<User> findAll();
 

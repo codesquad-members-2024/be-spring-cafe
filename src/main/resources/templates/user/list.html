@@ -52,7 +52,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="user:${users}">
-                        <td th:text="${user.nickname}">테스터 1</td>
+                        <td><a th:href="@{/users/{sid}(sid=${user.sid})}" th:text="${user.nickname}">테스터 1</a></td>
                         <td th:text="${user.email}">test1@gmail.com</td>
                         <td th:text="${user.joinDate}">2021-12-14</td>
                     </tr>
