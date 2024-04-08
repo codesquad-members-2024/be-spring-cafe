@@ -48,3 +48,10 @@ public class UserController {
     public String loginForm() {
         return "user/login";
     }
+
+    @GetMapping("/{id}")
+    public String profile(@PathVariable("id") String id , Model model) {
+        model.addAttribute("user", userRepository.findUserById(id));
+        return "user/profile";
+    }
+}
