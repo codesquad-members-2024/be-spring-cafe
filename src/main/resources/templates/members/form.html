@@ -35,6 +35,7 @@
                     <label for="email">이메일</label>
                     <input type="email" class="form-control" id="email" name="email"
                            th:field="*{email}" placeholder="Email">
+                    <div class="field-error" th:errors="*{email}"/>
                 </div>
                 <button type="submit" class="btn btn-success clearfix pull-right"
                         onclick="location.href='list.html'"
