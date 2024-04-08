@@ -1,29 +1,30 @@
 package codesquad.springcafe.Controller;
 
-import codesquad.springcafe.Model.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import codesquad.springcafe.Domain.User;
+import codesquad.springcafe.Service.UserService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 //file : Controller
 @Controller
 public class UserController {
 
-    //    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    UserService userService = new UserService();
     @GetMapping("/user/form.html")
     public String form() {
         return "user/form";
     }
-    @PostMapping("/users")
-    public String users(@ModelAttribute User user, Model model) {
 
-        return "user/form";
+    @GetMapping("/users")
+    public String users() {
+        return "user/list";
+    }
+    @PostMapping("/users")
+    public String users(@ModelAttribute User user) {
+        userService.signUp(user);
+        return "redirect:/users";
     }
 }

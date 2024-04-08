@@ -1,4 +1,4 @@
-package codesquad.springcafe.Model;
+package codesquad.springcafe.Domain;
 
 public class User {
     private String email;
