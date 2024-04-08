@@ -1,8 +1,10 @@
 package codesquad.springcafe.controller;
 
+import codesquad.springcafe.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -15,6 +17,9 @@ class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private UserService userService;
 
     @Test
     public void testRegister() throws Exception {
@@ -34,8 +39,7 @@ class UserControllerTest {
         // 요청 실행 및 응답 검증
         mockMvc.perform(request)
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/user/list.html"));
-
+                .andExpect(redirectedUrl("/users"));
     }
 
 
