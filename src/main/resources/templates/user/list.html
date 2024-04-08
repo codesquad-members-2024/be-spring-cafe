@@ -13,22 +13,7 @@
 </head>
 <body>
 <div class="background">
-    <nav class="navbar navbar-fixed-top header">
-        <div class="col-md-12">
-            <div class="navbar-header">
-                <a href="../index.html" class="navbar-brand">
-                    <img th:src="@{/images/KakaoCI.png}"/>
-                </a>
-
-            </div>
-            <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="../index.html">메인 페이지</a></li>
-                <li><a class="black-component" href="login.html" role="button">로그인</a></li>
-                <li><a class="black-component" href="/users/add" role="button">회원가입</a></li>
-            </ul>
-        </div>
-    </nav>
-
+    <div th:replace="~{/fragments/navbar :: navbar}"></div>
     <div class="description">
         <div class="desc-container">
             <p class="desc-small">멤버리스트</p>
