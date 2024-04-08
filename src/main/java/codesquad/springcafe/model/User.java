@@ -1,28 +1,35 @@
 package codesquad.springcafe.model;
 
 public class User {
-    private String userId;
-    private String password;
-    private String name;
     private String email;
+    private String nickname;
+    private String password;
+    private String joinDate;
     private Long sid;
 
-    public User(String userId, String password, String name, String email) {
-        this.userId = userId;
-        this.password = password;
-        this.name = name;
+    public User(String email, String nickname, String password) {
         this.email = email;
+        this.nickname = nickname;
+        this.password = password;
     }
 
     public User() {
     }
 
-    public String getUserId() {
-        return userId;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getPassword() {
@@ -33,20 +40,12 @@ public class User {
         this.password = password;
     }
 
-    public String getName() {
-        return name;
+    public String getJoinDate() {
+        return joinDate;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setJoinDate(String joinDate) {
+        this.joinDate = joinDate;
     }
 
     public Long getSid() {
@@ -60,10 +59,11 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "userId='" + userId + '\'' +
+                "email='" + email + '\'' +
+                ", nickname='" + nickname + '\'' +
                 ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
+                ", joinDate='" + joinDate + '\'' +
+                ", sid=" + sid +
                 '}';
     }
 }
