@@ -37,13 +37,18 @@ public class UserController {
     }
 
     @PostMapping
-    public String registerUser(UserVO userVO) {
+    public String registerUser(UserVO userVO, Model model) {
         userService.createUser(userVO);
-        return "redirect:/users/list";
+
+        model.addAttribute("userEmail", userVO.getEmail());
+        model.addAttribute("userId", userVO.getUserId());
+
+        return "/user/login_success";
     }
 
     @GetMapping("/list")
     public String showUsers(Model model) {
+
         ArrayList<User> users = userService.getAllUsers();
 
         model.addAttribute("users", users);
