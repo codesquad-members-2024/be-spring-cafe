@@ -7,10 +7,9 @@ import java.util.Optional;
 public interface UserDatabase {
     User save(User user);
 
-    Optional<User> findBySid(Long sid);
+    Optional<User> findByNickname(String nickname);
 
     List<User> findAll();
 
     void clear();
-
 }
