@@ -1,6 +1,8 @@
 package codesquad.springcafe.database;
 
 import codesquad.springcafe.model.User;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,13 +11,16 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserMemoryDatabase implements UserDatabase {
-    private final Map<String, User> store = new ConcurrentHashMap<>();
-    private static Long sid = 0L;
+    private final Map<Long, User> store = new ConcurrentHashMap<>();
+    private long sid = 0L;
 
     @Override
     public void save(User user) {
+        String joinDate = LocalDate.now()
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        user.setJoinDate(joinDate);
         user.setSid(++sid);
-        store.put(user.getUserId(), user);
+        store.put(sid, user);
     }
 
     @Override

@@ -45,7 +45,7 @@ public class UserController {
 
     @PostConstruct
     public void createTestUser() {
-        User user = new User("sangchu", "123", "상추", "sangchu@gmail.com");
+        User user = new User("sangchu@gmail.com", "상추", "123");
         userDatabase.save(user);
     }
 }
