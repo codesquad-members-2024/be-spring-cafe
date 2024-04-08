@@ -31,13 +31,11 @@ public class UserController {
 
     @PostMapping("/users")
     public String register(
-            @ModelAttribute User user,
-            Model model
+            @ModelAttribute User user
     ) {
         log.debug("register");
 
         userService.join(user);
-        model.addAttribute("models", userService.findMembers());
         return "redirect:/users";
     }
 }
