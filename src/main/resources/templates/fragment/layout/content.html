@@ -1,0 +1,14 @@
+<body th:fragment="content(contentBody)">
+<nav th:replace="~{fragment/layout/navigation :: common_nav}">네비게이션</nav>
+<div th:replace="~{fragment/layout/navigation :: subnav}">서브 네비게이션</div>
+
+<!-- content body -->
+<div th:replace="${contentBody}">
+    메인 콘텐츠
+</div>
+
+<!-- script references -->
+<script src="../../js/jquery-2.2.0.min.js" th:src="@{/../js/jquery-2.2.0.min.js}"></script>
+<script src="../../js/bootstrap.min.js" th:src="@{/../js/bootstrap.min.js}"></script>
+<script src="../../js/scripts.js" th:src="@{/../js/scripts.js}"></script>
+</body>
