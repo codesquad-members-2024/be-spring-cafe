@@ -14,8 +14,7 @@ public class UserDatabase {
 
     public static void addUser(User user) {
         users.add(user);
-
-        logger.debug("User [{}] Added , DB Size : {}", user, users.size());
+        logger.debug("User [{}] Added , Total Users : {}", user, users.size());
     }
 
     public static ArrayList<User> getAllUsers() {
