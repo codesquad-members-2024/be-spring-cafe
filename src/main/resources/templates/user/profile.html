@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>kakao Java Web Programming</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link th:href="@{/css/reset.css}" rel="stylesheet">
+    <link th:href="@{/css/user/form.css}" rel="stylesheet">
+    <style>
+        .col-md-12 {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .navbar-header {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .black-component {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            justify-content: center;
+            width: 80px;
+            height: 30px;
+            font-size: 14px;
+            background-color: black;
+            color: white;
+        }
+
+        .black-component:hover {
+            background-color: #ffcd00;
+            color: black;
+        }
+
+        .navbar-right {
+            display: flex;
+        }
+
+        .description {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: #ffcd00;
+            width: 200px;
+            height: 250px;
+            margin-bottom: 100px;
+        }
+
+        .desc-container {
+            text-align: center;
+        }
+
+        .desc-container img {
+            max-width: 90%;
+            max-height: 90%;
+            width: auto;
+            height: auto;
+            margin: auto;
+        }
+
+        li {
+            margin: 3px;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        thead {
+            margin: 20px;
+            border-top: 1px solid lightgray;
+            border-bottom: 1px solid lightgray;
+        }
+
+        th {
+            height: 50px;
+            vertical-align: middle;
+        }
+
+        tbody tr {
+            height: 50px;
+            vertical-align: middle;
+            margin: 20px;
+            border-bottom: 1px solid lightgray;
+        }
+
+        td {
+            height: 50px;
+            vertical-align: middle;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="background">
+    <nav class="navbar navbar-fixed-top header">
+        <div class="col-md-12">
+            <div class="navbar-header">
+                <a href="/home" class="navbar-brand">
+                    <img th:src="@{/images/KakaoCI.png}"/>
+                </a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a class="black-component" href="/users/settings" role="button">설정</a></li>
+                <li><a class="black-component" href="/users/logout" role="button">로그아웃</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container" id="main" style="margin-bottom: 80px">
+        <header class="post-header">
+            <p class="title">프로필</p>
+        </header>
+        <div class="info-container">
+            <div class="description">
+                <div class="desc-container">
+                    <img th:src="@{/images/user_basic_image.png}"/>
+                </div>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>항목</th>
+                    <th>내용</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>닉네임</td>
+                    <td th:text="${user.nickname}"></td>
+                </tr>
+                <tr>
+                    <td>이메일</td>
+                    <td th:text="${user.email}"></td>
+                </tr>
+                <tr>
+                    <td>가입날짜</td>
+                    <td th:text="${user.joinDate}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
