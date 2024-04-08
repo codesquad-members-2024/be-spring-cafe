@@ -102,3 +102,8 @@ td {
     vertical-align: middle;
     text-align: center;
 }
+
+.user-id a {
+    color: blue; /* 텍스트 색상을 파란색으로 설정 */
+    text-decoration: underline; /* 밑줄을 추가 */
+}

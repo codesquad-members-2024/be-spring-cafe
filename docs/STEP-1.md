@@ -7,7 +7,6 @@
 
 - ```url```에 해당하는 경로로 이동할 수 있도록 간단한 REST API 구현
 
-## 2)
 
 ---
 
@@ -32,12 +31,19 @@
 - [x] /users/list로 GET 요청을 처리한다
 - [x] DB에서 회원 목록들을 가져와서, ```/user/list.html```에 전달한다.
 - [x] /user/list.html 페이지에서 전달받은 회원 목록들을 보여준다.
-  - Mustache 문법을 이용하여 구현
+    - Mustache 문법을 이용하여 구현
 
 ## 4) 회원 프로필 조회 기능 구현
 
-- [ ] /user/list.html에서 profile 페이지로 들어갈 수 있도록 수정
-- [ ] 경로를 /users/{userId}로 하여 GET 요청을 보낸다
+- [x] /user/list.html에서 profile 페이지로 들어갈 수 있도록 수정
+    - ```<a>``` 태그를 통해 구현
+
+```html
+
+<td class="user-id"><a href="/users/{{userId}}">{{ getUserId }}</a></td>
+```
+
+- [x] 경로를 /users/{userId}로 하여 GET 요청을 보낸다
 - [ ] /users/{userId}로 전달된 GET 요청을 처리하여 ```/users/profile.html```로 보낸다
 - [ ] /users/profile.html에서 유저 아이디에 해당하는 유저 정보를 확인한다.
 
@@ -45,12 +51,12 @@
 
 # 📜 URL Convention
 
-|         URL         |             기능             | 구현 상태 |
-|:-------------------:|:--------------------------:|:-----:|
-|     GET /users      |      저장된 회원 목록을 보여준다       |  ⭕️   |
-|     POST /users     |  입력된 폼을 가지고, 회원 가입을 수행한다   |  ⭕️   |
-|   GET /users/list   |      회원가입된 유저들을 보여준다.      |  ⭕️   |
-| GET /users/:userdId | useeId에 해당하는 profile을 보여준다 |       |
+| URL                | 기능                         | 구현 상태 |
+|:-------------------|:---------------------------|:-----:|
+| GET /users         | 저장된 회원 목록을 보여준다            |  ⭕️   |
+| POST /users        | 입력된 폼을 가지고, 회원 가입을 수행한다    |  ⭕️   |
+| GET /users/list    | 회원가입된 유저들을 보여준다.           |  ⭕️   |
+| GET /users/:userId | useeId에 해당하는 profile을 보여준다 |       |
 
 ---
 
@@ -101,4 +107,30 @@ spring.mustache.cache=false
 
 ---
 
+## 3) URL의 userId를 못가져오던 문제
+```java
+@GetMapping("/{userId}")
+    public String getUserProfile(String userId) {
+        logger.debug("userId : {}", userId);
+        return "redirect:/users";
+    }
+```
+- 간단히 전달된 userId가 전달되었는지 확인하기 위해 userId에 대해 로그를 확인하였다.
+- ```null 값이 나왔다.```
+
+### ⭕️ 해결
+- ```@PathVariable```을 사용하여 해결
+```java
+@GetMapping("/{userId}")
+    public String getUserProfile(@PathVariable String userId) { // 어노테이션 적용
+        logger.debug("userId : {}", userId);
+        return "redirect:/users";
+    }
+```
+### @PathVariable 이란?
+- ```경로 변수```를 표시하기 위해 **매개변수에 사용**된다
+- ```경로 변수``` : 중괄호 {userId}에 둘러싸인 값
+- URL 경로에서 변수 값을 추출하여 매개변수에 할당한다.
+  - 따라서, userId라는 매개변수를 사용할 수 있게 된다.
+    - 경로 변수가 값이 없는 경우 404 에러!
 

@@ -9,4 +9,6 @@ public interface UserService {
     void createUser(UserVO userVO);
 
     ArrayList<User> getAllUsers();
+
+    Optional<User> findUserById(String userId);
 }

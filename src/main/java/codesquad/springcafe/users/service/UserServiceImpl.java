@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -28,5 +29,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public ArrayList<User> getAllUsers() {
         return UserDatabase.getAllUsers();
+    }
+
+    @Override
+    public Optional<User> findUserById(String userId) {
+        return UserDatabase.findUserById(userId);
     }
 }

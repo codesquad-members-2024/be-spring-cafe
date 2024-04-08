@@ -54,7 +54,7 @@
                     <!-- 사용자 목록 반복 -->
                     {{#users}}
                     <tr>
-                        <td>{{ getUserId }}</td>
+                        <td class="user-id"><a href="/users/{{userId}}">{{ getUserId }}</a></td>
                         <td>{{ getEmail }}</td>
                         <td>{{ getCreationDate }}</td>
                     </tr>

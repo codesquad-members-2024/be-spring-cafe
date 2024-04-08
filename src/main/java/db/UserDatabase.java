@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 
 public class UserDatabase {
@@ -19,5 +20,11 @@ public class UserDatabase {
 
     public static ArrayList<User> getAllUsers() {
         return users;
+    }
+
+    public static Optional<User> findUserById(String userId) {
+        return users.stream()
+                .filter(user -> user.getUserId().equals(userId))
+                .findFirst();
     }
 }
