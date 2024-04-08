@@ -2,6 +2,7 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.service.UserService;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +28,8 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public String userList() {
+    public String userList(Model model) {
+        model.addAttribute("users", userService.getUsers());
         return "/user/list";
     }
 }
