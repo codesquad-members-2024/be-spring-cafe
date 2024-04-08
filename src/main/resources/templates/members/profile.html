@@ -53,9 +53,6 @@
                data-toggle="dropdown"><i class="glyphicon glyphicon-home" style="color:#dd1111;"></i> Home <small><i
                     class="glyphicon glyphicon-chevron-down"></i></small></a>
             <ul class="nav dropdown-menu">
-                <li><a href="../members/profile.html" th:href="@{/members/{id}(id=${member.getId()})}"><i
-                        class="glyphicon glyphicon-user" style="color:#1111dd;"></i> Profile</a></li>
-                <li class="nav-divider"></li>
                 <li><a href="#"><i class="glyphicon glyphicon-cog" style="color:#dd1111;"></i> Settings</a></li>
             </ul>
 
@@ -90,10 +87,10 @@
                             <img class="media-object" src="../images/80-text.png" th:src="@{/images/80-text.png}">
                         </a>
                         <div class="media-body">
-                            <h4 class="media-heading" th:text="${member.userName}">자바지기</h4>
+                            <h4 class="media-heading" th:text="${member.userName}">yelly</h4>
                             <p>
                                 <a href="#" class="btn btn-xs btn-default" th:text="${member.email}"><span
-                                        class="glyphicon glyphicon-envelope"></span>&nbsp;javajigi@slipp.net</a>
+                                        class="glyphicon glyphicon-envelope"></span>yelly@test.com</a>
                             </p>
                         </div>
                     </div>
