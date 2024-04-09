@@ -1,4 +1,4 @@
-package codesquad.springcafe.database;
+package codesquad.springcafe.database.user;
 
 import codesquad.springcafe.model.User;
 import java.time.LocalDate;
@@ -21,7 +21,7 @@ public class UserMemoryDatabase implements UserDatabase {
     }
 
     @Override
-    public Optional<User> findByNickname(String nickname) {
+    public Optional<User> findBy(String nickname) {
         return Optional.ofNullable(store.get(nickname));
     }
 
