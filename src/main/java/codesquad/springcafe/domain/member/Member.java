@@ -1,5 +1,6 @@
 package codesquad.springcafe.domain.member;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.Objects;
 
@@ -13,6 +14,7 @@ public class Member {
     @NotEmpty
     private String userName;
     @NotEmpty
+    @Email
     private String email;
 
     public Member() {
