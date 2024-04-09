@@ -5,12 +5,12 @@ import java.util.Date;
 
 public class Article {
     private static final String TO_STRING_FORMAT = "[게시글] %s, %s, %s, %s";
-    private int id;
+    private long id;
     private String writer;
     private String title;
     private String content;
     private String creationTime;
-    private int viewCount;
+    private long viewCount;
 
     public Article(String title, String content) {
         this.writer = "익명 사용자"; // TODO: 로그인 구현시 변경
@@ -19,11 +19,11 @@ public class Article {
         this.viewCount = 0;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -55,11 +55,11 @@ public class Article {
         return creationTime;
     }
 
-    public int getViewCount() {
+    public long getViewCount() {
         return viewCount;
     }
 
-    public void setViewCount(int viewCount) {
+    public void setViewCount(long viewCount) {
         this.viewCount = viewCount;
     }
 

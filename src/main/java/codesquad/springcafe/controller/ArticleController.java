@@ -34,7 +34,7 @@ public class ArticleController {
     @PostMapping("/write")
     public String write(@ModelAttribute Article article) {
         article.setCreationTime(new Date());
-        int id = articleService.addArticle(article);
+        int id = (int) articleService.addArticle(article);
         logger.info("[" + id + "번째 게시글 생성 완료] - " + article);
 
         return "redirect:/";
@@ -45,7 +45,7 @@ public class ArticleController {
         Article article = articleService.findArticleById(articleId - 1);
         logger.info("[" + articleId + "번째 게시글 가져오기 성공] - " + article.toString());
 
-        int viewCount = articleService.increaseViewCount(article);
+        long viewCount = articleService.increaseViewCount(article);
         logger.info("[" + articleId + "번째 게시글 조회수 : " + viewCount);
 
         model.addAttribute("article", article);
