@@ -10,13 +10,9 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(new LoggerInterceptor())
-
-
         registry.addInterceptor(new LoginCheckInterceptor())
                 .addPathPatterns("/user/*")
                 .excludePathPatterns("/user/log*") // 로그인, 로그아웃 제외
-                .excludePathPatterns("/user/form*")
-                .excludePathPatterns("/css/**", "/images/**", "/js/**");
+                .excludePathPatterns("/user/form*");
     }
 }
