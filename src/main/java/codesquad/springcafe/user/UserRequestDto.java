@@ -12,4 +12,15 @@ public class UserRequestDto {
         this.nickname = nickname;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
 }
