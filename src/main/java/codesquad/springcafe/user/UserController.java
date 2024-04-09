@@ -28,7 +28,7 @@ public class UserController {
             return "redirect:/user/form/fail";
         }
 
-        log.info(user.toString());
+        log.debug(user.toString());
         return "redirect:/user/users";
     }
     @PostMapping("/login")
@@ -36,7 +36,7 @@ public class UserController {
                         @RequestParam("password") String password) {
 
         // 로그인 학인
-        log.info("로그인됨 : " + id + " , " + password);
+        log.debug("로그인됨 : " + id + " , " + password);
         return "redirect:/";
     }
 
