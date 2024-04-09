@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
-public class MemArticleRepository implements ArticleRepository{
+public class MemoryArticleRepository implements ArticleRepository{
 
     Map<Integer , Article> articles = new ConcurrentHashMap<>();
 
