@@ -1,5 +1,6 @@
 package codesquad.springcafe.service.impl;
 
+import codesquad.springcafe.dto.UpdatedUser;
 import codesquad.springcafe.dto.User;
 import codesquad.springcafe.repository.UserRepository;
 import codesquad.springcafe.service.UserService;
@@ -27,8 +28,8 @@ public class UserManagementService implements UserService {
     }
 
     @Override
-    public User modifyUser(User user) throws Exception {
-        return userRepository.modifyUser(user);
+    public User updateUser(String userId, UpdatedUser updatedUser) throws Exception {
+        return userRepository.updateUser(userId, updatedUser);
     }
 
     @Override

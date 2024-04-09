@@ -1,5 +1,6 @@
 package codesquad.springcafe.repository.impl;
 
+import codesquad.springcafe.dto.UpdatedUser;
 import codesquad.springcafe.dto.User;
 import codesquad.springcafe.exception.UserNotFoundException;
 import codesquad.springcafe.repository.UserRepository;
@@ -33,8 +34,10 @@ public class UserMemoryRepository implements UserRepository {
     }
 
     @Override
-    public User modifyUser(User user) throws Exception {
-        return null;
+    public User updateUser(String userId, UpdatedUser updatedUser) throws Exception {
+        User findUser = findUserByUserID(userId);
+        findUser.updateUser(updatedUser);
+        return findUser;
     }
 
     @Override

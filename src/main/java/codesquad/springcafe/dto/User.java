@@ -17,10 +17,6 @@ public class User {
         return userId;
     }
 
-    public String getUserPw() {
-        return userPw;
-    }
-
     public String getUserName() {
         return userName;
     }
@@ -47,6 +43,16 @@ public class User {
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
+    }
+
+    public boolean matchPw(String userPw) {
+        return this.userPw.equals(userPw);
+    }
+
+    public void updateUser(UpdatedUser updatedUser) {
+        this.userPw = updatedUser.getUserPw();
+        this.userName = updatedUser.getUserName();
+        this.userEmail = updatedUser.getUserEmail();
     }
 
     @Override
