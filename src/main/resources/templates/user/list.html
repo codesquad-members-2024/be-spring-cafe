@@ -85,7 +85,7 @@
               <tbody>
               <tr th:each="user, stat : ${userList}">
                   <td th:text="${stat.index + 1}"></td>
-                  <td><a th:href="@{/profile/{id}(id=${user.userId})}" th:text="${user.userId}"></a></td>
+                  <td><a th:href="@{/user/profile/{id}(id=${user.userId})}" th:text="${user.userId}"></a></td>
                   <td th:text="${user.name}"></td>
                   <td th:text="${user.email}"></td>
                 </tr>
