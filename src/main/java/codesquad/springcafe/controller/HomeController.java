@@ -24,7 +24,6 @@ public class HomeController {
     @GetMapping(value = {"/", "/home"})
     public String homeForm(Model model) {
         List<Article> articles = articleService.findAllArticle();
-        model.addAttribute("articleListSize", articles.size());
         model.addAttribute("articleList", articles);
         return "home";
     }
