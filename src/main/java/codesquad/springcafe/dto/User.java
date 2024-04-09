@@ -9,16 +9,6 @@ public class User {
     private String userName;
     private String userEmail;
 
-    public User() {
-    }
-
-    public User(String userId, String userPw, String userName, String userEmail) {
-        this.userId = userId;
-        this.userPw = userPw;
-        this.userName = userName;
-        this.userEmail = userEmail;
-    }
-
     public Long getId() {
         return id;
     }
