@@ -9,9 +9,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Controller
+@RequestMapping("/users")
 public class UserController {
 
     private final Logger log = LoggerFactory.getLogger(UserController.class);
@@ -22,19 +24,16 @@ public class UserController {
     }
 
 
-    @GetMapping("/users")
+    @GetMapping
     public String getUserList(Model model) {
         log.debug("user list");
-        model.addAttribute("users", userService.findMembers());
+        model.addAttribute("users", userService.findAllUsers());
         return "user/list";
     }
 
-    @PostMapping("/users")
-    public String register(
-            @ModelAttribute User user
-    ) {
+    @PostMapping
+    public String register(@ModelAttribute User user) {
         log.debug("register");
-
         userService.join(user);
         return "redirect:/users";
     }
