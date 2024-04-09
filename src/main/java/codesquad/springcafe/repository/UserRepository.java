@@ -19,8 +19,8 @@ public class UserRepository {
     private final AtomicLong sequence = new AtomicLong();
 
     public void saveUser(User user) {
-        user.setId(sequence.incrementAndGet());
-        users.put(user.getId(), user);
+        user.setUserSequence(sequence.incrementAndGet());
+        users.put(user.getUserSequence(), user);
         log.debug("user saved: {}", user.getUserId());
     }
 

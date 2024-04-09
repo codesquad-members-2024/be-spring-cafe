@@ -9,18 +9,18 @@ import java.util.List;
 @Service
 public class UserService {
 
-    private final UserRepository userDatabase;
+    private final UserRepository userRepository;
 
-    public UserService(UserRepository userDatabase) {
-        this.userDatabase = userDatabase;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     public void join(User user) {
-        userDatabase.saveUser(user);
+        userRepository.saveUser(user);
     }
 
     public List<User> findAllUsers() {
-        return userDatabase.findAllUsers();
+        return userRepository.findAllUsers();
     }
 
 }

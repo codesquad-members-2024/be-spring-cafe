@@ -2,7 +2,7 @@ package codesquad.springcafe.model;
 
 public class User {
 
-    private Long id;
+    private Long userSequence;
     private String userId;
     private String password;
     private String name;
@@ -15,8 +15,8 @@ public class User {
         this.email = email;
     }
 
-    public Long getId() {
-        return id;
+    public Long getUserSequence() {
+        return userSequence;
     }
 
     public String getUserId() {
@@ -35,8 +35,8 @@ public class User {
         return email;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserSequence(Long sequence) {
+        this.userSequence = sequence;
     }
 
     @Override
