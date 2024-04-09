@@ -17,7 +17,6 @@ public class UserController {
     private final UserRepository userRepository;
 
     @Autowired
-    public UserController(UserRepository userRepository){
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -33,9 +32,6 @@ public class UserController {
 
         try {
             userRepository.addUser(user);
-        }catch (IllegalArgumentException alreadyExistsId){
-            // 사용자에게 알림 ? 
-            return "redirect:/user/form";
         } catch (IllegalArgumentException alreadyExistsId) {
             return "redirect:/user/form/fail";
         }
@@ -43,8 +39,16 @@ public class UserController {
         log.info(user.toString());
         return "redirect:/user/users";
     }
+    @PostMapping("/login")
+    public String login(@RequestParam("userId") String id,
+                        @RequestParam("password") String password) {
+
+        // 로그인 학인
+        log.info("로그인됨 : " + id + " , " + password);
+        return "redirect:/";
+    }
+
     @GetMapping("/form")
-    public String userForm() {
     public String userForm(Model model) {
         model.addAttribute("alert", "");
         model.addAttribute("alert_section", false);
@@ -72,7 +76,6 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String profile(@PathVariable("id") String id , Model model) {
     public String profile(@PathVariable("id") String id, Model model) {
         model.addAttribute("user", userRepository.findUserById(id));
         return "user/profile";
