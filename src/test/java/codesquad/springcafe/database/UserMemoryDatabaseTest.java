@@ -2,6 +2,7 @@ package codesquad.springcafe.database;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import codesquad.springcafe.database.user.UserMemoryDatabase;
 import codesquad.springcafe.model.User;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +32,7 @@ class UserMemoryDatabaseTest {
     void findByNickname() {
         User user = new User("sangchu@gmail.com", "상추", "123");
         userMemoryDatabase.save(user);
-        User find = userMemoryDatabase.findByNickname("상추").get();
+        User find = userMemoryDatabase.findBy("상추").get();
         assertThat(find).isEqualTo(user);
     }
 
@@ -40,7 +41,7 @@ class UserMemoryDatabaseTest {
     void findByNicknameFailed() {
         User user = new User("sangchu@gmail.com", "상추", "123");
         userMemoryDatabase.save(user);
-        Optional<User> optionalUser = userMemoryDatabase.findByNickname("배추");
+        Optional<User> optionalUser = userMemoryDatabase.findBy("배추");
         assertThat(optionalUser).isEmpty();
     }
 
