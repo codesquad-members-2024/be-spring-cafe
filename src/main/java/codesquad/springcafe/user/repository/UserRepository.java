@@ -8,6 +8,8 @@ import java.util.List;
 public interface UserRepository {
 
     void addUser(User user) throws IllegalArgumentException;
+
+    void update(User user);
     User findUserById(String id);
     List<UserDTO> findAll();
 }

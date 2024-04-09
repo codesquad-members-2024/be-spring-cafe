@@ -40,6 +40,26 @@ public class UserController {
         return "redirect:/";
     }
 
+    @PostMapping("/{id}")
+    public String update(@PathVariable("id") String id ,
+                         @RequestParam("password") String password,
+                         @RequestParam("name") String name,
+                         @RequestParam("email") String email,
+                         Model model){
+
+
+        if(userRepository.findUserById(id).isCorrectPassword(password)){
+            userRepository.update(new User(id , password, name , email));
+            model.addAttribute("alert", "회원 정보 변경 성공!");
+        }else {
+            model.addAttribute("alert", "비밀번호가 일치하지 않습니다!");
+        }
+
+        model.addAttribute("alert_section", true);
+        model.addAttribute("userId", id);
+        return "user/update_form";
+    }
+
     @GetMapping("/form")
     public String userForm(Model model) {
         model.addAttribute("alert", "");
@@ -71,5 +91,14 @@ public class UserController {
     public String profile(@PathVariable("id") String id, Model model) {
         model.addAttribute("user", userRepository.findUserById(id));
         return "user/profile";
+    }
+
+    @GetMapping("{id}/form")
+    public String updateForm(@PathVariable("id") String id , Model model){
+        model.addAttribute("alert", "");
+        model.addAttribute("alert_section", false);
+        model.addAttribute("userId", id);
+
+        return "user/update_form";
     }
 }

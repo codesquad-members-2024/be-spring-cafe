@@ -20,6 +20,11 @@ public class MemoryUserRepository implements UserRepository{
     }
 
     @Override
+    public void update(User user) {
+        this.users.replace(user.getUserId() , user);
+    }
+
+    @Override
     public User findUserById(String id) {
         return users.get(id);
     }
