@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService {
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+public class UserManagementService implements UserService {
+    private static final Logger logger = LoggerFactory.getLogger(UserManagementService.class);
 
     @Override
     public void createUser(UserVO userVO) {
