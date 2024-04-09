@@ -1,8 +1,11 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.database.user.UserDatabase;
+import codesquad.springcafe.form.user.UserEditForm;
 import codesquad.springcafe.model.User;
 import jakarta.annotation.PostConstruct;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -69,6 +72,50 @@ public class UserController {
         return "user/profile";
     }
 
+    /**
+     * 유저 변경 폼을 사용자에게 보여줍니다.
+     *
+     * @param nickname 사용자가 수정을 원하는 유저의 닉네임입니다.
+     * @param model    데이터 베이스에 찾은 유저를 담습니다.
+     * @return 데이터베이스에 일치하는 유저가 없으면 유저 리스트 화면으로 리다이렉트하고, 아니라면 업데이트 폼 화면을 보여줍니다.
+     */
+    @GetMapping("/edit/{nickname}")
+    public String updateForm(@PathVariable String nickname, Model model) {
+        Optional<User> optionalUser = userDatabase.findBy(nickname);
+        if (optionalUser.isEmpty()) {
+            return "redirect:/users";
+        }
+        model.addAttribute("user", optionalUser.get());
+        return "user/update";
+    }
+
+    /**
+     * 유저 수정폼에 입력된 정보로 유저 정보를 업데이트합니다.
+     *
+     * @param nickname 사용자가 수정을 원하는 유저의 닉네임입니다.
+     * @param form     수정 정보가 담긴 폼 정보입니다.
+     * @return 유저가 존재하지 않으면 유저 리스트로 이동합니다. 현재 비밀번호가 일치하지 않으면 유저 수정 폼을 다시 보여줍니다. 수정이 정상적으로 완료되면 프로필을 보여줍니다.
+     */
+    @PostMapping("/edit/{nickname}")
+    public String updateUser(@PathVariable String nickname, @ModelAttribute UserEditForm form, Model model) {
+        Optional<User> optionalUser = userDatabase.findBy(nickname);
+        if (optionalUser.isEmpty()) {
+            return "redirect:/users";
+        }
+        User user = optionalUser.get();
+        if (!user.hasSamePassword(form.currentPassword())) {
+            model.addAttribute("user", user);
+            return "user/update";
+        }
+        user.update(form);
+        logger.info("유저정보가 업데이트 되었습니다. {}", user);
+        String newNickname = user.getNickname(); // 유저 닉네임이 수정될 경우를 반영
+        return "redirect:/users/profile/" + URLEncoder.encode(newNickname, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * 서버 실행시 테스트용 사용자를 만듭니다.
+     */
     @PostConstruct
     public void createTestUser() {
         User user = new User("sangchu@gmail.com", "상추", "123");
