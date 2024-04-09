@@ -126,3 +126,7 @@ td {
     background-color: #ffcd00;
     color: black;
 }
+
+.article-title{
+    text-decoration: underline; /* 밑줄을 추가 */
+}
