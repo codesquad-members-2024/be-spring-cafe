@@ -26,8 +26,6 @@ public class ArticleController {
 
     /**
      * 사용자에게 아티클 폼을 보여줍니다.
-     *
-     * @return 아티클 폼의 뷰 경로를 리턴합니다.
      */
     @GetMapping("/add")
     public String articleForm() {
@@ -36,9 +34,6 @@ public class ArticleController {
 
     /**
      * 사용자가 작성한 아티클을 생성하고 데이터베이스에 저장합니다.
-     *
-     * @param article 사용자로부터 입력받은 정보로 만든 아티클 객체입니다.
-     * @return 홈으로 리다이렉트 합니다.
      */
     @PostMapping("/add")
     public String addForm(@ModelAttribute Article article) {
@@ -52,9 +47,6 @@ public class ArticleController {
 
     /**
      * 사용자가 요청한 id의 아티클을 조회수를 올리고 렌더링하여 보여줍니다. 일치하는 id가 데이터베이스에 존재하지 않는다면 홈으로 리다이렉트합니다.
-     *
-     * @param id 사용자가 요청한 아티클의 번호입니다.
-     * @return 아티클 상세정보의 뷰 경로입니다.
      */
     @GetMapping("/detail/{id}")
     public String viewArticle(@PathVariable Long id, Model model) {
