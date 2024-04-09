@@ -1,5 +1,6 @@
 package codesquad.springcafe.repository;
 
+import codesquad.springcafe.dto.UpdatedUser;
 import codesquad.springcafe.dto.User;
 import java.util.List;
 
@@ -8,7 +9,7 @@ public interface UserRepository {
 
     User findUserByUserID(String userId) throws Exception;
 
-    User modifyUser(User user) throws Exception;
+    User updateUser(String userId, UpdatedUser updatedUser) throws Exception;
 
     User deleteUser(User user);
 

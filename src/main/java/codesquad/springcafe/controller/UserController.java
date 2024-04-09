@@ -1,5 +1,6 @@
 package codesquad.springcafe.controller;
 
+import codesquad.springcafe.dto.UpdatedUser;
 import codesquad.springcafe.dto.User;
 import codesquad.springcafe.service.UserService;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -62,5 +64,24 @@ public class UserController {
         logger.info("[사용자 가져오기 성공] - " + user.toString());
         model.addAttribute("user", user);
         return "user/profile";
+    }
+
+    @GetMapping("/match_pw/{userId}")
+    public String matchPwForm(Model model, @PathVariable String userId) {
+        model.addAttribute("userId", userId);
+        return "user/match_pw";
+    }
+
+    @GetMapping("/update/{userId}")
+    public String updateForm(Model model, @PathVariable String userId) {
+        model.addAttribute("userId", userId);
+        return "user/update";
+    }
+
+    @PutMapping("/update/{userId}")
+    public String update(@ModelAttribute UpdatedUser updatedUser, @PathVariable String userId) throws Exception {
+        User user = userService.updateUser(userId, updatedUser);
+        logger.info("[사용자 수정 성공] - " + user.toString());
+        return "redirect:/users/list";
     }
 }
