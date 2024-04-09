@@ -31,7 +31,6 @@ public class UserController {
 
     @GetMapping
     public String showUsers(Model model) {
-
         ArrayList<User> users = userService.getAllUsers();
 
         model.addAttribute("users", users);
@@ -50,10 +49,6 @@ public class UserController {
         return "/user/login_success";
     }
 
-    @GetMapping("/join")
-    public String showUserForm() {
-        return "/user/form";
-    }
     @GetMapping("/{userId}")
     public String getUserProfile(@PathVariable String userId, Model model) {
         User user = userService.findUserById(userId)
@@ -63,6 +58,5 @@ public class UserController {
 
         return "/user/profile";
     }
-
 
 }

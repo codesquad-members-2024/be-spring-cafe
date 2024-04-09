@@ -30,16 +30,10 @@ public class ArticleController {
     private static final Logger logger = LoggerFactory.getLogger(ArticleController.class);
 
     @PostMapping
-    public String postArticle(ArticleData articleData, Model model) {
+    public String postArticle(ArticleData articleData) {
         articleService.createArticle(articleData);
         return "redirect:/";
     }
-
-    @GetMapping("/write")
-    public String showQnaForm() {
-        return "/article/form";
-    }
-
 
     @GetMapping("/{articleId}")
     public String getUserProfile(@PathVariable int articleId, Model model) {
