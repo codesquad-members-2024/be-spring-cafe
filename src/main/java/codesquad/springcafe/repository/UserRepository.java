@@ -14,12 +14,11 @@ public class UserRepository {
         return user;
     }
 
-    public void removeUser(User user) {
-        users.remove(user);
-    }
-
-    public List<User> getUsers() {
+    public List<User> findAllUsers() {
         return users;
     }
 
+    public void removeUser(User user) {
+        users.remove(user);
+    }
 }

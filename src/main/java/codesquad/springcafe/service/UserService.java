@@ -1,11 +1,10 @@
 package codesquad.springcafe.service;
 
 import codesquad.springcafe.domain.User;
-import java.util.Optional;
+import java.util.List;
 
 public interface UserService {
 
     void createUser(User user);
-
-    Optional<User> findUserById(String userId);
+    List<User> findAllUsers();
 }
