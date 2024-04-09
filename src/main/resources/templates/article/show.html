@@ -9,7 +9,7 @@
     <!--[if lt IE 9]>
     <script th:src="@{//html5shim.googlecode.com/svn/trunk/html5.js}"></script>
     <![endif]-->
-    <link th:href="@{/css/post/show.css}" rel="stylesheet">
+    <link th:href="@{/css/article/show.css}" rel="stylesheet">
 </head>
 <body>
 <div class="background">
@@ -32,22 +32,21 @@
         <div class="col-md-12 col-sm-12 col-lg-12">
             <div class="panel panel-default">
                 <header class="post-header">
-                    <p class="post-title">자바 웹개발 교육 홈페이지 디자인 개발1</p>
+                    <p class="post-title" th:text="${article.getTitle()}">Title</p>
                 </header>
                 <div class="content-main">
                     <article class="article">
                         <div class="article-header">
                             <div class="article-header-text">
-                                <p class="article-content">멋진삼</p>
-                                <p class="article-content">
-                                    작성일자:2015-12-30 01:47
+                                <p class="article-content" th:text="${article.getWriter()}">Writer</p>
+                                <p class="article-content" th:text="${article.getCreationTime()}">
+                                    CreationTime
                                 </p>
-                                <p class="article-content">조회 4</p>
+                                <p class="article-content" th:text="${article.getViewCount()}">ViewCount</p>
                             </div>
                         </div>
                         <div class="article-doc">
-                            <p>호눅스가 요청하신 페이지의 디자인 입니다.<br>
-                                각각의 글의 상세 페이지는 이런 느낌이네요!</p>
+                            <p class="article-content" th:text="${article.getContent()}">Content</p>
                         </div>
                     </article>
 
@@ -85,7 +84,8 @@
                                         <input class="comment-writer" id="writer" name="writer" value="멋진상" readonly/>
                                     </div>
                                     <div class="form-group">
-                                        <textarea class="form-control" id="comment" name="comment" placeholder="내용을 입력하세요"></textarea>
+                                        <textarea class="form-control" id="comment" name="comment"
+                                                  placeholder="내용을 입력하세요"></textarea>
                                     </div>
                                     <input class="post-write-btn" type="submit" value="등록"/>
                                 </form>
