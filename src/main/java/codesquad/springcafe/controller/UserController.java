@@ -1,6 +1,6 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.database.UserDatabase;
+import codesquad.springcafe.database.user.UserDatabase;
 import codesquad.springcafe.model.User;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
@@ -46,12 +46,11 @@ public class UserController {
 
     @GetMapping("/user/{nickname}")
     public String userProfile(@PathVariable String nickname, Model model) {
-        Optional<User> optionalUser = userDatabase.findByNickname(nickname);
+        Optional<User> optionalUser = userDatabase.findBy(nickname);
         if (optionalUser.isEmpty()) {
             return "redirect:/users";
         }
         model.addAttribute("user", optionalUser.get());
-
         return "user/profile";
     }
 
