@@ -1,27 +1,24 @@
 package codesquad.springcafe.domain;
 
 public class User {
-    private String id;
+    private String userId;
     private String password;
     private String name;
     private String email;
 
-    public User(String id, String password, String name, String email) {
-        this.id = id;
+    public User(String userId, String password, String name, String email) {
+        this.userId = userId;
         this.password = password;
         this.name = name;
         this.email = email;
     }
 
-    public String getId() {
-        return id;
+    public String getUserId() {
+        return userId;
     }
 
     public String getName() {
         return name;
-    }
-    public String getPassword(){
-        return password;
     }
 
     public String getEmail() {
@@ -35,7 +32,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
+                "id='" + userId + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +

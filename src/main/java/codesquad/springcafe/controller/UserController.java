@@ -21,14 +21,11 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @PostMapping("/create")
-    public String createUser(@RequestParam("userId") String id,
-                             @RequestParam("password") String password,
-                             @RequestParam("name") String name,
-                             @RequestParam("email") String email) {
+    @PostMapping("")
+    public String createUser(@ModelAttribute User user){
 
         // 회원가입
-        User user = new User(id, password, name, email);
+//        User user = new User(id, password, name, email);
 
         try {
             userRepository.addUser(user);
