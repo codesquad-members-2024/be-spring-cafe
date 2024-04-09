@@ -25,8 +25,8 @@ public class User {
     }
 
     public void update(UserEditForm form) {
-        this.nickname = form.nickname();
-        this.password = form.newPassword();
+        this.nickname = form.getNickname();
+        this.password = form.getNewPassword();
     }
 
     public String getEmail() {
@@ -37,7 +37,7 @@ public class User {
     public String getNickname() {
         return nickname;
     }
-    
+
 
     public LocalDate getJoinDate() {
         return joinDate;

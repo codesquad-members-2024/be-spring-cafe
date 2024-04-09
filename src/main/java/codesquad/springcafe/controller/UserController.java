@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -85,29 +86,35 @@ public class UserController {
         if (optionalUser.isEmpty()) {
             return "redirect:/users";
         }
-        model.addAttribute("user", optionalUser.get());
+        User user = optionalUser.get();
+        UserEditForm userEditForm = new UserEditForm();
+        userEditForm.setEmail(user.getEmail());
+        userEditForm.setNickname(user.getNickname());
+        model.addAttribute("userEditForm", userEditForm);
         return "user/update";
     }
 
     /**
      * 유저 수정폼에 입력된 정보로 유저 정보를 업데이트합니다.
      *
-     * @param nickname 사용자가 수정을 원하는 유저의 닉네임입니다.
-     * @param form     수정 정보가 담긴 폼 정보입니다.
+     * @param nickname     사용자가 수정을 원하는 유저의 닉네임입니다.
+     * @param userEditForm 수정 정보가 담긴 폼 정보입니다.
      * @return 유저가 존재하지 않으면 유저 리스트로 이동합니다. 현재 비밀번호가 일치하지 않으면 유저 수정 폼을 다시 보여줍니다. 수정이 정상적으로 완료되면 프로필을 보여줍니다.
      */
     @PostMapping("/edit/{nickname}")
-    public String updateUser(@PathVariable String nickname, @ModelAttribute UserEditForm form, Model model) {
+    public String updateUser(@PathVariable String nickname, @ModelAttribute UserEditForm userEditForm, Model model,
+                             BindingResult bindingResult) {
         Optional<User> optionalUser = userDatabase.findBy(nickname);
         if (optionalUser.isEmpty()) {
             return "redirect:/users";
         }
         User user = optionalUser.get();
-        if (!user.hasSamePassword(form.currentPassword())) {
-            model.addAttribute("user", user);
+        if (!user.hasSamePassword(userEditForm.getCurrentPassword())) {
+            model.addAttribute("userEditForm", userEditForm);
+            bindingResult.reject("invalidCurrentPassword");
             return "user/update";
         }
-        user.update(form);
+        user.update(userEditForm);
         logger.info("유저정보가 업데이트 되었습니다. {}", user);
         String newNickname = user.getNickname(); // 유저 닉네임이 수정될 경우를 반영
         return "redirect:/users/profile/" + URLEncoder.encode(newNickname, StandardCharsets.UTF_8);
