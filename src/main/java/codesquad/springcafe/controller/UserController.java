@@ -25,6 +25,9 @@ public class UserController {
         this.userDatabase = userDatabase;
     }
 
+    /**
+     * 유저 리스트 전체를 조회할 수 있습니다.
+     */
     @GetMapping
     public String userList(Model model) {
         List<User> users = userDatabase.findAll();
@@ -32,11 +35,17 @@ public class UserController {
         return "user/list";
     }
 
+    /**
+     * 회원가입 폼을 사용자에게 보여줍니다.
+     */
     @GetMapping("/add")
     public String userForm() {
         return "user/form";
     }
 
+    /**
+     * 사용자가 작성한 내용을 바탕으로 유저를 생성하고 데이터베이스에 저장합니다.
+     */
     @PostMapping("/add")
     public String addUser(@ModelAttribute User user) {
         userDatabase.save(user);
@@ -44,6 +53,12 @@ public class UserController {
         return "redirect:/users";
     }
 
+    /**
+     * 사용자가 요청한 닉네임으로 데이터베이스에 저장된 프로필을 조회합니다.
+     *
+     * @param nickname 사용자가 요청한 닉네임입니다.
+     * @return 닉네임과 일치하는 유저가 없다면 홈으로 리다이렉트합니다. 아니면 유저 프로필 경로를 반환합니다.
+     */
     @GetMapping("/profile/{nickname}")
     public String userProfile(@PathVariable String nickname, Model model) {
         Optional<User> optionalUser = userDatabase.findBy(nickname);
