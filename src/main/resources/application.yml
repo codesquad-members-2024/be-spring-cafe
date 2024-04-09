@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: spring-cafe
+
+  mustache:
+    suffix: .html
+    servlet:
+      cache: false
+
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
