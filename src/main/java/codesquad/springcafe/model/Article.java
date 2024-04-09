@@ -1,14 +1,14 @@
 package codesquad.springcafe.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Article {
-    private final String writer;
+    private String writer;
     private String title;
     private String content;
     private Long id;
-    private LocalDate writeDate;
+    private LocalDateTime writeDate;
     private long views;
 
     public Article(String writer, String title, String content) {
@@ -18,15 +18,19 @@ public class Article {
         this.views = 0;
     }
 
-    public String getWriter() {
-        return writer;
-    }
-
     /**
      * 조회수를 증가시킵니다.
      */
     public void increaseViews() {
         views++;
+    }
+
+    public String getWriter() {
+        return writer;
+    }
+
+    public void setWriter(String writer) {
+        this.writer = writer;
     }
 
     public String getTitle() {
@@ -53,11 +57,11 @@ public class Article {
         this.id = id;
     }
 
-    public LocalDate getWriteDate() {
+    public LocalDateTime getWriteDate() {
         return writeDate;
     }
 
-    public void setWriteDate(LocalDate writeDate) {
+    public void setWriteDate(LocalDateTime writeDate) {
         this.writeDate = writeDate;
     }
 
@@ -92,4 +96,5 @@ public class Article {
                 ", id=" + id +
                 '}';
     }
+
 }

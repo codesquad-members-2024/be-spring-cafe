@@ -44,7 +44,7 @@ public class UserController {
         return "redirect:/users";
     }
 
-    @GetMapping("/user/{nickname}")
+    @GetMapping("/profile/{nickname}")
     public String userProfile(@PathVariable String nickname, Model model) {
         Optional<User> optionalUser = userDatabase.findBy(nickname);
         if (optionalUser.isEmpty()) {

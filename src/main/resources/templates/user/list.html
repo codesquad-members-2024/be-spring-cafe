@@ -37,7 +37,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="user:${users}">
-                        <td><a th:href="@{/users/user/{nickname}(nickname=${user.nickname})}"
+                        <td><a th:href="@{/users/profile/{nickname}(nickname=${user.nickname})}"
                                th:text="${user.nickname}">테스터
                             1</a></td>
                         <td th:text="${user.email}">test1@gmail.com</td>
