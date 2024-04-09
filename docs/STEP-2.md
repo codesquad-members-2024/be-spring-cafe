@@ -9,18 +9,18 @@
 
 ## 2) 글쓰기를 담당하는 ```ArticleController``` 구현
 - [x] ```/qna```로 ```GET```요청이 들어오면 ```/qna/form.html```을 보여준다
-- [ ] 질문 작성한 폼을 가지고 ```/qna/questions```로 ```POST```요청을 보낸다.
-- [ ] ```/qna/questions```에 대한 POST 요청을 처리한다
-- [ ] ```/``` 경로로 리다이렉트한다.
+- [x] 질문 작성한 폼을 가지고 ```/qna/questions```로 ```POST```요청을 보낸다.
+- [x] ```/qna/questions```에 대한 POST 요청을 처리한다
+- [x] ```/``` 경로로 리다이렉트한다.
 
 ## 3) qna를 저장하는 DB와 Model 구현
-- [ ] Article 객체 생성
+- [x] Article 객체 생성
     - 글쓴이, 제목, 내용, 생성 시간 [4개!]
-- [ ] ArticleDatabse 데이터베이스 생성 [ArrayList로 생성]
+- [x] ArticleDatabse 데이터베이스 생성 [ArrayList로 생성]
 
 ## 4) qna 목록 출력하기
-- [ ] Model에 ArrayList 객체를 넘겨서 처리한다
-- [ ] Mustache의 부분 템플릿을 활용해서 arrayList를 순회하여 보여준다
+- [x] Model에 ArrayList 객체를 넘겨서 처리한다
+- [x] Mustache의 부분 템플릿을 활용해서 arrayList를 순회하여 보여준다
 
 ## 5) 게시글 상세보기
 - [ ] 게시글 제목을 클릭했을 때, 게시글 상세 피이지에 접속하도록 한다
@@ -51,4 +51,55 @@
 | GET /               | 등록된 모든 qna를 보여준다           |       |
 
 ---
-v
+# 🤯 마주친 오류
+
+## REDIRECT 시에 Model 넘기기?
+- ```Step-2``` 글쓰기 기능 구현을 하면서 POST로 Qna 처리를 한 후, ```/```경로로 리다이렉트를 해주어야 했다.
+- 기존에는 ```Model model```을 선언하여, model.setAttribute로 값을 넘겨주었다.
+### 문제사항
+- redirect 시에는, ResponseBody가 없기 때문에 Model을 넘기기 힘들지 않을까?!
+- 따라서, 기본적인 Model을 사용하면 안된다.
+
+### ⭕️ 해결
+- 일단은 ```/```경로로 접속하게 된다면, ```ArticleDatabase```에 있는 모든 Article을 가져오도록 구현하면 된다.
+- 그렇다면, ```MainController```에서 ```Get```요청이 들어올 때, ```ArticleDatabase.getAllArticles```을 통해 ```/main/index.html```에 보내주면 도니다.
+
+> 하지만, 이러한 방법 말고 Redirect시에는 아예 값을 넘겨줄수는 없는가?
+
+### 기본적으로, Model속성을 적용하면 URL의 쿼리 문으로 가게 된다!
+```
+@RequestMapping("/redirect")
+public String redirect(Model model) {
+	model.addAttribute("mesg", "hello");
+	return "redirect:main";
+}
+```
+
+```
+url : localhost:8080/redirect/main?mseg=hello
+```
+- 이렇게 된다면 리다이렉트 하려는 요소들이 모두 보이게 되어, 정상적인 동작이 이루어지지 않을 수 있다!
+
+### RedirectAttributes 를 사용하자!
+- @RequestMapping 메소드의 파라미터 타입으로 RedirectAttributes 객체를 지정하면 특정 속성을 리다이렉트되는 뷰 페이지에서 사용할 수 있도록 전달할 수 있다.
+- 메소드가 리다이렉트되면 RedirectAttributes 객체의 내용이 사용되고, 리다이렉트되지 않는 경우 Model 객체의 내용이 사용된다.
+
+> ### Flash Attributes
+- RedirectAttributes를 사용하여 리다이렉트되는 주소로 데이터를 전달하기 위해 플래시 속성(Flash Attributes)을 사용!
+  - 한 번 쓴 값을 남아있으면 안되기 때문!
+- 플래시 속성은 하나의 요청에서 속성을 저장하고 다른 곳에서 사용하기 위한 방법을 제공
+  - 현재 ```/``` 리다이렉션에도 쓸 수 있겠지만, 작성한 모든 qna가 모든 사용자들에게 보여야 하므로 ```/``` GetMapping이 이루어질때 동적으로 생성하는 것이 더 좋아보인다.
+```java
+@RequestMapping("/redirect2")
+public String redirect(RedirectAttributes rttr) {
+	rttr.addFlashAttribute("mesg", "hello");
+	return "redirect:main";
+}
+```
+- 위의 방식을 쓰면, main에서 model 객체를 사용하는 것 처럼 사용할 수 있다.
+```html
+Model 객체 : ${ mesg } <br>
+Model 객체 : <%= request.getAttribute("mesg") %> <br>
+
+-> 모두 hello
+```

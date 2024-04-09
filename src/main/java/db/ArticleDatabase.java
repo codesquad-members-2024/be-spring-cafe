@@ -18,7 +18,8 @@ public class ArticleDatabase {
     }
 
     public static void addArticle(Article article) {
-        articles.add(article);
+        articles.add(0, article);   // 들어온 순으로 저장하기 위해 0부터 저장
+        // Stack으로 바꾸어도 가능
         logger.debug("Article [{}] Added , Total Articles : {}", article, articles.size());
     }
 
