@@ -52,7 +52,7 @@ class MemberServiceTest {
         memberService.join(member2);
 
         // when
-        Optional<Member> findMember = memberService.findMember(2L);
+        Optional<Member> findMember = memberService.findMember("ghost");
 
         // then
         assertThat(findMember).isPresent();

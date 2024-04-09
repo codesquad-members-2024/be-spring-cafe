@@ -50,9 +50,9 @@ public class MemberController {
         return "redirect:/members";
     }
 
-    @GetMapping("/{id}")
-    public String memberInfo(@PathVariable("id") long id, Model model) {
-        Optional<Member> findMember = memberService.findMember(id);
+    @GetMapping("/{loginId}")
+    public String memberInfo(@PathVariable("loginId") String loginId, Model model) {
+        Optional<Member> findMember = memberService.findMember(loginId);
 
         if (findMember.isEmpty()) {
             return "error/404";

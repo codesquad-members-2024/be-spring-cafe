@@ -27,8 +27,10 @@ public class MemberRepositoryInMemory implements MemberRepository {
     }
 
     @Override
-    public Optional<Member> findById(long id) {
-        return Optional.ofNullable(store.get(id));
+    public Optional<Member> findById(String loginId) {
+        return store.values().stream()
+                .filter(member -> member.getLoginId().equals(loginId))
+                .findAny();
     }
 
     @Override

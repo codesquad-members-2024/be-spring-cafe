@@ -22,7 +22,7 @@
                 <tr th:each="member, memberIter : ${members}">
                     <th scope="row" th:text="${memberIter.count}">1</th>
                     <th>
-                        <a th:href="@{members/{id}(id=${member.getId()})}" th:text="${member.loginId}"> yelly </a>
+                        <a th:href="@{|/members/${member.loginId}|}" th:text="${member.loginId}"> yelly </a>
                     </th>
                     <td th:text="${member.userName}">옐리</td>
                     <td th:text="${member.email}">yelly@test.com</td>

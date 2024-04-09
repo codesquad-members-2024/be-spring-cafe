@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface MemberService {
     Member join(Member member);
 
-    Optional<Member> findMember(long id);
+    Optional<Member> findMember(String loginId);
 
     List<Member> findAllMember();
 }

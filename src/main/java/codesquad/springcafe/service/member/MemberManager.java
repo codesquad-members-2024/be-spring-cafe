@@ -22,8 +22,8 @@ public class MemberManager implements MemberService {
     }
 
     @Override
-    public Optional<Member> findMember(long id) {
-        return repository.findById(id);
+    public Optional<Member> findMember(String loginId) {
+        return repository.findById(loginId);
     }
 
     @Override

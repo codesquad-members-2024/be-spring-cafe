@@ -61,7 +61,7 @@ class MemberRepositoryTest {
         repository.save(member);
 
         // when
-        Optional<Member> findMember = repository.findById(1L);
+        Optional<Member> findMember = repository.findById("yelly");
 
         // then
         assertThat(findMember).isPresent();
@@ -72,7 +72,7 @@ class MemberRepositoryTest {
     @Test
     void findById_fail() {
         // when
-        Optional<Member> findMember = repository.findById(1L);
+        Optional<Member> findMember = repository.findById("yelly");
 
         // then
         assertThat(findMember).isEmpty();
