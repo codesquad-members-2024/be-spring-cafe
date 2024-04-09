@@ -3,6 +3,7 @@ package codesquad.springcafe.article.repository;
 import codesquad.springcafe.article.Article;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class MemoryArticleRepository implements ArticleRepository{
     @Override
     public void add(Article article) throws IllegalArgumentException {
         article.setId(nowIndex);
-        article.setCreatedDateTime(LocalDateTime.now());
+        article.setCreatedDateTime(Timestamp.valueOf(LocalDateTime.now()));
 
         articles.put(nowIndex, article);
         nowIndex++;
@@ -36,5 +37,10 @@ public class MemoryArticleRepository implements ArticleRepository{
     @Override
     public List<Article> findAll() {
         return new ArrayList<>(articles.values());
+    }
+
+    @Override
+    public void addPoint(Article article) {
+        article.addPoint();
     }
 }

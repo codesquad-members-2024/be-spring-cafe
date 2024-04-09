@@ -28,7 +28,7 @@ public class ArticleController {
     @GetMapping("/{id}")
     public String showArticle(@PathVariable("id") int id, Model model) {
         Article article = articleRepository.findById(id);
-        article.addPoint();
+        articleRepository.addPoint(article);
 
         model.addAttribute("article", article);
         return "qna/show";
