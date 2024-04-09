@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MemberServiceImpl implements MemberService {
+public class MemberManager implements MemberService {
     private final MemberRepository repository;
 
     @Autowired
-    public MemberServiceImpl(MemberRepository repository) {
+    public MemberManager(MemberRepository repository) {
         this.repository = repository;
     }
 
