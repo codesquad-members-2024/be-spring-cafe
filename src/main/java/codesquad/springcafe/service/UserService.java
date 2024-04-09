@@ -19,7 +19,7 @@ public class UserService {
         userDatabase.saveUser(user);
     }
 
-    public List<User> findMembers() {
+    public List<User> findAllUsers() {
         return userDatabase.findAllUsers();
     }
 
