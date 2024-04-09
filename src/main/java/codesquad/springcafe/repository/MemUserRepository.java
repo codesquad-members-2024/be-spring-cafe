@@ -13,7 +13,7 @@ public class MemUserRepository implements UserRepository{
 
     Map<String , User> users = new ConcurrentHashMap<>();
     @Override
-    public void addUser(User user) {
+    public void addUser(User user) throws IllegalArgumentException{
         users.put(user.getId() , user);
     }
 

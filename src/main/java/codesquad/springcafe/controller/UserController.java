@@ -29,7 +29,14 @@ public class UserController {
 
         // 회원가입
         User user = new User(id, password, name, email);
-        userRepository.addUser(user);
+
+        try {
+            userRepository.addUser(user);
+        }catch (IllegalArgumentException alreadyExistsId){
+            // 사용자에게 알림 ? 
+            return "redirect:/user/form";
+        }
+
         log.info(user.toString());
         return "redirect:/user/users";
     }
