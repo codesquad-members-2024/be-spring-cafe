@@ -1,19 +1,26 @@
-# Read Me First
-The following was discovered as part of building this project:
+## URL 컨벤션
+| URL             | 기능            |
+|-----------------|---------------|
+| GET /user/:id/form | 유저 정보 수정 form |
+| POST /user/:id  | 유저 정보 수정      |
+| GET /qna/:id    | 글 상세 조회       |
+| POST /qna      | 질문 글 등록       |
 
-* The original package name 'codesquad.spring-cafe' is invalid and this project uses 'codesquad.springcafe' instead.
 
-# Getting Started
 
-### Reference Documentation
-For further reference, please consider the following sections:
+### Nav의 `개인정보 수정` 버튼
 
-* [Official Gradle documentation](https://docs.gradle.org)
-* [Spring Boot Gradle Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/3.2.4/gradle-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/3.2.4/gradle-plugin/reference/html/#build-image)
+- 상단의 `개인정보 수정` 버튼을 누르면 로그인 된 계정의 정보 수정 페이지로 이동시킴
+- 로그인 상태가 아니라면 로그인으로 리다이렉트
+  - Interceptor 사용하여 /user 요청에 대해서는 로그인 여부를 확인하도록 함
+  - 버튼이 html 의 `<a>`  태그로 되어있는데, 이때문에 로그아웃을 `POST`로 요청하지 못함 -> `GET`으로 사용중
+  
+| URL              | 기능                  |
+|------------------|---------------------|
+| POST /user/login | 로그인                 |
+| GET /user/update | 로그인 된 계정의 정보 수정 페이지 |
+| GET /user/logout | 로그아웃                |
+| POST /qna        | 질문 글 등록             |
 
-### Additional Links
-These additional references should also help you:
 
-* [Gradle Build Scans – insights for your project's build](https://scans.gradle.com#gradle)
 

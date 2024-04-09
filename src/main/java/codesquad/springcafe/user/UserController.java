@@ -1,11 +1,14 @@
 package codesquad.springcafe.user;
 
-import codesquad.springcafe.user.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -13,17 +16,17 @@ import static org.slf4j.LoggerFactory.getLogger;
 @RequestMapping("/user")
 public class UserController {
     private static final Logger log = getLogger(UserController.class);
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @PostMapping("")
-    public String createUser(@ModelAttribute User user){
+    public String createUser(@ModelAttribute User user) {
         try {
-            userRepository.addUser(user);
+            userService.create(user);
         } catch (IllegalArgumentException alreadyExistsId) {
             return "redirect:/user/form/fail";
         }
@@ -31,27 +34,40 @@ public class UserController {
         log.debug(user.toString());
         return "redirect:/user/users";
     }
+
     @PostMapping("/login")
     public String login(@RequestParam("userId") String id,
-                        @RequestParam("password") String password) {
+                        @RequestParam("password") String password,
+                        HttpServletRequest request) {
 
-        // 로그인 학인
-        log.debug("로그인됨 : " + id + " , " + password);
+        UserDTO userDTO;
+        if ((userDTO = userService.login(id, password)) != null) {
+            HttpSession session = request.getSession();
+            session.setAttribute("loginUser", userDTO);
+            session.setMaxInactiveInterval(60 * 30);
+
+            log.info("로그인됨 : " + id);
+        }
+
         return "redirect:/";
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/user/login";
+    }
+
     @PostMapping("/{id}")
-    public String update(@PathVariable("id") String id ,
+    public String update(@PathVariable("id") String id,
                          @RequestParam("password") String password,
                          @RequestParam("name") String name,
                          @RequestParam("email") String email,
-                         Model model){
+                         Model model) {
 
-
-        if(userRepository.findUserById(id).isCorrectPassword(password)){
-            userRepository.update(new User(id , password, name , email));
+        if (userService.update(new User(id, password, name, email))) {
             model.addAttribute("alert", "회원 정보 변경 성공!");
-        }else {
+        } else {
             model.addAttribute("alert", "비밀번호가 일치하지 않습니다!");
         }
 
@@ -78,7 +94,9 @@ public class UserController {
 
     @GetMapping("/users")
     public String userList(Model model) {
-        model.addAttribute("users" , userRepository.findAll());
+        List<UserDTO> users = userService.userList();
+
+        model.addAttribute("users", users);
         return "user/list";
     }
 
@@ -89,15 +107,26 @@ public class UserController {
 
     @GetMapping("/{id}")
     public String profile(@PathVariable("id") String id, Model model) {
-        model.addAttribute("user", userRepository.findUserById(id));
+        model.addAttribute("user", userService.getUser(id));
         return "user/profile";
     }
 
     @GetMapping("{id}/form")
-    public String updateForm(@PathVariable("id") String id , Model model){
+    public String updateForm(@PathVariable("id") String id, Model model) {
         model.addAttribute("alert", "");
         model.addAttribute("alert_section", false);
         model.addAttribute("userId", id);
+
+        return "user/update_form";
+    }
+
+    @GetMapping("/update")
+    public String myUpdateForm(HttpServletRequest request, Model model) {
+        UserDTO loginUser = (UserDTO) request.getSession().getAttribute("loginUser");
+
+        model.addAttribute("alert", "");
+        model.addAttribute("alert_section", false);
+        model.addAttribute("userId", loginUser.id());
 
         return "user/update_form";
     }
