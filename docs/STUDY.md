@@ -170,7 +170,7 @@ Service -> Controller : 요청 처리 결과 반환
 # 🔎 ```VO? DTO?``` 차이점
 ## DTO (Data Transfer Object)
 - 순수하게 데이터를 담아 계층 간으로 전달하는 객체
-![img.png](img.png)
+![img.png](img/img.png)
 - 생성자를 이용한, 불변 객체로 동작하게 하자!
 ```java
 //생성자를 이용한 불변 객체
@@ -207,7 +207,7 @@ public class UserDTO {
 - VO는 서로 다른 이름을 갖는 VO 인스턴스라도 모든 속성 값이 같다면 두 인스턴스는 같은 객체인 것이 핵심
 
 ## 차이점 정리
-![img_1.png](img_1.png)
+![img_1.png](img/img_1.png)
 
 ```
 목적:

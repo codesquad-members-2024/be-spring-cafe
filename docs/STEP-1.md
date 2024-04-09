@@ -44,8 +44,35 @@
 ```
 
 - [x] 경로를 /users/{userId}로 하여 GET 요청을 보낸다
-- [ ] /users/{userId}로 전달된 GET 요청을 처리하여 ```/users/profile.html```로 보낸다
-- [ ] /users/profile.html에서 유저 아이디에 해당하는 유저 정보를 확인한다.
+- [x] /users/{userId}로 전달된 GET 요청을 처리하여 ```/users/profile.html```로 보낸다
+- [x] /users/profile.html에서 유저 아이디에 해당하는 유저 정보를 확인한다.
+
+## 5) 중복 html 코드 제거
+- ```templates```에 있는 html 파일들의 nav 부분이 중복된다.
+  - 또한, 추후에 로그인이 되었을 경우와 안되었을 경우를 분리하기 위해 ```mustache 부분 템플릿```이 필요
+- ```/templates/base``` 폴더에 html 파일을 생성
+  - ```application.properties```에 suffix를 .html로 해놓았기 때문에, base 폴더의 부분 템플릿 확장자는 ```.html```로 구현
+### mustache 부분 템플릿 사용법
+- ```navBarNav.html```
+```html
+<ul class="nav navbar-nav navbar-right">
+    <li class="active"><a href="/users/list">멤버 리스트</a></li>
+    <li><a class="black-component" href="/users/login" role="button">로그인</a></li>
+    <li><a class="black-component" href="/users" role="button">회원가입</a></li>
+</ul>
+```
+- 위의 내비바 html을 적용하고자 하는 html에 주입한다.
+
+- ```form.html```
+```html
+ <nav class="navbar navbar-fixed-top header">
+      <div class="col-md-12">
+          {{> /base/navBarHeader}}  
+          {{> /base/navBarNav}} <!--해당 부분-->
+      </div>
+</nav>
+```
+- {{> 파일경로/파일이름}} 을 통해 html 요소를 넣어줄 수 있다!
 
 ---
 
