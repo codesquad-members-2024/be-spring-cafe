@@ -1,4 +1,4 @@
-package codesquad.springcafe.domain;
+package codesquad.springcafe.user;
 
 public class User {
     private String userId;

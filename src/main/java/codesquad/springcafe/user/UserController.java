@@ -1,7 +1,6 @@
-package codesquad.springcafe.controller;
+package codesquad.springcafe.user;
 
-import codesquad.springcafe.domain.User;
-import codesquad.springcafe.repository.UserRepository;
+import codesquad.springcafe.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -1,4 +1,4 @@
-package codesquad.springcafe.controller;
+package codesquad.springcafe.article;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package codesquad.springcafe.domain;
+package codesquad.springcafe.article;
 
 import java.time.LocalDateTime;
 

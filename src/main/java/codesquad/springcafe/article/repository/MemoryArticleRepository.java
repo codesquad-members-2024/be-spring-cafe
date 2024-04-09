@@ -1,6 +1,6 @@
-package codesquad.springcafe.repository;
+package codesquad.springcafe.article.repository;
 
-import codesquad.springcafe.domain.Article;
+import codesquad.springcafe.article.Article;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
