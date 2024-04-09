@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ArticleServiceImpl implements ArticleService {
+public class ArticleManagementService implements ArticleService {
     private final ArticleRepository articleRepository;
 
     @Autowired
-    public ArticleServiceImpl(ArticleRepository articleRepository) {
+    public ArticleManagementService(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
 
