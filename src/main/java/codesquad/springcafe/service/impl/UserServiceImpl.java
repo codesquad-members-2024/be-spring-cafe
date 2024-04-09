@@ -28,12 +28,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User modifyUser(User user) throws Exception {
-        return null;
+        return userRepository.modifyUser(user);
     }
 
     @Override
     public User deleteUser(User user) {
-        return null;
+        return userRepository.deleteUser(user);
     }
 
     @Override
