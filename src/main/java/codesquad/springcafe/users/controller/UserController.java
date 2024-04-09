@@ -30,8 +30,14 @@ public class UserController {
     }
 
     @GetMapping
-    public String showUserForm() {
-        return "/user/form";
+    public String showUsers(Model model) {
+
+        ArrayList<User> users = userService.getAllUsers();
+
+        model.addAttribute("users", users);
+        model.addAttribute("totalUsers", users.size());
+
+        return "/user/list";
     }
 
     @PostMapping
@@ -44,17 +50,10 @@ public class UserController {
         return "/user/login_success";
     }
 
-    @GetMapping("/list")
-    public String showUsers(Model model) {
-
-        ArrayList<User> users = userService.getAllUsers();
-
-        model.addAttribute("users", users);
-        model.addAttribute("totalUsers", users.size());
-
-        return "/user/list";
+    @GetMapping("/join")
+    public String showUserForm() {
+        return "/user/form";
     }
-
     @GetMapping("/{userId}")
     public String getUserProfile(@PathVariable String userId, Model model) {
         User user = userService.findUserById(userId)
