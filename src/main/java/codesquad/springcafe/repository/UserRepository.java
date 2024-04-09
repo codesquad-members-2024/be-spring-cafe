@@ -31,4 +31,9 @@ public class UserRepository {
     public User findUserBySequence(Long userSequence) {
         return users.get(userSequence);
     }
+
+    public void clear() {
+        users.clear();
+        sequence.setOpaque(0);
+    }
 }
