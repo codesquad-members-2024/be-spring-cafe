@@ -4,7 +4,7 @@ import codesquad.springcafe.dto.Article;
 import java.util.List;
 
 public interface ArticleService {
-    int addArticle(Article article);
+    long addArticle(Article article);
 
     Article findArticleById(int id) throws Exception;
 
@@ -14,5 +14,5 @@ public interface ArticleService {
 
     List<Article> findAllArticle();
 
-    int increaseViewCount(Article article);
+    long increaseViewCount(Article article);
 }

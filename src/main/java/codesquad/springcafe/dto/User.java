@@ -3,13 +3,13 @@ package codesquad.springcafe.dto;
 public class User {
     private static final String TO_STRING_FORMAT = "[사용자] %s, %s, %s, %s";
 
-    private Long id; // TODO: 현재는 User를 List로 저장하므로 id 사용 X. 나중에 DB 연결시 사용한다.
+    private long id;
     private String userId;
     private String userPw;
     private String userName;
     private String userEmail;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
@@ -25,7 +25,7 @@ public class User {
         return userEmail;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

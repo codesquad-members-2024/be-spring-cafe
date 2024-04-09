@@ -17,7 +17,7 @@ public class ArticleManagementService implements ArticleService {
     }
 
     @Override
-    public int addArticle(Article article) {
+    public long addArticle(Article article) {
         return articleRepository.addArticle(article);
     }
 
@@ -42,7 +42,7 @@ public class ArticleManagementService implements ArticleService {
     }
 
     @Override
-    public int increaseViewCount(Article article) {
+    public long increaseViewCount(Article article) {
         return articleRepository.increaseViewCount(article);
     }
 }

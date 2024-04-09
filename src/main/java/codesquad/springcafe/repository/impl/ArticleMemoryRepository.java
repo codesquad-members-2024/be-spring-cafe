@@ -15,7 +15,7 @@ public class ArticleMemoryRepository implements ArticleRepository {
     private static List<Article> articles = new ArrayList<>();
 
     @Override
-    public int addArticle(Article article) {
+    public long addArticle(Article article) {
         int id = articles.size() + 1;
         article.setId(id);
         articles.add(article);
@@ -36,12 +36,13 @@ public class ArticleMemoryRepository implements ArticleRepository {
 
     @Override
     public Article modifyArticle(Article article) throws Exception {
-        return null;
+        return articles.set((int) (article.getId() - 1), article);
     }
 
     @Override
     public Article deleteArticle(Article article) {
-        return null;
+        articles.remove(article);
+        return article;
     }
 
     @Override
@@ -50,8 +51,8 @@ public class ArticleMemoryRepository implements ArticleRepository {
     }
 
     @Override
-    public int increaseViewCount(Article article) {
-        int increasedViewCount = article.getViewCount() + 1;
+    public long increaseViewCount(Article article) {
+        long increasedViewCount = article.getViewCount() + 1;
         article.setViewCount(increasedViewCount);
         return increasedViewCount;
     }
