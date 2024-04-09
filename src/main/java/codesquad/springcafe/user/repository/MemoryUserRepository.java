@@ -13,6 +13,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MemoryUserRepository implements UserRepository{
 
     private final Map<String , User> users = new ConcurrentHashMap<>();
+
+    public MemoryUserRepository(){
+        addUser(new User("tester" , "1234" , "테스터", "test@naver.com"));
+    }
     @Override
     public void addUser(User user) throws IllegalArgumentException{
         if(users.containsKey(user.getUserId())) throw new IllegalArgumentException();

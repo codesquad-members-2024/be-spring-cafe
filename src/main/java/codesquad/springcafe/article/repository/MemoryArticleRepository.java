@@ -12,15 +12,20 @@ import java.util.concurrent.ConcurrentHashMap;
 @Repository
 public class MemoryArticleRepository implements ArticleRepository{
 
-    Map<Integer , Article> articles = new ConcurrentHashMap<>();
+    private final Map<Integer , Article> articles = new ConcurrentHashMap<>();
+    private int nowIndex = 1;
 
+    public MemoryArticleRepository(){
+        add(new Article("테스터" , " 테스트용 제목", "테스트용 내용"));
+    }
 
     @Override
     public void add(Article article) throws IllegalArgumentException {
-        article.setId(articles.size() + 1);
+        article.setId(nowIndex);
         article.setCreatedDateTime(LocalDateTime.now());
 
-        articles.put(articles.size() + 1 , article);
+        articles.put(nowIndex, article);
+        nowIndex++;
     }
 
     @Override

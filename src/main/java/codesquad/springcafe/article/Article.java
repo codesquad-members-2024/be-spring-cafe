@@ -24,4 +24,8 @@ public class Article {
     public void setCreatedDateTime(LocalDateTime created){
         this.created_datetime = created;
     }
+
+    public void addPoint(){
+        this.point +=1;
+    }
 }

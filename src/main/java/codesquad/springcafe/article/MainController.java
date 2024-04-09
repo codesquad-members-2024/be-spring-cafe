@@ -20,8 +20,6 @@ public class MainController {
 
     @GetMapping("")
     public String index(Model model){
-        articleRepository.add(new Article("테스터" , " 테스트용 제목", "테스트용 내용"));
-
         model.addAttribute("articles", articleRepository.findAll());
         return "index";
     }
