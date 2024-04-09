@@ -24,6 +24,15 @@ public class UserDatabase {
         return userRequestDtoList;
     }
 
+    public User findByUserId(String userId) {
+        for (User user : userDatabase) {
+            if (user.getUserId().equals(userId)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
     public void clear() {
         userDatabase.clear();
     }
