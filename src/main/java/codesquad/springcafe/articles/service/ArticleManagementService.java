@@ -34,6 +34,7 @@ public class ArticleManagementService implements ArticleService {
 
     @Override
     public Optional<Article> findArticleById(int articleId) {
+        articleId = articleId - 1;
         return ArticleDatabase.findArticleById(articleId);
     }
 }

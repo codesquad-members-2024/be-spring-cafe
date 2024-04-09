@@ -28,7 +28,10 @@ public class ArticleDatabase {
     }
 
     public static Optional<Article> findArticleById(int articleId) {
-        int arrayIndex = articleId - 1;
-        return Optional.of(articles.get(arrayIndex));
+        if (articleId >= 0 && articleId < articles.size()) {
+            return Optional.of(articles.get(articleId));
+        }
+        logger.error("Article ID : {}, But TotalArticles : {}", articleId, articles.size());
+        return Optional.empty();
     }
 }

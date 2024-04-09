@@ -59,10 +59,6 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public String getUserProfile(@PathVariable String userId, Model model) {
-
-        logger.debug("userId : {}", userId);
-
-        // user 정보가 없는 경우 404 에러 처리
         User user = userService.findUserById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
 
