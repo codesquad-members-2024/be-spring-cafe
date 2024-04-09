@@ -2,14 +2,37 @@ package codesquad.springcafe.Service;
 
 import codesquad.springcafe.Domain.User;
 import codesquad.springcafe.Repository.UserRepository;
-import codesquad.springcafe.Repository.UserRepositoryImpl;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service; //스프링 컨테이너에 등록
 
+@Service //component scan
 public class UserService {
     private final UserRepository userRepository;
-    public UserService(){
-        userRepository = new UserRepositoryImpl();
-    }
-    public void signUp(User user) {
 
+    @Autowired
+    public UserService(UserRepository userRepository){
+        this.userRepository = userRepository; //구현체 주입
+    }
+    public User signUp(User user) {
+        //모든 값이 올바른지 체크
+
+
+        //중복 회원 체크
+        validateDuplicateUser(user);
+
+        userRepository.save(user);
+        return user;
+    }
+
+    private void validateDuplicateUser(User user) {
+        userRepository.findById(user.getEmail())
+            .ifPresent(result -> {
+                throw new IllegalStateException("이미 유저가 존재함");
+            });
+    }
+
+    public List<User> findAllUser() {
+        return userRepository.findAll();
     }
 }
