@@ -23,21 +23,21 @@ public class UserController {
 
     @GetMapping
     public String getUserList(Model model) {
-        log.debug("user list");
+        log.info("user list");
         model.addAttribute("users", userService.findAllUsers());
         return "user/list";
     }
 
     @PostMapping
     public String register(@ModelAttribute User user) {
-        log.debug("register");
+        log.info("register");
         userService.join(user);
         return "redirect:/users";
     }
 
     @GetMapping("/{userSequence}")
     public String getUser(@PathVariable Long userSequence, Model model) {
-        log.debug("get User : {}", userSequence);
+        log.info("get User : {}", userSequence);
         User user = userService.findUserBySequence(userSequence);
         model.addAttribute("user", user);
         return "user/profile";

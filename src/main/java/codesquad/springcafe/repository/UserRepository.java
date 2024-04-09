@@ -21,7 +21,7 @@ public class UserRepository {
     public void saveUser(User user) {
         user.setUserSequence(sequence.incrementAndGet());
         users.put(user.getUserSequence(), user);
-        log.debug("user saved: {}", user.getUserId());
+        log.info("user saved: {}", user.getUserId());
     }
 
     public List<User> findAllUsers() {
