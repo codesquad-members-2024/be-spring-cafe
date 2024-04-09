@@ -29,9 +29,4 @@ public class UserMemoryDatabase implements UserDatabase {
     public List<User> findAll() {
         return new ArrayList<>(store.values());
     }
-
-    @Override
-    public void clear() {
-        store.clear();
-    }
 }
