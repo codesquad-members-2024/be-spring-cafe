@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>kakao Java Web Programming</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link th:href="@{/css/reset.css}" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script th:src="@{//html5shim.googlecode.com/svn/trunk/html5.js}"></script>
+    <![endif]-->
+    <link th:href="@{/css/user/join.css}" rel="stylesheet">
+    <div id="userId" th:text="${userId}" style="display:none;"></div>
+    <script>
+        function validateForm() {
+            var userId = document.getElementById("userId").textContent;
+            var userPw = document.getElementById("userPw").value;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/users/match_pw/" + userId, true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.valid) {
+                            window.location.href = "/users/update/" + userId;
+                        } else {
+                            alert("비밀번호가 일치하지 않습니다.");
+                        }
+                    } else {
+                        // 서버 에러 발생
+                        alert("서버 에러 발생");
+                    }
+                }
+            };
+            var formData = "userPw=" + encodeURIComponent(userPw);
+            xhr.send(formData);
+            return false; // 폼을 전송하지 않음
+        }
+    </script>
+</head>
+<body>
+<div class="background">
+    <nav class="navbar navbar-fixed-top header">
+        <div class="col-md-12">
+            <div class="navbar-header">
+                <a th:href="@{/home}" class="navbar-brand">
+                    <img src="/images/KakaoCI.png"/>
+                </a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active"><a th:href="@{/users/list}">멤버 리스트</a></li>
+                <li><a class="black-component" th:href="@{/users/login}" role="button">로그인</a></li>
+                <li><a class="black-component" th:href="@{/users/join}" role="button">회원가입</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container" id="main">
+        <header class="post-header">
+            <p class="title">비밀번호 확인</p>
+        </header>
+        <form name="question" class="info-container" onsubmit="return validateForm();">
+            <div class="form-group">
+                <label for="userPw">비밀번호</label>
+                <input type="password" class="form-control" id="userPw" name="userPw" placeholder="비밀번호를 입력하세요">
+            </div>
+            <button type="submit" class="btn btn-success clearfix pull-right">완료</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
