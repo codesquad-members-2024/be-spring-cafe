@@ -2,13 +2,14 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.service.UserService;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-@org.springframework.stereotype.Controller
+@Controller
 public class UserController {
 
     private final UserService userService;
