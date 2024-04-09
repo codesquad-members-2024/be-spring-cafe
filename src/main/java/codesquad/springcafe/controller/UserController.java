@@ -23,10 +23,6 @@ public class UserController {
 
     @PostMapping("")
     public String createUser(@ModelAttribute User user){
-
-        // 회원가입
-//        User user = new User(id, password, name, email);
-
         try {
             userRepository.addUser(user);
         } catch (IllegalArgumentException alreadyExistsId) {

@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/")
 public class MainController {
 
     private final ArticleRepository articleRepository;
@@ -17,7 +19,7 @@ public class MainController {
         this.articleRepository = articleRepository;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public String index(Model model){
         articleRepository.add(new Article("테스터" , " 테스트용 제목", "테스트용 내용"));
 
