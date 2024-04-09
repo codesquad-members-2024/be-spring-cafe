@@ -3,8 +3,7 @@ package codesquad.springcafe.articles.controller;
 
 import codesquad.springcafe.articles.service.ArticleService;
 import model.Article;
-import model.ArticleVO;
-import model.User;
+import model.ArticleData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +35,8 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String postArticle(ArticleVO articleVO, Model model) {
-        articleService.createArticle(articleVO);
+    public String postArticle(ArticleData articleData, Model model) {
+        articleService.createArticle(articleData);
         return "redirect:/";
     }
 

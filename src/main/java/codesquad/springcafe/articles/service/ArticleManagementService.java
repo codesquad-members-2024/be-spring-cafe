@@ -1,9 +1,8 @@
 package codesquad.springcafe.articles.service;
 
-import codesquad.springcafe.users.service.UserManagementService;
 import db.ArticleDatabase;
 import model.Article;
-import model.ArticleVO;
+import model.ArticleData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,10 +15,10 @@ public class ArticleManagementService implements ArticleService {
     private static final Logger logger = LoggerFactory.getLogger(ArticleManagementService.class);
 
     @Override
-    public void createArticle(ArticleVO articleVO) {
-        String userId = articleVO.getUserId();
-        String title = articleVO.getTitle();
-        String content = articleVO.getContent();
+    public void createArticle(ArticleData articleData) {
+        String userId = articleData.getUserId();
+        String title = articleData.getTitle();
+        String content = articleData.getContent();
 
         Article article = new Article(userId, title, content);
         logger.debug("Article Created : {}", article);

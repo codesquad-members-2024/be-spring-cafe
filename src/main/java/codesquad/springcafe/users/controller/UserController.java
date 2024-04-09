@@ -1,9 +1,8 @@
 package codesquad.springcafe.users.controller;
 
 import codesquad.springcafe.users.service.UserService;
-import db.UserDatabase;
 import model.User;
-import model.UserVO;
+import model.UserData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/users")
@@ -37,11 +35,11 @@ public class UserController {
     }
 
     @PostMapping
-    public String registerUser(UserVO userVO, Model model) {
-        userService.createUser(userVO);
+    public String registerUser(UserData userData, Model model) {
+        userService.createUser(userData);
 
-        model.addAttribute("userEmail", userVO.getEmail());
-        model.addAttribute("userId", userVO.getUserId());
+        model.addAttribute("userEmail", userData.getEmail());
+        model.addAttribute("userId", userData.getUserId());
 
         return "/user/login_success";
     }

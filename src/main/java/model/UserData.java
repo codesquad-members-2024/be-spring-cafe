@@ -1,11 +1,11 @@
 package model;
 
-public class UserVO {
+public class UserData {
     private final String email;
     private final String userId;
     private final String password;
 
-    public UserVO(String email, String userId, String password) {
+    public UserData(String email, String userId, String password) {
         this.email = email;
         this.userId = userId;
         this.password = password;

@@ -1,12 +1,12 @@
 package codesquad.springcafe.users.service;
 
-import model.UserVO;
+import model.UserData;
 import model.User;
 
 import java.util.*;
 
 public interface UserService {
-    void createUser(UserVO userVO);
+    void createUser(UserData userData);
 
     ArrayList<User> getAllUsers();
 
