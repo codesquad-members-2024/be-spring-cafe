@@ -85,7 +85,7 @@
               </thead>
               <tbody>
                 <tr th:each="user : ${users}">
-                    <th scope="row">1</th> <td th:text="${user.userId}">회원id</td> <td th:text="${user.name}">이름</td> <td th:text="${user.email}">이메일</td><td><a href="#" class="btn btn-success" role="button">수정</a></td>
+                    <th scope="row" th:text="${user.id}">번호</th> <td th:text="${user.userId}">회원id</td> <td th:text="${user.name}">이름</td> <td th:text="${user.email}">이메일</td><td><a href="#" class="btn btn-success" role="button">수정</a></td>
                 </tr>
               </tbody>
           </table>
