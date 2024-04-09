@@ -14,6 +14,7 @@ public class MemUserRepository implements UserRepository{
     Map<String , User> users = new ConcurrentHashMap<>();
     @Override
     public void addUser(User user) throws IllegalArgumentException{
+        if(users.containsKey(user.getId())) throw new IllegalArgumentException();
         users.put(user.getId() , user);
     }
 

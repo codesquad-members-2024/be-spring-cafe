@@ -18,6 +18,7 @@ public class UserController {
 
     @Autowired
     public UserController(UserRepository userRepository){
+    public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -35,6 +36,8 @@ public class UserController {
         }catch (IllegalArgumentException alreadyExistsId){
             // 사용자에게 알림 ? 
             return "redirect:/user/form";
+        } catch (IllegalArgumentException alreadyExistsId) {
+            return "redirect:/user/form/fail";
         }
 
         log.info(user.toString());
@@ -42,6 +45,18 @@ public class UserController {
     }
     @GetMapping("/form")
     public String userForm() {
+    public String userForm(Model model) {
+        model.addAttribute("alert", "");
+        model.addAttribute("alert_section", false);
+        return "user/form";
+    }
+
+    @GetMapping("/form/fail")
+    public String userFormWithAlert(Model model) {
+
+        // 사용자에게 알림
+        model.addAttribute("alert", "이미 존재하는 ID 입니다");
+        model.addAttribute("alert_section", true);
         return "user/form";
     }
 
@@ -58,6 +73,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public String profile(@PathVariable("id") String id , Model model) {
+    public String profile(@PathVariable("id") String id, Model model) {
         model.addAttribute("user", userRepository.findUserById(id));
         return "user/profile";
     }
