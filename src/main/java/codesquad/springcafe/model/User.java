@@ -1,10 +1,11 @@
 package codesquad.springcafe.model;
 
+import codesquad.springcafe.form.user.UserEditForm;
 import java.time.LocalDate;
 import java.util.Objects;
 
 public class User {
-    private String email;
+    private final String email;
     private String nickname;
     private String password;
     private LocalDate joinDate;
@@ -15,32 +16,28 @@ public class User {
         this.password = password;
     }
 
-    public User() {
+    public boolean hasSameNickname(String nickname) {
+        return this.nickname.equals(nickname);
+    }
+
+    public boolean hasSamePassword(String password) {
+        return this.password.equals(password);
+    }
+
+    public void update(UserEditForm form) {
+        this.nickname = form.nickname();
+        this.password = form.newPassword();
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getNickname() {
         return nickname;
     }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    
 
     public LocalDate getJoinDate() {
         return joinDate;

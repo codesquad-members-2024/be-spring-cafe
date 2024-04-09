@@ -3,30 +3,31 @@ package codesquad.springcafe.database.user;
 import codesquad.springcafe.model.User;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserMemoryDatabase implements UserDatabase {
-    private final Map<String, User> store = new ConcurrentHashMap<>();
+    private final List<User> store = new ArrayList<>();
 
     @Override
     public User save(User user) {
         user.setJoinDate(LocalDate.now());
-        store.put(user.getNickname(), user);
+        store.add(user);
         return user;
     }
 
     @Override
     public Optional<User> findBy(String nickname) {
-        return Optional.ofNullable(store.get(nickname));
+        return store.stream()
+                .filter(user -> user.hasSameNickname(nickname))
+                .findAny();
     }
 
     @Override
     public List<User> findAll() {
-        return new ArrayList<>(store.values());
+        return Collections.unmodifiableList(store);
     }
 }

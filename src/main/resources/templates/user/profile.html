@@ -8,41 +8,6 @@
     <link th:href="@{/css/reset.css}" rel="stylesheet">
     <link th:href="@{/css/user/form.css}" rel="stylesheet">
     <style>
-        .col-md-12 {
-            display: flex;
-            width: 100%;
-            justify-content: space-between;
-            margin-top: 20px;
-            margin-bottom: 30px;
-        }
-
-        .navbar-header {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .black-component {
-            display: flex;
-            flex-direction: column;
-            text-align: center;
-            justify-content: center;
-            width: 80px;
-            height: 30px;
-            font-size: 14px;
-            background-color: black;
-            color: white;
-        }
-
-        .black-component:hover {
-            background-color: #ffcd00;
-            color: black;
-        }
-
-        .navbar-right {
-            display: flex;
-        }
-
         .description {
             display: flex;
             flex-direction: column;
@@ -134,6 +99,9 @@
                 </tr>
                 </tbody>
             </table>
+            <div style="text-align: center; margin-top: 20px;">
+                <a th:href="@{/users/edit/{nickname}(nickname=${user.nickname})}" class="black-component">수정하기</a>
+            </div>
         </div>
     </div>
 </div>
