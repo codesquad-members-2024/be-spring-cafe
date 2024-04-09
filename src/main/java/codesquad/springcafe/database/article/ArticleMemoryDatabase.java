@@ -1,6 +1,7 @@
 package codesquad.springcafe.database.article;
 
 import codesquad.springcafe.model.Article;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ public class ArticleMemoryDatabase implements ArticleDatabase {
     @Override
     public Article save(Article article) {
         article.setId(++id);
+        article.setWriteDate(LocalDate.now());
         store.put(article.getId(), article);
         return article;
     }
@@ -30,8 +32,4 @@ public class ArticleMemoryDatabase implements ArticleDatabase {
         return new ArrayList<>(store.values());
     }
 
-    @Override
-    public void clear() {
-        store.clear();
-    }
 }

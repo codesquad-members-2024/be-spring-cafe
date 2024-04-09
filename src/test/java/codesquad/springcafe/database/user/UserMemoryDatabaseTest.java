@@ -1,23 +1,16 @@
-package codesquad.springcafe.database;
+package codesquad.springcafe.database.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import codesquad.springcafe.database.user.UserMemoryDatabase;
 import codesquad.springcafe.model.User;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class UserMemoryDatabaseTest {
 
     UserMemoryDatabase userMemoryDatabase = new UserMemoryDatabase();
-
-    @BeforeEach
-    void setUp() {
-        userMemoryDatabase.clear();
-    }
 
     @Test
     @DisplayName("데이터베이스에 유저를 저장하면 저장한 유저를 반환한다.")

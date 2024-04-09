@@ -10,6 +10,4 @@ public interface UserDatabase {
     Optional<User> findBy(String nickname);
 
     List<User> findAll();
-
-    void clear();
 }

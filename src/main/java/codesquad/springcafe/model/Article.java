@@ -1,5 +1,6 @@
 package codesquad.springcafe.model;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Article {
@@ -7,11 +8,25 @@ public class Article {
     private String title;
     private String content;
     private Long id;
+    private LocalDate writeDate;
+    private long views;
 
     public Article(String writer, String title, String content) {
         this.writer = writer;
         this.title = title;
         this.content = content;
+        this.views = 0;
+    }
+
+    public String getWriter() {
+        return writer;
+    }
+
+    /**
+     * 조회수를 증가시킵니다.
+     */
+    public void increaseViews() {
+        views++;
     }
 
     public String getTitle() {
@@ -36,6 +51,18 @@ public class Article {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public LocalDate getWriteDate() {
+        return writeDate;
+    }
+
+    public void setWriteDate(LocalDate writeDate) {
+        this.writeDate = writeDate;
+    }
+
+    public long getViews() {
+        return views;
     }
 
     @Override
