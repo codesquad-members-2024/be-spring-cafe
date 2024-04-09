@@ -1,31 +1,25 @@
 package codesquad.springcafe.domain;
 
 public class User {
-    private final String userId;
-    private final String password;
-    private final String name;
     private final String email;
+    private final String nickname;
+    private final String password;
 
-    public User(String userId, String password, String name, String email) {
-        this.userId = userId;
-        this.password = password;
-        this.name = name;
+    public User(String email, String nickname, String password) {
         this.email = email;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getName() {
-        return name;
+        this.nickname = nickname;
+        this.password = password;
     }
 
     public String getEmail() {
         return email;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
