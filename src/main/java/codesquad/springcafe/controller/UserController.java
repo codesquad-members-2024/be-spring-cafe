@@ -53,7 +53,6 @@ public class UserController {
     @GetMapping("/list")
     public String listForm(Model model) {
         List<User> users = userService.findAllUser();
-        model.addAttribute("userListSize", users.size());
         model.addAttribute("userList", users);
         return "user/list";
     }
