@@ -27,4 +27,8 @@ public class UserRepository {
     public List<User> findAllUsers() {
         return new ArrayList<User>(users.values());
     }
+
+    public User findUserBySequence(Long userSequence) {
+        return users.get(userSequence);
+    }
 }

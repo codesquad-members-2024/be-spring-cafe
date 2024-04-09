@@ -23,4 +23,7 @@ public class UserService {
         return userRepository.findAllUsers();
     }
 
+    public User findUserBySequence(Long userSequence) {
+        return userRepository.findUserBySequence(userSequence);
+    }
 }
