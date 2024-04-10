@@ -16,7 +16,7 @@ class UserMemoryDatabaseTest {
     @DisplayName("데이터베이스에 유저를 저장하면 저장한 유저를 반환한다.")
     void save() {
         User user = new User("sangchu@gmail.com", "상추", "123");
-        User saved = userMemoryDatabase.save(user);
+        User saved = userMemoryDatabase.add(user);
         assertThat(user).isEqualTo(saved);
     }
 
@@ -24,7 +24,7 @@ class UserMemoryDatabaseTest {
     @DisplayName("닉네임과 일치하는 유저를 찾을 수 있다.")
     void findByNickname() {
         User user = new User("sangchu@gmail.com", "상추", "123");
-        userMemoryDatabase.save(user);
+        userMemoryDatabase.add(user);
         User find = userMemoryDatabase.findBy("상추").get();
         assertThat(find).isEqualTo(user);
     }
@@ -33,7 +33,7 @@ class UserMemoryDatabaseTest {
     @DisplayName("닉네임과 일치하는 유저를 찾을 수 없으면 빈값을 반환한다.")
     void findByNicknameFailed() {
         User user = new User("sangchu@gmail.com", "상추", "123");
-        userMemoryDatabase.save(user);
+        userMemoryDatabase.add(user);
         Optional<User> optionalUser = userMemoryDatabase.findBy("배추");
         assertThat(optionalUser).isEmpty();
     }
@@ -44,8 +44,8 @@ class UserMemoryDatabaseTest {
         User user1 = new User("sangchu@gmail.com", "상추", "123");
         User user2 = new User("baechu@gmail.com", "배추", "123");
 
-        userMemoryDatabase.save(user1);
-        userMemoryDatabase.save(user2);
+        userMemoryDatabase.add(user1);
+        userMemoryDatabase.add(user2);
         List<User> users = userMemoryDatabase.findAll();
         assertThat(users).contains(user1, user2);
     }

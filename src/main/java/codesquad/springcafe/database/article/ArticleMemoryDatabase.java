@@ -15,7 +15,7 @@ public class ArticleMemoryDatabase implements ArticleDatabase {
     private Long id = 0L;
 
     @Override
-    public Article save(Article article) {
+    public Article add(Article article) {
         article.setId(++id);
         article.setWriteDate(LocalDateTime.now());
         store.put(article.getId(), article);

@@ -16,7 +16,7 @@ class ArticleMemoryDatabaseTest {
     @DisplayName("id와 일치하는 Article을 찾을 수 있다.")
     void findById() {
         Article article = new Article("상추", "타이틀1", "내용입니다.");
-        articleMemoryDatabase.save(article);
+        articleMemoryDatabase.add(article);
         Article result = articleMemoryDatabase.findBy(1L).get();
         assertThat(result.getWriter()).isEqualTo("상추");
         assertThat(result.getId()).isEqualTo(1);
@@ -26,7 +26,7 @@ class ArticleMemoryDatabaseTest {
     @DisplayName("id와 일치하는 Article이 존재하지 않으면 빈 결과를 반환한다.")
     void findByIdFailed() {
         Article article = new Article("상추", "타이틀1", "내용입니다.");
-        articleMemoryDatabase.save(article);
+        articleMemoryDatabase.add(article);
         Optional<Article> result = articleMemoryDatabase.findBy(2L);
         assertThat(result).isEmpty();
     }
@@ -36,8 +36,8 @@ class ArticleMemoryDatabaseTest {
     void findAll() {
         Article article1 = new Article("상추", "타이틀1", "내용입니다.");
         Article article2 = new Article("배추", "타이틀2", "내용입니다.");
-        articleMemoryDatabase.save(article1);
-        articleMemoryDatabase.save(article2);
+        articleMemoryDatabase.add(article1);
+        articleMemoryDatabase.add(article2);
         List<Article> result = articleMemoryDatabase.findAll();
 
         assertThat(result).contains(article1, article2);

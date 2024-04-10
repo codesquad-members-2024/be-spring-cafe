@@ -52,7 +52,7 @@ public class UserController {
      */
     @PostMapping("/add")
     public String addUser(@ModelAttribute User user) {
-        userDatabase.save(user);
+        userDatabase.add(user);
         logger.info("새로운 유저가 생성되었습니다. {}", user);
         return "redirect:/users";
     }
@@ -126,6 +126,6 @@ public class UserController {
     @PostConstruct
     public void createTestUser() {
         User user = new User("sangchu@gmail.com", "상추", "123");
-        userDatabase.save(user);
+        userDatabase.add(user);
     }
 }
