@@ -6,16 +6,17 @@
 
 # 📜 URL Convention
 
-| URL                               | 기능                             | 구현 상태 |
-|:----------------------------------|:-------------------------------|:-----:|
-| GET /users                        | 회원가입된 유저들을 보여준다.               |  ⭕️   |
-| POST /users                       | 입력된 폼을 가지고, 회원 가입을 수행한다        |  ⭕️   |
-| GET /users/join                   | 유저 회원가입 폼을 보여준다                |  ⭕️   |
-| GET /users/{{userId}}             | useeId에 해당하는 profile을 보여준다     |  ⭕️   |
-| GET /articles/write               | 게시물 입력하는 폼을 보여준다               |  ⭕️   |
-| POST /articles                    | 입력한 폼을 POST 요청으로 보낸다           |  ⭕️   |
-| GET /articles/{{articleId}}       | articleId에 해당하는 게시물 상세정보를 보여준다 |  ⭕️   |
-| GET / , GET /main                 | 등록된 모든 게시글들을 보여준다              |  ⭕️   |
+| URL                         | 기능                             | 구현 상태 |
+|:----------------------------|:-------------------------------|:-----:|
+| GET / , GET /main           | 등록된 모든 게시글들을 보여준다              |  ⭕️   |
+| GET /users                  | 회원가입된 유저들을 보여준다.               |  ⭕️   |
+| POST /users                 | 입력된 폼을 가지고, 회원 가입을 수행한다        |  ⭕️   |
+| GET /users/join             | 유저 회원가입 폼을 보여준다                |  ⭕️   |
+| GET /users/{{userId}}       | userId에 해당하는 profile을 보여준다     |  ⭕️   |
+| GET /users/{{userId}}/form  | userId에 해당하는 수정 페이지를 보여준다      |  ⭕️   | 
+| GET /articles/write         | 게시물 입력하는 폼을 보여준다               |  ⭕️   |
+| POST /articles              | 입력한 폼을 POST 요청으로 보낸다           |  ⭕️   |
+| GET /articles/{{articleId}} | articleId에 해당하는 게시물 상세정보를 보여준다 |  ⭕️   |
 
 ---
 
@@ -23,35 +24,61 @@
 
 ## 회원가입
 
-### 1) ```localhost:8080/users``` 로 접속
+### 1) ```localhost:8080/users/join```로 접속
 
-![img.png](readme/img.png)
+![img_1.png](readme/user/img_1.png)
 
-### 2) 회원가입 폼 작성 후, 회원가입 성공 화면
+### 2) 회원가입된 목록 조회
 
-![img.png](readme/img1.png)
+![img_2.png](readme/user/img_2.png)
 
-### 3) 회원가입한 유저들 목록 확인
+---
 
-![img.png](readme/img2.png)
+## 회원 정보 상세 페이지
 
-### 4) 유저 상세 정보 확인
+### 1) 유저 아이디를 클릭하여 접속
 
-![img.png](readme/img4.png)
+![img_3.png](readme/user/img_3.png)
 
+### 2) 존재하지 않는 유저 경로로 접속했을 경우
+
+![img_4.png](readme/user/img_4.png)
+> ![img_5.png](readme/user/img_5.png)
+
+---
+
+## 회원 정보 수정
+### 1) 수정하기 버튼을 클릭
+![img_6.png](readme/user/img_6.png)
+
+### 2) 정보들을 입력하여 수정
+- 아이디는 수정되지 않음
+![img_7.png](readme/user/img_7.png)
+
+### 3) 등록된 유저 정보와 다른 비밀번호를 입력했을 경우
+![img_8.png](readme/user/img_8.png)
+> ![img_9.png](readme/user/img_9.png)
+- 기존 PW : 123 
+- 수정 페이지에서 입력한 PW : 1234
+> ![img_10.png](readme/user/img_10.png)
+- 에러 로그가 뜨는 것을 볼 수 있다.
+
+### 4) 성공적으로 업데이트
+![img_11.png](readme/user/img_11.png)
+> ![img_12.png](readme/user/img_12.png)
 ---
 
 ## 글쓰기
 
 ### 1) ```localhost:8080/articles```로 접속
 
-![img.png](readme/img5.png)
+![img.png](readme/article/img5.png)
 
 ### 2) 글 작성 후, 메인 화면 리다이렉션
 
 - 최신 작성한 글이 가장 상단에 보인다
 
-![img_1.png](readme/img6.png)
+![img_1.png](readme/article/img6.png)
 
 ### 3) 제목을 눌러 상세 페이지 확인
 
@@ -59,7 +86,7 @@
     - 작성자 : default로 "작성자" 가 들어간다.
         - 로그인 기능 구현 후 수정 예정
 
-![img_2.png](readme/img7.png)
+![img_2.png](readme/article/img7.png)
 
 ---
 
@@ -110,13 +137,17 @@
 ---
 
 ## ```@Configuration``` 과 ```WebMvcConfigurer```을 사용하여 URL과 HTML 매핑
+
 - ```회원가입 페이지```, ```로그인 페이지```, ```게시글 작성 페이지```의 경우에는 동적으로 생성해주지 않고, 정적으로 생성해주어도 된다.
-  - 따라서, 굳이 ```Controller```을 통해 ```@GetMapping```을 해 줄 필요가 없다!
+    - 따라서, 굳이 ```Controller```을 통해 ```@GetMapping```을 해 줄 필요가 없다!
 
 ### ```WebMvcConfigurer``` 인터페이스를 통해 구현
+
 - 컨트롤러 클래스 없이, 특정 view에 대한 컨트롤러를 추가할 수 있다!
 - ```addViewControllers(ViewControllerRegistry registry)```메소드를 오버라이딩!
+
 ```java
+
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
     @Override
@@ -139,17 +170,22 @@ public class MvcConfig implements WebMvcConfigurer {
 }
 
 ```
+
 - ```registry.addRedirectViewController(접속 URL, 리다이렉트 URL);```
-  - 접속 URL로 접속하면, 항상 리다이렉트 URL로 접속
+    - 접속 URL로 접속하면, 항상 리다이렉트 URL로 접속
 - ``` registry.addViewController(접속 URL).setViewName(보여줄 HTML 경로);```
-  - 접속 URL로 접속하면,보여줄 HTML 경로를 보여준다.
-  - 이를 통해 Controller 없이도 정적 페이지 제공 가능
+    - 접속 URL로 접속하면,보여줄 HTML 경로를 보여준다.
+    - 이를 통해 Controller 없이도 정적 페이지 제공 가능
 
 ---
 
 ## Custom Exception 구현
+
 ### 사용자를 못찾은 경우 : ```UserNotFoundException```
+
 - UserManagementService에서 예외를 던진다.
-  - 예외를 처리하는 ```ExceptionController```를 구현
-    - ```/error/ErrorController```
+    - 예외를 처리하는 ```ExceptionController```를 구현
+        - ```/error/ErrorController```
 ### 사용자의 비밀번호가 틀린 경우 : ```PasswordMisMatchException```
+
+---
