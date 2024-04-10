@@ -7,11 +7,11 @@ import java.util.List;
 public interface UserRepository {
     User addUser(User user);
 
-    User findUserByUserID(String userId) throws Exception;
+    User findUserByUserId(String userId) throws Exception;
 
-    User updateUser(String userId, UpdatedUser updatedUser) throws Exception;
+    String updateUser(String userId, UpdatedUser updatedUser) throws Exception;
 
-    User deleteUser(User user);
+    String deleteUser(String userId);
 
     List<User> findAllUser();
 }

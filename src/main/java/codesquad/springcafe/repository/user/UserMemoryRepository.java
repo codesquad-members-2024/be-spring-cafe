@@ -9,9 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public class UserMemoryRepository implements UserRepository {
     private static final Logger logger = LoggerFactory.getLogger(UserMemoryRepository.class);
     private static List<User> users = new ArrayList<>();
@@ -24,7 +22,7 @@ public class UserMemoryRepository implements UserRepository {
     }
 
     @Override
-    public User findUserByUserID(String userId) throws UserNotFoundException {
+    public User findUserByUserId(String userId) throws UserNotFoundException {
         Optional<User> optionalUser = users.stream()
                 .filter(user -> user.getUserId().equals(userId))
                 .findFirst();
@@ -34,14 +32,14 @@ public class UserMemoryRepository implements UserRepository {
     }
 
     @Override
-    public User updateUser(String userId, UpdatedUser updatedUser) throws Exception {
-        User findUser = findUserByUserID(userId);
+    public String updateUser(String userId, UpdatedUser updatedUser) throws Exception {
+        User findUser = findUserByUserId(userId);
         findUser.updateUser(updatedUser);
-        return findUser;
+        return userId;
     }
 
     @Override
-    public User deleteUser(User user) {
+    public String deleteUser(String userId) {
         return null;
     }
 
