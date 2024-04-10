@@ -34,7 +34,7 @@ public class UserService {
 
     public UserListData getUsers() {
         List<UserData> users = userRepository.findAll().stream()
-                .map(u -> new UserData(u.getEmail(), u.getName(),
+                .map(u -> new UserData(u.getId(), u.getEmail(), u.getName(),
                         convertCreatedAt(u.getCreatedAt())))
                 .toList();
 
@@ -43,7 +43,7 @@ public class UserService {
 
     public UserData getUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
-        return new UserData(user.getEmail(), user.getName(), convertCreatedAt(user.getCreatedAt()));
+        return new UserData(user.getId(), user.getEmail(), user.getName(), convertCreatedAt(user.getCreatedAt()));
     }
 
     private String convertCreatedAt(LocalDateTime createdAt) {

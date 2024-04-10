@@ -21,9 +21,12 @@ public class UserController {
     }
 
     @PostMapping
-    public String join(@ModelAttribute UserJoinData userJoinData) {
-        Long savedUserId = userService.join(userJoinData);
-        return "redirect:/users/" + savedUserId;
+    public String join(@ModelAttribute UserJoinData userJoinData, Model model) {
+        userService.join(userJoinData);
+
+        model.addAttribute("user", userJoinData);
+
+        return "/user/registration_success";
     }
 
     @GetMapping

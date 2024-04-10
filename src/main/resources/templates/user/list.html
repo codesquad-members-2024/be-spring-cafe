@@ -49,7 +49,7 @@
                     <tbody>
                     {{#users}}
                     <tr>
-                        <td>{{ getName }}</td>
+                        <td><a class="profile-link" href="/users/{{getId}}">{{ getName }}</a></td>
                         <td>{{ getEmail }}</td>
                         <td>{{ getCreatedAt }}</td>
                     </tr>

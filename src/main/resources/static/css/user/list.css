@@ -102,3 +102,7 @@ td {
     vertical-align: middle;
     text-align: center;
 }
+
+.profile-link {
+    color: blue;
+}
