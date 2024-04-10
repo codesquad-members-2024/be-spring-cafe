@@ -3,6 +3,7 @@ package codesquad.springcafe.users.controller;
 import codesquad.springcafe.users.service.UserService;
 import model.User;
 import model.UserData;
+import model.UserUpdateData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/users")
@@ -67,6 +69,17 @@ public class UserController {
         model.addAttribute("user", user);
 
         return "/user/updateForm";
+    }
+
+    @PostMapping("/{userId}/update")
+    public String updateUser(@PathVariable String userId, UserUpdateData updateData) {
+        try {
+            userService.updateUser(userId, updateData);
+        } catch (IllegalArgumentException e) {
+            logger.error(e.getMessage());
+            return "redirect:/users/" + userId + "/form";
+        }
+        return "redirect:/users";
     }
 
 }

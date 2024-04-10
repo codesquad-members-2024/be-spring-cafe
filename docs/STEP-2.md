@@ -56,6 +56,21 @@
 - [ ] 수정페이지에서 입력한 값 **[수정하고자 하는 정보]** 를 받는다
 - [ ] ```User```객체를 새로 입력받은 값으로 업데이트 한다
 
+## 추가 구현 : Custom Exception 만들어보기
+### 문제가 된 상황 [UserManagementService 클래스]
+- ```updateUser()```에서 사용자가 존재하지 않을 경우 : ```IllegalArgumentException```
+- ```findUserById()```에서 사용자가 존재하지 않을 경우 : ```Controller```에서 ```ResponseStatusException```로 처리
+> 비슷한 역할을 하는 예외 처리지만, 용도가 때에 따라 다르다!
+- Custom Exception을 만들어보자!
+```java
+// Example 이런식으로!
+public class UserNotFoundException extends IllegalArgumentException {
+  public UserNotFoundException(String message) {
+    super(message);
+  }
+}
+```
+
 # 📜 URL Convention
 
 | URL                      | 기능                             | 구현 상태 |
