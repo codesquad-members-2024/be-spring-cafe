@@ -47,7 +47,7 @@ public class UserController {
 
         model.addAttribute("userEmail", userData.getEmail());
         model.addAttribute("userId", userData.getUserId());
-
+        model.addAttribute("userName", userData.getName());
         return "/user/login_success";
     }
 

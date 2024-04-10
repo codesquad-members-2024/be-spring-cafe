@@ -1,7 +1,8 @@
 {{#users}}
-    <tr>
-        <td class="user-id"><a href="/users/{{userId}}">{{ getUserId }}</a></td>
-        <td>{{ getEmail }}</td>
-        <td>{{ getCreationDate }}</td>
-    </tr>
+<tr>
+    <td class="user-id"><a href="/users/{{userId}}">{{ getUserId }}</a></td>
+    <td>{{getName}}</td>
+    <td>{{ getEmail }}</td>
+    <td>{{ getCreationDate }}</td>
+</tr>
 {{/users}}

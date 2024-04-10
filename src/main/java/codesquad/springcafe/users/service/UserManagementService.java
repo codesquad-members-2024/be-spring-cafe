@@ -21,11 +21,12 @@ public class UserManagementService implements UserService {
 
     @Override
     public void createUser(UserData userData) {
-        String email = userData.getEmail();
         String userId = userData.getUserId();
+        String email = userData.getEmail();
+        String name = userData.getName();
         String password = userData.getPassword();
 
-        User user = new User(email, userId, password);
+        User user = new User(userId, email, name, password);
         logger.debug("User Created : {}", user);
 
         UserDatabase.addUser(user);
@@ -58,9 +59,6 @@ public class UserManagementService implements UserService {
             throw new IllegalArgumentException("입력한 비밀번호가 일치하지 않습니다.");
         }
     }
-
-
-
 
 
 }
