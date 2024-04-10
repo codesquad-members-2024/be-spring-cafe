@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/main")
 public class MainController {
     private final ArticleService articleService;
 

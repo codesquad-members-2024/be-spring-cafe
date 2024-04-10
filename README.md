@@ -6,16 +6,16 @@
 
 # 📜 URL Convention
 
-| URL                         | 기능                             | 구현 상태 |
-|:----------------------------|:-------------------------------|:-----:|
-| GET /users                  | 회원가입된 유저들을 보여준다.               |  ⭕️   |
-| POST /users                 | 입력된 폼을 가지고, 회원 가입을 수행한다        |  ⭕️   |
-| GET /users/join             | 유저 회원가입 폼을 보여준다                |  ⭕️   |
-| GET /users/{{userId}}       | useeId에 해당하는 profile을 보여준다     |  ⭕️   |
-| GET /articles/write         | 게시물 입력하는 폼을 보여준다               |  ⭕️   |
-| POST /articles              | 입력한 폼을 POST 요청으로 보낸다           |  ⭕️   |
-| GET /articles/{{articleId}} | articleId에 해당하는 게시물 상세정보를 보여준다 |  ⭕️   |
-| GET /                       | 등록된 모든 게시글들을 보여준다              |  ⭕️   |
+| URL                               | 기능                             | 구현 상태 |
+|:----------------------------------|:-------------------------------|:-----:|
+| GET /users                        | 회원가입된 유저들을 보여준다.               |  ⭕️   |
+| POST /users                       | 입력된 폼을 가지고, 회원 가입을 수행한다        |  ⭕️   |
+| GET /users/join                   | 유저 회원가입 폼을 보여준다                |  ⭕️   |
+| GET /users/{{userId}}             | useeId에 해당하는 profile을 보여준다     |  ⭕️   |
+| GET /articles/write               | 게시물 입력하는 폼을 보여준다               |  ⭕️   |
+| POST /articles                    | 입력한 폼을 POST 요청으로 보낸다           |  ⭕️   |
+| GET /articles/{{articleId}}       | articleId에 해당하는 게시물 상세정보를 보여준다 |  ⭕️   |
+| GET / , GET /main                 | 등록된 모든 게시글들을 보여준다              |  ⭕️   |
 
 ---
 
@@ -61,6 +61,10 @@
 
 ![img_2.png](readme/img7.png)
 
+---
+
+# 구현한 기능
+
 ## Mustache를 사용하여 중복 html 제거
 
 - ```templates```에 있는 html 파일들의 nav 부분이 중복된다.
@@ -97,6 +101,46 @@
 
 - {{> 파일경로/파일이름}} 을 통해 html 요소를 넣어주어 html 중복 분리
 
+---
+
 ## ```VO, DTO```객체의 사용 대신 ```Data```객체로 다루자!
 
 - 아직 헷갈리는 용어 대신에, ```UserData```, ```ArticleData```객체로 request값을 갖도록 수정
+
+---
+
+## ```@Configuration``` 과 ```WebMvcConfigurer```을 사용하여 URL과 HTML 매핑
+- ```회원가입 페이지```, ```로그인 페이지```, ```게시글 작성 페이지```의 경우에는 동적으로 생성해주지 않고, 정적으로 생성해주어도 된다.
+  - 따라서, 굳이 ```Controller```을 통해 ```@GetMapping```을 해 줄 필요가 없다!
+
+### ```WebMvcConfigurer``` 인터페이스를 통해 구현
+- 컨트롤러 클래스 없이, 특정 view에 대한 컨트롤러를 추가할 수 있다!
+- ```addViewControllers(ViewControllerRegistry registry)```메소드를 오버라이딩!
+```java
+@Configuration
+public class MvcConfig implements WebMvcConfigurer {
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        /* Main Redirect */
+        registry.addRedirectViewController("/", "main");    // URL에 /을 입력하면 항상 /main 으로 접속된다
+        registry.addRedirectViewController("/articles", "main");    // URL에 /articles을 입력하면 /main 으로 접속된다
+
+
+        /* User */
+        registry.addViewController("/users/join").setViewName("user/form"); // 유저 회원가입
+        registry.addViewController("/users/login").setViewName("user/login");   // 유저 로그인
+
+        /* Article */
+        registry.addViewController("/articles/write").setViewName("article/form");  // 게시글 작성
+
+        /* 우선순위를 가장 높게 설정 */
+        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+    }
+}
+
+```
+- ```registry.addRedirectViewController(접속 URL, 리다이렉트 URL);```
+  - 접속 URL로 접속하면, 항상 리다이렉트 URL로 접속
+- ``` registry.addViewController(접속 URL).setViewName(보여줄 HTML 경로);```
+  - 접속 URL로 접속하면,보여줄 HTML 경로를 보여준다.
+  - 이를 통해 Controller 없이도 정적 페이지 제공 가능

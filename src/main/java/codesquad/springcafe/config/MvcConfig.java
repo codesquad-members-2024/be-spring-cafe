@@ -9,7 +9,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        /* Main Redirect */
+        registry.addRedirectViewController("/", "main");    // URL에 /을 입력하면 항상 /main 으로 접속된다
 
         /* User */
         registry.addViewController("/users/join").setViewName("user/form"); // 유저 회원가입
@@ -17,5 +18,8 @@ public class MvcConfig implements WebMvcConfigurer {
 
         /* Article */
         registry.addViewController("/articles/write").setViewName("article/form");  // 게시글 작성
+
+        /* 우선순위를 가장 높게 설정 */
+        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
     }
 }
