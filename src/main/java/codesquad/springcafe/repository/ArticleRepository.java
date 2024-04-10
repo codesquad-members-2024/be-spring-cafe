@@ -4,6 +4,7 @@ import codesquad.springcafe.domain.Article;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -17,5 +18,9 @@ public class ArticleRepository {
 
     public void save(Article article) {
         articles.add(article);
+    }
+
+    public List<Article> getArticles() {
+        return Collections.unmodifiableList(articles);
     }
 }
