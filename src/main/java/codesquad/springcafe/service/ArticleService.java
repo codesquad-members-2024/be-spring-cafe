@@ -19,6 +19,10 @@ public class ArticleService {
         articleRepository.save(article);
     }
 
+    public Article findByIndex(Long index) {
+        return articleRepository.findByIndex(index - 1);
+    }
+
     public Map<Long, Article> getArticles() {
         return articleRepository.getArticles();
     }

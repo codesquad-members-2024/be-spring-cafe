@@ -23,6 +23,10 @@ public class ArticleRepository {
         articles.put(sequence.getAndIncrement(), article);
     }
 
+    public Article findByIndex(Long index) {
+        return articles.get(index - 1);
+    }
+
     public Map<Long, Article> getArticles() {
         return Collections.unmodifiableMap(articles);
     }
