@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public class ArticleMemoryDatabase implements ArticleDatabase {
     private final Map<Long, Article> store = new ConcurrentHashMap<>();
     private Long id = 0L;
@@ -32,4 +30,8 @@ public class ArticleMemoryDatabase implements ArticleDatabase {
         return new ArrayList<>(store.values());
     }
 
+    @Override
+    public void clear() {
+        store.clear();
+    }
 }

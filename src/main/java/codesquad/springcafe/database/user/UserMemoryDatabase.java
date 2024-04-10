@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public class UserMemoryDatabase implements UserDatabase {
     private final List<User> store = new ArrayList<>();
 
