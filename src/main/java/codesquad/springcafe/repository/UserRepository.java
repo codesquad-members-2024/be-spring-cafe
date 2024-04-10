@@ -10,12 +10,12 @@ import org.springframework.stereotype.Repository;
 public class UserRepository {
     private static final List<User> users = new ArrayList<>();
 
-    public User create(User user) {
+    public User createUser(User user) {
         users.add(user);
         return user;
     }
 
-    public List<User> findAll() {
+    public List<User> findAllUsers() {
         return users;
     }
 

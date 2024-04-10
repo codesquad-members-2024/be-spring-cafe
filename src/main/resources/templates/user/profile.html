@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .profile-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            text-align: center;
+        }
+        .profile-picture {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+        .profile-info {
+            margin-bottom: 20px;
+        }
+        .profile-info label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="profile-container">
+    <img class="profile-picture" src="profile.jpg" alt="Profile Picture">
+    <div class="profile-info">
+        <label for="userId">ID:</label>
+        <span id="userId">user123</span>
+    </div>
+    <div class="profile-info">
+        <label for="nickname">Nickname:</label>
+        <span id="nickname">CoolUser</span>
+    </div>
+    <div class="profile-info">
+        <label for="email">Email:</label>
+        <span id="email">user@example.com</span>
+    </div>
+</div>
+</body>
+</html>
