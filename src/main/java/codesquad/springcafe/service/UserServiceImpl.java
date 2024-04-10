@@ -17,11 +17,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createUser(User user) {
-        userRepository.createUser(user);
+        userRepository.create(user);
     }
 
     @Override
     public List<User> findAllUsers() {
-        return userRepository.findAllUsers();
+        return userRepository.findAll();
     }
 }
