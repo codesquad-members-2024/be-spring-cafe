@@ -30,16 +30,18 @@
         <div class="profile">
             <img src="/images/user-default.png" alt="프로필 사진">
             <div class="user-info">
+                {{#user}}
                 <table>
                     <tr>
                         <td class="label">이메일</td>
-                        <td class="email">user@example.com</td>
+                        <td class="email">{{getEmail}}</td>
                     </tr>
                     <tr>
                         <td class="label">닉네임</td>
-                        <td class="nickname">User123</td>
+                        <td class="nickname">{{getName}}</td>
                     </tr>
                 </table>
+                {{/user}}
             </div>
             <div class="buttons">
                 <button class="edit-button">정보 수정</button>
