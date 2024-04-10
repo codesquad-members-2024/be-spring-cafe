@@ -78,13 +78,13 @@ public class Article {
             return false;
         }
         Article article = (Article) object;
-        return Objects.equals(title, article.title) && Objects.equals(content, article.content)
-                && Objects.equals(id, article.id);
+        return Objects.equals(writer, article.writer) && Objects.equals(title, article.title)
+                && Objects.equals(content, article.content) && Objects.equals(id, article.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(writer, title, content, id);
     }
 
     @Override
@@ -94,7 +94,8 @@ public class Article {
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", id=" + id +
+                ", writeDate=" + writeDate +
+                ", views=" + views +
                 '}';
     }
-
 }

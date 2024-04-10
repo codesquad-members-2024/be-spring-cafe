@@ -10,4 +10,6 @@ public interface ArticleDatabase {
     Optional<Article> findBy(Long id);
 
     List<Article> findAll();
+
+    void clear();
 }
