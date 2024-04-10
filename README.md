@@ -6,18 +6,19 @@
 
 # 📜 URL Convention
 
-| URL                         | 기능                             | 구현 상태 |
-|:----------------------------|:-------------------------------|:-----:|
-| GET / , GET /main           | 등록된 모든 게시글들을 보여준다              |  ⭕️   |
-| GET /users                  | 회원가입된 유저들을 보여준다.               |  ⭕️   |
-| POST /users                 | 입력된 폼을 가지고, 회원 가입을 수행한다        |  ⭕️   |
-| GET /users/login            | 로그인 페이지를 보여준다                  |  ⭕️   |
-| GET /users/join             | 유저 회원가입 폼을 보여준다                |  ⭕️   |
-| GET /users/{{userId}}       | userId에 해당하는 profile을 보여준다     |  ⭕️   |
-| GET /users/{{userId}}/form  | userId에 해당하는 수정 페이지를 보여준다      |  ⭕️   | 
-| GET /articles/write         | 게시물 입력하는 폼을 보여준다               |  ⭕️   |
-| POST /articles              | 입력한 폼을 POST 요청으로 보낸다           |  ⭕️   |
-| GET /articles/{{articleId}} | articleId에 해당하는 게시물 상세정보를 보여준다 |  ⭕️   |
+| URL                          | 기능                             | 구현 상태 |
+|:-----------------------------|:-------------------------------|:-----:|
+| GET / , GET /main            | 등록된 모든 게시글들을 보여준다              |  ⭕️   |
+| GET /users                   | 회원가입된 유저들을 보여준다.               |  ⭕️   |
+| POST /users                  | 입력된 폼을 가지고, 회원 가입을 수행한다        |  ⭕️   |
+| GET /users/login             | 로그인 페이지를 보여준다                  |  ⭕️   |
+| GET /users/join              | 유저 회원가입 폼을 보여준다                |  ⭕️   |
+| GET /users/{{userId}}        | userId에 해당하는 profile을 보여준다     |  ⭕️   |
+| GET /users/{{userId}}/form   | userId에 해당하는 수정 페이지를 보여준다      |  ⭕️   | 
+| PUT /users/{{userId}}/update | 사용자의 정보를 업데이트                  |  ⭕️   |
+| GET /articles/write          | 게시물 입력하는 폼을 보여준다               |  ⭕️   |
+| POST /articles               | 입력한 폼을 POST 요청으로 보낸다           |  ⭕️   |
+| GET /articles/{{articleId}}  | articleId에 해당하는 게시물 상세정보를 보여준다 |  ⭕️   |
 
 ---
 
