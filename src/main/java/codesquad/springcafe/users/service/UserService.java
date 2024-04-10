@@ -11,7 +11,7 @@ public interface UserService {
 
     ArrayList<User> getAllUsers();
 
-    Optional<User> findUserById(String userId);
+    User findUserById(String userId);
 
     void updateUser(String userId, UserUpdateData updateData);
 }

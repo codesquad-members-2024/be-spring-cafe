@@ -1,5 +1,7 @@
 package codesquad.springcafe.users.controller;
 
+import codesquad.springcafe.exception.PasswordMismatchException;
+import codesquad.springcafe.exception.UserNotFoundException;
 import codesquad.springcafe.users.service.UserService;
 import model.User;
 import model.UserData;
@@ -50,8 +52,7 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public String getUserProfile(@PathVariable String userId, Model model) {
-        User user = userService.findUserById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+        User user = userService.findUserById(userId);
 
         model.addAttribute("user", user);
 
@@ -60,8 +61,7 @@ public class UserController {
 
     @GetMapping("/{userId}/form")
     public String getUserEditPage(@PathVariable String userId, Model model) {
-        User user = userService.findUserById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+        User user = userService.findUserById(userId);
 
         model.addAttribute("user", user);
 
@@ -72,10 +72,9 @@ public class UserController {
     public String updateUser(@PathVariable String userId, UserUpdateData updateData, Model model) {
         try {
             userService.updateUser(userId, updateData);
-        } catch (IllegalArgumentException e) {
-            logger.error(e.getMessage());
-            User user = userService.findUserById(userId)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+        } catch (PasswordMismatchException e) {
+            logger.error(e.getClass().getSimpleName() + " : " + e.getMessage());
+            User user = userService.findUserById(userId);
             model.addAttribute("user", user);
             model.addAttribute("error", true);
             return "/user/updateForm";

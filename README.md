@@ -144,3 +144,12 @@ public class MvcConfig implements WebMvcConfigurer {
 - ``` registry.addViewController(접속 URL).setViewName(보여줄 HTML 경로);```
   - 접속 URL로 접속하면,보여줄 HTML 경로를 보여준다.
   - 이를 통해 Controller 없이도 정적 페이지 제공 가능
+
+---
+
+## Custom Exception 구현
+### 사용자를 못찾은 경우 : ```UserNotFoundException```
+- UserManagementService에서 예외를 던진다.
+  - 예외를 처리하는 ```ExceptionController```를 구현
+    - ```/error/ErrorController```
+### 사용자의 비밀번호가 틀린 경우 : ```PasswordMisMatchException```

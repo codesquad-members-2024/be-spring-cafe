@@ -1,5 +1,7 @@
 package codesquad.springcafe.users.service;
 
+import codesquad.springcafe.exception.PasswordMismatchException;
+import codesquad.springcafe.exception.UserNotFoundException;
 import db.UserDatabase;
 import model.User;
 import model.UserData;
@@ -38,17 +40,13 @@ public class UserManagementService implements UserService {
     }
 
     @Override
-    public Optional<User> findUserById(String userId) {
-        return UserDatabase.findUserById(userId);
+    public User findUserById(String userId) {
+        return UserDatabase.findUserById(userId).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
     }
 
     @Override
     public void updateUser(String userId, UserUpdateData updateData) {
-        /*
-         * 사용자의 입력이 잘못된 경우 : IllegalArgumentException
-         */
-
-        User user = findUserById(userId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        User user = findUserById(userId);
         validatePassword(user.getPassword(), updateData.getCurrentPassword());
         user.updateUser(updateData);
         logger.debug("User Updated : {}", user);
@@ -56,7 +54,7 @@ public class UserManagementService implements UserService {
 
     private void validatePassword(String userPassword, String inputPassword) {
         if (!userPassword.equals(inputPassword)) {
-            throw new IllegalArgumentException("입력한 비밀번호가 일치하지 않습니다.");
+            throw new PasswordMismatchException("입력한 비밀번호가 일치하지 않습니다.");
         }
     }
 
