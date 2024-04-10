@@ -8,6 +8,8 @@ import codesquad.springcafe.domain.user.model.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -30,10 +32,15 @@ public class UserService {
 
     public UserListData getUsers() {
         List<UserData> users = userRepository.findAll().stream()
-                .map(u -> new UserData(u.getEmail(), u.getName()))
+                .map(u -> new UserData(u.getEmail(), u.getName(),
+                        convertCreatedAt(u.getCreatedAt())))
                 .toList();
 
         return new UserListData(users);
+    }
+
+    private String convertCreatedAt(LocalDateTime createdAt) {
+        return createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
 }

@@ -1,13 +1,18 @@
 package codesquad.springcafe.domain.user.model;
 
+import codesquad.springcafe.global.model.BaseTime;
+
+import java.time.LocalDateTime;
+
 // TODO: 빌더 패턴 사용
-public class User{
+public class User extends BaseTime {
     private Long id;
     private String name;
     private String email;
     private String password;
 
-    public User(String name, String email, String password) {
+    public User(String name, String email, String password, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        super(createdAt, modifiedAt);
         this.name = name;
         this.email = email;
         this.password = password;
