@@ -11,6 +11,7 @@
 | GET / , GET /main           | 등록된 모든 게시글들을 보여준다              |  ⭕️   |
 | GET /users                  | 회원가입된 유저들을 보여준다.               |  ⭕️   |
 | POST /users                 | 입력된 폼을 가지고, 회원 가입을 수행한다        |  ⭕️   |
+| GET /users/login            | 로그인 페이지를 보여준다                  |  ⭕️   |
 | GET /users/join             | 유저 회원가입 폼을 보여준다                |  ⭕️   |
 | GET /users/{{userId}}       | userId에 해당하는 profile을 보여준다     |  ⭕️   |
 | GET /users/{{userId}}/form  | userId에 해당하는 수정 페이지를 보여준다      |  ⭕️   | 
@@ -48,22 +49,30 @@
 ---
 
 ## 회원 정보 수정
+
 ### 1) 수정하기 버튼을 클릭
+
 ![img_6.png](readme/user/img_6.png)
 
 ### 2) 정보들을 입력하여 수정
+
 - 아이디는 수정되지 않음
-![img_7.png](readme/user/img_7.png)
+  ![img_7.png](readme/user/img_7.png)
 
 ### 3) 등록된 유저 정보와 다른 비밀번호를 입력했을 경우
+
 ![img_8.png](readme/user/img_8.png)
 > ![img_9.png](readme/user/img_9.png)
-- 기존 PW : 123 
+
+- 기존 PW : 123
 - 수정 페이지에서 입력한 PW : 1234
+
 > ![img_10.png](readme/user/img_10.png)
+
 - 에러 로그가 뜨는 것을 볼 수 있다.
 
 ### 4) 성공적으로 업데이트
+
 ![img_11.png](readme/user/img_11.png)
 > ![img_12.png](readme/user/img_12.png)
 ---
@@ -186,6 +195,7 @@ public class MvcConfig implements WebMvcConfigurer {
 - UserManagementService에서 예외를 던진다.
     - 예외를 처리하는 ```ExceptionController```를 구현
         - ```/error/ErrorController```
+
 ### 사용자의 비밀번호가 틀린 경우 : ```PasswordMisMatchException```
 
 ---
