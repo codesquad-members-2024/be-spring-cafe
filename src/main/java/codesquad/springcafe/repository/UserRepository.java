@@ -20,6 +20,6 @@ public class UserRepository {
     }
 
     public Optional<User> findByUserId(String userId) {
-        return users.stream().filter(user -> user.getUserId().equals(userId)).findAny();
+        return users.stream().filter(user -> user.getUserId().equals(userId)).findFirst();
     }
 }
