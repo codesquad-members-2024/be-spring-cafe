@@ -11,5 +11,5 @@ public interface ArticleService {
 
     ArrayList<Article> getAllArticles();
 
-    Optional<Article> findArticleById(int articleId);
+    Article findArticleById(int articleId);
 }

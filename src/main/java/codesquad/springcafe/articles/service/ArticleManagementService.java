@@ -1,5 +1,6 @@
 package codesquad.springcafe.articles.service;
 
+import codesquad.springcafe.exception.ArticleNotFoundException;
 import db.ArticleDatabase;
 import model.Article;
 import model.ArticleData;
@@ -32,8 +33,8 @@ public class ArticleManagementService implements ArticleService {
     }
 
     @Override
-    public Optional<Article> findArticleById(int articleId) {
+    public Article findArticleById(int articleId) {
         articleId = articleId - 1;
-        return ArticleDatabase.findArticleById(articleId);
+        return ArticleDatabase.findArticleById(articleId).orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
     }
 }

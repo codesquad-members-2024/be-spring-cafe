@@ -37,9 +37,7 @@ public class ArticleController {
 
     @GetMapping("/{articleId}")
     public String getUserProfile(@PathVariable int articleId, Model model) {
-        Article article = articleService.findArticleById(articleId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
-
+        Article article = articleService.findArticleById(articleId);
         model.addAttribute("article", article);
 
         return "/article/show";
