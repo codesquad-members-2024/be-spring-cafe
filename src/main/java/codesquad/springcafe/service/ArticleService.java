@@ -4,7 +4,7 @@ import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.repository.ArticleRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Map;
 
 @Service
 public class ArticleService {
@@ -19,7 +19,7 @@ public class ArticleService {
         articleRepository.save(article);
     }
 
-    public List<Article> getArticleList() {
+    public Map<Long, Article> getArticles() {
         return articleRepository.getArticles();
     }
 }

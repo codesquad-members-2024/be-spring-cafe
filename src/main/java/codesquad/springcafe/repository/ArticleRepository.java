@@ -3,24 +3,27 @@ package codesquad.springcafe.repository;
 import codesquad.springcafe.domain.Article;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class ArticleRepository {
 
-    private final List<Article> articles;
+    private final Map<Long, Article> articles;
+    private final AtomicLong sequence;
 
     public ArticleRepository() {
-        this.articles = new ArrayList<>();
+        this.articles = new HashMap<>();
+        this.sequence = new AtomicLong();
     }
 
     public void save(Article article) {
-        articles.add(0, article);
+        articles.put(sequence.getAndIncrement(), article);
     }
 
-    public List<Article> getArticles() {
-        return Collections.unmodifiableList(articles);
+    public Map<Long, Article> getArticles() {
+        return Collections.unmodifiableMap(articles);
     }
 }

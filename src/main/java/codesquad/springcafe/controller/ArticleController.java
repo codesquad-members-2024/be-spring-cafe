@@ -30,7 +30,7 @@ public class ArticleController {
 
     @GetMapping("/")
     public String questionList(Model model) {
-        model.addAttribute("articles", articleService.getArticleList());
+        model.addAttribute("articles", articleService.getArticles());
         return "/index";
     }
 }
