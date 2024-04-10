@@ -17,7 +17,7 @@ public class ArticleRepository {
     }
 
     public void save(Article article) {
-        articles.add(article);
+        articles.add(0, article);
     }
 
     public List<Article> getArticles() {
