@@ -25,6 +25,7 @@
             <p class="title">{{ user.getUserId }}님의 회원 정보 수정</p>
         </header>
         <form name="question" class="info-container" method="post" action="/users/{{ user.getUserId }}/update">
+            <input type="hidden" name="_method" value="PUT">
             <div class="form-group">
                 <label for="newEmail">새로운 이메일</label>
                 <input class="form-control" id="newEmail" name="newEmail" placeholder="이메일을 입력하세요">
