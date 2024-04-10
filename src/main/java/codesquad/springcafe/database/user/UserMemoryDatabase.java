@@ -13,7 +13,7 @@ public class UserMemoryDatabase implements UserDatabase {
     private final List<User> store = new ArrayList<>();
 
     @Override
-    public User save(User user) {
+    public User add(User user) {
         user.setJoinDate(LocalDate.now());
         store.add(user);
         return user;

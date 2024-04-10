@@ -40,7 +40,7 @@ public class ArticleController {
         if (article.getWriter() == null) {
             article.setWriter("익명");
         }
-        articleDatabase.save(article);
+        articleDatabase.add(article);
         logger.info("새로운 게시물이 추가되었습니다. {}", article);
         return "redirect:/";
     }

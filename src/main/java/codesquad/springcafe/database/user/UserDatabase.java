@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserDatabase {
-    User save(User user);
+    User add(User user);
 
     Optional<User> findBy(String nickname);
 

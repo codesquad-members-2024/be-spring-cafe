@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ArticleDatabase {
-    Article save(Article article);
+    Article add(Article article);
 
     Optional<Article> findBy(Long id);
 
