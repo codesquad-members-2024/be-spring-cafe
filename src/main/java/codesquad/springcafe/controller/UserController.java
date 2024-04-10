@@ -1,13 +1,11 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.domain.User;
+import codesquad.springcafe.dto.UserUpdateDto;
 import codesquad.springcafe.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class UserController {
@@ -45,5 +43,11 @@ public class UserController {
     public String userUpdate(@PathVariable String userId, Model model) {
         model.addAttribute("user", userService.findOne(userId));
         return "/user/updateForm";
+    }
+
+    @PutMapping("/users/{userId}/update")
+    public String userUpdate(@PathVariable String userId, @ModelAttribute UserUpdateDto userUpdateDto) {
+        userService.updateUser(userId, userUpdateDto);
+        return "redirect:/users";
     }
 }
