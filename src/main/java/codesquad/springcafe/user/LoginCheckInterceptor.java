@@ -1,10 +1,10 @@
 package codesquad.springcafe.user;
 
-import codesquad.springcafe.user.UserDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 public class LoginCheckInterceptor implements HandlerInterceptor {
 
@@ -20,6 +20,15 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        return HandlerInterceptor.super.preHandle(request, response, handler);
+        request.setAttribute("user", userDTO);
+        return true;
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        if (modelAndView != null) {
+            UserDTO userDTO = (UserDTO) request.getAttribute("user");
+            modelAndView.addObject("userName", userDTO.name());
+        }
     }
 }
