@@ -18,12 +18,12 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    @GetMapping("/questions/create")
-    public String createQuestion() {
+    @GetMapping("/articles/create")
+    public String quest() {
         return "/qna/form";
     }
 
-    @PostMapping("/questions/create")
+    @PostMapping("/articles/create")
     public String quest(@ModelAttribute Article article) {
         articleService.saveArticle(article);
         return "redirect:/";
