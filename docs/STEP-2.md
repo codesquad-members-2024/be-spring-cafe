@@ -44,17 +44,24 @@
 ## 추가 구현 : 사용자 정보 수정하기
 ### 수정 페이지
 - [x] 사용자 프로필 화면에 수정하기 버튼 추가하기
-- [ ] 사용자 인증을 위해 사용자 비밀번호 확인하는 기능 추가하기
-  - JavaScript? or SpringBoot? 고민!
+- [x] 사용자 인증을 위해 사용자 비밀번호 확인하는 기능 추가하기
+  - controller에서 확인하여, model에 true/false 넘겨주어 mustache로 구현
 - [x] 사용자 프로필을 수정할 수 있는 페이지 추가하기
-- [ ] 입력한 폼을 이용해서 사용자 정보를 수정하기
+- [x] 입력한 폼을 이용해서 사용자 정보를 수정하기
 ### 수정 작업
-- [ ] ```UserDatabase```는 ```ArrayList```로 구성되어있으므로, 해당 User의 index를 가져온다.
-- [ ] ```UserIndex```에 대한 User 정보를 가져온다
-- [ ] 수정 페이지에서 입력한 ```비밀번호```와 ```User의 비밀번호```가 같은 지 확인한다
-- [ ] 같다면 수정 페이지를 띄운다
-- [ ] 수정페이지에서 입력한 값 **[수정하고자 하는 정보]** 를 받는다
-- [ ] ```User```객체를 새로 입력받은 값으로 업데이트 한다
+- [x] 수정페이지에서 입력한 값 **[수정하고자 하는 정보]** 를 받는다
+- [x] UserController에서 입력받은 값을 UserUpdateDate 객체로 UserManagementService로 전달한다.
+- [x] UserDatabase에서 UserId에 해당하는 user를 가져온 후, 유저의 비밀번호와  UserUpdateData의 비밀번호를 확인한다.
+- [x] User 객체의 updateUser(UserUpdataData) 을 이용해서 업데이트한다.
+  - 기존에는 유저 객체의 불변성을 유지하고 싶어서, 새로운 유저 객체를 생성하고, ArrayList에 해당 유저를 replace하려고 했다.
+  - setter를 사용하는 것도 고려해보았지만, 좋은 방법같지 않았다.
+  - 결과적으로 User 객체에 updateUser 메소드를 두어 내부적으로 값을 바꾸도록 하였다..
+    - 이 방법도 옳은 것인지 잘 모르겠다..
+- [x] ```User```객체를 새로 입력받은 값으로 업데이트 한다
+
+## 추가 구현 : ```PUT```메소드 사용하여 유저 정보 업데이트 하기
+- [ ] input 태그를 put 메소드로 바꾸기
+- [ ] application.properties에 PUT 메소드 사용을 위한 설정 추가하기
 
 ## 추가 구현 : Custom Exception 만들어보기
 ### 문제가 된 상황 [UserManagementService 클래스]
