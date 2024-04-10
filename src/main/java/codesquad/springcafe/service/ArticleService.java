@@ -20,7 +20,7 @@ public class ArticleService {
     }
 
     public Article findByIndex(Long index) {
-        return articleRepository.findByIndex(index - 1);
+        return articleRepository.findByIndex(index);
     }
 
     public Map<Long, Article> getArticles() {
