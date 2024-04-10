@@ -19,7 +19,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User getUser(String userId) {
+    public User findOne(String userId) {
         return userRepository.findByUserId(userId).get();
     }
 
