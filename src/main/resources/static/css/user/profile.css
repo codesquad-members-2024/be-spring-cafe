@@ -1,0 +1,139 @@
+.col-md-12 {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.navbar-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.active {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    width: 80px;
+    height: 30px;
+    font-size: 14px;
+}
+
+.black-component {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    width: 80px;
+    height: 30px;
+    font-size: 14px;
+    background-color: black;
+    color: white;
+}
+
+.black-component:hover {
+    background-color: #ffcd00;
+    color: black;
+}
+
+.navbar-right {
+    display: flex;
+}
+
+.description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #ffcd00;
+    height: 148px;
+    margin-bottom: 40px;
+}
+
+.desc-container {
+    margin-left: 50px;
+}
+
+.desc-small {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.desc-big {
+    font-size: 24px;
+}
+
+li {
+    margin: 3px;
+}
+
+
+.profile {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.profile img {
+    width: 200px; /* 이미지 너비 조정 */
+    height: 200px; /* 이미지 높이 조정 */
+    border-radius: 50%; /* 이미지를 원 모양으로 만듦 */
+    object-fit: cover; /* 이미지를 원 안에 맞춤 */
+    object-position: center center; /* 이미지를 가운데 위치시킴 */
+    box-shadow: 0px 0px 5px #444;
+    margin-bottom: 20px;
+}
+
+.user-info {
+    margin-bottom: 10px;
+}
+
+.label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.email, .nickname {
+    margin: 0;
+}
+
+.buttons {
+    margin-top: 20px;
+}
+
+.edit-button, .delete-button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #ffcd00;
+    color: #000;
+    text-align: center;
+}
+
+.edit-button:hover, .delete-button:hover {
+    font-weight: bold;
+    background-color: #e0b515;
+}
+
+.user-info table {
+    width: 30%; /* 테이블 폭을 줄임 */
+    margin: 0 auto; /* 가운데 정렬 */
+    border-collapse: collapse; /* 테이블 셀의 경계를 합침 */
+    text-align: left; /* 텍스트를 왼쪽 정렬 */
+}
+
+.user-info td {
+    padding: 10px; /* 셀의 안쪽 여백 설정 */
+    border-bottom: 1px solid #ddd; /* 아래쪽 테두리 추가 */
+}
+
+.user-info .label {
+    font-weight: bold; /* 라벨 텍스트 굵게 설정 */
+}
+
+.user-info .email, .user-info .nickname {
+    padding-left: 10px; /* 이메일과 닉네임 사이 여백 설정 */
+}

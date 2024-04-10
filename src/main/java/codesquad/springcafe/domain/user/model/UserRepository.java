@@ -10,10 +10,11 @@ public class UserRepository {
     private static final Map<Long, User> users = new HashMap<>();
     private static final AtomicLong sequence = new AtomicLong(0);
 
-    public void save(User user){
+    public Long save(User user){
         long userId = sequence.incrementAndGet();
         user.setId(userId);
         users.put(userId, user);
+        return userId;
     }
 
     public Optional<User> findById(Long id) {

@@ -71,3 +71,10 @@
   - jps 명령으로 실행 중인 어플리케이션의 PID를 찾고, kill ${PID} 명령으로 해당 프로세스를 종료했다
   - 다만 유닉스 계역 운영 체제에서만 kill 명령이 실행 가능하기 때문에 윈도우 PowerShell로 실행해야 했다
 
+### PathVariable name 작성 누락
+- 문제 상황
+  - 에러 메시지: Name for argument of type [java.lang.Long] not specified, and parameter name information not available via reflection. Ensure that the compiler uses the '-parameters' flag.
+- 해결 방법
+  - 스프링 부트 3.2부터 자바 컴파일러에 -parameter 옵션을 넣어주어야 어노테이션의 이름을 생략할 수 있다
+  - name 속성을 알맞게 작성하여 해결
+  - 관련 링크 : https://www.inflearn.com/questions/1087879/pathvariable-name-%EC%83%9D%EB%9E%B5-%EC%A7%88%EB%AC%B8-%EB%93%9C%EB%A6%BD%EB%8B%88%EB%8B%A4

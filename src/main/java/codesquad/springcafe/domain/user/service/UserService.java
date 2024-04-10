@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
@@ -21,13 +22,14 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void join(UserJoinData userJoinData) {
+    // TODO: 예외 클래스 생성해 처리
+    public Long join(UserJoinData userJoinData) {
         userRepository.findByEmail(userJoinData.getEmail())
                 .ifPresent(u -> {
                     throw new IllegalStateException("이미 존재하는 사용자입니다.");
                 });
         User user = userJoinData.toUser();
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     public UserListData getUsers() {
@@ -37,6 +39,11 @@ public class UserService {
                 .toList();
 
         return new UserListData(users);
+    }
+
+    public UserData getUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        return new UserData(user.getEmail(), user.getName(), convertCreatedAt(user.getCreatedAt()));
     }
 
     private String convertCreatedAt(LocalDateTime createdAt) {

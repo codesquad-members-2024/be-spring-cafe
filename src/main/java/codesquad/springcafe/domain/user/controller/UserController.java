@@ -1,15 +1,13 @@
 package codesquad.springcafe.domain.user.controller;
 
+import codesquad.springcafe.domain.user.data.UserData;
 import codesquad.springcafe.domain.user.data.UserJoinData;
 import codesquad.springcafe.domain.user.data.UserListData;
 import codesquad.springcafe.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/users")
@@ -24,8 +22,8 @@ public class UserController {
 
     @PostMapping
     public String join(@ModelAttribute UserJoinData userJoinData) {
-        userService.join(userJoinData);
-        return "redirect:/users";
+        Long savedUserId = userService.join(userJoinData);
+        return "redirect:/users/" + savedUserId;
     }
 
     @GetMapping
@@ -36,5 +34,14 @@ public class UserController {
         model.addAttribute("users", userListData.getUserList());
 
         return "user/list";
+    }
+
+    @GetMapping("/{userId}")
+    public String getUser(@PathVariable(name = "userId") Long userId, Model model) {
+        UserData userData = userService.getUser(userId);
+
+        model.addAttribute("user", userData);
+
+        return "user/profile";
     }
 }
