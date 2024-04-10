@@ -7,37 +7,35 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("/users")
 public class UserController {
     private final UserService userService;
     public UserController(UserService userService) {
         this.userService = userService;
     }
-    @GetMapping("/user/create")
+    @GetMapping("/create")
     public String showRegistrationForm(Model model){
         model.addAttribute("user", new User());
-        return "/user/form";
+        return "/users/form";
     }
-    @GetMapping("/user/list")
+    @GetMapping("/list")
     public String showUserListForm(Model model){
         model.addAttribute("users",userService.findAll());
-        return "/user/list";
+        return "/users/list";
     }
-    @PostMapping("/user/create")
+    @PostMapping("/create")
     public String createUser(User user)
     {
         userService.createUser(user);
-        return "redirect:/user/list";
+        return "redirect:/users/list";
     }
-    @GetMapping("/users/{userId}")
+    @GetMapping("/{userId}")
     public String getUserProfile(@PathVariable("userId") String userId, Model model) {
         User user = userService.findByUserId(userId);
         if (user != null) {
             model.addAttribute("user", user);
-            return "user/profile";
+            return "users/profile";
         }
         return "redirect:/users/list";
     }
-
-
-
 }
