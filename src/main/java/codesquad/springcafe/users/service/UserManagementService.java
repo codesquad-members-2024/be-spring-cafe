@@ -49,7 +49,8 @@ public class UserManagementService implements UserService {
 
         User user = findUserById(userId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
         validatePassword(user.getPassword(), updateData.getCurrentPassword());
-        
+        user.updateUser(updateData);
+        logger.debug("User Updated : {}", user);
     }
 
     private void validatePassword(String userPassword, String inputPassword) {
@@ -57,6 +58,7 @@ public class UserManagementService implements UserService {
             throw new IllegalArgumentException("입력한 비밀번호가 일치하지 않습니다.");
         }
     }
+
 
 
 

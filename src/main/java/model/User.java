@@ -35,4 +35,10 @@ public class User {
     public LocalDate getCreationDate() {
         return creationDate;
     }
+
+    public void updateUser(UserUpdateData updateData) {
+        this.email = updateData.getNewEmail();
+        this.password = updateData.getNewPassword();
+    }
+
 }

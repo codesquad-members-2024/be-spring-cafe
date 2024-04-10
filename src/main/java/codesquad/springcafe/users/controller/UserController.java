@@ -72,12 +72,16 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/update")
-    public String updateUser(@PathVariable String userId, UserUpdateData updateData) {
+    public String updateUser(@PathVariable String userId, UserUpdateData updateData, Model model) {
         try {
             userService.updateUser(userId, updateData);
         } catch (IllegalArgumentException e) {
             logger.error(e.getMessage());
-            return "redirect:/users/" + userId + "/form";
+            User user = userService.findUserById(userId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+            model.addAttribute("user", user);
+            model.addAttribute("error", true);
+            return "/user/updateForm";
         }
         return "redirect:/users";
     }
