@@ -17,12 +17,15 @@
           <div class="wrap">
             <div class="main">
               <strong class="subject">
-                <a href="/templates/article/show.html" th:text="${article.title}">게시글 제목</a>
+                <a th:href="@{/article/{articleId}(articleId=${article.articleId})}"
+                   th:text="${article.title}">게시글
+                  제목</a>
               </strong>
               <div class="auth-info">
                 <i class="icon-add-comment"></i>
                 <span class="time">2016-01-15 18:47</span>
-                <a href="/templates/user/profile.html" class="author" th:text="${article.author}">자바지기</a>
+                <a href="/templates/user/profile.html" class="author"
+                   th:text="${article.author}">자바지기</a>
               </div>
               <div class="reply" title="댓글">
                 <i class="icon-reply"></i>
