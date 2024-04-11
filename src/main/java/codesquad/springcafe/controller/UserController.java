@@ -42,4 +42,14 @@ public class UserController {
         model.addAttribute("user", user);
         return "user/profile";
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "user/login";
+    }
+
+    @GetMapping("/join")
+    public String getSignUpForm() {
+        return "/user/form";
+    }
 }
