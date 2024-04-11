@@ -22,7 +22,8 @@ class ArticleDatabaseTest {
     @Test
     @DisplayName("ArticleDatabase에 게시글이 잘 저장되는지 테스트")
     void saveArticle() {
-        Article article = new ArticleBuilder().author("jayden").title("제목").content("내용").build();
+        Article article = new ArticleBuilder().articleId(1).author("jayden").title("제목")
+            .content("내용").build();
 
         articleDatabase.saveArticle(article);
         assertThat(articleDatabase.findAll()).hasSize(1);
@@ -32,7 +33,8 @@ class ArticleDatabaseTest {
     @DisplayName("ArticleDatabase의 모든 게시글이 잘 찾아지는지 테스트")
     void testFindAllArticles() {
 
-        Article article = new ArticleBuilder().author("jayden").title("제목").content("내용").build();
+        Article article = new ArticleBuilder().articleId(1).author("jayden").title("제목")
+            .content("내용").build();
 
         articleDatabase.saveArticle(article);
         assertThat(articleDatabase.findAll()).hasSize(1);
