@@ -23,14 +23,14 @@ class UserRepositoryTest {
 
         userRepository.saveUser(user);
 
-        assertThat(userRepository.findUserById(user.getUserSequence())).isEqualTo(user);
+        assertThat(userRepository.findUserById(user.getUserId())).isEqualTo(user);
     }
 
     @Test
     @DisplayName("저장한 유저를 전부 가져올 수 있다.")
     void findAllUsers() {
         User user1 = new User("test1", "1234", "test1", "test1@naver.com");
-        User user2 = new User("test1", "1234", "test1", "test1@naver.com");
+        User user2 = new User("test2", "1234", "test2", "test2@naver.com");
 
         userRepository.saveUser(user1);
         userRepository.saveUser(user2);
