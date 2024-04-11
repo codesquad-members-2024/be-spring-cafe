@@ -1,5 +1,6 @@
 package codesquad.springcafe.service.member;
 
+import codesquad.springcafe.controller.member.UpdateMember;
 import codesquad.springcafe.domain.member.Member;
 import codesquad.springcafe.repository.member.MemberRepository;
 import java.util.List;
@@ -29,5 +30,15 @@ public class MemberManager implements MemberService {
     @Override
     public List<Member> findAllMember() {
         return repository.findAll();
+    }
+
+    @Override
+    public boolean validatePassword(Member findMember, String beforePassword) {
+        return findMember.getPassword().equals(beforePassword);
+    }
+
+    @Override
+    public void update(String loginId, UpdateMember updateParam) {
+        repository.update(loginId, updateParam);
     }
 }
