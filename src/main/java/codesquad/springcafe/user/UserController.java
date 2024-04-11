@@ -63,9 +63,10 @@ public class UserController {
                          @RequestParam("password") String password,
                          @RequestParam("name") String name,
                          @RequestParam("email") String email,
+                         @RequestParam("new_password") String newPassword,
                          Model model) {
 
-        if (userService.update(new User(id, password, name, email))) {
+        if (userService.update(new User(id, newPassword, name, email), password)) {
             model.addAttribute("alert", "회원 정보 변경 성공!");
         } else {
             model.addAttribute("alert", "비밀번호가 일치하지 않습니다!");
@@ -126,7 +127,7 @@ public class UserController {
 
         model.addAttribute("alert", "");
         model.addAttribute("alert_section", false);
-        model.addAttribute("userId", loginUser.id());
+        model.addAttribute("user", userService.getUser(loginUser.id()));
 
         return "user/update_form";
     }

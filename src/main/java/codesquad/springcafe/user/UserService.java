@@ -36,10 +36,11 @@ public class UserService {
     /**
      * 유저 정보를 수정하고, 성공 여부를 반환
      * @param user 새 유저 정보
+     * @param password 기존 비밀번호
      * @return 수정 성공 여부
      */
-    public boolean update(User user){
-        if(userRepository.findUserById(user.getUserId()).isCorrectPassword(user.getPassword())){
+    public boolean update(User user, String password){
+        if(userRepository.findUserById(user.getUserId()).isCorrectPassword(password)){
             userRepository.update(user);
 
             log.debug("user updated : " + user);
