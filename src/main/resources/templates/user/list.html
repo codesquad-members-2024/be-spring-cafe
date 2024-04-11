@@ -10,21 +10,7 @@
 </head>
 <body>
 <div class="background">
-    <nav class="navbar navbar-fixed-top header">
-        <div class="col-md-12">
-            <div class="navbar-header">
-                <a href="/index.html" class="navbar-brand">
-                    <img src="/images/KakaoCI.png" alt="카카오 로고"/>
-                </a>
-
-            </div>
-            <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="/index.html">메인 페이지</a></li>
-                <li><a class="black-component" href="/user/login.html" role="button">로그인</a></li>
-                <li><a class="black-component" href="/user/form.html" role="button">회원가입</a></li>
-            </ul>
-        </div>
-    </nav>
+    {{>base/part/navbar_toMain}}
 
     <div class="description">
         <div class="desc-container">
@@ -35,30 +21,12 @@
 
     <p class="total_num">전체 멤버 {{totalUserCnt}}명</p>
 
-    <div class="container" id="main">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default">
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>닉네임</th>
-                        <th>이메일</th>
-                        <th>가입일자</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {{#users}}
-                    <tr>
-                        <td><a class="profile-link" href="/users/{{getId}}">{{ getName }}</a></td>
-                        <td>{{ getEmail }}</td>
-                        <td>{{ getCreatedAt }}</td>
-                    </tr>
-                    {{/users}}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+    {{#users}}
+    {{> base/user/user_profile_link}}
+    {{/users}}
+    {{^users}}
+    <p style="font-weight: bold;">회원가입한 사용자가 없습니다.</p>
+    {{/users}}
 </div>
 </body>
 </html>
