@@ -9,9 +9,9 @@ public interface UserService {
 
     User findUserByUserId(String userId) throws Exception;
 
-    User updateUser(String userId, UpdatedUser updatedUser) throws Exception;
+    String updateUser(String userId, UpdatedUser updatedUser) throws Exception;
 
-    User deleteUser(User user);
+    String deleteUser(String userId);
 
     List<User> findAllUser();
 }

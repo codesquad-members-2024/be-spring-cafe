@@ -1,9 +1,8 @@
-package codesquad.springcafe.repository.impl;
+package codesquad.springcafe.repository.user;
 
 import codesquad.springcafe.dto.UpdatedUser;
 import codesquad.springcafe.dto.User;
 import codesquad.springcafe.exception.UserNotFoundException;
-import codesquad.springcafe.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

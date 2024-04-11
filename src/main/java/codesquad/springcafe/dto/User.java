@@ -9,8 +9,24 @@ public class User {
     private String userName;
     private String userEmail;
 
+    public User() {
+
+    }
+
+    public User(long id, String userId, String userPw, String userName, String userEmail) {
+        this.id = id;
+        this.userId = userId;
+        this.userPw = userPw;
+        this.userName = userName;
+        this.userEmail = userEmail;
+    }
+
     public long getId() {
         return id;
+    }
+
+    public String getUserPw() {
+        return userPw;
     }
 
     public String getUserId() {
@@ -45,7 +61,7 @@ public class User {
         this.userEmail = userEmail;
     }
 
-    public boolean matchPw(String userPw) {
+    public boolean matchPassword(String userPw) {
         return this.userPw.equals(userPw);
     }
 

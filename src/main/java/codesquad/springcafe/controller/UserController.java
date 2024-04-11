@@ -79,8 +79,8 @@ public class UserController {
 
     @PutMapping("/update/{userId}")
     public String update(@ModelAttribute UpdatedUser updatedUser, @PathVariable String userId) throws Exception {
-        User user = userService.updateUser(userId, updatedUser);
-        logger.info("[사용자 수정 성공] - " + user.toString());
+        String updatedUserId = userService.updateUser(userId, updatedUser);
+        logger.info("[" + updatedUserId + " 사용자 수정 성공]");
         return "redirect:/users/list";
     }
 }
