@@ -4,7 +4,7 @@ create table article
     writer        varchar(255),
     title         varchar(255),
     content       varchar(255),
-    creation_time varchar(255),
+    creation_time timestamp,
     view_count    bigint,
     primary key (id)
 );

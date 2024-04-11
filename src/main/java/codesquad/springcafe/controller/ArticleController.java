@@ -2,7 +2,6 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.dto.Article;
 import codesquad.springcafe.service.ArticleService;
-import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,20 +32,19 @@ public class ArticleController {
 
     @PostMapping("/write")
     public String write(@ModelAttribute Article article) {
-        article.setCreationTime(new Date());
-        int id = (int) articleService.addArticle(article);
-        logger.info("[" + id + "번째 게시글 생성 완료] - " + article);
+        Article addArticle = articleService.addArticle(article);
+        logger.info("[게시글 생성 완료] - " + addArticle);
 
         return "redirect:/";
     }
 
     @GetMapping("/show/{articleId}")
-    public String showForm(Model model, @PathVariable int articleId) throws Exception {
-        Article article = articleService.findArticleById(articleId - 1);
-        logger.info("[" + articleId + "번째 게시글 가져오기 성공] - " + article.toString());
+    public String showForm(Model model, @PathVariable long articleId) throws Exception {
+        long updatedArticleId = articleService.increaseViewCount(articleId);
+        logger.info("[" + updatedArticleId + "번째 게시글 조회수 증가]");
 
-        long viewCount = articleService.increaseViewCount(article);
-        logger.info("[" + articleId + "번째 게시글 조회수 : " + viewCount);
+        Article article = articleService.findArticleById(articleId);
+        logger.info("[" + articleId + "번째 게시글 가져오기 성공] - " + article);
 
         model.addAttribute("article", article);
         return "article/show";

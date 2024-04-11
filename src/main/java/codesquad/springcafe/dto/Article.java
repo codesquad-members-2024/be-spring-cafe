@@ -1,22 +1,34 @@
 package codesquad.springcafe.dto;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class Article {
+    private static final String EMPTY = "";
+    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm";
     private static final String TO_STRING_FORMAT = "[게시글] %s, %s, %s, %s";
+
     private long id;
     private String writer;
     private String title;
     private String content;
-    private String creationTime;
+    private LocalDateTime creationTime;
     private long viewCount;
 
-    public Article(String title, String content) {
-        this.writer = "익명 사용자"; // TODO: 로그인 구현시 변경
+    public Article() {
+        this.writer = "익명 사용자";
+        this.creationTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        this.viewCount = 0;
+    }
+
+    public Article(long id, String writer, String title, String content, LocalDateTime creationTime, long viewCount) {
+        this.id = id;
+        this.writer = writer;
         this.title = title;
         this.content = content;
-        this.viewCount = 0;
+        this.creationTime = creationTime;
+        this.viewCount = viewCount;
     }
 
     public long getId() {
@@ -51,8 +63,11 @@ public class Article {
         this.content = content;
     }
 
-    public String getCreationTime() {
-        return creationTime;
+    public String getFormattedCreationTime() {
+        if (creationTime == null) {
+            return EMPTY;
+        }
+        return creationTime.format(DateTimeFormatter.ofPattern(DATE_FORMAT));
     }
 
     public long getViewCount() {
@@ -63,9 +78,12 @@ public class Article {
         this.viewCount = viewCount;
     }
 
-    public void setCreationTime(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        this.creationTime = sdf.format(date);
+    public LocalDateTime getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(LocalDateTime localDateTime) {
+        this.creationTime = localDateTime;
     }
 
     @Override
