@@ -1,48 +1,46 @@
-package codesquad.springcafe.repository.impl;
+package codesquad.springcafe.repository.article;
 
 import codesquad.springcafe.dto.Article;
+import codesquad.springcafe.dto.UpdatedArticle;
 import codesquad.springcafe.exception.ArticleNotFoundException;
-import codesquad.springcafe.repository.ArticleRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public class ArticleMemoryRepository implements ArticleRepository {
     private static final Logger logger = LoggerFactory.getLogger(ArticleMemoryRepository.class);
     private static List<Article> articles = new ArrayList<>();
 
     @Override
-    public long addArticle(Article article) {
-        int id = articles.size() + 1;
+    public Article addArticle(Article article) {
+        long id = articles.size() + 1;
         article.setId(id);
         articles.add(article);
         logger.debug(article + " MemoryDB 저장 완료");
 
-        return id;
+        return article;
     }
 
     @Override
-    public Article findArticleById(int id) throws Exception {
+    public Article findArticleById(long id) throws Exception {
         try {
-            return articles.get(id);
+            return articles.get((int) id);
         } catch (IndexOutOfBoundsException e) {
             // 게시글을 찾지 못한 경우 ArticleNotFoundException 예외를 던진다.
-            throw new ArticleNotFoundException(id);
+            throw new ArticleNotFoundException((int) id);
         }
     }
 
     @Override
-    public Article modifyArticle(Article article) throws Exception {
-        return articles.set((int) (article.getId() - 1), article);
+    public long modifyArticle(long id, UpdatedArticle article) throws Exception {
+        return id;
     }
 
     @Override
-    public Article deleteArticle(Article article) {
-        articles.remove(article);
-        return article;
+    public long deleteArticle(long id) {
+        articles.remove(id);
+        return id;
     }
 
     @Override
@@ -51,7 +49,8 @@ public class ArticleMemoryRepository implements ArticleRepository {
     }
 
     @Override
-    public long increaseViewCount(Article article) {
+    public long increaseViewCount(long id) {
+        Article article = articles.get((int) id);
         long increasedViewCount = article.getViewCount() + 1;
         article.setViewCount(increasedViewCount);
         return increasedViewCount;
