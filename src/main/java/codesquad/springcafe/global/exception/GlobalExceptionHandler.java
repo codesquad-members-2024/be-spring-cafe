@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * 전역적으로 예외를 처리하는 핸들러를 포함합니다.
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 

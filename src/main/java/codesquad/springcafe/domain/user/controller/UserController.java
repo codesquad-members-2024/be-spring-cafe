@@ -21,6 +21,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    // 회원 가입
     @PostMapping
     public String join(@Valid @ModelAttribute UserJoinData userJoinData, Model model) {
         userService.join(userJoinData);
@@ -30,6 +31,7 @@ public class UserController {
         return "/user/registration_success";
     }
 
+    // 회원 목록 조회
     @GetMapping
     public String getUsers(Model model) {
         UserListData userListData = userService.getUsers();
@@ -40,6 +42,7 @@ public class UserController {
         return "user/list";
     }
 
+    // 회원 상세 조회 (프로필 조회)
     @GetMapping("/{userId}")
     public String getUser(@PathVariable(name = "userId") Long userId, Model model) {
         UserData userData = userService.getUser(userId);
