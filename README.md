@@ -1,5 +1,6 @@
 # be-spring-cafe
 2024 마스터즈 백엔드 스프링 카페
+##### eddy
 
 과정
 1. implementation 'org.springframework.boot:spring-boot-starter-web' 추가
@@ -41,5 +42,17 @@ public class UserRepositoryImpl implements UserRepository{
    ...
 }
 ```
-6. MVC 구조를 통해 구현
-   1. 
+6. 로그 설정 application.properties에 적용
+   - logging.level.root=info
+   - logging.level.codesquad.springcafe=debug
+7. a 태그 경로 학습
+- 상대경로
+```
+<li><a class="black-component" href="form" role="button">회원가입</a></li> 
+```
+- 절대경로 : href = "/~"
+```
+<li><a class="black-component" href="/form" role="button">회원가입</a></li>
+```
+8. javascript를 사용한 a태그 href 변경
+9. 
