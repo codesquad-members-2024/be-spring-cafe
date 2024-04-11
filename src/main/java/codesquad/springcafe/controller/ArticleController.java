@@ -1,17 +1,19 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.dto.ArticleRequestDto;
+import codesquad.springcafe.model.Article;
 import codesquad.springcafe.repository.ArticleRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/question")
 public class ArticleController {
 
+    private final Logger log = LoggerFactory.getLogger(ArticleController.class);
     private final ArticleRepository articleRepository;
 
     public ArticleController(ArticleRepository articleRepository) {
@@ -27,5 +29,13 @@ public class ArticleController {
     public String writeQuestion(@ModelAttribute ArticleRequestDto articleRequestDto) {
         articleRepository.save(articleRequestDto);
         return "redirect:/";
+    }
+
+    @GetMapping("/{articleId}")
+    public String getArticle(@PathVariable Long articleId, Model model) {
+        Article article = articleRepository.findById(articleId);
+        log.info("getArticle : {}", article);
+        model.addAttribute("article", article);
+        return "qna/show";
     }
 }

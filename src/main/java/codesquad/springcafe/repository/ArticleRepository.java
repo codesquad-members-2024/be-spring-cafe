@@ -20,7 +20,6 @@ public class ArticleRepository {
         long articleId = sequence.incrementAndGet();
         Article article = new Article(articleId, articleRequestDto);
         articles.put(articleId, article);
-        System.out.println(article);
     }
 
     public Article findById(Long articleId) {

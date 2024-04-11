@@ -30,7 +30,6 @@ public class UserController {
         List<UserProfileDto> userProfileDtos = userService.findAllUsers().stream()
                 .map(UserProfileDto::toDto)
                 .toList();
-        System.out.println(userProfileDtos);
         model.addAttribute("users", userProfileDtos);
         return "user/list";
     }
