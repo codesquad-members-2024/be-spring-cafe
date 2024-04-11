@@ -20,16 +20,15 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public String create(@ModelAttribute User user) {
-        log.debug("사용자 정보 : {}", user.toString());
-        userRepository.save(user);
+    public String create(@ModelAttribute UserDto userDto) {
+        userRepository.save(userDto);
         return "redirect:/users";
     }
 
     @GetMapping("/users")
     public String showUsers(Model model) {
-        List<User> users = userRepository.get();
-        model.addAttribute("users", users);
+        List<UserDto> userDtos = userRepository.getUserList();
+        model.addAttribute("users", userDtos);
         return "user/list";
     }
 }
