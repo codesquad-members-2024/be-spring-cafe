@@ -1,7 +1,7 @@
 package codesquad.springcafe.Controller;
 
-import codesquad.springcafe.Domain.Article;
-import codesquad.springcafe.Service.ArticleService;
+import codesquad.springcafe.Domain.Post;
+import codesquad.springcafe.Service.PostService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,18 +9,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping({"/", "/index"})
 public class IndexController {
-    private final ArticleService articleService;
 
-    public IndexController(ArticleService articleService) {
-        this.articleService = articleService;
+    private final PostService postService;
+
+    public IndexController(PostService postService) {
+        this.postService = postService;
     }
 
-    @GetMapping("/index")
+    @GetMapping
     public String index(Model model) {
-        List<Article> articles = articleService.findAllArticle();
-        model.addAttribute("articles", articles);
+        List<Post> posts = postService.findAllPost();
+        model.addAttribute("posts", posts);
         return "index";
     }
 }

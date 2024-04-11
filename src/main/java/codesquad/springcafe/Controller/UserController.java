@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,14 +36,14 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public String userProfile(@PathVariable("userId") String userId,Model model) {
+    public String userProfile(@PathVariable("userId") String userId, Model model) {
         //FIXME
         // - 유저 패스워드 같은 정보를 가져오는 경우 발생
-        try{
+        try {
             User user = userService.findUserById(userId);
-            model.addAttribute("userId",user.getUserId());
+            model.addAttribute("userId", user.getUserId());
             model.addAttribute("email", user.getEmail());
-        }catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             //존재하지 않는 유저 가져오면 리스트로 리다이렉트
             logger.error(e.getMessage());
             return "redirect:/users";
