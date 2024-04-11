@@ -10,4 +10,8 @@ public interface UserDatabase {
     Optional<User> findBy(String nickname);
 
     List<User> findAll();
+
+    void update(User user);
+
+    void clear();
 }

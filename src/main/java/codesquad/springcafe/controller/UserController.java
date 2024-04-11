@@ -3,7 +3,6 @@ package codesquad.springcafe.controller;
 import codesquad.springcafe.database.user.UserDatabase;
 import codesquad.springcafe.form.user.UserEditForm;
 import codesquad.springcafe.model.User;
-import jakarta.annotation.PostConstruct;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -87,9 +86,8 @@ public class UserController {
             return "redirect:/users";
         }
         User user = optionalUser.get();
-        UserEditForm userEditForm = new UserEditForm();
-        userEditForm.setEmail(user.getEmail());
-        userEditForm.setNickname(user.getNickname());
+        String email = user.getEmail();
+        UserEditForm userEditForm = new UserEditForm(email, nickname, "", "");
         model.addAttribute("userEditForm", userEditForm);
         return "user/update";
     }
@@ -104,6 +102,7 @@ public class UserController {
     @PostMapping("/edit/{nickname}")
     public String updateUser(@PathVariable String nickname, @ModelAttribute UserEditForm userEditForm, Model model,
                              BindingResult bindingResult) {
+        System.out.println(userEditForm);
         Optional<User> optionalUser = userDatabase.findBy(nickname);
         if (optionalUser.isEmpty()) {
             return "redirect:/users";
@@ -115,17 +114,10 @@ public class UserController {
             return "user/update";
         }
         user.update(userEditForm);
+        userDatabase.update(user);
+
         logger.info("유저정보가 업데이트 되었습니다. {}", user);
         String newNickname = user.getNickname(); // 유저 닉네임이 수정될 경우를 반영
         return "redirect:/users/profile/" + URLEncoder.encode(newNickname, StandardCharsets.UTF_8);
-    }
-
-    /**
-     * 서버 실행시 테스트용 사용자를 만듭니다.
-     */
-    @PostConstruct
-    public void createTestUser() {
-        User user = new User("sangchu@gmail.com", "상추", "123");
-        userDatabase.add(user);
     }
 }
