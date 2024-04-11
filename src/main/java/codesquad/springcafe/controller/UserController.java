@@ -1,6 +1,8 @@
-package codesquad.springcafe;
+package codesquad.springcafe.controller;
 
 
+import codesquad.springcafe.model.User;
+import codesquad.springcafe.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
