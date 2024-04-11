@@ -15,9 +15,6 @@ public class UserService {
         this.userRepository = userRepository; //구현체 주입
     }
     public User signUp(User user) {
-        //모든 값이 올바른지 체크
-
-
         //중복 회원 체크
         validateDuplicateUser(user);
 
@@ -26,12 +23,15 @@ public class UserService {
     }
 
     private void validateDuplicateUser(User user) {
-        userRepository.findById(user.getEmail())
+        userRepository.findById(user.getUserId())
             .ifPresent(result -> {
                 throw new IllegalStateException("이미 유저가 존재함");
             });
     }
 
+    public User findUserById(String userId) {
+        return userRepository.findById(userId).get();
+    }
     public List<User> findAllUser() {
         return userRepository.findAll();
     }

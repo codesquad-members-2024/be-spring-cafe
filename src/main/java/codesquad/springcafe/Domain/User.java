@@ -1,9 +1,17 @@
 package codesquad.springcafe.Domain;
 
+import java.time.LocalDate;
+
 public class User {
     private String email;
     private String userId;
     private String password;
+    private LocalDate signUpDate;
+
+    public User() {
+        LocalDate now = LocalDate.now();
+        this.signUpDate = now;
+    }
 
     public void setEmail(String email) {
         this.email = email;
@@ -29,5 +37,8 @@ public class User {
         return password;
     }
 
+    public LocalDate getSignUpDate() {
+        return signUpDate;
+    }
 }
 
