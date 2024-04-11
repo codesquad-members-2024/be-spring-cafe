@@ -1,8 +1,8 @@
-package codesquad.springcafe.controller;
+package codesquad.springcafe.web.controller;
 
-import codesquad.springcafe.domain.User;
-import codesquad.springcafe.dto.UserUpdateDto;
+import codesquad.springcafe.domain.user.User;
 import codesquad.springcafe.service.UserService;
+import codesquad.springcafe.web.dto.UserUpdateDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

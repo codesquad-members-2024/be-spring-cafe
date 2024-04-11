@@ -1,6 +1,5 @@
-package codesquad.springcafe.repository;
+package codesquad.springcafe.domain.article;
 
-import codesquad.springcafe.domain.Article;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collections;

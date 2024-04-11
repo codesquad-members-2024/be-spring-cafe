@@ -1,8 +1,8 @@
 package codesquad.springcafe.service;
 
-import codesquad.springcafe.domain.User;
-import codesquad.springcafe.dto.UserUpdateDto;
-import codesquad.springcafe.repository.UserRepository;
+import codesquad.springcafe.domain.user.User;
+import codesquad.springcafe.domain.user.UserRepository;
+import codesquad.springcafe.web.dto.UserUpdateDto;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;

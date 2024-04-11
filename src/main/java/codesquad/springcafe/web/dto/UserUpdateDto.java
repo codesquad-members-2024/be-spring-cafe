@@ -1,4 +1,4 @@
-package codesquad.springcafe.dto;
+package codesquad.springcafe.web.dto;
 
 public class UserUpdateDto {
 

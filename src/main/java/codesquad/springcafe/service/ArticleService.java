@@ -1,7 +1,7 @@
 package codesquad.springcafe.service;
 
-import codesquad.springcafe.domain.Article;
-import codesquad.springcafe.repository.ArticleRepository;
+import codesquad.springcafe.domain.article.Article;
+import codesquad.springcafe.domain.article.ArticleRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;

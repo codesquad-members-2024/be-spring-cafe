@@ -1,6 +1,6 @@
-package codesquad.springcafe.controller;
+package codesquad.springcafe.web.controller;
 
-import codesquad.springcafe.domain.Article;
+import codesquad.springcafe.domain.article.Article;
 import codesquad.springcafe.service.ArticleService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -1,6 +1,5 @@
-package codesquad.springcafe.repository;
+package codesquad.springcafe.domain.user;
 
-import codesquad.springcafe.domain.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;
