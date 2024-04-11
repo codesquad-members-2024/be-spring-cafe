@@ -3,6 +3,7 @@ package codesquad.springcafe.Controller;
 import codesquad.springcafe.Domain.User;
 import codesquad.springcafe.Service.UserService;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +49,15 @@ public class UserController {
     public String userProfile(@PathVariable("userId") String userId,Model model) {
         //FIXME
         // - 유저 패스워드 같은 정보를 가져오는 경우 발생
-        User user = userService.findUserById(userId);
-        model.addAttribute("userId",user.getUserId());
-        model.addAttribute("email", user.getEmail());
+        try{
+            User user = userService.findUserById(userId);
+            model.addAttribute("userId",user.getUserId());
+            model.addAttribute("email", user.getEmail());
+        }catch (NoSuchElementException e){
+            //존재하지 않는 유저 가져오면 리스트로 리다이렉트
+            logger.error(e.getMessage());
+            return "redirect:/users";
+        }
         return "user/profile";
     }
 
