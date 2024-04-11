@@ -27,16 +27,6 @@ public class UserController {
         this.userService = userService; // 스프링 생성할때 생성 -> 스프링 컨테이너의 서비스와 연결
     }
 
-    @GetMapping("/form")
-    public String form() {
-        return "user/form";
-    }
-
-    @GetMapping("/login")
-    public String loginForm() {
-        return "user/login";
-    }
-
     @GetMapping
     public String users(Model model) {
         List<User> users = userService.findAllUser();
