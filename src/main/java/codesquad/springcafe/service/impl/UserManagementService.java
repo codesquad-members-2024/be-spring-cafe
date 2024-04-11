@@ -2,12 +2,14 @@ package codesquad.springcafe.service.impl;
 
 import codesquad.springcafe.dto.UpdatedUser;
 import codesquad.springcafe.dto.User;
-import codesquad.springcafe.repository.UserRepository;
+import codesquad.springcafe.repository.user.UserRepository;
 import codesquad.springcafe.service.UserService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class UserManagementService implements UserService {
     private final UserRepository userRepository;
@@ -24,17 +26,17 @@ public class UserManagementService implements UserService {
 
     @Override
     public User findUserByUserId(String userId) throws Exception {
-        return userRepository.findUserByUserID(userId);
+        return userRepository.findUserByUserId(userId);
     }
 
     @Override
-    public User updateUser(String userId, UpdatedUser updatedUser) throws Exception {
+    public String updateUser(String userId, UpdatedUser updatedUser) throws Exception {
         return userRepository.updateUser(userId, updatedUser);
     }
 
     @Override
-    public User deleteUser(User user) {
-        return userRepository.deleteUser(user);
+    public String deleteUser(String userId) {
+        return userRepository.deleteUser(userId);
     }
 
     @Override
