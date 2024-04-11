@@ -9,6 +9,7 @@ public class User {
     private String nickname;
     private String password;
     private LocalDate joinDate;
+    private Long id;
 
     public User(String email, String nickname, String password) {
         this.email = email;
@@ -38,6 +39,9 @@ public class User {
         return nickname;
     }
 
+    public String getPassword() {
+        return password;
+    }
 
     public LocalDate getJoinDate() {
         return joinDate;
@@ -45,6 +49,14 @@ public class User {
 
     public void setJoinDate(LocalDate joinDate) {
         this.joinDate = joinDate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
@@ -66,11 +78,13 @@ public class User {
             return false;
         }
         User user = (User) object;
-        return Objects.equals(nickname, user.nickname);
+        return Objects.equals(email, user.email) && Objects.equals(nickname, user.nickname)
+                && Objects.equals(password, user.password) && Objects.equals(joinDate, user.joinDate)
+                && Objects.equals(id, user.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nickname);
+        return Objects.hash(email, nickname, password, joinDate, id);
     }
 }
