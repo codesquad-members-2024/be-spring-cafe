@@ -10,6 +10,10 @@ public class User {
         return id;
     }
 
+    public boolean passwordIsIllegal() {
+        return password == null || password.equals("");
+    }
+
     public void setId(String id) {
         this.id = id;
     }
