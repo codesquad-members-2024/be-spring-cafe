@@ -28,37 +28,37 @@ public class UserController {
     }
 
     @GetMapping("/join")
-    public String joinForm() {
+    public String showJoinPage() {
         return "user/join";
     }
 
     @PostMapping("/join")
-    public String join(@ModelAttribute User user) {
+    public String processJoinForm(@ModelAttribute User user) {
         userService.addUser(user);
         logger.info("[사용자 생성 완료] - " + user.toString());
         return "redirect:/users/list";
     }
 
     @GetMapping("/login")
-    public String loginForm() {
+    public String showLoginPage() {
         return "user/login";
     }
 
     @PostMapping("/login")
-    public String login() {
+    public String processLoginForm() {
         // TODO: login 기능
         return null;
     }
 
     @GetMapping("/list")
-    public String listForm(Model model) {
+    public String showListPage(Model model) {
         List<User> users = userService.findAllUser();
         model.addAttribute("userList", users);
         return "user/list";
     }
 
     @GetMapping("/profile/{userId}")
-    public String profileForm(Model model, @PathVariable String userId) throws Exception {
+    public String showProfilePage(Model model, @PathVariable String userId) throws Exception {
         User user = userService.findUserByUserId(userId);
         logger.info("[사용자 가져오기 성공] - " + user.toString());
         model.addAttribute("user", user);
@@ -66,19 +66,20 @@ public class UserController {
     }
 
     @GetMapping("/match_pw/{userId}")
-    public String matchPwForm(Model model, @PathVariable String userId) {
+    public String showMatchPasswordPage(Model model, @PathVariable String userId) {
         model.addAttribute("userId", userId);
         return "user/match_pw";
     }
 
     @GetMapping("/update/{userId}")
-    public String updateForm(Model model, @PathVariable String userId) {
+    public String showUpdatePage(Model model, @PathVariable String userId) {
         model.addAttribute("userId", userId);
         return "user/update";
     }
 
     @PutMapping("/update/{userId}")
-    public String update(@ModelAttribute UpdatedUser updatedUser, @PathVariable String userId) throws Exception {
+    public String updateUserInfo(@ModelAttribute UpdatedUser updatedUser, @PathVariable String userId)
+            throws Exception {
         String updatedUserId = userService.updateUser(userId, updatedUser);
         logger.info("[" + updatedUserId + " 사용자 수정 성공]");
         return "redirect:/users/list";

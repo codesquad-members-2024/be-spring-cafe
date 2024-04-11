@@ -25,7 +25,7 @@ public class UserMatchController {
     }
 
     @PostMapping("/match_pw/{userId}")
-    public Map<String, Object> matchPassword(@PathVariable String userId, @RequestParam String userPassword)
+    public Map<String, Object> processMatchPasswordForm(@PathVariable String userId, @RequestParam String userPassword)
             throws Exception {
         User user = userService.findUserByUserId(userId);
         Map<String, Object> response = new HashMap<>();

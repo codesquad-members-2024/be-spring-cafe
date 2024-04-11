@@ -26,12 +26,12 @@ public class ArticleController {
     }
 
     @GetMapping("/write")
-    public String writeForm() {
+    public String showWritePage() {
         return "article/form";
     }
 
     @PostMapping("/write")
-    public String write(@ModelAttribute Article article) {
+    public String processWriteForm(@ModelAttribute Article article) {
         Article addArticle = articleService.addArticle(article);
         logger.info("[게시글 생성 완료] - " + addArticle);
 
@@ -39,7 +39,7 @@ public class ArticleController {
     }
 
     @GetMapping("/show/{articleId}")
-    public String showForm(Model model, @PathVariable long articleId) throws Exception {
+    public String showDetailPage(Model model, @PathVariable long articleId) throws Exception {
         long updatedArticleId = articleService.increaseViewCount(articleId);
         logger.info("[" + updatedArticleId + "번째 게시글 조회수 증가]");
 
