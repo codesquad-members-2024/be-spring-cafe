@@ -52,6 +52,14 @@ public class ArticleH2Database implements ArticleDatabase {
     }
 
     @Override
+    public void update(Article article) {
+        String sql = "UPDATE articles SET title = ?, content = ?, writer = ?, views = ? WHERE id = ?";
+        jdbcTemplate.update(sql, article.getTitle(), article.getContent(), article.getWriter(), article.getViews(),
+                article.getId());
+    }
+
+
+    @Override
     public void clear() {
         String sql = "delete from articles";
         jdbcTemplate.update(sql);
@@ -66,6 +74,7 @@ public class ArticleH2Database implements ArticleDatabase {
             Article article = new Article(writer, title, content);
             article.setId(rs.getLong("id"));
             article.setWriteDate(rs.getTimestamp("writedate").toLocalDateTime());
+            article.setViews(rs.getLong("views"));
             return article;
         };
     }

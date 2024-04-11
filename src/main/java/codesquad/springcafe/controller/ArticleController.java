@@ -56,6 +56,8 @@ public class ArticleController {
         }
         Article article = optionalArticle.get();
         article.increaseViews();
+        articleDatabase.update(article);
+        
         model.addAttribute("article", article);
 
         return "article/show";
