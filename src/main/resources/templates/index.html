@@ -85,15 +85,14 @@
                   <div class="wrap">
                       <div class="main">
 <!--                          <strong class="subject">-->
-<!--                              &lt;!&ndash; Article 객체의 속성을 사용하여 제목과 링크를 생성합니다. &ndash;&gt;-->
-<!--                          th:href="@{'./qna/show/' + ${article.id}}"-->
-                              <a th:text="${article.title}"></a>
+                              <!-- Article 객체의 속성을 사용하여 제목과 링크를 생성합니다. -->
+                              <a th:href="@{'articles/' + ${article.id}}" th:text="${article.title}">글제목</a>
 <!--                          </strong>-->
                           <div class="auth-info">
                               <i class="icon-add-comment"></i>
                               <!-- Article 객체의 속성을 사용하여 작성자와 작성 시간을 출력합니다. -->
 <!--                              <span class="time" th:text="${article.createdDate}"></span>-->
-                              <a href="./user/profile.html" class="author" th:text="${article.writer}"></a>
+                              <a href="./user/profile.html" class="author" th:text="${article.writer}">작성자</a>
                           </div>
                           <div class="reply" title="댓글">
                               <i class="icon-reply"></i>
