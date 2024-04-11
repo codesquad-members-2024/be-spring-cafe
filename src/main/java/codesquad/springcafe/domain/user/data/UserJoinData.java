@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  */
 public class UserJoinData {
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
-    @Email(regexp = "/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g",
+    @Email(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
             message = "올바른 이메일 형식이어야 합니다.")
     private final String email;
     @NotBlank(message = "이름은 필수 입력 값입니다.")
