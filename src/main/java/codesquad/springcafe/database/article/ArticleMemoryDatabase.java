@@ -34,4 +34,9 @@ public class ArticleMemoryDatabase implements ArticleDatabase {
     public void clear() {
         store.clear();
     }
+
+    @Override
+    public void update(Article article) {
+        store.put(article.getId(), article);
+    }
 }

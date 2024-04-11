@@ -69,6 +69,10 @@ public class Article {
         return views;
     }
 
+    public void setViews(long views) {
+        this.views = views;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {

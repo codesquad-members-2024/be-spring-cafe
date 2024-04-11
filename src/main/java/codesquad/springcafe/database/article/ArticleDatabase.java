@@ -11,5 +11,7 @@ public interface ArticleDatabase {
 
     List<Article> findAll();
 
+    void update(Article article);
+
     void clear();
 }
