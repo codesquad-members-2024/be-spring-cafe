@@ -4,11 +4,13 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface BasicRepository<T, ID> {
-    Long save(T entity);
+    T save(T entity);
 
     Optional<T> findById(ID id);
 
     Collection<T> findAll();
 
     Long countAll();
+
+    void deleteAll();
 }

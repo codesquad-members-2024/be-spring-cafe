@@ -15,11 +15,10 @@ public class UserRepositoryLocal implements UserRepository{
     private static final Map<Long, User> users = new HashMap<>();
     private static final AtomicLong sequence = new AtomicLong(0);
 
-    public Long save(User user){
+    public User save(User user){
         long userId = sequence.incrementAndGet();
         user.setId(userId);
-        users.put(userId, user);
-        return userId;
+        return users.put(userId, user);
     }
 
     public Optional<User> findById(Long id) {
@@ -45,5 +44,9 @@ public class UserRepositoryLocal implements UserRepository{
 
     public Long countAll() {
         return sequence.get();
+    }
+
+    public void deleteAll() {
+        users.clear();
     }
 }
