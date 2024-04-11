@@ -1,6 +1,8 @@
 package codesquad.springcafe.domain.user.data;
 
 import codesquad.springcafe.domain.user.model.User;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
@@ -9,8 +11,13 @@ import java.time.LocalDateTime;
  * 유저 회원가입 정보를 저장하는 데이터 클래스
  */
 public class UserJoinData {
+    @NotBlank(message = "이메일은 필수 입력 값입니다.")
+    @Email(regexp = "/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g",
+            message = "올바른 이메일 형식이어야 합니다.")
     private final String email;
+    @NotBlank(message = "이름은 필수 입력 값입니다.")
     private final String name;
+    @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
     private final String password;
 
     @ConstructorProperties({"email", "name", "password"})

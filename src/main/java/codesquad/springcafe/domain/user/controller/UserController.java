@@ -4,6 +4,7 @@ import codesquad.springcafe.domain.user.data.UserData;
 import codesquad.springcafe.domain.user.data.UserJoinData;
 import codesquad.springcafe.domain.user.data.UserListData;
 import codesquad.springcafe.domain.user.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping
-    public String join(@ModelAttribute UserJoinData userJoinData, Model model) {
+    public String join(@Valid @ModelAttribute UserJoinData userJoinData, Model model) {
         userService.join(userJoinData);
 
         model.addAttribute("user", userJoinData);
