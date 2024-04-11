@@ -1,0 +1,88 @@
+.col-md-12 {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.navbar-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.active {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    width: 80px;
+    height: 30px;
+    font-size: 14px;
+}
+
+.black-component {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    width: 80px;
+    height: 30px;
+    font-size: 14px;
+    background-color: black;
+    color: white;
+}
+
+.black-component:hover {
+    background-color: #ffcd00;
+    color: black;
+}
+
+.navbar-right {
+    display: flex;
+}
+
+.description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #ffcd00;
+    height: 148px;
+    margin-bottom: 40px;
+}
+
+.desc-container {
+    margin-left: 50px;
+}
+
+.desc-small {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.desc-big {
+    font-size: 24px;
+}
+
+li {
+    margin: 3px;
+}
+
+.error-container {
+    width: 80%; /* 컨테이너의 너비 */
+    margin: 100px auto; /* 수평 가운데 정렬 */
+    text-align: center; /* 왼쪽 정렬 */
+}
+h1 {
+    font-size: 36px; /* 헤더 폰트 크기 */
+    font-weight: bold;
+    margin-bottom: 20px; /* 헤더와 내용 간격 */
+}
+p {
+    font-size: 18px; /* 내용 폰트 크기 */
+    color: #6c757d; /* 내용 색상 */
+    text-align: left; /* 텍스트 가운데 정렬 */
+    word-wrap: break-word; /* 긴 단어가 넘칠 경우 줄바꿈 */
+    white-space: pre-wrap; /* 공백과 줄바꿈을 유지 */
+}
