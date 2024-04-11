@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -30,5 +31,12 @@ public class UserController {
         List<UserDto> userDtos = userRepository.getUserList();
         model.addAttribute("users", userDtos);
         return "user/list";
+    }
+
+    @GetMapping("/users/{userId}")
+    public String showProfile(@PathVariable String userId, Model model) {
+        UserDto userDto = userRepository.findUser(userId);
+        model.addAttribute("user", userDto);
+        return "user/profile";
     }
 }
