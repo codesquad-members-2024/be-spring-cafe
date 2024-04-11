@@ -31,6 +31,7 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleIndex}")
     public String articleDetails(@PathVariable Long articleIndex, Model model) {
+        model.addAttribute("nlString", System.lineSeparator());
         model.addAttribute("article", articleService.findByIndex(articleIndex));
         return "/qna/show";
     }

@@ -26,7 +26,7 @@
                           </a>
                       </div>
                   </div>
-                  <div class="article-doc" th:text="${article.getContents()}">contents</div>
+                  <div class="article-doc" th:utext="${#strings.replace(article.getContents(), nlString, '&lt;br /&gt;')}">contents</div>
                   <div class="article-util">
                       <ul class="article-util-list">
                           <li>
