@@ -1,7 +1,7 @@
 package codesquad.springcafe;
 
 import codesquad.springcafe.database.article.ArticleDatabase;
-import codesquad.springcafe.database.article.ArticleH2Database;
+import codesquad.springcafe.database.article.ArticleMemoryDatabase;
 import codesquad.springcafe.database.user.UserDatabase;
 import codesquad.springcafe.database.user.UserMemoryDatabase;
 import javax.sql.DataSource;
@@ -33,7 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Bean
     public ArticleDatabase articleDatabase() {
-//        return new UserMemoryDatabase();
-        return new ArticleH2Database(dataSource);
+        return new ArticleMemoryDatabase();
+//        return new ArticleH2Database(dataSource);
     }
 }
