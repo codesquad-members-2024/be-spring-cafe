@@ -5,9 +5,49 @@
 
 ## 1) H2 데이터베이스 연동
 
-- [ ] h2 데이터베이스 의존성 추가하기
-- [ ] Spring JDBC 사용하기
-- [ ] DB 저장, 조회 SQL 작성하기
+- [x] h2 데이터베이스 의존성 추가하기
+- build.gradle
+```
+implementation 'org.springframework.boot:spring-boot-starter-jdbc:3.2.4'
+implementation 'com.h2database:h2:1.4.200'
+```
+- [x] Spring JDBC 사용하기
+- application.properties
+```
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.url=jdbc:h2:~/spring-qna-db;DB_CLOSE_ON_EXIT=FALSE
+spring.datasource.username=zoonmy
+spring.datasource.password=zoonmy
+
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+```
+- [x] Intellij에 h2 db 연결하기
+
+![img.png](img/img_4.png)
+- [ ] User, Article 테이블 생성하기
+- USERS 테이블 생성
+```
+CREATE TABLE USERS (
+    userId VARCHAR(255) PRIMARY KEY,
+    email VARCHAR(255),
+    name VARCHAR(255),
+    password VARCHAR(255),
+    creationDate VARCHAR(255)
+);
+```
+- ARTICLES 테이블 생성
+```
+CREATE TABLE ARTICLES (
+   articleId INT PRIMARY KEY,
+   userId VARCHAR(255),
+   title VARCHAR(255),
+   content VARCHAR(255),
+   creationDate VARCHAR(255),
+   FOREIGN KEY (userId) REFERENCES USERS(userId)
+);
+```
+
 
 ## 2) 게시글 데이터 저장하기
 - [ ] Article 클래스를 DB 테이블에 저장하기
