@@ -26,7 +26,7 @@
                     </th>
                     <td th:text="${member.userName}">옐리</td>
                     <td th:text="${member.email}">yelly@test.com</td>
-                    <td><a href="#" class="btn btn-success" role="button">수정</a></td>
+                    <td><a th:href="@{|/members/${member.loginId}/update|}" class="btn btn-success" role="button">수정</a></td>
                 </tr>
                 </tbody>
             </table>
