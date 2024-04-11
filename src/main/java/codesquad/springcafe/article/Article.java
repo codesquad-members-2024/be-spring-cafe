@@ -10,19 +10,13 @@ public class Article {
     private String content;
     private int point;
 
-    public Article(String author, String title, String content) {
+    public Article(int id, Timestamp created_datetime, String author, String title, String content, int point) {
+        this.id = id;
+        this.created_datetime = created_datetime;
         this.author = author;
         this.title = title;
         this.content = content;
-        this.point = 0;
-    }
-
-    public Article completeArticle(int id, Timestamp created_datetime, int point) {
-        this.setId(id);
-        this.setCreatedDateTime(created_datetime);
-        this.setPoint(point);
-
-        return this;
+        this.point = point;
     }
 
     public void setId(int id) {
