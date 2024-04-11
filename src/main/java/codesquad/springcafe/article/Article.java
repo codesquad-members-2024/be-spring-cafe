@@ -2,19 +2,19 @@ package codesquad.springcafe.article;
 
 public class Article {
 
-    private String articleId;
+    private long articleId;
     private String title;
     private String author;
     private String contents;
 
-    public Article(String articleId, String title, String author, String contents) {
+    public Article(long articleId, String title, String author, String contents) {
         this.articleId = articleId;
         this.title = title;
         this.author = author;
         this.contents = contents;
     }
 
-    public String getArticleId() {
+    public long getArticleId() {
         return articleId;
     }
 

@@ -2,12 +2,12 @@ package codesquad.springcafe.article;
 
 public class ArticleBuilder {
 
-    private String articleId;
+    private long articleId;
     private String author;
     private String title;
     private String content;
 
-    public ArticleBuilder articleId(String articleId) {
+    public ArticleBuilder articleId(long articleId) {
         this.articleId = articleId;
         return this;
     }

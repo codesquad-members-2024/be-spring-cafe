@@ -2,12 +2,12 @@ package codesquad.springcafe.article;
 
 public class ArticleCreateDto {
 
-    private String articleId;
+    private long articleId;
     private String title;
     private String author;
     private String contents;
 
-    public ArticleCreateDto(String articleId, String title, String author, String contents) {
+    public ArticleCreateDto(long articleId, String title, String author, String contents) {
         this.articleId = articleId;
         this.title = title;
         this.author = author;
@@ -19,7 +19,7 @@ public class ArticleCreateDto {
             .content(contents).build();
     }
 
-    public String getArticleId() {
+    public long getArticleId() {
         return articleId;
     }
 
