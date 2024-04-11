@@ -1,10 +1,11 @@
-package codesquad.springcafe.board;
+package codesquad.springcafe.user;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -17,4 +18,9 @@ public class UserRepository {
         users.add(user);
         log.debug("유저 수 : {}", users.size());
     }
+
+    public List<User> get() {
+        return Collections.unmodifiableList(users);
+    }
+
 }
