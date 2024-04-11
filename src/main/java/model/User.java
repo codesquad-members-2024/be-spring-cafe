@@ -17,6 +17,14 @@ public class User {
         this.creationDate = LocalDate.now(); // 현재 날짜를 사용하여 초기화
     }
 
+    public User(String userId, String email, String name, String password, String creationDate) {
+        this.userId = userId;
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.creationDate = LocalDate.parse(creationDate);
+    }
+
     @Override
     public String toString() {
         return "ID : " + userId + ", EMAIL : " + email + ", Name : " + name + ", PW : " + password + ", CreationDate : " + creationDate;

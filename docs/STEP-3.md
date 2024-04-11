@@ -67,7 +67,7 @@ CREATE TABLE ARTICLES (
   - Artciel Table에 추가를 할 지, 다른 테이블에 추가를 할 지 고민해보자
 
 ## 5) 사용자 정보 DB에 저장
-- [ ] User 클래스를 DB 테이블에 저장하기
+- [x] User 클래스를 DB 테이블에 저장하기
 
 ---
 

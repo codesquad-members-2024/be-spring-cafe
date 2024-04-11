@@ -1,4 +1,4 @@
-package codesquad.springcafe.users.service;
+package codesquad.springcafe.users.repository;
 
 import codesquad.springcafe.exception.PasswordMismatchException;
 import codesquad.springcafe.exception.UserNotFoundException;
@@ -8,18 +8,14 @@ import model.UserData;
 import model.UserUpdateData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.stream.IntStream;
 
-@Service
-public class UserManagementService implements UserService {
-    private static final Logger logger = LoggerFactory.getLogger(UserManagementService.class);
+@Repository
+public class MemoryUserRepository implements UserRepository{
+    private static final Logger logger = LoggerFactory.getLogger(MemoryUserRepository.class);
 
     @Override
     public void createUser(UserData userData) {
@@ -57,6 +53,5 @@ public class UserManagementService implements UserService {
             throw new PasswordMismatchException("입력한 비밀번호가 일치하지 않습니다.");
         }
     }
-
 
 }
