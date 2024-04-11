@@ -2,14 +2,14 @@ package codesquad.springcafe.Domain;
 
 import java.time.LocalDate;
 
-public class Article {
+public class Post {
     private Long id;
     private String title;
     private String content;
     private LocalDate createdAt;
 
     // 생성자
-    public Article() {
+    public Post() {
         this.createdAt = LocalDate.now();
     }
 
