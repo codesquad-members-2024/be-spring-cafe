@@ -25,14 +25,11 @@ public class UserMatchController {
     }
 
     @PostMapping("/match_pw/{userId}")
-    public Map<String, Object> matchPw(@PathVariable String userId, @RequestParam String userPw) throws Exception {
+    public Map<String, Object> matchPassword(@PathVariable String userId, @RequestParam String userPassword)
+            throws Exception {
         User user = userService.findUserByUserId(userId);
         Map<String, Object> response = new HashMap<>();
-        if (user.matchPw(userPw)) {
-            response.put("valid", true);
-        } else {
-            response.put("valid", false);
-        }
+        response.put("valid", user.matchPassword(userPassword));
         return response;
     }
 }
