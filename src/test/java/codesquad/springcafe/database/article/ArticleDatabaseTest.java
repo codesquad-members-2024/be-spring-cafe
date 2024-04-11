@@ -34,6 +34,7 @@ class ArticleDatabaseTest {
     }
 
     @Test
+    @DisplayName("데이터베이스에 존재하는 모든 article을 조회할 수 있다.")
     void findAll() {
         Article article1 = new Article("상추", "제목1", "본문1");
         Article article2 = new Article("배추", "제목2", "본문2");
@@ -42,5 +43,19 @@ class ArticleDatabaseTest {
 
         List<Article> result = articleDatabase.findAll();
         assertThat(result).containsExactly(article1, article2);
+    }
+
+    @Test
+    @DisplayName("아티클의 정보를 수정하고 저장할 수 있다.")
+    void update() {
+        Article article = new Article("상추", "제목1", "본문1");
+        Long id = articleDatabase.add(article).getId();
+
+        article.increaseViews();
+        articleDatabase.update(article);
+
+        Article result = articleDatabase.findBy(id).get();
+
+        assertThat(result.getViews()).isEqualTo(1);
     }
 }
