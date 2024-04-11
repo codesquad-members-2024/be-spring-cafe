@@ -9,10 +9,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PostService {
+
     private final PostRepository postRepository;
 
     @Autowired
-    public PostService(PostRepository postRepository){
+    public PostService(PostRepository postRepository) {
         this.postRepository = postRepository; //구현체 주입
     }
 

@@ -40,5 +40,10 @@ public class User {
     public LocalDate getSignUpDate() {
         return signUpDate;
     }
+
+    public void infoUpdate(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }
 
