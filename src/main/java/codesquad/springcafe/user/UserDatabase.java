@@ -15,6 +15,11 @@ public class UserDatabase {
         userDatabase.add(user);
     }
 
+    public void updateUser(User user, String userId) {
+        userDatabase.remove(findByUserId(userId));
+        save(user);
+    }
+
     public List<UserRequestDto> findAll() {
         List<UserRequestDto> userRequestDtoList = new ArrayList<>();
         for (User user : userDatabase) {
