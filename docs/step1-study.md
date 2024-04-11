@@ -115,7 +115,46 @@ init() 후 클라이언트 요청에 따라 service() 메서드를 통해 응답
 서블릿의 번거로움을 JSP가 대신 수행!
 
 ---
+## WebMvcConfigurer로 URL과 html 쉽게 연결하기
+- html에서 중복을 제거하는 기능은 template engine에서 제공하는 기능
+- 모든 html의 기능의 중복을 제거하려면 static의 html 또한 templates 폴더로 이동해야 한다
+- 이와 같은 구현 방법은 특별한 로직이 없음에도 매번 controller 메서드를 만들어 매핑해야 한다
+- 이런 번거로운 작업을 제거하기 위해 WebMvcConfigurer의 메서드를 override해 구현할 수 있다
 
+### WebMvcConfigurerAdapter
+- 전에는 WebMvcConfigurerAdapter가 사용되었다.
+- 하지만 자바가 인터페이스의 default 메서드를 지원하면서 WebMvcConfigurer를 구현하는 클래스에서 모든 메서드를 구현해야 하는 강제력이 사려졌다.
+- 따라서 기존의 WebMvcConfigurerAdapter 클래스는 쓰임새가 사라져 스프링부트 2.0에서 deprecated 되었다.
+
+### 사용 예시
+```java
+@Configuration
+public class AppConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+
+        registry.addViewController("/").setViewName("/index");
+        registry.addViewController("/user/login").setViewName("/user/login");
+        registry.addViewController("/user/join").setViewName("/user/form");
+    }
+}
+```
+- Configuration 어노테이션으로 해당 클래스가 어플리케이션 컨텍스트의 구성을 정의한다는 것을 나타낸다
+- addViewController 메서드는 스프링 MVC에서 사용되는 메서드로, 컨트롤러를 등록하는 데 사용
+- 특정 URL 경로에 대한 요청을 처리하는 컨트롤러를 등록
+- 실제 작업을 수행하는 컨트롤러가 아닌 단순히 특정 뷰로 이동시키는 역할!(라우팅이 아님)
+- 예를 들어 위 코드에서 "/" 경로에 대한 요청이 발생하면, "/index" 뷰로 이동하도록 설정한다
+- registry.setOrder(Ordered.HIGHEST_PRECEDENCE);로 빈 레지스트리의 순서를 설정
+  - 더 높은 우선순위로 설정해 다른 빈들보다 먼저 처리되도록 설정
+  - Ordered.HIGHEST_PRECEDENCE는 빈의 최고 우선순위를 나타내는 상수
+
+---
+## Application Context?
+- 스프링 프레임워크의 핵심적인 컨테이너
+- 스프링 어플리케이션을 설정하고 구성하는 데 사용되며, 런타임 중에 스프링 빈의 인스턴스를 관리하고 의존성 주입을 수행한다
+---
 ## 참고 내용 출처
 - https://velog.io/@0_0_yoon/%EB%A0%88%EB%B2%A83-ServletModelAttributeMethodProcessor%EA%B0%80-%EB%8F%99%EC%9E%91%ED%95%98%EB%8A%94-%EA%B3%BC%EC%A0%95
 - https://mangkyu.tistory.com/14
