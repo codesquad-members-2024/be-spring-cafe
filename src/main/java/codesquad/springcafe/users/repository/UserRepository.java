@@ -1,12 +1,12 @@
-package codesquad.springcafe.users.service;
+package codesquad.springcafe.users.repository;
 
-import model.UserData;
 import model.User;
+import model.UserData;
 import model.UserUpdateData;
 
-import java.util.*;
+import java.util.ArrayList;
 
-public interface UserService {
+public interface UserRepository {
     void createUser(UserData userData);
 
     ArrayList<User> getAllUsers();
