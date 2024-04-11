@@ -12,7 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/users")
@@ -51,6 +53,21 @@ public class UserController {
         return "user/profile";
     }
 
+    @GetMapping("/{userId}/form")
+    public String userUpdate(@PathVariable("userId") String userId, Model model) {
+        //FIXME
+        // - 유저 패스워드 같은 정보를 가져오는 경우 발생
+        try {
+            User user = userService.findUserById(userId);
+            model.addAttribute("user", user);
+        } catch (NoSuchElementException e) {
+            //존재하지 않는 유저 가져오면 리스트로 리다이렉트
+            logger.error(e.getMessage());
+            return "redirect:/users";
+        }
+        return "user/updateForm";
+    }
+
     @PostMapping
     public String users(User user, Model model) { //html의 name과 매칭
         try {
@@ -66,5 +83,14 @@ public class UserController {
         }
         model.addAttribute(user);
         return "user/login_success";
+    }
+
+    @PutMapping("/{userId}/update")
+    public String userUpdate(@PathVariable("userId") String userId,
+        @RequestParam("email") String email, @RequestParam("password") String password) {
+        User user = userService.findUserById(userId);
+        user.infoUpdate(email, password);
+
+        return "redirect:/users";
     }
 }
