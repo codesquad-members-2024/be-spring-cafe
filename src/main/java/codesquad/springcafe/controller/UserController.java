@@ -1,5 +1,6 @@
 package codesquad.springcafe.controller;
 
+import codesquad.springcafe.dto.UserProfileDto;
 import codesquad.springcafe.model.User;
 import codesquad.springcafe.service.UserService;
 import org.slf4j.Logger;
@@ -7,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @Controller
@@ -24,7 +27,11 @@ public class UserController {
     @GetMapping
     public String getUserList(Model model) {
         log.info("user list");
-        model.addAttribute("users", userService.findAllUsers());
+        List<UserProfileDto> userProfileDtos = userService.findAllUsers().stream()
+                .map(UserProfileDto::toDto)
+                .toList();
+        System.out.println(userProfileDtos);
+        model.addAttribute("users", userProfileDtos);
         return "user/list";
     }
 
@@ -35,11 +42,11 @@ public class UserController {
         return "redirect:/users";
     }
 
-    @GetMapping("/{userSequence}")
-    public String getUser(@PathVariable Long userSequence, Model model) {
-        log.info("get User : {}", userSequence);
-        User user = userService.findUserBySequence(userSequence);
-        model.addAttribute("user", user);
+    @GetMapping("/{userId}")
+    public String getUser(@PathVariable String userId, Model model) {
+        log.info("get User : {}", userId);
+        User user = userService.findUserById(userId);
+        model.addAttribute("user", UserProfileDto.toDto(user));
         return "user/profile";
     }
 

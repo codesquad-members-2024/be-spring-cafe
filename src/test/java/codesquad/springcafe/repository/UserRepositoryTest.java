@@ -23,7 +23,7 @@ class UserRepositoryTest {
 
         userRepository.saveUser(user);
 
-        assertThat(userRepository.findUserBySequence(user.getUserSequence())).isEqualTo(user);
+        assertThat(userRepository.findUserById(user.getUserSequence())).isEqualTo(user);
     }
 
     @Test

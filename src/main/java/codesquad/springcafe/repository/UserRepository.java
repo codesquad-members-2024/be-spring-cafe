@@ -15,12 +15,10 @@ import java.util.concurrent.atomic.AtomicLong;
 public class UserRepository {
 
     private final Logger log = LoggerFactory.getLogger(UserRepository.class);
-    private final Map<Long, User> users = new ConcurrentHashMap<>();
-    private final AtomicLong sequence = new AtomicLong();
+    private final Map<String, User> users = new ConcurrentHashMap<>();
 
     public void saveUser(User user) {
-        user.setUserSequence(sequence.incrementAndGet());
-        users.put(user.getUserSequence(), user);
+        users.put(user.getUserId(), user);
         log.info("user saved: {}", user.getUserId());
     }
 
@@ -28,12 +26,11 @@ public class UserRepository {
         return new ArrayList<User>(users.values());
     }
 
-    public User findUserBySequence(Long userSequence) {
-        return users.get(userSequence);
+    public User findUserById(String userId) {
+        return users.get(userId);
     }
 
     public void clear() {
         users.clear();
-        sequence.set(0);
     }
 }

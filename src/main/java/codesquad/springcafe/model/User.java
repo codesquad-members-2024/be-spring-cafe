@@ -2,7 +2,6 @@ package codesquad.springcafe.model;
 
 public class User {
 
-    private Long userSequence;
     private String userId;
     private String password;
     private String name;
@@ -15,9 +14,6 @@ public class User {
         this.email = email;
     }
 
-    public Long getUserSequence() {
-        return userSequence;
-    }
 
     public String getUserId() {
         return userId;
@@ -35,9 +31,6 @@ public class User {
         return email;
     }
 
-    public void setUserSequence(Long sequence) {
-        this.userSequence = sequence;
-    }
 
     @Override
     public String toString() {

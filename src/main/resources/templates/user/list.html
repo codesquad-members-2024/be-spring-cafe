@@ -21,7 +21,7 @@
               </thead>
               <tbody>
                   <tr th:each="user : ${users}">
-                      <th scope="row" th:text="${user.userSequence}">번호</th> <td th:text="${user.userId}">회원id</td> <td><a th:href="@{/users/{userSequence}(userSequence=${user.userSequence})}" th:text="${user.name}">이름</a></td> <td th:text="${user.email}">이메일</td><td><a href="#" class="btn btn-success" role="button">수정</a></td>
+                      <th scope="row" th:text="${userStat.count}">번호</th> <td th:text="${user.userId}">회원id</td> <td><a th:href="@{/users/{userId}(userId=${user.userId})}" th:text="${user.name}">이름</a></td> <td th:text="${user.email}">이메일</td><td><a href="#" class="btn btn-success" role="button">수정</a></td>
                   </tr>
               </tbody>
           </table>

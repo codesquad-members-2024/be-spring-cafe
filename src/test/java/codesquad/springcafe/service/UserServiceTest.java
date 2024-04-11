@@ -38,7 +38,7 @@ class UserServiceTest {
         User user = new User("test1", "1234", "test1", "test1@naver.com");
         userService.join(user);
 
-        User findUser = userService.findUserBySequence(user.getUserSequence());
+        User findUser = userService.findUserById(user.getUserSequence());
 
         assertThat(findUser).isEqualTo(user);
     }
