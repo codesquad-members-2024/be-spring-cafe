@@ -15,17 +15,8 @@
 <div class="background">
 <nav class="navbar navbar-fixed-top header">
     <div class="col-md-12">
-        <div class="navbar-header">
-            <a href="/index" class="navbar-brand">
-                <img src="/images/KakaoCI.png" />
-            </a>
-
-        </div>
-        <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="/index">메인 페이지</a></li>
-            <li><a class="black-component" href="users/login" role="button">로그인</a></li>
-            <li><a class="black-component" href="users/form" role="button">회원가입</a></li>
-        </ul>
+        {{>layout/navbar_header}}
+        {{>layout/navbar_right}}
     </div>
 </nav>
 
@@ -49,10 +40,7 @@
                 </thead>
                 <tbody>
                 {{#users}}
-                <tr>
-                    <!-- 이거 js 설정해야한다. -->
-                    <td><strong><a href="/users/{{userId}}" />{{userId}}</a></strong></td> <td>{{email}}</td><td>{{signUpDate}}</td>
-                </tr>
+                    {{>user/userInfo}}
                 {{/users}}
                 </tbody>
             </table>
