@@ -11,6 +11,7 @@ public class ArticleDatabase {
     private final List<Article> articles = new ArrayList<>();
 
     public void saveArticle(Article article) {
+        article.setArticleId(articles.size() + 1);
         articles.add(article);
     }
 
@@ -18,9 +19,14 @@ public class ArticleDatabase {
         return articles;
     }
 
+    public Article findById(long id) {
+        return articles.stream()
+            .filter(article -> article.getArticleId() == id)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("해당 아이디의 게시글이 없습니다."));
+    }
+
     public void clear() {
         articles.clear();
     }
-
-
 }
