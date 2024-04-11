@@ -105,4 +105,8 @@ td {
 
 .profile-link {
     color: blue;
+    text-decoration: none;
+}
+.profile-link:hover {
+    text-decoration: underline;
 }
