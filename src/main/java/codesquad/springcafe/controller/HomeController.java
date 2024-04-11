@@ -22,7 +22,7 @@ public class HomeController {
     }
 
     @GetMapping(value = {"/", "/home"})
-    public String homeForm(Model model) {
+    public String showHomePage(Model model) {
         List<Article> articles = articleService.findAllArticle();
         model.addAttribute("articleList", articles);
         return "home";
