@@ -1,12 +1,15 @@
 package codesquad.springcafe.service.impl;
 
 import codesquad.springcafe.dto.Article;
-import codesquad.springcafe.repository.ArticleRepository;
+import codesquad.springcafe.dto.UpdatedArticle;
+import codesquad.springcafe.repository.article.ArticleRepository;
 import codesquad.springcafe.service.ArticleService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class ArticleManagementService implements ArticleService {
     private final ArticleRepository articleRepository;
@@ -17,23 +20,23 @@ public class ArticleManagementService implements ArticleService {
     }
 
     @Override
-    public long addArticle(Article article) {
+    public Article addArticle(Article article) {
         return articleRepository.addArticle(article);
     }
 
     @Override
-    public Article findArticleById(int id) throws Exception {
+    public Article findArticleById(long id) throws Exception {
         return articleRepository.findArticleById(id);
     }
 
     @Override
-    public Article modifyArticle(Article article) throws Exception {
-        return articleRepository.modifyArticle(article);
+    public long modifyArticle(long id, UpdatedArticle article) throws Exception {
+        return articleRepository.modifyArticle(id, article);
     }
 
     @Override
-    public Article deleteArticle(Article article) {
-        return articleRepository.deleteArticle(article);
+    public long deleteArticle(long id) {
+        return articleRepository.deleteArticle(id);
     }
 
     @Override
@@ -42,7 +45,7 @@ public class ArticleManagementService implements ArticleService {
     }
 
     @Override
-    public long increaseViewCount(Article article) {
-        return articleRepository.increaseViewCount(article);
+    public long increaseViewCount(long id) throws Exception {
+        return articleRepository.increaseViewCount(id);
     }
 }

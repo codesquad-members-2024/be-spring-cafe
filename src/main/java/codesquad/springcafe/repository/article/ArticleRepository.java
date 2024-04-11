@@ -1,18 +1,19 @@
-package codesquad.springcafe.repository;
+package codesquad.springcafe.repository.article;
 
 import codesquad.springcafe.dto.Article;
+import codesquad.springcafe.dto.UpdatedArticle;
 import java.util.List;
 
 public interface ArticleRepository {
-    long addArticle(Article article);
+    Article addArticle(Article article);
 
-    Article findArticleById(int id) throws Exception;
+    Article findArticleById(long id) throws Exception;
 
-    Article modifyArticle(Article article) throws Exception;
+    long modifyArticle(long id, UpdatedArticle article) throws Exception;
 
-    Article deleteArticle(Article article);
+    long deleteArticle(long id);
 
     List<Article> findAllArticle();
 
-    long increaseViewCount(Article article);
+    long increaseViewCount(long id) throws Exception;
 }
