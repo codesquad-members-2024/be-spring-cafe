@@ -34,6 +34,6 @@ public class UserRepository {
 
     public void clear() {
         users.clear();
-        sequence.setOpaque(0);
+        sequence.set(0);
     }
 }
