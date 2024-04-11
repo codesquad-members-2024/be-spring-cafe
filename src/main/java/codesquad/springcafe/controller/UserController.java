@@ -5,8 +5,6 @@ import codesquad.springcafe.model.User;
 import codesquad.springcafe.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class UserController {
-
-    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserRepository userRepository;
 
@@ -38,7 +34,7 @@ public class UserController {
 
     @GetMapping("/users")
     public String userList(Model model) {
-        List<User> users = userRepository.users();
+        List<User> users = userRepository.findAll();
         model.addAttribute(users);
         return "user/list";
     }

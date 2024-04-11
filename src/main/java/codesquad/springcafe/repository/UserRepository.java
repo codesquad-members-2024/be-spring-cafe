@@ -19,7 +19,7 @@ public class UserRepository {
         logger.info("SAVED USER : {}", user.toString());
     }
 
-    public List<User> users() {
+    public List<User> findAll() {
         return Collections.unmodifiableList(users);
     }
 

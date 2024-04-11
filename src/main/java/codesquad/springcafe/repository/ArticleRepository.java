@@ -2,6 +2,7 @@ package codesquad.springcafe.repository;
 
 import codesquad.springcafe.model.Article;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,5 +18,9 @@ public class ArticleRepository {
     public void add(Article article) {
         articles.add(article);
         logger.info("SAVED ARTICLE : {}", article.toString());
+    }
+
+    public List<Article> findAll() {
+        return Collections.unmodifiableList(articles);
     }
 }
