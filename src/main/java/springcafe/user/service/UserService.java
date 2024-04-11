@@ -1,10 +1,9 @@
-package springcafe.service;
+package springcafe.user.service;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import springcafe.dto.UserDto;
-import springcafe.model.User;
-import springcafe.repository.UserRepository;
+import springcafe.user.dto.UserDto;
+import springcafe.user.model.User;
+import springcafe.user.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +21,6 @@ public class UserService {
 
 
         User user = new User(id, password, username, email);
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String encodedPassword = encoder.encode(password);
-        user.setPassword(encodedPassword);
         userRepository.add(user);
 
         return user;
