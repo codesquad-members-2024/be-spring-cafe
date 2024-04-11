@@ -23,13 +23,13 @@ public class UserService {
     }
 
     // TODO: 예외 클래스 생성해 처리
-    public Long join(UserJoinData userJoinData) {
+    public void join(UserJoinData userJoinData) {
         userRepository.findByEmail(userJoinData.getEmail())
                 .ifPresent(u -> {
                     throw new IllegalStateException("이미 존재하는 사용자입니다.");
                 });
         User user = userJoinData.toUser();
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     public UserListData getUsers() {
