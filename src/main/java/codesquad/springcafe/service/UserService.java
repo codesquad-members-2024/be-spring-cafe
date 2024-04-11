@@ -1,5 +1,6 @@
 package codesquad.springcafe.service;
 
+import codesquad.springcafe.dto.UserUpdateDto;
 import codesquad.springcafe.repository.UserRepository;
 import codesquad.springcafe.model.User;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,9 @@ public class UserService {
 
     public User findUserById(String userId) {
         return userRepository.findUserById(userId);
+    }
+
+    public void update(UserUpdateDto userUpdateDto) {
+        userRepository.update(userUpdateDto);
     }
 }

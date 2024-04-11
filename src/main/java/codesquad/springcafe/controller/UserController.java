@@ -1,6 +1,7 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.dto.UserProfileDto;
+import codesquad.springcafe.dto.UserUpdateDto;
 import codesquad.springcafe.model.User;
 import codesquad.springcafe.service.UserService;
 import org.slf4j.Logger;
@@ -57,5 +58,23 @@ public class UserController {
     @GetMapping("/join")
     public String getSignUpForm() {
         return "/user/form";
+    }
+
+    @GetMapping("/{userId}/form")
+    public String getUserUpdateForm(@PathVariable String userId, Model model) {
+        model.addAttribute("userId", userId);
+        return "user/updateForm";
+    }
+
+    @PutMapping("/{userId}")
+    public String updateUser(@PathVariable String userId, @RequestParam("password") String password, @RequestParam("newPassword") String newPassword, @RequestParam("name") String name, @RequestParam("email") String email) {
+        UserUpdateDto userUpdateDto = new UserUpdateDto(userId, password, newPassword, name, email);
+        log.info("{}", userUpdateDto);
+        try {
+            userService.update(userUpdateDto);
+        } catch (IllegalArgumentException e) {
+            return "redirect:/users/" + userId + "/form";
+        }
+        return "redirect:/users";
     }
 }

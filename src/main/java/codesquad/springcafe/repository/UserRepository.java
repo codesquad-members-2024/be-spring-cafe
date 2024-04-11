@@ -1,5 +1,6 @@
 package codesquad.springcafe.repository;
 
+import codesquad.springcafe.dto.UserUpdateDto;
 import codesquad.springcafe.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,5 +33,10 @@ public class UserRepository {
 
     public void clear() {
         users.clear();
+    }
+
+    public void update(UserUpdateDto userUpdateDto) {
+        User user = users.get(userUpdateDto.getUserId());
+        user.update(userUpdateDto);
     }
 }
