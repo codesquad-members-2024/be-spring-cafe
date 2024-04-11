@@ -266,3 +266,13 @@ VO: 비즈니스 영역에서 사용되는 객체로, 주로 도메인 모델 �
 ![img.png](img/img_2.png)
 
 > ### 따라서, 현재 User 정보를 업데이트 하는 것은 POST가 아닌 PUT 메소드가 적절하다!
+
+---
+
+# JDBC? JDBC Template?
+## JDBC
+- ```Java Database Connectivity```의 약자
+- Java에서 Database에 접속하고 제어하기 위해 사용되는 API
+## JDBC Template
+- JAVA에서 관계형 데이터베이스에 접근할 수 있다.
+- CRUD 동작을 수행할 수 있다.

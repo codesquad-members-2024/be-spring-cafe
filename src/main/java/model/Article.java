@@ -19,6 +19,14 @@ public class Article {
         this.creationDate = LocalDate.now();
     }
 
+    public Article(int articleId, String userId, String title, String content, String creationDate) {
+        this.articleId = articleId;
+        this.userId = userId;
+        this.title = title;
+        this.content = content;
+        this.creationDate = LocalDate.parse(creationDate);
+    }
+
     @Override
     public String toString() {
         return "# [" + articleId + "] " + "userId : " + userId + ", title : " + title + ", content : " + content + ", creatinDate : " + creationDate;
