@@ -2,14 +2,13 @@
     <div class="col-md-12 col-sm-12 col-lg-10 col-lg-offset-1">
         <div class="panel panel-default qna-list">
             <ul class="list">
-                {{> components/qna/list_dummy.partial}}
 
                 {{#articles}}
                 <li>
                     <div class="wrap">
                         <div class="main">
                             <strong class="subject">
-                                <a href="/qna/{{id}}">{{title}}</a>
+                                <a href="/article/{{id}}">{{title}}</a>
                             </strong>
                             <div class="auth-info">
                                 <i class="icon-add-comment"></i>
@@ -40,7 +39,7 @@
                     </ul>
                 </div>
                 <div class="col-md-3 qna-write">
-                    <a href="/qna/form" class="btn btn-primary pull-right" role="button">질문하기</a>
+                    <a href="/article/form" class="btn btn-primary pull-right" role="button">질문하기</a>
                 </div>
             </div>
         </div>

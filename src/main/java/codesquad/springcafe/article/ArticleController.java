@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/qna")
+@RequestMapping("/article")
 public class ArticleController {
 
     private final ArticleRepository articleRepository;
