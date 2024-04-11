@@ -4,12 +4,12 @@ public class Article {
 
     private String title;
     private String author;
-    private String content;
+    private String contents;
 
-    public Article(String title, String author, String content) {
+    public Article(String title, String author, String contents) {
         this.title = title;
         this.author = author;
-        this.content = content;
+        this.contents = contents;
     }
 
     public String getTitle() {
@@ -20,7 +20,7 @@ public class Article {
         return author;
     }
 
-    public String getContent() {
-        return content;
+    public String getContents() {
+        return contents;
     }
 }
