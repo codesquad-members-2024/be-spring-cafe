@@ -1,6 +1,7 @@
 package codesquad.springcafe.articles.controller;
 
 
+import codesquad.springcafe.articles.repository.ArticleRepository;
 import codesquad.springcafe.articles.service.ArticleService;
 import model.Article;
 import model.ArticleData;
@@ -20,24 +21,22 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/articles")
 public class ArticleController {
 
-    private final ArticleService articleService;
+    private final ArticleRepository articleRepository;
 
     @Autowired
-    public ArticleController(ArticleService articleService) {
-        this.articleService = articleService;
+    public ArticleController(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
     }
-
-    private static final Logger logger = LoggerFactory.getLogger(ArticleController.class);
 
     @PostMapping
     public String postArticle(ArticleData articleData) {
-        articleService.createArticle(articleData);
+        articleRepository.createArticle(articleData);
         return "redirect:/";
     }
 
     @GetMapping("/{articleId}")
     public String getUserProfile(@PathVariable int articleId, Model model) {
-        Article article = articleService.findArticleById(articleId);
+        Article article = articleRepository.findArticleById(articleId);
         model.addAttribute("article", article);
 
         return "/article/show";

@@ -1,4 +1,4 @@
-package codesquad.springcafe.articles.service;
+package codesquad.springcafe.articles.repository;
 
 import codesquad.springcafe.exception.ArticleNotFoundException;
 import db.ArticleDatabase;
@@ -6,14 +6,13 @@ import model.Article;
 import model.ArticleData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
-@Service
-public class ArticleManagementService implements ArticleService {
-    private static final Logger logger = LoggerFactory.getLogger(ArticleManagementService.class);
+@Repository
+public class MemoryArticleRepository implements ArticleRepository{
+    private static final Logger logger = LoggerFactory.getLogger(MemoryArticleRepository.class);
 
     @Override
     public void createArticle(ArticleData articleData) {

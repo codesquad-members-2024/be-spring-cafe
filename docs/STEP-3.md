@@ -39,29 +39,29 @@ CREATE TABLE USERS (
 - ARTICLES 테이블 생성
 ```
 CREATE TABLE ARTICLES (
-   articleId INT PRIMARY KEY,
-   userId VARCHAR(255),
-   title VARCHAR(255),
-   content VARCHAR(255),
-   creationDate VARCHAR(255),
-   FOREIGN KEY (userId) REFERENCES USERS(userId)
+    articleId INT AUTO_INCREMENT PRIMARY KEY,
+    userId VARCHAR(255),
+    title VARCHAR(255),
+    content VARCHAR(255),
+    creationDate DATE, -- creationDate를 DATE 타입으로 변경
+    FOREIGN KEY (userId) REFERENCES USERS(userId)
 );
 ```
 
 
 ## 2) 게시글 데이터 저장하기
-- [ ] Article 클래스를 DB 테이블에 저장하기
-- [ ] Article 클래스 PK, FK 작성하기
+- [x] Article 클래스를 DB 테이블에 저장하기
+- [x] Article 클래스 PK, FK 작성하기
   - PK : articleId
   - FK : userId
 
 ## 3) 게시글 목록 구현하기
-- [ ] 전체 게시글 목록 데이터를 DB에서 조회하도록 구현
-- [ ] Repository Interface 적용해보기
-- [ ] @Primary 어노테이션 사용해보기
+- [x] 전체 게시글 목록 데이터를 DB에서 조회하도록 구현
+- [x] Repository Interface 적용해보기
+- [x] @Primary 어노테이션 사용해보기
 
 ## 4) 게시글 상세보기 구현하기
-- [ ] 게시글 세부 내용을 DB에서 가져오도록 구현한다
+- [x] 게시글 세부 내용을 DB에서 가져오도록 구현한다
 - [ ] 게시글 상세보기를 할 때, 조회수가 증가하도록 구현해본다
 - [ ] Article 객체에 조회수를 담는 변수를 추가한다
   - Artciel Table에 추가를 할 지, 다른 테이블에 추가를 할 지 고민해보자

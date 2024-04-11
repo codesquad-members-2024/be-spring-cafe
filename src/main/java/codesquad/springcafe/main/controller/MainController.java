@@ -1,7 +1,7 @@
 package codesquad.springcafe.main.controller;
 
 
-import codesquad.springcafe.articles.service.ArticleService;
+import codesquad.springcafe.articles.repository.ArticleRepository;
 import model.Article;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,16 +15,15 @@ import java.util.Collections;
 @Controller
 @RequestMapping("/main")
 public class MainController {
-    private final ArticleService articleService;
-
+    private final ArticleRepository articleRepository;
     @Autowired
-    public MainController(ArticleService articleService) {
-        this.articleService = articleService;
+    public MainController(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
     }
 
     @GetMapping
     public String showMain(Model model) {
-        ArrayList<Article> articles = articleService.getAllArticles();
+        ArrayList<Article> articles = articleRepository.getAllArticles();
 
         model.addAttribute("articles", articles);
         model.addAttribute("totalArticles", articles.size());
