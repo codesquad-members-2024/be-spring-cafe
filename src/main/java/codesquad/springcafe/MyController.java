@@ -14,11 +14,6 @@ public class MyController {
 
     private static final Logger logger = LoggerFactory.getLogger(MyController.class);
 
-    @GetMapping({"/", "/index.html"})
-    public String index() {
-        return "index";
-    }
-
     @PostMapping("/users")
     public String createUser(@ModelAttribute User user) {
         UserDatabase.addUser(user);
