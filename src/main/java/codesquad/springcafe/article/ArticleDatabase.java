@@ -15,8 +15,13 @@ public class ArticleDatabase {
         articles.add(article);
     }
 
-    public List<Article> findAll() {
-        return articles;
+    public List<ArticleRequestDto> findAll() {
+        List<ArticleRequestDto> articleRequestDtos = new ArrayList<>();
+        for (Article article : articles) {
+            articleRequestDtos.add(
+                new ArticleRequestDto(article.getTitle(), article.getAuthor()));
+        }
+        return articleRequestDtos;
     }
 
     public Article findById(long id) {
