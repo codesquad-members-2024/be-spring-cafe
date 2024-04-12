@@ -2,12 +2,13 @@ package codesquad.springcafe.repository.article;
 
 import codesquad.springcafe.dto.Article;
 import codesquad.springcafe.dto.UpdatedArticle;
-import codesquad.springcafe.exception.ArticleNotFoundException;
+import codesquad.springcafe.exception.db.ArticleNotFoundException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,20 +51,20 @@ public class ArticleJdbcRepository implements ArticleRepository {
     }
 
     @Override
-    public Article findArticleById(long id) throws Exception {
+    public Optional<Article> findArticleById(long id) throws ArticleNotFoundException {
         String sql = "SELECT id, writer, title, content, creation_time, view_count FROM article WHERE id = ?";
         Long[] params = new Long[]{id};
         int[] paramTypes = new int[]{Types.BIGINT};
 
         try {
-            return jdbcTemplate.queryForObject(sql, params, paramTypes, articleRowMapper());
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, params, paramTypes, articleRowMapper()));
         } catch (EmptyResultDataAccessException e) {
             throw new ArticleNotFoundException(id);
         }
     }
 
     @Override
-    public long modifyArticle(long id, UpdatedArticle article) throws Exception {
+    public long modifyArticle(long id, UpdatedArticle article) throws ArticleNotFoundException {
         String sql = "UPDATE article SET title = ?, content = ? WHERE id = ?";
         int rowsUpdated = jdbcTemplate.update(sql, article.getTitle(), article.getContent(), id);
 
@@ -87,7 +88,7 @@ public class ArticleJdbcRepository implements ArticleRepository {
     }
 
     @Override
-    public long increaseViewCount(long id) throws Exception {
+    public long increaseViewCount(long id) throws ArticleNotFoundException {
         String sql = "UPDATE article SET view_count = view_count + 1 WHERE id = ?";
         int rowsUpdated = jdbcTemplate.update(sql, id);
         if (rowsUpdated == 0) {

@@ -2,9 +2,10 @@ package codesquad.springcafe.repository.article;
 
 import codesquad.springcafe.dto.Article;
 import codesquad.springcafe.dto.UpdatedArticle;
-import codesquad.springcafe.exception.ArticleNotFoundException;
+import codesquad.springcafe.exception.db.ArticleNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,9 +24,9 @@ public class ArticleMemoryRepository implements ArticleRepository {
     }
 
     @Override
-    public Article findArticleById(long id) throws Exception {
+    public Optional<Article> findArticleById(long id) throws ArticleNotFoundException {
         try {
-            return articles.get((int) id);
+            return Optional.ofNullable(articles.get((int) id));
         } catch (IndexOutOfBoundsException e) {
             // 게시글을 찾지 못한 경우 ArticleNotFoundException 예외를 던진다.
             throw new ArticleNotFoundException((int) id);
@@ -33,7 +34,7 @@ public class ArticleMemoryRepository implements ArticleRepository {
     }
 
     @Override
-    public long modifyArticle(long id, UpdatedArticle article) throws Exception {
+    public long modifyArticle(long id, UpdatedArticle article) throws ArticleNotFoundException {
         return id;
     }
 

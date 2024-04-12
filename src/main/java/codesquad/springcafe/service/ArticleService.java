@@ -3,17 +3,18 @@ package codesquad.springcafe.service;
 import codesquad.springcafe.dto.Article;
 import codesquad.springcafe.dto.UpdatedArticle;
 import java.util.List;
+import java.util.Optional;
 
 public interface ArticleService {
-    Article addArticle(Article article);
+    void addArticle(Article article);
 
-    Article findArticleById(long id) throws Exception;
+    Optional<Article> findArticleById(long id);
 
-    long modifyArticle(long id, UpdatedArticle article) throws Exception;
+    void modifyArticle(long id, UpdatedArticle article);
 
-    long deleteArticle(long id);
+    void deleteArticle(long id);
 
     List<Article> findAllArticle();
 
-    long increaseViewCount(long id) throws Exception;
+    void increaseViewCount(long id);
 }

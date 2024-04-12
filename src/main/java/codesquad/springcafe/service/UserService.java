@@ -3,15 +3,16 @@ package codesquad.springcafe.service;
 import codesquad.springcafe.dto.UpdatedUser;
 import codesquad.springcafe.dto.User;
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
-    User addUser(User user);
+    void addUser(User user);
 
-    User findUserByUserId(String userId) throws Exception;
+    Optional<User> findUserByUserId(String userId);
 
-    String updateUser(String userId, UpdatedUser updatedUser) throws Exception;
+    void updateUser(String userId, UpdatedUser updatedUser);
 
-    String deleteUser(String userId);
+    void deleteUser(String userId);
 
     List<User> findAllUser();
 }

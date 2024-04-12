@@ -2,6 +2,7 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.dto.Article;
 import codesquad.springcafe.service.ArticleService;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,21 +33,19 @@ public class ArticleController {
 
     @PostMapping("/write")
     public String processWriteForm(@ModelAttribute Article article) {
-        Article addArticle = articleService.addArticle(article);
-        logger.info("[게시글 생성 완료] - " + addArticle);
-
+        articleService.addArticle(article);
         return "redirect:/";
     }
 
     @GetMapping("/show/{articleId}")
-    public String showDetailPage(Model model, @PathVariable long articleId) throws Exception {
-        long updatedArticleId = articleService.increaseViewCount(articleId);
-        logger.info("[" + updatedArticleId + "번째 게시글 조회수 증가]");
+    public String showDetailPage(Model model, @PathVariable long articleId) {
+        articleService.increaseViewCount(articleId);
+        Optional<Article> article = articleService.findArticleById(articleId);
 
-        Article article = articleService.findArticleById(articleId);
-        logger.info("[" + articleId + "번째 게시글 가져오기 성공] - " + article);
-
-        model.addAttribute("article", article);
-        return "article/show";
+        if (article.isPresent()) {
+            model.addAttribute("article", article.get());
+            return "article/show";
+        }
+        return "error/not_found";
     }
 }

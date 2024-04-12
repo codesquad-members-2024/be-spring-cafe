@@ -4,6 +4,7 @@ import codesquad.springcafe.dto.User;
 import codesquad.springcafe.service.UserService;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,14 @@ public class UserMatchController {
         this.userService = userService;
     }
 
-    @PostMapping("/match_pw/{userId}")
-    public Map<String, Object> processMatchPasswordForm(@PathVariable String userId, @RequestParam String userPassword)
-            throws Exception {
-        User user = userService.findUserByUserId(userId);
+    @PostMapping("/match-pw/{userId}")
+    public Map<String, Object> processMatchPasswordForm(@PathVariable String userId,
+                                                        @RequestParam String userPassword) {
+        Optional<User> user = userService.findUserByUserId(userId);
         Map<String, Object> response = new HashMap<>();
-        response.put("valid", user.matchPassword(userPassword));
+        if (user.isPresent()) {
+            response.put("valid", user.get().matchPassword(userPassword));
+        }
         return response;
     }
 }
