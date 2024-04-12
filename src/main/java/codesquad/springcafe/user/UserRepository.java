@@ -12,21 +12,14 @@ public class UserRepository {
 
     private static final Map<String, User> users = new LinkedHashMap<>();
 
-    public void save(final UserDto userDto) {
-        final String userId = userDto.getUserId();
-        User user = new User(userId, userDto.getPassword(), userDto.getName(), userDto.getEmail());
+    public void save(final User user) {
         log.debug("회원가입한 유저 정보 : {}", user);
-        users.put(userId, user);
+        users.put(user.getUserId(), user);
         log.debug("유저 수 : {}", users.size());
     }
 
-    public List<UserDto> getUserList() {
-        return users.values().stream()
-                .map(user -> {
-                    long index = 0L;
-                    return createUserDto(++index, user);
-                })
-                .toList();
+    public Collection<User> getAllUsers() {
+        return users.values();
     }
 
     public Optional<User> findUser(String userId) {
