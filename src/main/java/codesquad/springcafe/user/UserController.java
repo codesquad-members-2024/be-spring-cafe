@@ -23,7 +23,7 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/users/{userId}")
+    @GetMapping("/{userId}")
     public String showProfile(@PathVariable String userId, Model model) {
         // 저장소에서 유저 찾기
         Optional<User> optUser = userRepository.findUser(userId);
