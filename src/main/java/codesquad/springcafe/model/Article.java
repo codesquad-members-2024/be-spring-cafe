@@ -15,6 +15,7 @@ public class Article {
         this.writer = writer;
         this.title = title;
         this.content = content;
+        this.writeDate = LocalDateTime.now();
         this.views = 0;
     }
 

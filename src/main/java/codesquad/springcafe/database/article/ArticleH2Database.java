@@ -1,8 +1,6 @@
 package codesquad.springcafe.database.article;
 
 import codesquad.springcafe.model.Article;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,18 +20,18 @@ public class ArticleH2Database implements ArticleDatabase {
     @Override
     public Article add(Article article) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-        jdbcInsert.withTableName("articles").usingGeneratedKeyColumns("id", "writedate");
+        jdbcInsert.withTableName("articles").usingGeneratedKeyColumns("id");
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("writer", article.getWriter());
         parameters.put("title", article.getTitle());
         parameters.put("content", article.getContent());
+        parameters.put("writeDate", article.getWriteDate());
         parameters.put("views", article.getViews());
 
-        Map<String, Object> keys = jdbcInsert.executeAndReturnKeyHolder(parameters).getKeys();
-        if (keys != null) {
-            setGeneratedValues(article, keys);
-        }
+        Number key = jdbcInsert.executeAndReturnKey(parameters);
+        article.setId((key.longValue()));
+        
         return article;
     }
 
@@ -77,13 +75,5 @@ public class ArticleH2Database implements ArticleDatabase {
             article.setViews(rs.getLong("views"));
             return article;
         };
-    }
-
-    private void setGeneratedValues(Article article, Map<String, Object> keys) {
-        Long id = (Long) keys.get("id");
-        LocalDateTime writedate = ((Timestamp) keys.get("writedate")).toLocalDateTime();
-
-        article.setId(id);
-        article.setWriteDate(writedate);
     }
 }
