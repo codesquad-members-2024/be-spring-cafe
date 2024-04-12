@@ -1,5 +1,7 @@
 package codesquad.springcafe.user;
 
+import codesquad.springcafe.security.PasswordEncryptor;
+
 public class UserSignupDto {
 
     private String userId;
@@ -11,7 +13,7 @@ public class UserSignupDto {
         this.userId = userId;
         this.email = email;
         this.nickname = nickname;
-        this.password = password;
+        this.password = PasswordEncryptor.encrypt(password);
     }
 
     public User toEntity() {
