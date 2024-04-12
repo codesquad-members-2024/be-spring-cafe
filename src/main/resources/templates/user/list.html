@@ -20,10 +20,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="member : ${users}">
-                    <td th:text="${member.id}"></td>
-                    <td th:text="${member.name}"></td>
-                    <td th:text="${member.email}"></td>
+                    <tr th:each="member : ${users}">
+                    <td>
+                        <a th:href="@{/users/{userId}(userId=${member.id})}" th:text="${member.id}">사용자 아이디</a>
+                    </td>
+                    <td th:text="${member.name}">이름</td>
+                    <td th:text="${member.email}">이메일</td>
                 </tr>
                 </tbody>
             </table>

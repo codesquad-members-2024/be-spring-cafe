@@ -6,6 +6,7 @@ import codesquad.springcafe.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -29,7 +30,6 @@ public class UserService {
         if(user.passwordIsIllegal()) {
             throw new IllegalStateException("유효하지 않은 비밀번호");
         }
-
     }
 
     private void validateDuplicateUser(User user) {
@@ -45,4 +45,7 @@ public class UserService {
         return repository.findAll();
     }
 
+    public Optional<User> findUserById(String id) {
+        return repository.findById(id);
+    }
 }
