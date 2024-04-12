@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class UserController {
@@ -39,22 +42,32 @@ public class UserController {
 
     // 회원가입 기능
     @PostMapping("/user")
-    public String create(@ModelAttribute UserDto userDto) {
-        userRepository.save(userDto);
+    public String create(@ModelAttribute UserCreationDTO userDTO) {
+        final String userId = userDTO.getUserId();
+        final String password = userDTO.getPassword();
+        final String name = userDTO.getName();
+        final String email = userDTO.getEmail();
+        User user = new User(userId, password, name, email);
+        userRepository.save(user);
         return "redirect:/users";
     }
 
     @GetMapping("/users")
     public String showUsers(Model model) {
-        List<UserDto> userDtos = userRepository.getUserList();
-        model.addAttribute("users", userDtos);
+        Collection<User> users = userRepository.getAllUsers();
+        AtomicLong atomicLong = new AtomicLong(0L);
+        List<UserDTO> userDTOs = users.stream()
+                .map(user -> {
+                    UserDTO userDTO = new UserDTO();
+                    userDTO.setIndex(atomicLong.incrementAndGet());
+                    userDTO.setUserId(user.getUserId());
+                    userDTO.setName(user.getName());
+                    userDTO.setEmail(user.getEmail());
+                    return userDTO;
+                }).toList();
+
+        model.addAttribute("users", userDTOs);
         return "user/list";
     }
 
-    @GetMapping("/users/{userId}")
-    public String showProfile(@PathVariable String userId, Model model) {
-        UserDto userDto = userRepository.findUser(userId);
-        model.addAttribute("user", userDto);
-        return "user/profile";
-    }
 }

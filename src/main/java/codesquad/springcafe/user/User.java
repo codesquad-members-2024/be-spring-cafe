@@ -17,10 +17,6 @@ public class User {
         return userId;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public String getName() {
         return name;
     }
@@ -28,7 +24,6 @@ public class User {
     public String getEmail() {
         return email;
     }
-
 
     @Override
     public String toString() {
