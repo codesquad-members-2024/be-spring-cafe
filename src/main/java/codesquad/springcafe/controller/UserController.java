@@ -4,6 +4,7 @@ import codesquad.springcafe.dto.UpdatedUser;
 import codesquad.springcafe.dto.User;
 import codesquad.springcafe.service.UserService;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,6 @@ public class UserController {
     @PostMapping("/join")
     public String processJoinForm(@ModelAttribute User user) {
         userService.addUser(user);
-        logger.info("[사용자 생성 완료] - " + user.toString());
         return "redirect:/users/list";
     }
 
@@ -58,14 +58,16 @@ public class UserController {
     }
 
     @GetMapping("/profile/{userId}")
-    public String showProfilePage(Model model, @PathVariable String userId) throws Exception {
-        User user = userService.findUserByUserId(userId);
-        logger.info("[사용자 가져오기 성공] - " + user.toString());
-        model.addAttribute("user", user);
-        return "user/profile";
+    public String showProfilePage(Model model, @PathVariable String userId) {
+        Optional<User> user = userService.findUserByUserId(userId);
+        if (user.isPresent()) {
+            model.addAttribute("user", user.get());
+            return "user/profile";
+        }
+        return "error/not_found";
     }
 
-    @GetMapping("/match_pw/{userId}")
+    @GetMapping("/match-pw/{userId}")
     public String showMatchPasswordPage(Model model, @PathVariable String userId) {
         model.addAttribute("userId", userId);
         return "user/match_pw";
@@ -78,10 +80,8 @@ public class UserController {
     }
 
     @PutMapping("/update/{userId}")
-    public String updateUserInfo(@ModelAttribute UpdatedUser updatedUser, @PathVariable String userId)
-            throws Exception {
-        String updatedUserId = userService.updateUser(userId, updatedUser);
-        logger.info("[" + updatedUserId + " 사용자 수정 성공]");
+    public String updateUserInfo(@ModelAttribute UpdatedUser updatedUser, @PathVariable String userId) {
+        userService.updateUser(userId, updatedUser);
         return "redirect:/users/list";
     }
 }

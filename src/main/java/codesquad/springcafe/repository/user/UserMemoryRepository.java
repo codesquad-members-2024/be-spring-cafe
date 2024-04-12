@@ -2,7 +2,7 @@ package codesquad.springcafe.repository.user;
 
 import codesquad.springcafe.dto.UpdatedUser;
 import codesquad.springcafe.dto.User;
-import codesquad.springcafe.exception.UserNotFoundException;
+import codesquad.springcafe.exception.db.UserNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,18 +21,20 @@ public class UserMemoryRepository implements UserRepository {
     }
 
     @Override
-    public User findUserByUserId(String userId) throws UserNotFoundException {
+    public Optional<User> findUserByUserId(String userId) throws UserNotFoundException {
         Optional<User> optionalUser = users.stream()
                 .filter(user -> user.getUserId().equals(userId))
                 .findFirst();
 
-        // 사용자를 찾지 못한 경우 UserNotFoundException 예외를 던진다.
-        return optionalUser.orElseThrow(() -> new UserNotFoundException(userId));
+        if (optionalUser.isEmpty()) {
+            throw new UserNotFoundException(userId);
+        }
+        return optionalUser;
     }
 
     @Override
-    public String updateUser(String userId, UpdatedUser updatedUser) throws Exception {
-        User findUser = findUserByUserId(userId);
+    public String updateUser(String userId, UpdatedUser updatedUser) throws UserNotFoundException {
+        User findUser = findUserByUserId(userId).get();
         findUser.updateUser(updatedUser);
         return userId;
     }
