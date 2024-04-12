@@ -8,11 +8,14 @@ import codesquad.springcafe.domain.user.model.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static codesquad.springcafe.global.utils.DateUtils.convertCreatedAt;
+
+/**
+ * UserRepository와 통신하며 회원 관련 비즈니스 로직을 구현하는 클래스
+ */
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -51,11 +54,6 @@ public class UserService {
         // id로 회원 조회
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
         return new UserData(user.getId(), user.getEmail(), user.getName(), convertCreatedAt(user.getCreatedAt()));
-    }
-
-    // LocalDateTime을 날짜 포맷 문자열로 변환하는 메서드
-    private String convertCreatedAt(LocalDateTime createdAt) {
-        return createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
 }
