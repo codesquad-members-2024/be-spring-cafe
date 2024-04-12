@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @Controller
 public class UserController {
@@ -45,7 +46,7 @@ public class UserController {
         return "user/updateForm";
     }
 
-    @PostMapping("/user/profile/{userId}/update")
+    @PutMapping("/user/profile/{userId}/update")
     public String editProfile(UserEdit userEdit, @PathVariable("userId") String userId, Model model) {
         User target = Database.getUser(userId);
         String password = userEdit.getPassword();

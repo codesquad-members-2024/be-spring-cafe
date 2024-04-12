@@ -76,6 +76,7 @@
     <div class="col-md-6 col-md-offset-3">
         <div class="panel panel-default content-main">
             <form name="question" method="post" th:action="'/user/profile/' + ${userId} + '/update'">
+                <input type="hidden" name="_method" value="PUT" />
                 <div class="form-group">
                     <label for="password">기존 비밀번호</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="Password">
