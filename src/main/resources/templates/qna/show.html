@@ -23,7 +23,7 @@
                           <img src="https://graph.facebook.com/v2.3/100000059371774/picture" class="article-author-thumb" alt="">
                       </div>
                       <div class="article-header-text">
-                          <a th:href="@{/users/${article.writer}}" class="article-author-name"> writer </a>
+                          <a th:href="@{/users/{userId}(userId = ${article.writer})}" class="article-author-name" th:text="${article.writer}"> writer </a>
                           <span class="article-header-time" title="퍼머링크" th:text="${article.localDateTime}">
                               local date time
                               <i class="icon-link"></i>

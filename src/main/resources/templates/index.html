@@ -24,7 +24,7 @@
                           <div class="auth-info">
                               <i class="icon-add-comment"></i>
                               <span class="time" th:text="${article.localDateTime}">local date time</span>
-                              <a href="../templates/user/profile.html" class="author" th:text="${article.writer}"> 글쓴이 </a>
+                              <a th:href="@{/users/{userId}(userId = ${article.writer})}" class="author" th:text="${article.writer}"> 글쓴이 </a>
                           </div>
                           <div class="reply" title="댓글">
                               <i class="icon-reply"></i>
