@@ -1,5 +1,6 @@
 package codesquad.springcafe.service;
 
+import codesquad.springcafe.dto.UserUpdateDto;
 import codesquad.springcafe.model.User;
 import codesquad.springcafe.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,14 +10,16 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class UserServiceTest {
 
-    UserService userService;
+    UserRepository userRepository = new UserRepository();
+    UserService userService = new UserService(userRepository);
 
     @BeforeEach
     void init() {
-        userService = new UserService(new UserRepository());
+        userRepository.clear();
     }
 
     @Test
@@ -41,5 +44,28 @@ class UserServiceTest {
         User findUser = userService.findUserById(user.getUserId());
 
         assertThat(findUser).isEqualTo(user);
+    }
+
+    @Test
+    @DisplayName("유저 정보를 수정할 수 있다.")
+    void updateUserTest() {
+        User user = new User("cori", "1234", "old name", "cori@naver.com");
+        userRepository.saveUser(user);
+
+        UserUpdateDto userUpdateDto = new UserUpdateDto("cori", "1234", "4321", "new name", "cori123@naver.com");
+        userService.update(userUpdateDto);
+
+        assertThat(user).usingRecursiveComparison().isEqualTo(new User("cori", "4321", "new name", "cori123@naver.com"));
+    }
+
+    @Test
+    @DisplayName("비밀번호가 일치하지 않으면 예외가 발생한다.")
+    void passwordNotMatchTest() {
+        User user = new User("cori", "1234", "old name", "cori@naver.com");
+        userRepository.saveUser(user);
+
+        UserUpdateDto userUpdateDto = new UserUpdateDto("cori", "1111", "4321", "new name", "cori123@naver.com");
+
+        assertThatThrownBy(() -> userService.update(userUpdateDto)).isInstanceOf(IllegalArgumentException.class);
     }
 }
