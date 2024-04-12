@@ -1,9 +1,11 @@
 package codesquad.springcafe.repository;
 
 import codesquad.springcafe.domain.User;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+@Repository
 public class MemoryUserRepository implements UserRepository {
 
     private static final Map<String, User> store = new HashMap<>();

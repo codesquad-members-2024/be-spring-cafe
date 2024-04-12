@@ -2,11 +2,18 @@ package codesquad.springcafe.service;
 
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.repository.MemoryUserRepository;
+import codesquad.springcafe.repository.UserRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class UserService {
-    private MemoryUserRepository repository = new MemoryUserRepository();
+    private final UserRepository repository;
+
+    public UserService(UserRepository repository) {
+        this.repository = repository;
+    }
 
     public void join(User user) {
         validateIsNull(user);
@@ -31,6 +38,8 @@ public class UserService {
                     throw new IllegalStateException("이미 존재하는 회원입니다.");
                 });
     }
+
+//    login을 여기서 해야하나? 어떻게 하지?
 
     public List<User> findUsers() {
         return repository.findAll();
