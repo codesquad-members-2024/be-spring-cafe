@@ -101,8 +101,7 @@ public class UserController {
     }
 
     @GetMapping("/form")
-    public String registerForm(Model model) {
-        addAlert(model);
+    public String registerForm() {
         return "user/form";
     }
 
@@ -116,7 +115,6 @@ public class UserController {
 
     @GetMapping("{id}/form")
     public String updateForm(@PathVariable("id") String id, Model model) {
-        addAlert(model);
         model.addAttribute("user", userService.getUser(id));
 
         return "user/update_form";
@@ -126,7 +124,6 @@ public class UserController {
     public String myUpdateForm(HttpServletRequest request, Model model) {
         UserDTO loginUser = (UserDTO) request.getSession().getAttribute("loginUser");
 
-        addAlert(model);
         model.addAttribute("user", userService.getUser(loginUser.id()));
 
         return "user/update_form";
