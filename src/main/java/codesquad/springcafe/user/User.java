@@ -1,5 +1,7 @@
 package codesquad.springcafe.user;
 
+import codesquad.springcafe.security.PasswordEncryptor;
+
 public class User {
 
     private String userId;
@@ -31,7 +33,7 @@ public class User {
     }
 
     public boolean checkPassword(String password) {
-        return this.password.equals(password);
+        return PasswordEncryptor.match(password, this.password);
     }
 
 }
