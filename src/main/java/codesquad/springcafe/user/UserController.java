@@ -20,6 +20,24 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
+    // userID 를 찾으면 유저 프로필 조회, 못 찾으면 로그인 페이지로 이동.
+    @GetMapping("/users/{userId}")
+    public String showProfile(@PathVariable String userId, Model model) {
+        Optional<User> optUser = userRepository.findUser(userId);
+        Optional<UserDTO> optUserDTO = optUser.map(user -> {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setName(user.getName());
+            userDTO.setEmail(user.getEmail());
+            return userDTO;
+        });
+
+        return optUserDTO.map(userDTO -> {
+            model.addAttribute("user", userDTO);
+            return "user/profile";
+        }).orElse("user/login");
+    }
+
+    // 회원가입 기능
     @PostMapping("/user")
     public String create(@ModelAttribute UserDto userDto) {
         userRepository.save(userDto);

@@ -10,7 +10,7 @@ import java.util.*;
 public class UserRepository {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private static final Map<String, User> users = new HashMap<>();
+    private static final Map<String, User> users = new LinkedHashMap<>();
 
     public void save(final UserDto userDto) {
         final String userId = userDto.getUserId();
@@ -29,24 +29,7 @@ public class UserRepository {
                 .toList();
     }
 
-    public UserDto findUser(String userId) {
-        User found = users.get(userId);
-        return createUserDto(found);
-    }
-
-    private UserDto createUserDto(User user) {
-        UserDto userDto = new UserDto();
-        userDto.setName(user.getName());
-        userDto.setEmail(user.getEmail());
-        return userDto;
-    }
-
-    private UserDto createUserDto(final long index, User user) {
-        UserDto userDto = new UserDto();
-        userDto.setIndex(index);
-        userDto.setUserId(user.getUserId());
-        userDto.setName(user.getName());
-        userDto.setEmail(user.getEmail());
-        return userDto;
+    public Optional<User> findUser(String userId) {
+        return Optional.ofNullable(users.get(userId));
     }
 }
