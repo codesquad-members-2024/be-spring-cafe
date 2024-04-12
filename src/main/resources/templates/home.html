@@ -14,7 +14,7 @@
                         <div class="main">
                             <div class="row" th:text="*{loop.current.id}">1</div>
                             <strong class="subject">
-                                <a href="qna/detail.html" th:href="@{|/question/${article.id}|}">
+                                <a href="qna/detail.html" th:href="@{|/questions/${article.id}|}">
                                     <span th:text="*{article.title}">국내에서 Ruby on Rails와 Play가 활성화되기 힘든 이유는 뭘까?</span>
                                 </a>
                             </strong>
@@ -50,7 +50,7 @@
                 </div>
                 <div class="col-md-3 qna-write">
                     <a href="./qna/form.html" class="btn btn-primary pull-right"
-                       th:href="@{/question}" role="button">질문하기</a>
+                       th:href="@{/questions}" role="button">질문하기</a>
                 </div>
             </div>
         </div>
