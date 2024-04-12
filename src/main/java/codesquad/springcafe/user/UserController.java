@@ -116,7 +116,7 @@ public class UserController {
     public String updateForm(@PathVariable("id") String id, Model model) {
         model.addAttribute("alert", "");
         model.addAttribute("alert_section", false);
-        model.addAttribute("userId", id);
+        model.addAttribute("user", userService.getUser(id));
 
         return "user/update_form";
     }

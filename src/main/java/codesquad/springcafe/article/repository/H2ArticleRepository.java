@@ -1,6 +1,7 @@
 package codesquad.springcafe.article.repository;
 
 import codesquad.springcafe.article.Article;
+import codesquad.springcafe.article.ArticlePostReq;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -13,9 +14,17 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static codesquad.springcafe.article.repository.ArticleConsts.DEFAULT_POINT;
+
 @Repository
 @Primary
 public class H2ArticleRepository implements ArticleRepository {
+
+    private final String ADD_SQL = "INSERT INTO ARTICLE (CREATED_DATETIME, AUTHOR, TITLE, CONTENT, POINT) " +
+                "VALUES (?, ?, ?, ?, ?);";
+    private final String FIND_BY_ID_SQL = "SELECT * FROM ARTICLE WHERE Id = ?";
+    private final String FIND_ALL_SQL = "SELECT * FROM ARTICLE";
+    private final String ADD_POINT_SQL = "UPDATE ARTICLE SET point = point + 1 WHERE id = ?;";
 
     private final DataSource dataSource;
 
@@ -24,17 +33,14 @@ public class H2ArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public void add(Article article) throws IllegalArgumentException {
-        String sql = "INSERT INTO ARTICLE (CREATED_DATETIME, AUTHOR, TITLE, CONTENT, POINT) " +
-                "VALUES (?, ?, ?, ?, ?);";
-
-        article.setCreatedDateTime(Timestamp.valueOf(LocalDateTime.now()));
-        try (PreparedStatement query = dataSource.getConnection().prepareStatement(sql)) {
-            query.setTimestamp(1, article.getCreated_datetime());
-            query.setString(2, article.getAuthor());
-            query.setString(3, article.getTitle());
-            query.setString(4, article.getContent());
-            query.setInt(5, article.getPoint());
+    public void add(ArticlePostReq articlePostReq) throws IllegalArgumentException {
+        Timestamp  createdDateTime =Timestamp.valueOf(LocalDateTime.now());
+        try (PreparedStatement query = dataSource.getConnection().prepareStatement(ADD_SQL)) {
+            query.setTimestamp(1, createdDateTime);
+            query.setString(2, articlePostReq.author());
+            query.setString(3, articlePostReq.title());
+            query.setString(4, articlePostReq.content());
+            query.setInt(5, DEFAULT_POINT);
 
             query.executeUpdate();
         } catch (SQLException e) {
@@ -44,24 +50,22 @@ public class H2ArticleRepository implements ArticleRepository {
 
     @Override
     public Article findById(int id) {
-        String sql = "SELECT * FROM ARTICLE WHERE Id = ?";
-
-        try (PreparedStatement query = dataSource.getConnection().prepareStatement(sql)) {
+        try (PreparedStatement query = dataSource.getConnection().prepareStatement(FIND_BY_ID_SQL)) {
             query.setInt(1, id);
             try (ResultSet resultSet = query.executeQuery()) {
                 List<Article> articles = rowToArticle(resultSet);
                 return articles.get(0);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(this.getClass() + ": findByUserId : " + e.getMessage());
+            throw new RuntimeException(this.getClass() + ": findById : " + e.getMessage());
+        }catch (IndexOutOfBoundsException noMatchId){
+            return null;
         }
     }
 
     @Override
     public List<Article> findAll() {
-        String sql = "SELECT * FROM ARTICLE";
-
-        try (PreparedStatement query = dataSource.getConnection().prepareStatement(sql)) {
+        try (PreparedStatement query = dataSource.getConnection().prepareStatement(FIND_ALL_SQL)) {
             try (ResultSet resultSet = query.executeQuery()) {
                 return rowToArticle(resultSet);
             }
@@ -72,9 +76,7 @@ public class H2ArticleRepository implements ArticleRepository {
 
     @Override
     public void addPoint(Article article) {
-        String sql = "UPDATE ARTICLE SET point = point + 1 WHERE id = ?;";
-
-        try (PreparedStatement query = dataSource.getConnection().prepareStatement(sql)) {
+        try (PreparedStatement query = dataSource.getConnection().prepareStatement(ADD_POINT_SQL)) {
             query.setInt(1, article.getId());
 
             query.executeUpdate();
@@ -88,14 +90,12 @@ public class H2ArticleRepository implements ArticleRepository {
 
         while (resultSet.next()) {
             articles.add(new Article(
-                            resultSet.getString("author"),
-                            resultSet.getString("title"),
-                            resultSet.getString("content")
-                            )
-                    .completeArticle(
-                            resultSet.getInt("id"),
-                            resultSet.getTimestamp("created_datetime"),
-                            resultSet.getInt("point")
+                    resultSet.getInt("id"),
+                    resultSet.getTimestamp("created_datetime"),
+                    resultSet.getString("author"),
+                    resultSet.getString("title"),
+                    resultSet.getString("content"),
+                    resultSet.getInt("point")
             ));
         }
         return articles;
