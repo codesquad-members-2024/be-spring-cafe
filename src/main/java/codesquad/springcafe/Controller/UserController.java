@@ -70,7 +70,7 @@ public class UserController {
     }
 
     @PostMapping
-    public String users(User user, Model model) { //html의 name과 매칭
+    public String userSignUp(User user, Model model) { //html의 name과 매칭
         try {
             logger.debug("debug log = {}", user.getEmail());
             logger.debug("debug log = {}", user.getUserId());
