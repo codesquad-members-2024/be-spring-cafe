@@ -21,4 +21,10 @@ public class MyController {
         return "redirect:/users";
     }
 
+    @GetMapping("/users")
+    public String showUsers(Model model) {
+        List<User> userList = UserDatabase.getUserList();
+        model.addAttribute("userList", userList);
+        return "user/list";
+    }
 }

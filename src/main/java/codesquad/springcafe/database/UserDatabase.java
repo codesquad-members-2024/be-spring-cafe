@@ -13,4 +13,8 @@ public class UserDatabase {
     public static void addUser(User user) {
         userMap.put(user.getUserId(), user);
     }
+
+    public static List<User> getUserList() {
+        return userMap.values().stream().toList();
+    }
 }
