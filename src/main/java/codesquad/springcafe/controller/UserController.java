@@ -56,5 +56,11 @@ public class UserController {
         return "/user/list";
     }
 
+    @GetMapping("/users/profile")
+    public String showProfile(Model model) {
+
+        return "/user/profile";
+    }
+
 
 }
