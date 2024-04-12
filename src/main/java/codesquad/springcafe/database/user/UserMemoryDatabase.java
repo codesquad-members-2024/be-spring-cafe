@@ -1,7 +1,6 @@
 package codesquad.springcafe.database.user;
 
 import codesquad.springcafe.model.User;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,6 @@ public class UserMemoryDatabase implements UserDatabase {
     @Override
     public User add(User user) {
         user.setId(++id);
-        user.setJoinDate(LocalDate.now());
 
         store.put(user.getId(), user);
         return user;

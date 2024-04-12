@@ -2,7 +2,6 @@ package codesquad.springcafe.database.user;
 
 import codesquad.springcafe.model.User;
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,15 +21,16 @@ public class UserH2Database implements UserDatabase {
     @Override
     public User add(User user) {
         SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate);
-        insert.withTableName("users").usingGeneratedKeyColumns("id", "joindate");
+        insert.withTableName("users").usingGeneratedKeyColumns("id");
 
         Map<String, Object> params = new HashMap<>();
         params.put("nickname", user.getNickname());
         params.put("email", user.getEmail());
         params.put("password", user.getPassword());
+        params.put("joinDate", user.getJoinDate());
 
-        Map<String, Object> keys = insert.executeAndReturnKeyHolder(params).getKeys();
-        setGeneratedValues(user, keys);
+        Number key = insert.executeAndReturnKey(params);
+        user.setId(key.longValue());
 
         return user;
     }
@@ -77,13 +77,4 @@ public class UserH2Database implements UserDatabase {
         };
     }
 
-    private void setGeneratedValues(User user, Map<String, Object> keys) {
-        if (keys != null) {
-            Long id = (Long) keys.get("id");
-            LocalDate joindate = ((Date) keys.get("joindate")).toLocalDate();
-
-            user.setId(id);
-            user.setJoinDate(joindate);
-        }
-    }
 }
