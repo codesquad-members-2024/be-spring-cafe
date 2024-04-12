@@ -44,7 +44,7 @@ public class MemberControllerTest {
     @Test
     @DisplayName("/users 요청 시 user/list 뷰로 이동")
     void showListTest() throws Exception {
-        // MockMvc를 사용하여 /users에 GET 요청을 보내고, 뷰 이름을 확인합니다.
+        // MockMvc를 사용하여 /users에 GET 요청을 보내고, 뷰 이름을 확인합니다
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("user/list"));
