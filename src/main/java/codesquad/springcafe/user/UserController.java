@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -61,21 +62,18 @@ public class UserController {
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable("id") String id,
-                         @RequestParam("password") String password,
-                         @RequestParam("name") String name,
-                         @RequestParam("email") String email,
-                         @RequestParam("new_password") String newPassword,
+    public String update(@RequestParam("prev_password") String prevPassword,
+                         @ModelAttribute("user") User user,
                          Model model) {
 
-        if (userService.update(new User(id, newPassword, name, email), password)) {
-            model.addAttribute("alert", "회원 정보 변경 성공!");
+        List<Alert> alerts = addAlert(model);
+        if (userService.update(user, prevPassword)) {
+            alerts.add(new Alert("회원 정보 변경 성공!"));
         } else {
-            model.addAttribute("alert", "비밀번호가 일치하지 않습니다!");
+            alerts.add(new Alert("비밀번호가 일치하지 않습니다!"));
         }
 
-        model.addAttribute("alert_section", true);
-        model.addAttribute("userId", id);
+        model.addAttribute("userId", user.getUserId());
         return "user/update_form";
     }
 
@@ -101,10 +99,10 @@ public class UserController {
     public String loginForm() {
         return "user/login";
     }
+
     @GetMapping("/form")
     public String registerForm(Model model) {
-        model.addAttribute("alert", "");
-        model.addAttribute("alert_section", false);
+        addAlert(model);
         return "user/form";
     }
 
@@ -112,15 +110,13 @@ public class UserController {
     public String registerFormWithAlert(Model model) {
 
         // 사용자에게 알림
-        model.addAttribute("alert", "이미 존재하는 ID 입니다");
-        model.addAttribute("alert_section", true);
+        addAlert(model).add(new Alert("이미 존재하는 ID 입니다"));
         return "user/form";
     }
 
     @GetMapping("{id}/form")
     public String updateForm(@PathVariable("id") String id, Model model) {
-        model.addAttribute("alert", "");
-        model.addAttribute("alert_section", false);
+        addAlert(model);
         model.addAttribute("user", userService.getUser(id));
 
         return "user/update_form";
@@ -130,10 +126,16 @@ public class UserController {
     public String myUpdateForm(HttpServletRequest request, Model model) {
         UserDTO loginUser = (UserDTO) request.getSession().getAttribute("loginUser");
 
-        model.addAttribute("alert", "");
-        model.addAttribute("alert_section", false);
+        addAlert(model);
         model.addAttribute("user", userService.getUser(loginUser.id()));
 
         return "user/update_form";
+    }
+
+    private List<Alert> addAlert(Model model) {
+        List<Alert> alerts = new ArrayList<>();
+        model.addAttribute("alerts", alerts);
+
+        return alerts;
     }
 }
