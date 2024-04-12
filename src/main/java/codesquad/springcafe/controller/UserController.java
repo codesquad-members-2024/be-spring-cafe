@@ -113,7 +113,7 @@ public class UserController {
             bindingResult.reject("invalidCurrentPassword");
             return "user/update";
         }
-        user.update(userEditForm);
+        user.update(userEditForm.getNickname(), userEditForm.getNewPassword());
         userDatabase.update(user);
 
         logger.info("유저정보가 업데이트 되었습니다. {}", user);
