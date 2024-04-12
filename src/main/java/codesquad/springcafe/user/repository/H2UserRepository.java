@@ -68,6 +68,8 @@ public class H2UserRepository implements UserRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException(this.getClass() + ": findByUserId : " + e.getMessage());
+        } catch (IndexOutOfBoundsException userNotFound){
+            return null;
         }
     }
 

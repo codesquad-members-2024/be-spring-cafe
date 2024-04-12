@@ -29,7 +29,8 @@ public class UserController {
     @PostMapping("/login")
     public String login(@RequestParam("userId") String id,
                         @RequestParam("password") String password,
-                        HttpServletRequest request) {
+                        HttpServletRequest request,
+                        Model model) {
 
         UserDTO userDTO;
         if ((userDTO = userService.login(id, password)) != null) {
@@ -38,6 +39,10 @@ public class UserController {
             session.setMaxInactiveInterval(60 * 30);
 
             log.info("로그인됨 : " + id);
+        }
+        else {
+            addAlert(model).add(new Alert("아이디 또는 비밀번호가 틀립니다. 다시 로그인 해주세요."));
+            return "user/login";
         }
 
         return "redirect:/";
@@ -50,18 +55,19 @@ public class UserController {
     }
 
     @PostMapping("")
-    public String createUser(@ModelAttribute User user) {
+    public String createUser(@ModelAttribute User user, Model model) {
         try {
             userService.create(user);
         } catch (IllegalArgumentException alreadyExistsId) {
-            return "redirect:/user/form/fail";
+            addAlert(model).add(new Alert("이미 존재하는 ID 입니다"));
+            return "user/form";
         }
 
         log.debug(user.toString());
         return "redirect:/user/users";
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/update")
     public String update(@RequestParam("prev_password") String prevPassword,
                          @ModelAttribute("user") User user,
                          Model model) {
@@ -105,14 +111,6 @@ public class UserController {
         return "user/form";
     }
 
-    @GetMapping("/form/fail")
-    public String registerFormWithAlert(Model model) {
-
-        // 사용자에게 알림
-        addAlert(model).add(new Alert("이미 존재하는 ID 입니다"));
-        return "user/form";
-    }
-
     @GetMapping("{id}/form")
     public String updateForm(@PathVariable("id") String id, Model model) {
         model.addAttribute("user", userService.getUser(id));
@@ -120,15 +118,8 @@ public class UserController {
         return "user/update_form";
     }
 
-    @GetMapping("/update")
-    public String myUpdateForm(HttpServletRequest request, Model model) {
-        UserDTO loginUser = (UserDTO) request.getSession().getAttribute("loginUser");
 
-        model.addAttribute("user", userService.getUser(loginUser.id()));
-
-        return "user/update_form";
-    }
-
+    //
     private List<Alert> addAlert(Model model) {
         List<Alert> alerts = new ArrayList<>();
         model.addAttribute("alerts", alerts);
