@@ -1,33 +1,14 @@
 package codesquad.springcafe.article;
 
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public class ArticleDatabase {
+public interface ArticleDatabase {
 
-    private final List<Article> articles = new ArrayList<>();
+    void save(Article article);
 
-    public void saveArticle(Article article) {
-        article.setArticleId(articles.size() + 1);
-        articles.add(article);
-    }
+    Article findById(long articleId);
 
-    public List<Article> findAll() {
-        return Collections.unmodifiableList(articles);
-    }
+    List<Article> findAll();
 
-    public Article findById(long id) {
-        return articles.stream()
-            .filter(article -> article.getArticleId() == id)
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("해당 아이디의 게시글이 없습니다."));
-    }
-
-    public void clear() {
-        articles.clear();
-    }
+    void clear();
 }
