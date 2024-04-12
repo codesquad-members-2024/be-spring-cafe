@@ -15,4 +15,8 @@ public class UserService {
         users.add(newUser);
         return newUser;
     }
+
+    public List<User> findAllUsers() {
+        return new ArrayList<>(users);
+    }
 }
