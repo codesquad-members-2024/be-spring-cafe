@@ -2,6 +2,7 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.repository.UserRepository;
+import codesquad.springcafe.repository.UserRepositoryInterface;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -21,10 +22,10 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/users")
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-    private final UserRepository userRepository;
+    private final UserRepositoryInterface userRepository;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepositoryInterface userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -44,7 +45,7 @@ public class UserController {
     public String create(@ModelAttribute User user) {
         User newUser = userRepository.createUser(user);
         logger.info("회원가입이 성공했습니다. {}", newUser);
-        return "redirect:/users";
+        return "redirect:/users"; // uri response header 302
     }
 
     @GetMapping("/{userId}")
