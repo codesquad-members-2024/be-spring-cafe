@@ -15,37 +15,37 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class UserController {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @GetMapping("/user/form.html")
+    @GetMapping("/user/register")
     public String showForm() {
-        return "user/form";
+        return "user/register/form";
     }
 
-    @PostMapping("/user")
+    @PostMapping("/user/register")
     public String register(User user) {
         Database.addUser(user);
         logger.debug("new user: " + user.toString());
-        return "redirect:/users";
+        return "redirect:/user/list";
     }
 
-    @GetMapping("/users")
+    @GetMapping("/user/list")
     public String showList(Model model) {
         model.addAttribute("users", Database.getAllUsers());
         return "user/list";
     }
 
-    @GetMapping("/users/{userId}")
+    @GetMapping("/user/profile/{userId}")
     public String showProfile(Model model, @PathVariable("userId") String userId) {
         model.addAttribute("user", Database.getUser(userId));
         return "user/profile";
     }
 
-    @GetMapping("/users/{userId}/form")
+    @GetMapping("/user/profile/{userId}/update")
     public String showEditProfileForm(Model model, @PathVariable("userId") String userId) {
         model.addAttribute("user", userId);
         return "user/updateForm";
     }
 
-    @PostMapping("/users/{userId}/form")
+    @PostMapping("/user/profile/{userId}/update")
     public String editProfile(UserEdit userEdit, @PathVariable("userId") String userId, Model model) {
         User target = Database.getUser(userId);
         String password = userEdit.getPassword();
@@ -55,7 +55,7 @@ public class UserController {
             String newName = userEdit.getName();
             String newEmail = userEdit.getEmail();
             target.edit(newPassword, newName, newEmail);
-            return "redirect:/users";
+            return "redirect:/user/list";
         } else {
             model.addAttribute("error",true);
             model.addAttribute("userEdit",userEdit);

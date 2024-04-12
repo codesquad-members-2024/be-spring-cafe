@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class ArticleController {
     private final Logger logger = LoggerFactory.getLogger(ArticleController.class);
 
-    @GetMapping(value = {"/qna", "/qna/form.html"})
+    @GetMapping("/qna")
     public String showForm() {
         return "qna/form";
     }
 
-    @PostMapping(value = {"/qna", "/qna/form.html"})
+    @PostMapping("/qna")
     public String register(Article article) {
         Database.addArticle(article);
         article.setId(Database.articlesSize());
