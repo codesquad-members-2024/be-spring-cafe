@@ -14,16 +14,6 @@ import java.util.Optional;
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @GetMapping("/main")
-    public String showMain() {
-        return "main";
-    }
-
-    @GetMapping("/users/form")
-    public String showForm() {
-        return "user/form";
-    }
-
     @GetMapping("/users/success")
     // @RequestParam을 통해 쿼리문의 userId를 받아온다.
     // userId를 통해 DB에서 해당 사용자의 email, nickname을 받아온다.
