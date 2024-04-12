@@ -6,7 +6,11 @@ public class User {
     private String email;
     private String password;
 
-    public User() {
+    public User(String userId, String nickname, String email, String password) {
+        this.userId = userId;
+        this.nickname = nickname;
+        this.email = email;
+        this.password = password;
     }
 
     public String getUserId() {
@@ -21,20 +25,8 @@ public class User {
         return email;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public String getPassword() {
+        return password;
     }
 
     @Override
