@@ -21,21 +21,19 @@ public class UserDatabase {
     }
 
     public List<UserRequestDto> findAll() {
-        List<UserRequestDto> userRequestDtoList = new ArrayList<>();
+        List<UserRequestDto> userRequestDtos = new ArrayList<>();
         for (User user : userDatabase) {
-            userRequestDtoList.add(
+            userRequestDtos.add(
                 new UserRequestDto(user.getUserId(), user.getEmail(), user.getNickname()));
         }
-        return userRequestDtoList;
+        return userRequestDtos;
     }
 
     public User findByUserId(String userId) {
-        for (User user : userDatabase) {
-            if (user.getUserId().equals(userId)) {
-                return user;
-            }
-        }
-        return null;
+        return userDatabase.stream()
+            .filter(user -> user.getUserId().equals(userId))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("해당하는 userId가 없습니다"));
     }
 
     public void clear() {
