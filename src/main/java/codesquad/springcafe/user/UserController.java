@@ -23,18 +23,8 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("")
-    public String createUser(@ModelAttribute User user) {
-        try {
-            userService.create(user);
-        } catch (IllegalArgumentException alreadyExistsId) {
-            return "redirect:/user/form/fail";
-        }
 
-        log.debug(user.toString());
-        return "redirect:/user/users";
-    }
-
+    // action
     @PostMapping("/login")
     public String login(@RequestParam("userId") String id,
                         @RequestParam("password") String password,
@@ -58,6 +48,18 @@ public class UserController {
         return "redirect:/user/login";
     }
 
+    @PostMapping("")
+    public String createUser(@ModelAttribute User user) {
+        try {
+            userService.create(user);
+        } catch (IllegalArgumentException alreadyExistsId) {
+            return "redirect:/user/form/fail";
+        }
+
+        log.debug(user.toString());
+        return "redirect:/user/users";
+    }
+
     @PostMapping("/{id}")
     public String update(@PathVariable("id") String id,
                          @RequestParam("password") String password,
@@ -77,22 +79,8 @@ public class UserController {
         return "user/update_form";
     }
 
-    @GetMapping("/form")
-    public String userForm(Model model) {
-        model.addAttribute("alert", "");
-        model.addAttribute("alert_section", false);
-        return "user/form";
-    }
 
-    @GetMapping("/form/fail")
-    public String userFormWithAlert(Model model) {
-
-        // 사용자에게 알림
-        model.addAttribute("alert", "이미 존재하는 ID 입니다");
-        model.addAttribute("alert_section", true);
-        return "user/form";
-    }
-
+    // view
     @GetMapping("/users")
     public String userList(Model model) {
         List<UserDTO> users = userService.userList();
@@ -101,15 +89,32 @@ public class UserController {
         return "user/list";
     }
 
-    @GetMapping("/login")
-    public String loginForm() {
-        return "user/login";
-    }
-
     @GetMapping("/{id}")
     public String profile(@PathVariable("id") String id, Model model) {
         model.addAttribute("user", userService.getUser(id));
         return "user/profile";
+    }
+
+
+    // form
+    @GetMapping("/login")
+    public String loginForm() {
+        return "user/login";
+    }
+    @GetMapping("/form")
+    public String registerForm(Model model) {
+        model.addAttribute("alert", "");
+        model.addAttribute("alert_section", false);
+        return "user/form";
+    }
+
+    @GetMapping("/form/fail")
+    public String registerFormWithAlert(Model model) {
+
+        // 사용자에게 알림
+        model.addAttribute("alert", "이미 존재하는 ID 입니다");
+        model.addAttribute("alert_section", true);
+        return "user/form";
     }
 
     @GetMapping("{id}/form")

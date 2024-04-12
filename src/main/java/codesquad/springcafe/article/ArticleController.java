@@ -19,6 +19,7 @@ public class ArticleController {
     }
 
 
+    // action
     @PostMapping("")
     public String postArticle(@ModelAttribute ArticlePostReq articlePostReq){
         articleRepository.add(articlePostReq);
@@ -26,6 +27,8 @@ public class ArticleController {
         return "redirect:/";
     }
 
+
+    // view
     @GetMapping("/{id}")
     public String showArticle(@PathVariable("id") int id, Model model, HttpServletResponse response) {
         Article article = articleRepository.findById(id);
@@ -42,6 +45,8 @@ public class ArticleController {
         return "qna/show";
     }
 
+
+    // form
     @GetMapping("/form")
     public String articleForm(){
         return "qna/form";
