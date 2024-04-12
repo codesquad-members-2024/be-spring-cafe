@@ -12,15 +12,23 @@ public class UserRepositoryImpl implements UserRepository {
     List<User> userDB = new ArrayList<>();
 
     @Override
-    public User save(User user) {
+    public User create(User user) {
         userDB.add(user);
         return user;
     }
 
     @Override
     public User update(User user) {
-
-        return user;
+        int updateUserIndex = 0;
+        for (int index = 0; index < userDB.size(); index++) {
+            if(userDB.get(index).getUserId().equals(user.getUserId())){
+                userDB.get(index).setPassword(user.getPassword());
+                userDB.get(index).setEmail(user.getEmail());
+                updateUserIndex = index;
+                break;
+            }
+        }
+        return userDB.get(updateUserIndex);
     }
 
     @Override

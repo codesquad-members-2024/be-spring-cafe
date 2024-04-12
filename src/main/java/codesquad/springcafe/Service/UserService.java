@@ -19,22 +19,17 @@ public class UserService {
 
     public User signUp(User user) {
         //중복 회원 체크
-        validateDuplicateUser(user);
+        userRepository.findById(user.getUserId())
+            .ifPresent(result -> {
+                throw new IllegalStateException("이미 유저가 존재함");});
 
-        userRepository.save(user);
+        userRepository.create(user);
         return user;
     }
 
     public User update(User user) {
         userRepository.findById(user.getUserId()).orElseThrow(() -> new NoSuchElementException());
         return userRepository.update(user);
-    }
-
-    private void validateDuplicateUser(User user) {
-        userRepository.findById(user.getUserId())
-            .ifPresent(result -> {
-                throw new IllegalStateException("이미 유저가 존재함");
-            });
     }
 
     public User findUserById(String userId) {

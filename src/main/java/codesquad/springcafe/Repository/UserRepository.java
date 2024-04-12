@@ -6,7 +6,9 @@ import java.util.Optional;
 
 public interface UserRepository {
 
-    User save(User user);
+    User create(User user);
+
+    User update(User user);
 
     Optional<User> findById(String id);
 
@@ -14,5 +16,4 @@ public interface UserRepository {
 
     List<User> findAll();
 
-    User update(User user);
 }

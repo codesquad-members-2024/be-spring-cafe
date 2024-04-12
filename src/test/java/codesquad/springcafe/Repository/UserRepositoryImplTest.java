@@ -27,7 +27,7 @@ class UserRepositoryImplTest {
     @DisplayName("UserRepositoryImpl 저장 테스트")
     void save() {
         //when
-        userRepository.save(user);
+        userRepository.create(user);
         //then
         //success
         boolean isEddy = userRepository.findById("eddy").isPresent();
@@ -40,7 +40,7 @@ class UserRepositoryImplTest {
     @Test
     @DisplayName("findById를 통해 user 객체 가져오는지 테스트")
     void findById() {
-        userRepository.save(user);
+        userRepository.create(user);
         //then
         User storedUser = userRepository.findById(user.getUserId()).get();
         assertThat(storedUser).isEqualTo(user);
@@ -49,7 +49,7 @@ class UserRepositoryImplTest {
     @Test
     @DisplayName("findByEmail를 통해 user 객체 가져오는지 테스트")
     void findByEmail() {
-        userRepository.save(user);
+        userRepository.create(user);
         //then
         User storedUser = userRepository.findByEmail(user.getEmail()).get();
         assertThat(storedUser).isEqualTo(user);
@@ -57,12 +57,12 @@ class UserRepositoryImplTest {
 
     @Test
     void findAll() {
-        userRepository.save(user);
+        userRepository.create(user);
         User nextUser = new User();
         nextUser.setUserId("sean");
         nextUser.setEmail("tmdgus717@gmail.com");
         nextUser.setPassword("qwer");
-        userRepository.save(nextUser);
+        userRepository.create(nextUser);
 
         List<User> users = userRepository.findAll();
         assertThat(users.size()).isEqualTo(2);
