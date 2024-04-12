@@ -29,10 +29,10 @@ public class ArticleController {
         return "redirect:/";
     }
 
-    @GetMapping("/articles/{articleIndex}")
-    public String articleDetails(@PathVariable Long articleIndex, Model model) {
+    @GetMapping("/articles/{sequence}")
+    public String articleDetails(@PathVariable int sequence, Model model) {
         model.addAttribute("nlString", System.lineSeparator());
-        model.addAttribute("article", articleService.findByIndex(articleIndex));
+        model.addAttribute("article", articleService.findBySequence(sequence));
         return "/qna/show";
     }
 

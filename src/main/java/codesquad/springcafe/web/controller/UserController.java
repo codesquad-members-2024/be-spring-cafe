@@ -34,7 +34,7 @@ public class UserController {
         return "/user/list";
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/{userId}") // /users/bbb
     public String userDetails(@PathVariable String userId, Model model) {
         model.addAttribute("user", userService.findOne(userId));
         return "/user/profile";

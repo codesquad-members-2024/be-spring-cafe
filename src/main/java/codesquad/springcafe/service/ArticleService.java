@@ -4,7 +4,7 @@ import codesquad.springcafe.domain.article.Article;
 import codesquad.springcafe.domain.article.ArticleRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.util.List;
 
 @Service
 public class ArticleService {
@@ -19,11 +19,11 @@ public class ArticleService {
         articleRepository.save(article);
     }
 
-    public Article findByIndex(Long index) {
-        return articleRepository.findByIndex(index);
+    public Article findBySequence(int sequence) {
+        return articleRepository.findBySequence(sequence);
     }
 
-    public Map<Long, Article> getArticles() {
+    public List<Article> getArticles() {
         return articleRepository.getArticles();
     }
 }
