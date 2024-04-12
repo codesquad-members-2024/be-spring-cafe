@@ -23,6 +23,7 @@
     <div class="container" id="main">
         <header class="post-header">
             <p class="title">유저 상세 페이지</p>
+            <a href="/users/{{userId}}/form" class="adjust-btn">수정하기</a>
         </header>
 
         <!--here-->
@@ -30,6 +31,10 @@
             <div class="user-info">
                 <p class="info-label">유저 ID</p>
                 <p class="info-value" id="userId">{{ user.getUserId }}</p>
+            </div>
+            <div class="user-info">
+                <p class="info-label">닉네임</p>
+                <p class="info-value" id="userName">{{ user.getName }}</p>
             </div>
             <div class="user-info">
                 <p class="info-label">이메일</p>

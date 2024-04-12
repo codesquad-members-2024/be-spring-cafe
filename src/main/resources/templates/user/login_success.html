@@ -24,10 +24,11 @@
         <header class="post-header">
             <p class="title">가입이 완료되었습니다!</p>
         </header>
+        <p class="user-info"> 아이디: {{ userId }}</p>
         <p class="user-info"> 이메일: {{ userEmail }}</p>
-        <p class="user-info"> 닉네임: {{ userId }}</p>
-        <a href="../index.html" class="btn">홈으로</a>
-        <a href="/users/list" class="btn">유저 리스트</a>
+        <p class="user-info"> 닉네임: {{ userName }}</p>
+        <a href="/" class="btn">홈으로</a>
+        <a href="/users" class="btn">유저 리스트</a>
     </div>
 </div>
 </body>

@@ -153,11 +153,12 @@ li {
     display: flex;
     border: 1px solid lightgray;
     margin: 20px;
-    width: 40%;
+    width: 50%;
 }
 
 .form-control {
     border:none;
+    width: 40%;
 }
 
 .form-control:focus {
@@ -182,4 +183,10 @@ li {
 
 label {
     width: 25%;
+}
+
+.error-message{
+    color: red;
+    font-weight: bold;
+    text-align: center;
 }

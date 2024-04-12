@@ -1,14 +1,17 @@
 package codesquad.springcafe.users.service;
 
-import model.UserVO;
+import model.UserData;
 import model.User;
+import model.UserUpdateData;
 
 import java.util.*;
 
 public interface UserService {
-    void createUser(UserVO userVO);
+    void createUser(UserData userData);
 
     ArrayList<User> getAllUsers();
 
-    Optional<User> findUserById(String userId);
+    User findUserById(String userId);
+
+    void updateUser(String userId, UserUpdateData updateData);
 }

@@ -1,26 +1,34 @@
 package codesquad.springcafe.users.service;
 
+import codesquad.springcafe.exception.PasswordMismatchException;
+import codesquad.springcafe.exception.UserNotFoundException;
 import db.UserDatabase;
 import model.User;
-import model.UserVO;
+import model.UserData;
+import model.UserUpdateData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
 @Service
 public class UserManagementService implements UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserManagementService.class);
 
     @Override
-    public void createUser(UserVO userVO) {
-        String email = userVO.getEmail();
-        String userId = userVO.getUserId();
-        String password = userVO.getPassword();
+    public void createUser(UserData userData) {
+        String userId = userData.getUserId();
+        String email = userData.getEmail();
+        String name = userData.getName();
+        String password = userData.getPassword();
 
-        User user = new User(email, userId, password);
+        User user = new User(userId, email, name, password);
         logger.debug("User Created : {}", user);
 
         UserDatabase.addUser(user);
@@ -32,7 +40,23 @@ public class UserManagementService implements UserService {
     }
 
     @Override
-    public Optional<User> findUserById(String userId) {
-        return UserDatabase.findUserById(userId);
+    public User findUserById(String userId) {
+        return UserDatabase.findUserById(userId).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
     }
+
+    @Override
+    public void updateUser(String userId, UserUpdateData updateData) {
+        User user = findUserById(userId);
+        validatePassword(user.getPassword(), updateData.getCurrentPassword());
+        user.updateUser(updateData);
+        logger.debug("User Updated : {}", user);
+    }
+
+    private void validatePassword(String userPassword, String inputPassword) {
+        if (!userPassword.equals(inputPassword)) {
+            throw new PasswordMismatchException("입력한 비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+
 }

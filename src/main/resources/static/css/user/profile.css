@@ -61,7 +61,6 @@ li {
     text-align: center;
     font-weight: 500;
     margin-top: 100px;
-    margin-bottom: 60px;
 }
 
 .comment {
@@ -157,7 +156,7 @@ li {
 }
 
 .form-control {
-    border:none;
+    border: none;
 }
 
 .form-control:focus {
@@ -188,6 +187,7 @@ label {
 /* ---- 직접 만든 css ----- */
 .user-info-container {
     margin: 0 auto;
+    margin-top: 50px;
     text-align: center;
 }
 
@@ -208,4 +208,19 @@ label {
 .info-value {
     color: #333; /* 값 텍스트 색상 설정 */
     text-decoration: underline; /* 밑줄을 추가 */
+}
+
+.adjust-btn {
+    float: right;
+    background-color: #4CAF50; /* 초록색 배경 */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 10px;
+    margin-right: 20px;
 }

@@ -161,6 +161,7 @@ Service -> Controller : 요청 처리 결과 반환
 > 2) Service Interface Implement [Class]
 
 - Interface 사용을 통해, 클래스 간의 결합을 느슨하게 하자!
+
 > 비즈니스 로직이 바뀌었을 경우 Implement만 갈아끼우면 된다!
 
 - View는 생략.. ㅎ
@@ -168,10 +169,13 @@ Service -> Controller : 요청 처리 결과 반환
 ---
 
 # 🔎 ```VO? DTO?``` 차이점
+
 ## DTO (Data Transfer Object)
+
 - 순수하게 데이터를 담아 계층 간으로 전달하는 객체
-![img.png](img/img.png)
+  ![img.png](img/img.png)
 - 생성자를 이용한, 불변 객체로 동작하게 하자!
+
 ```java
 //생성자를 이용한 불변 객체
 public class UserDTO {
@@ -202,11 +206,13 @@ public class UserDTO {
 ```
 
 ## VO (Value Object)
+
 - VO는 값 그 자체를 나태는 객체
 - DTO와 반대로 로직을 포함할 수 있으며, VO의 경우 특정 값 자체를 표현하기 때문에 불변성의 보장을 위해 생성자를 사용하여야 한다.
 - VO는 서로 다른 이름을 갖는 VO 인스턴스라도 모든 속성 값이 같다면 두 인스턴스는 같은 객체인 것이 핵심
 
 ## 차이점 정리
+
 ![img_1.png](img/img_1.png)
 
 ```
@@ -215,9 +221,48 @@ public class UserDTO {
 DTO: 데이터 전송에 사용되는 객체로, 주로 서로 다른 시스템 또는 계층간에 데이터를 전달하기 위해 사용됩니다. 주로 데이터베이스나 외부 API와의 통신에서 사용됩니다.
 VO: 비즈니스 영역에서 사용되는 객체로, 주로 도메인 모델 내에서 사용됩니다. 객체의 값을 그대로 전달하거나 비즈니스 로직을 수행할 때 사용됩니다.
 ```
+
 ### 결론
+
 - ```UserController```에서 ```UserVO```객체로 ```UserService```에 전달하는 것이 맞다!
-  - 왜냐하면, 비즈니스 영역에서 사용되는 객체이기 때문!
+    - 왜냐하면, 비즈니스 영역에서 사용되는 객체이기 때문!
 - 만약, User 객체가 Database에 저장되어야 한다면, ```DTO```로 사용되야 할 것,,!?
 
 ---
+
+# HTML은 왜 POST, GET만 지원할까?
+
+- Step-2 마지막 단계 ```PUT```메소드를 통한 업데이트 를 진행하면서 이와 같은 의문점이 들었다.
+
+> method에 GET, POST 말고 PUT, DELETE를 넘겨주면 되는 거 아니야?
+
+- ```Form```
+    - ```Form```은 서버에 정보를 제출하기 위해 존재한다!
+        - ```GET``` : form에 있는 정보를 줄테니, 나에게 ```리소스(representation)```을 줘!
+        - ```POST``` : form에 있는 정보를 줄테니, ```처리```해줘
+- HTML Form은 위와 같은 형식으로 사용된다. 그렇다면, ```DELETE```, ```PUT```은 어떨까
+    - ```DELETE``` : 이미 URI는 리소스를 정확하게 식별하고 요청을 보낸다!
+        - 따라서, FORM이 필요없다.
+    - ```PUT``` : 전송해야 할 것은 리소스를 대체할 representation 그 자체인데, form 데이터를 처리할 필요가 없다!
+
+## POST, GET만 쓰면 되잖아! 왜 PUT, DELETE를 쓰는것일까?
+
+- 사실 그 목적은 ```RESTful```에 있다!
+
+### REST란?
+
+- Representational State Transfer 의 약자!
+    - 전송에 대한 표현 이라고 해석할 수 있다.
+
+### REST API 중심규칙 및 구성
+
+> **1) URI는 정보의 자원을 표현!**
+
+- URI는 자원자체를 표현하는데 있어서, get create update와 같이 동사로 표현하지 않고 자원자체의 명사로만 표현
+- 사실 가독성에 있어서 동사표현이 편할 수 있겠지만, 이는 Method로 처리하는게 규칙
+
+> **2) 자원에 대한 행위는 HTTP Method로 표현!** 
+
+![img.png](img/img_2.png)
+
+> ### 따라서, 현재 User 정보를 업데이트 하는 것은 POST가 아닌 PUT 메소드가 적절하다!

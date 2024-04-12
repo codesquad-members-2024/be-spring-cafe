@@ -1,19 +1,18 @@
 package codesquad.springcafe.users.controller;
 
+import codesquad.springcafe.exception.PasswordMismatchException;
+import codesquad.springcafe.exception.UserNotFoundException;
 import codesquad.springcafe.users.service.UserService;
-import db.UserDatabase;
 import model.User;
-import model.UserVO;
+import model.UserData;
+import model.UserUpdateData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -32,23 +31,7 @@ public class UserController {
     }
 
     @GetMapping
-    public String showUserForm() {
-        return "/user/form";
-    }
-
-    @PostMapping
-    public String registerUser(UserVO userVO, Model model) {
-        userService.createUser(userVO);
-
-        model.addAttribute("userEmail", userVO.getEmail());
-        model.addAttribute("userId", userVO.getUserId());
-
-        return "/user/login_success";
-    }
-
-    @GetMapping("/list")
     public String showUsers(Model model) {
-
         ArrayList<User> users = userService.getAllUsers();
 
         model.addAttribute("users", users);
@@ -57,19 +40,46 @@ public class UserController {
         return "/user/list";
     }
 
+    @PostMapping
+    public String registerUser(UserData userData, Model model) {
+        userService.createUser(userData);
+
+        model.addAttribute("userEmail", userData.getEmail());
+        model.addAttribute("userId", userData.getUserId());
+        model.addAttribute("userName", userData.getName());
+        return "/user/login_success";
+    }
+
     @GetMapping("/{userId}")
     public String getUserProfile(@PathVariable String userId, Model model) {
-
-        logger.debug("userId : {}", userId);
-
-        // user 정보가 없는 경우 404 에러 처리
-        User user = userService.findUserById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+        User user = userService.findUserById(userId);
 
         model.addAttribute("user", user);
 
         return "/user/profile";
     }
 
+    @GetMapping("/{userId}/form")
+    public String getUserEditPage(@PathVariable String userId, Model model) {
+        User user = userService.findUserById(userId);
+
+        model.addAttribute("user", user);
+
+        return "/user/updateForm";
+    }
+
+    @PutMapping("/{userId}/update")
+    public String updateUser(@PathVariable String userId, UserUpdateData updateData, Model model) {
+        try {
+            userService.updateUser(userId, updateData);
+        } catch (PasswordMismatchException e) {
+            logger.error(e.getClass().getSimpleName() + " : " + e.getMessage());
+            User user = userService.findUserById(userId);
+            model.addAttribute("user", user);
+            model.addAttribute("error", true);
+            return "/user/updateForm";
+        }
+        return "redirect:/users";
+    }
 
 }
