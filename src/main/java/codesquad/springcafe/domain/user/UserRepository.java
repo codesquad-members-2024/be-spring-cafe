@@ -1,6 +1,5 @@
-package codesquad.springcafe.repository;
+package codesquad.springcafe.domain.user;
 
-import codesquad.springcafe.domain.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;
@@ -23,10 +22,21 @@ public class UserRepository {
         users.put(sequence.getAndIncrement(), user);
     }
 
+    public void update(Long sequence, User user) {
+        users.put(sequence, user);
+    }
+
     public Optional<User> findByUserId(String userId) {
         return users.values().stream()
                 .filter(user -> user.getUserId().equals(userId))
                 .findAny();
+    }
+
+    public Long findSequence(User user) {
+        return users.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(user))
+                .map(Map.Entry::getKey)
+                .findAny().get();
     }
 
     public Map<Long, User> getUsers() {
