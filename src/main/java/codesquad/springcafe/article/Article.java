@@ -4,15 +4,15 @@ import java.sql.Timestamp;
 
 public class Article {
     private int id;
-    private Timestamp created_datetime;
+    private Timestamp createdAt;
     private String author;
     private String title;
     private String content;
     private int point;
 
-    public Article(int id, Timestamp created_datetime, String author, String title, String content, int point) {
+    public Article(int id, Timestamp createdAt, String author, String title, String content, int point) {
         this.id = id;
-        this.created_datetime = created_datetime;
+        this.createdAt = createdAt;
         this.author = author;
         this.title = title;
         this.content = content;
@@ -23,8 +23,8 @@ public class Article {
         this.id = id;
     }
 
-    public void setCreatedDateTime(Timestamp created){
-        this.created_datetime = created;
+    public void setCreatedAt(Timestamp created){
+        this.createdAt = created;
     }
 
     public void addPoint(){
@@ -35,8 +35,8 @@ public class Article {
         return id;
     }
 
-    public Timestamp getCreated_datetime() {
-        return created_datetime;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
     public String getAuthor() {
@@ -63,7 +63,7 @@ public class Article {
     public String toString() {
         return "Article{" +
                 "id=" + id +
-                ", created_datetime=" + created_datetime +
+                ", created_datetime=" + createdAt +
                 ", author='" + author + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
