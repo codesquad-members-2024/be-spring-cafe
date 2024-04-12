@@ -64,7 +64,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="/static/index.html">Posts</a></li>
                 <li><a href="../user/login.html" role="button">로그인</a></li>
-                <li><a href="../user/form.html" role="button">회원가입</a></li>
+                <li><a href="register/form.html" role="button">회원가입</a></li>
                 <li><a href="#" role="button">로그아웃</a></li>
                 <li><a href="#" role="button">개인정보수정</a></li>
             </ul>
@@ -75,7 +75,7 @@
 <div class="container" id="main">
     <div class="col-md-6 col-md-offset-3">
         <div class="panel panel-default content-main">
-            <form name="question" method="post" th:action="'/users/' + ${userId} + '/form'">
+            <form name="question" method="post" th:action="'/user/profile/' + ${userId} + '/update'">
                 <div class="form-group">
                     <label for="password">기존 비밀번호</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="Password">

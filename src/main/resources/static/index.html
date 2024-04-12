@@ -83,6 +83,7 @@
       <div class="panel panel-default qna-list">
           <ul class="list">
               <li>
+<!--                  글 하나 시작-->
                   <div class="wrap">
                       <div class="main">
                           <strong class="subject">
@@ -99,6 +100,11 @@
                           </div>
                       </div>
                   </div>
+              </li>
+              <!--                  글 하나 끝-->
+
+              <li th:each="article: ${articles}">
+
               </li>
               <li>
                   <div class="wrap">
