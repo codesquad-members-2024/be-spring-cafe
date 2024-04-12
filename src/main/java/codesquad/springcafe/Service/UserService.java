@@ -26,8 +26,8 @@ public class UserService {
     }
 
     public User update(User user) {
-        userRepository.save(user);
-        return user;
+        userRepository.findById(user.getUserId()).orElseThrow(() -> new NoSuchElementException());
+        return userRepository.update(user);
     }
 
     private void validateDuplicateUser(User user) {
