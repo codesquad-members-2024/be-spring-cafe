@@ -2,6 +2,7 @@ package codesquad.springcafe.article;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
@@ -15,13 +16,8 @@ public class ArticleDatabase {
         articles.add(article);
     }
 
-    public List<ArticleRequestDto> findAll() {
-        List<ArticleRequestDto> articleRequestDtos = new ArrayList<>();
-        for (Article article : articles) {
-            articleRequestDtos.add(
-                new ArticleRequestDto(article.getTitle(), article.getAuthor()));
-        }
-        return articleRequestDtos;
+    public List<Article> findAll() {
+        return Collections.unmodifiableList(articles);
     }
 
     public Article findById(long id) {
