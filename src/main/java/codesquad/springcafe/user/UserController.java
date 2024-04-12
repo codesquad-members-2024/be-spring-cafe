@@ -1,7 +1,6 @@
-package codesquad.springcafe.controller;
+package codesquad.springcafe.user;
 
-import codesquad.springcafe.domain.User;
-import codesquad.springcafe.repository.UserRepository;
+import codesquad.springcafe.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,22 +20,15 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @PostMapping("/create")
-    public String createUser(@RequestParam("userId") String id,
-                             @RequestParam("password") String password,
-                             @RequestParam("name") String name,
-                             @RequestParam("email") String email) {
-
-        // 회원가입
-        User user = new User(id, password, name, email);
-
+    @PostMapping("")
+    public String createUser(@ModelAttribute User user){
         try {
             userRepository.addUser(user);
         } catch (IllegalArgumentException alreadyExistsId) {
             return "redirect:/user/form/fail";
         }
 
-        log.info(user.toString());
+        log.debug(user.toString());
         return "redirect:/user/users";
     }
     @PostMapping("/login")
@@ -44,8 +36,28 @@ public class UserController {
                         @RequestParam("password") String password) {
 
         // 로그인 학인
-        log.info("로그인됨 : " + id + " , " + password);
+        log.debug("로그인됨 : " + id + " , " + password);
         return "redirect:/";
+    }
+
+    @PostMapping("/{id}")
+    public String update(@PathVariable("id") String id ,
+                         @RequestParam("password") String password,
+                         @RequestParam("name") String name,
+                         @RequestParam("email") String email,
+                         Model model){
+
+
+        if(userRepository.findUserById(id).isCorrectPassword(password)){
+            userRepository.update(new User(id , password, name , email));
+            model.addAttribute("alert", "회원 정보 변경 성공!");
+        }else {
+            model.addAttribute("alert", "비밀번호가 일치하지 않습니다!");
+        }
+
+        model.addAttribute("alert_section", true);
+        model.addAttribute("userId", id);
+        return "user/update_form";
     }
 
     @GetMapping("/form")
@@ -79,5 +91,14 @@ public class UserController {
     public String profile(@PathVariable("id") String id, Model model) {
         model.addAttribute("user", userRepository.findUserById(id));
         return "user/profile";
+    }
+
+    @GetMapping("{id}/form")
+    public String updateForm(@PathVariable("id") String id , Model model){
+        model.addAttribute("alert", "");
+        model.addAttribute("alert_section", false);
+        model.addAttribute("userId", id);
+
+        return "user/update_form";
     }
 }
