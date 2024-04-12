@@ -18,6 +18,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public User update(User user) {
+        return null;
+    }
+
+    @Override
     public Optional<User> findById(String userId) {
         return userDB.stream()
             .filter(user -> user.getUserId().equals(userId))
@@ -35,4 +40,5 @@ public class UserRepositoryImpl implements UserRepository {
     public List<User> findAll() {
         return userDB;
     }
+
 }
