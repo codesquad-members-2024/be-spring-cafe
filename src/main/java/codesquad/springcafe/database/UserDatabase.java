@@ -17,4 +17,8 @@ public class UserDatabase {
     public static List<User> getUserList() {
         return userMap.values().stream().toList();
     }
+
+    public static User getUser(String userId) {
+        return userMap.get(userId);
+    }
 }
