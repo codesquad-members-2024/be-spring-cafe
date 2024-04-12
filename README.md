@@ -78,3 +78,20 @@
   - 스프링 부트 3.2부터 자바 컴파일러에 -parameter 옵션을 넣어주어야 어노테이션의 이름을 생략할 수 있다
   - name 속성을 알맞게 작성하여 해결
   - 관련 링크 : https://www.inflearn.com/questions/1087879/pathvariable-name-%EC%83%9D%EB%9E%B5-%EC%A7%88%EB%AC%B8-%EB%93%9C%EB%A6%BD%EB%8B%88%EB%8B%A4
+
+### Map의 put에 대한 잘못된 이해
+- 문제 상황
+  - user를 저장하고 반환되는 user 객체에서 getId()를 시도했으나, NPE 발생
+- 코드
+  ```java
+      public User save(User user){
+          long userId = sequence.incrementAndGet();
+          user.setId(userId);
+          return users.put(userId, user);
+      }
+  ```
+- 해결 방법
+  - map의 put의 반환타입이 Map<K, V>의 V여서 당연히 지금 저장한 값의 결과를 반환할 것이라고 생각했다.
+  - map의 put은 새로운 요소를 추가할 때 해당 요소의 이전 값이 있으면 그 값을 반환한다
+  - 이 경우 새로운 요소가 추가되는 경우므로 이전 값이 없어 null을 반환하고, 무엇보다 그 이전 값이 있더라도 해당 값을 활용해서는 안 된다.
+  - 저장하려는 user 객체를 반환하도록 수정하여 해결

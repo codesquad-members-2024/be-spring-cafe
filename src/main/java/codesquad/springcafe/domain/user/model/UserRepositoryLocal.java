@@ -18,7 +18,8 @@ public class UserRepositoryLocal implements UserRepository{
     public User save(User user){
         long userId = sequence.incrementAndGet();
         user.setId(userId);
-        return users.put(userId, user);
+        users.put(userId, user);
+        return user;
     }
 
     public Optional<User> findById(Long id) {
