@@ -1,9 +1,9 @@
 package codesquad.springcafe.articles.controller;
 
 
-import codesquad.springcafe.articles.repository.ArticleRepository;
-import model.Article;
-import model.ArticleData;
+import codesquad.springcafe.articles.service.ArticleService;
+import model.article.dto.ArticleCreateDto;
+import model.article.dto.ArticleContentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,23 +16,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/articles")
 public class ArticleController {
 
-    private final ArticleRepository articleRepository;
+    private final ArticleService articleService;
 
     @Autowired
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
     @PostMapping
-    public String postArticle(ArticleData articleData) {
-        articleRepository.createArticle(articleData);
+    public String postArticle(ArticleCreateDto articleCreateDto) {
+        articleService.createArticle(articleCreateDto);
         return "redirect:/";
     }
 
     @GetMapping("/{articleId}")
     public String getUserProfile(@PathVariable int articleId, Model model) {
-        Article article = articleRepository.findArticleById(articleId);
-        model.addAttribute("article", article);
+        ArticleContentDto articleContent = articleService.findArticleById(articleId);
+
+        model.addAttribute("articleContent", articleContent);
 
         return "/article/show";
     }

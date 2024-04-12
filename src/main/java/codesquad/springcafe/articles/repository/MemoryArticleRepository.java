@@ -1,39 +1,45 @@
 package codesquad.springcafe.articles.repository;
 
-import codesquad.springcafe.exception.ArticleNotFoundException;
 import db.ArticleDatabase;
-import model.Article;
-import model.ArticleData;
+import model.article.Article;
+import model.article.dto.ArticleContentDto;
+import model.article.dto.ArticlePreviewDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Repository
-public class MemoryArticleRepository implements ArticleRepository{
+public class MemoryArticleRepository implements ArticleRepository {
     private static final Logger logger = LoggerFactory.getLogger(MemoryArticleRepository.class);
 
     @Override
-    public void createArticle(ArticleData articleData) {
-        String userId = articleData.getUserId();
-        String title = articleData.getTitle();
-        String content = articleData.getContent();
-
-        Article article = new Article(userId, title, content);
-        logger.debug("Article Created : {}", article);
-
+    public void createArticle(Article article) {
         ArticleDatabase.addArticle(article);
     }
 
     @Override
-    public ArrayList<Article> getAllArticles() {
-        return ArticleDatabase.getAllArticles();
+    public Optional<ArrayList<ArticlePreviewDto>> getAllArticles() {
+        ArrayList<Article> articles = ArticleDatabase.getAllArticles();
+        ArrayList<ArticlePreviewDto> articlePreviews = new ArrayList<>();
+        for (int i = 0; i < articles.size(); i++) {
+            Article article = articles.get(i);
+            ArticlePreviewDto articlePreviewDto = new ArticlePreviewDto((long) (i + 1), article.getUserId(), article.getTitle(), article.getContent());
+            articlePreviews.add(articlePreviewDto);
+        }
+        return Optional.of(articlePreviews);
     }
 
     @Override
-    public Article findArticleById(int articleId) {
-        articleId = articleId - 1;
-        return ArticleDatabase.findArticleById(articleId).orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
+    public Optional<ArticleContentDto> findArticleById(int articleId) {
+        Article article = ArticleDatabase.findArticleById(articleId);
+        if (article == null) {
+            return Optional.empty();
+        }
+        ArticleContentDto articleContent = new ArticleContentDto(article.getUserId(), article.getTitle(), article.getContent(), article.getCreationDate().toString());
+        return Optional.of(articleContent);
     }
 }

@@ -1,8 +1,8 @@
 package codesquad.springcafe.articles.repository;
 
-import codesquad.springcafe.exception.ArticleNotFoundException;
-import model.Article;
-import model.ArticleData;
+import model.article.Article;
+import model.article.dto.ArticleContentDto;
+import model.article.dto.ArticlePreviewDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-
+import java.util.Optional;
 @Primary
 @Repository
 public class H2ArticleRepository implements ArticleRepository {
@@ -30,14 +30,7 @@ public class H2ArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public void createArticle(ArticleData articleData) {
-        String userId = articleData.getUserId();
-        String title = articleData.getTitle();
-        String content = articleData.getContent();
-
-        Article article = new Article(userId, title, content);
-        logger.debug("Article Created : {}", article);
-
+    public void createArticle(Article article) {
         String sql = "INSERT INTO ARTICLES (USERID, TITLE, CONTENT, CREATIONDATE) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = dataSource.getConnection();
@@ -50,38 +43,43 @@ public class H2ArticleRepository implements ArticleRepository {
         } catch (SQLException e) {
             logger.error(e.getMessage());
         }
+        logger.debug("Article Title : '{}' Updated At H2 Database", article.getTitle());
     }
 
     @Override
-    public ArrayList<Article> getAllArticles() {
-        ArrayList<Article> articles = new ArrayList<>();
-        String sql = "SELECT * FROM ARTICLES";
+    public Optional<ArrayList<ArticlePreviewDto>> getAllArticles() {
+        ArrayList<ArticlePreviewDto> articlePreviews = new ArrayList<>();
+        /*
+         * 모든 게시물들을 출력하는 데에 필요한 정보들
+         * 1) title
+         * 2) userId
+         * 3) creationDate
+         * 4) 조회수 [아직 미구현]
+         * */
+        String sql = "SELECT ARTICLEID, USERID, TITLE, CREATIONDATE FROM ARTICLES";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
-
             while (rs.next()) {
-                int articleId = rs.getInt("articleId");
+                long articleId = rs.getInt("articleId");
                 String userId = rs.getString("userId");
                 String title = rs.getString("title");
-                String content = rs.getString("content");
                 String creationDate = rs.getString("creationDate");
-                Article article = new Article(articleId, userId, title, content, creationDate);
-                articles.add(article);
+                ArticlePreviewDto articlePreviewDTO = new ArticlePreviewDto(articleId, userId, title, creationDate);
+                articlePreviews.add(articlePreviewDTO);
             }
         } catch (SQLException e) {
             logger.error(e.getMessage());
+            return Optional.empty(); // 예외 발생 시 Optional.empty()를 반환
         }
-        Collections.reverse(articles);
-        return articles;
+        Collections.reverse(articlePreviews);
+        return Optional.of(articlePreviews); // Optional에 articlePreviews를 감싸서 반환
     }
 
     @Override
-    public Article findArticleById(int articleId) {
-        Article article = null;
-        String sql = "SELECT * FROM ARTICLES WHERE articleId = ?";
-
+    public Optional<ArticleContentDto> findArticleById(int articleId) {
+        String sql = "SELECT USERID, TITLE, CONTENT, CREATIONDATE FROM ARTICLES WHERE articleId = ?";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, articleId);
@@ -91,17 +89,15 @@ public class H2ArticleRepository implements ArticleRepository {
                     String title = rs.getString("title");
                     String content = rs.getString("content");
                     String creationDate = rs.getString("creationDate");
-                    article = new Article(articleId, userId, title, content, creationDate);
+                    ArticleContentDto articleContent = new ArticleContentDto(userId, title, content, creationDate);
+                    return Optional.of(articleContent);
                 }
+                return Optional.empty(); // Article을 찾지 못한 경우
             }
         } catch (SQLException e) {
             logger.error(e.getMessage());
+            return Optional.empty(); // 예외 발생 시
         }
-
-        if (article == null) {
-            throw new ArticleNotFoundException("존재하는 게시글이 없습니다 Article ID: " + articleId);
-        }
-
-        return article;
     }
+
 }

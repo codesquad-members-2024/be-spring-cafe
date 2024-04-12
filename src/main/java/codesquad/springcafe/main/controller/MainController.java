@@ -1,8 +1,8 @@
 package codesquad.springcafe.main.controller;
 
 
-import codesquad.springcafe.articles.repository.ArticleRepository;
-import model.Article;
+import codesquad.springcafe.articles.service.ArticleService;
+import model.article.dto.ArticlePreviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,23 +10,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 @Controller
 @RequestMapping("/main")
 public class MainController {
-    private final ArticleRepository articleRepository;
+    private final ArticleService articleService;
+
     @Autowired
-    public MainController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    public MainController(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
     @GetMapping
     public String showMain(Model model) {
-        ArrayList<Article> articles = articleRepository.getAllArticles();
+        ArrayList<ArticlePreviewDto> articlePreviews = articleService.getAllArticles();
 
-        model.addAttribute("articles", articles);
-        model.addAttribute("totalArticles", articles.size());
+        model.addAttribute("articlePreviews", articlePreviews);
+        model.addAttribute("totalArticles", articlePreviews.size());
 
         return "/main/index";
     }
