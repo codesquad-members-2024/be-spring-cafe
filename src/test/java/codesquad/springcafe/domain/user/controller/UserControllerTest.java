@@ -20,10 +20,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static codesquad.springcafe.global.utils.DateUtils.convertCreatedAt;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+// UserController 단위테스트
+// TODO: 실패 테스트도 작성
 @SpringBootTest
 @AutoConfigureMockMvc
 class UserControllerTest {
@@ -48,8 +52,34 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("회원가입에 성공한다.")
+    void testPostUser() throws Exception {
+        //given
+        final String url = "/users";
+        final String email = "hong@gmail.com";
+        final String name = "hong";
+        final String password = "1234";
+
+        //when
+        final ResultActions result = mockMvc.perform(
+                post(url).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("email", email)
+                        .param("name", name)
+                        .param("password", password)); // POST
+
+        //then
+        result.andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.TEXT_HTML))
+                .andExpect(view().name("/user/registration_success"))
+                .andExpect(model().attribute("user", allOf( // userJoinData에는 getPwd가 없다. email, name만 확인
+                        hasProperty("email", equalTo(email)),
+                        hasProperty("name", equalTo(name))
+                )));
+    }
+
+    @Test
     @DisplayName("유저 목록 조회에 성공한다.")
-    void getJoinedUserList() throws Exception {
+    void testGetJoinedUserList() throws Exception {
         //given
         final String url = "/users";
         List<User> userList = Arrays.asList(
@@ -60,7 +90,7 @@ class UserControllerTest {
         userList.forEach(user -> userRepository.save(user));
 
         //when
-        final ResultActions result = mockMvc.perform(get(url).accept(MediaType.TEXT_HTML)); // GET
+        final ResultActions result = mockMvc.perform(get(url)); // GET
 
         //then
         result.andExpect(status().isOk())   // 200 OK
@@ -75,6 +105,28 @@ class UserControllerTest {
                                         hasProperty("email", equalTo(user.getEmail()))
                                 )
                         ).collect(Collectors.toList())
+                )));
+    }
+
+    @Test
+    @DisplayName("유저 프로필 조회에 성공한다.")
+    void testGetUserProfile() throws Exception {
+        //given
+        final String url = "/users/{userId}";
+        User user = new User("hong", "hong@gmail.com", "1234", LocalDateTime.now(), LocalDateTime.now());
+        Long userSavedId = userRepository.save(user).getId();
+
+        //when
+        final ResultActions result = mockMvc.perform(get(url, userSavedId));
+
+        //then
+        result.andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.TEXT_HTML))
+                .andExpect(view().name("user/profile"))
+                .andExpect(model().attribute("user", allOf(
+                        hasProperty("email", equalTo(user.getEmail())),
+                        hasProperty("name", equalTo(user.getName())),
+                        hasProperty("createdAt", equalTo(convertCreatedAt(user.getCreatedAt())))
                 )));
     }
 }
