@@ -9,14 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ArticleDatabaseTest {
+class ArticleInMemoryDatabaseTest {
 
     @Autowired
-    ArticleDatabase articleDatabase;
+    ArticleInMemoryDatabase articleInMemoryDatabase;
 
     @AfterEach
     void resetDB() {
-        articleDatabase.clear();
+        articleInMemoryDatabase.clear();
     }
 
     @Test
@@ -25,8 +25,8 @@ class ArticleDatabaseTest {
         Article article = new ArticleBuilder().articleId(1).author("jayden").title("제목")
             .content("내용").build();
 
-        articleDatabase.saveArticle(article);
-        assertThat(articleDatabase.findAll()).hasSize(1);
+        articleInMemoryDatabase.saveArticle(article);
+        assertThat(articleInMemoryDatabase.findAll()).hasSize(1);
     }
 
     @Test
@@ -36,7 +36,7 @@ class ArticleDatabaseTest {
         Article article = new ArticleBuilder().articleId(1).author("jayden").title("제목")
             .content("내용").build();
 
-        articleDatabase.saveArticle(article);
-        assertThat(articleDatabase.findAll()).hasSize(1);
+        articleInMemoryDatabase.saveArticle(article);
+        assertThat(articleInMemoryDatabase.findAll()).hasSize(1);
     }
 }
