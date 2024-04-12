@@ -3,12 +3,11 @@ package codesquad.springcafe.users.repository;
 import codesquad.springcafe.exception.PasswordMismatchException;
 import codesquad.springcafe.exception.UserNotFoundException;
 import db.UserDatabase;
-import model.User;
-import model.UserData;
-import model.UserUpdateData;
+import model.user.User;
+import model.user.UserData;
+import model.user.UserUpdateData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

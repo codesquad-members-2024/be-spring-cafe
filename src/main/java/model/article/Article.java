@@ -1,39 +1,25 @@
-package model;
+package model.article;
 
 import db.ArticleDatabase;
 
 import java.time.LocalDate;
 
 public class Article {
-    private int articleId;
     private String userId;
     private String title;
     private String content;
     private LocalDate creationDate;
 
     public Article(String userId, String title, String content) {
-        this.articleId = ArticleDatabase.getArticleID();
         this.userId = userId;
         this.title = title;
         this.content = content;
         this.creationDate = LocalDate.now();
     }
 
-    public Article(int articleId, String userId, String title, String content, String creationDate) {
-        this.articleId = articleId;
-        this.userId = userId;
-        this.title = title;
-        this.content = content;
-        this.creationDate = LocalDate.parse(creationDate);
-    }
-
     @Override
     public String toString() {
-        return "# [" + articleId + "] " + "userId : " + userId + ", title : " + title + ", content : " + content + ", creatinDate : " + creationDate;
-    }
-
-    public int getArticleId() {
-        return articleId;
+        return "userId : " + userId + ", title : " + title + ", content : " + content + ", creatinDate : " + creationDate;
     }
 
     public String getUserId() {

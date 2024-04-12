@@ -1,14 +1,16 @@
-package model;
+package model.article.dto;
 
-public class ArticleData {
+public class ArticleContentDto {
     private final String userId;
     private final String title;
     private final String content;
+    private final String creationDate;
 
-    public ArticleData(String title, String content) {
-        this.userId = "작성자";    // login 된 사용자를 리턴하도록 리팩토링 필요
+    public ArticleContentDto(String userId, String title, String content, String creationDate) {
+        this.userId = userId;
         this.title = title;
         this.content = content;
+        this.creationDate = creationDate;
     }
 
     public String getUserId() {
@@ -22,4 +24,9 @@ public class ArticleData {
     public String getContent() {
         return content;
     }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
 }

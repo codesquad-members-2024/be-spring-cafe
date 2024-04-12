@@ -2,9 +2,9 @@ package codesquad.springcafe.users.controller;
 
 import codesquad.springcafe.exception.PasswordMismatchException;
 import codesquad.springcafe.users.repository.UserRepository;
-import model.User;
-import model.UserData;
-import model.UserUpdateData;
+import model.user.User;
+import model.user.UserData;
+import model.user.UserUpdateData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

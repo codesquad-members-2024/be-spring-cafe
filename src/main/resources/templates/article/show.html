@@ -24,21 +24,21 @@
         <div class="col-md-12 col-sm-12 col-lg-12">
             <div class="panel panel-default">
                 <header class="post-header">
-                    <p class="post-title">{{article.getTitle}}</p>
+                    <p class="post-title">{{articleContent.getTitle}}</p>
                 </header>
                 <div class="content-main">
                     <article class="article">
                         <div class="article-header">
                             <div class="article-header-text">
-                                <p class="article-content">작성자 : {{article.getUserId}}</p>
+                                <p class="article-content">작성자 : {{articleContent.getUserId}}</p>
                                 <p class="article-content">
-                                    작성일자 : {{article.getCreationDate}}
+                                    작성일자 : {{articleContent.getCreationDate}}
                                 </p>
                                 <p class="article-content">조회 4</p>
                             </div>
                         </div>
                         <div class="article-doc">
-                            <p>{{article.getContent}}</p>
+                            <p>{{articleContent.getContent}}</p>
                         </div>
                     </article>
 

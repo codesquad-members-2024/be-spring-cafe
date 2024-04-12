@@ -1,14 +1,16 @@
 package codesquad.springcafe.articles.repository;
 
-import model.Article;
-import model.ArticleData;
+import model.article.Article;
+import model.article.dto.ArticleContentDto;
+import model.article.dto.ArticlePreviewDto;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public interface ArticleRepository {
-    void createArticle(ArticleData articleData);
+    void createArticle(Article article);
 
-    ArrayList<Article> getAllArticles();
+    Optional<ArrayList<ArticlePreviewDto>> getAllArticles();
 
-    Article findArticleById(int articleId);
+    Optional<ArticleContentDto> findArticleById(int articleId);
 }

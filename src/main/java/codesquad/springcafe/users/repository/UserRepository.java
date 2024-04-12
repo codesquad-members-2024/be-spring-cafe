@@ -1,8 +1,8 @@
 package codesquad.springcafe.users.repository;
 
-import model.User;
-import model.UserData;
-import model.UserUpdateData;
+import model.user.User;
+import model.user.UserData;
+import model.user.UserUpdateData;
 
 import java.util.ArrayList;
 
