@@ -21,19 +21,18 @@ public class UserService {
     }
 
     public User findOne(String userId) {
-        return userRepository.findByUserId(userId).get();
+        return userRepository.findByUserId(userId);
     }
 
-    public Map<Long, User> getUsers() {
+    public Map<String, User> getUsers() {
         return userRepository.getUsers();
     }
 
     public void updateUser(String userId, UserUpdateDto userUpdateDto) {
         User findUser = findOne(userId);
-        Long findSequence = userRepository.findSequence(findUser);
         findUser.setPassword(userUpdateDto.getPassword());
         findUser.setName(userUpdateDto.getName());
         findUser.setEmail(userUpdateDto.getEmail());
-        userRepository.update(findSequence, findUser);
+        userRepository.update(findUser);
     }
 }

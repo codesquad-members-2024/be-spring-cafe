@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class User {
 
+    private Long id;
     private final String userId;
     private String password;
     private String name;
@@ -22,6 +23,14 @@ public class User {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return Objects.equals(userId, user.userId);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUserId() {
