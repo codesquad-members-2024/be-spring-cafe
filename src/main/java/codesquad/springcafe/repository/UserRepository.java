@@ -20,7 +20,7 @@ public class UserRepository {
 
     public void saveUser(User user) {
         users.put(user.getUserId(), user);
-        log.info("user saved: {}", user.getUserId());
+        log.debug("user saved: {}", user.getUserId());
     }
 
     public List<User> findAllUsers() {
@@ -35,8 +35,4 @@ public class UserRepository {
         users.clear();
     }
 
-    public void update(UserUpdateDto userUpdateDto) {
-        User user = users.get(userUpdateDto.getUserId());
-        user.update(userUpdateDto);
-    }
 }

@@ -29,6 +29,8 @@ public class UserService {
     }
 
     public void update(UserUpdateDto userUpdateDto) {
-        userRepository.update(userUpdateDto);
+        String userId = userUpdateDto.getUserId();
+        User user = userRepository.findUserById(userId);
+        user.update(userUpdateDto);
     }
 }
