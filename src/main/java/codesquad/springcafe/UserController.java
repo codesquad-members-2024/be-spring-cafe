@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-public class MyController {
+public class UserController {
 
-    private static final Logger logger = LoggerFactory.getLogger(MyController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @PostMapping("/users")
     public String createUser(@ModelAttribute User user) {
