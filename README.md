@@ -64,6 +64,9 @@ public class UserRepositoryImpl implements UserRepository{
 spring.mvc.hiddenmethod.filter.enabled=true
 ```
 11. POST와 PUT의 차이
-- POST
-  - 멱등 O
-- PUT
+- POST : 멱등 X
+  - POST는 리소스의 생성을 담당한다.
+  - POST는 요청 시 마다, 새로운 리소스가 생성된다.
+- PUT : 멱등 O
+  - PUT은 리소스의 생성과 수정을 담당한다.
+  - PUT은 요청 시 마다, 같은 리소스를 반환한다
