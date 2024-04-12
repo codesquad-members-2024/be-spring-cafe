@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,7 +43,9 @@ public class UserController {
      * 회원가입 폼을 사용자에게 보여줍니다.
      */
     @GetMapping("/add")
-    public String userForm() {
+    public String userForm(Model model) {
+        User user = new User("", "", "");
+        model.addAttribute("user", user);
         return "user/form";
     }
 
@@ -50,7 +53,12 @@ public class UserController {
      * 사용자가 작성한 내용을 바탕으로 유저를 생성하고 데이터베이스에 저장합니다.
      */
     @PostMapping("/add")
-    public String addUser(@ModelAttribute User user) {
+    public String addUser(@Validated @ModelAttribute User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            logger.error("errors={}", bindingResult);
+            return "user/form";
+        }
+
         userDatabase.add(user);
         logger.info("새로운 유저가 생성되었습니다. {}", user);
         return "redirect:/users";
