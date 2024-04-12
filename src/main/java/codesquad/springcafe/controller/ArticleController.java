@@ -29,7 +29,7 @@ public class ArticleController {
      */
     @GetMapping("/add")
     public String articleForm() {
-        return "/article/form";
+        return "article/form";
     }
 
     /**
