@@ -34,7 +34,7 @@ public class ArticleController {
     @GetMapping("/{articleId}")
     public String getArticle(@PathVariable Long articleId, Model model) {
         Article article = articleRepository.findById(articleId);
-        log.info("getArticle : {}", article);
+        log.debug("getArticle : {}", article);
         model.addAttribute("article", article);
         return "qna/show";
     }
