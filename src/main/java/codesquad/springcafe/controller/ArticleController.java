@@ -30,7 +30,7 @@ public class ArticleController {
         return "redirect:/";
     }
 
-    @GetMapping("/articles/{articleId}")
+    @GetMapping("/qna/{articleId}")
     public String articleShow(@PathVariable Long articleId, Model model) {
         Optional<Article> optionalArticle = articleRepository.findById(articleId);
         if (optionalArticle.isPresent()) {
