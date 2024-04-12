@@ -1,11 +1,14 @@
 package codesquad.springcafe.model;
 
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Article {
     private String writer;
+    @NotBlank
     private String title;
+    @NotBlank
     private String content;
     private Long id;
     private LocalDateTime writeDate;

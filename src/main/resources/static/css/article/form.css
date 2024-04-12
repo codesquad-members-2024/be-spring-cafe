@@ -152,7 +152,7 @@ li {
     padding: 3%;
     width: 90%;
     height: 50px;
-    border:none;
+    border: none;
 }
 
 .form-control:focus {
@@ -173,4 +173,10 @@ li {
 
     display: flex;
     flex-direction: column;
+}
+
+.field-error {
+    margin-top: 10px;
+    border-color: #dc3545;
+    color: #dc3545;
 }

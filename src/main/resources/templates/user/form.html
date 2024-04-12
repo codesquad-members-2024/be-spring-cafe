@@ -19,19 +19,28 @@
         <header class="post-header">
             <p class="title">회원가입</p>
         </header>
-        <form name="question" class="info-container" method="post" action>
+        <form name="question" class="info-container" method="post" action th:object="${user}" }>
             <div class="form-group">
                 <label for="email">이메일</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="이메일을 입력하세요">
+                <input type="email" class="form-control" id="email" th:errorclass="field-error" th:field="*{email}"
+                       placeholder="이메일을 입력하세요">
             </div>
+            <div class="field-error" th:errors="*{email}">이메일 오류</div>
+
             <div class="form-group">
                 <label for="nickname">닉네임</label>
-                <input class="form-control" id="nickname" name="nickname" placeholder="닉네입을 입력하세요">
+                <input class="form-control" id="nickname" th:errorclass="field-error" th:field="*{nickname}"
+                       placeholder="닉네입을 입력하세요">
             </div>
+            <div class="field-error" th:errors="*{nickname}">닉네임 오류</div>
+
             <div class="form-group">
                 <label for="password">비밀번호</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요">
+                <input type="password" class="form-control" th:errorclass="field-error" id="password"
+                       th:field="*{password}"
+                       placeholder="비밀번호를 입력하세요">
             </div>
+            <div class="field-error" th:errors="*{password}">비밀번호 오류</div>
             <button type="submit" class="btn btn-success clearfix pull-right">완료</button>
         </form>
     </div>
