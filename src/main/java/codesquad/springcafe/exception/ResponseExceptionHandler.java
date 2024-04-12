@@ -11,7 +11,7 @@ public class ResponseExceptionHandler {
     @ExceptionHandler(value = {IndexOutOfBoundsException.class, NoSuchElementException.class})
     private ModelAndView handleException() {
         ModelAndView modelAndView = new ModelAndView("error/noArticle");
-        modelAndView.setStatus(HttpStatus.FOUND);
+        modelAndView.setStatus(HttpStatus.NOT_FOUND);
         return modelAndView;
     }
 }
