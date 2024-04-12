@@ -56,11 +56,15 @@ public class UserController {
         return "/user/list";
     }
 
-    @GetMapping("/users/profile")
-    public String showProfile(Model model) {
+    @GetMapping("/users/{userId}")
+    public String showProfile(@PathVariable String userId, Model model) {
+        Optional<User> userOptional = UserDatabase.getUser(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            model.addAttribute("user", user); // profile.html에 user 객체 넘겨주기
+        }
 
         return "/user/profile";
     }
-
 
 }

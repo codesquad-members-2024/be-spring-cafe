@@ -65,9 +65,9 @@
     <div class="profile-container">
         <img class="profile-img" src="/images/user.png" alt="프로필 사진">
         <div class="profile-info">
-            <p>Nickname: <span id="nickname">Nickname</span></p>
-            <p>User ID: <span id="userId">UserID</span></p>
-            <p>Email: <span id="email">example@example.com</span></p>
+            <p>Nickname: <span id="nickname">{{ user.getNickname }}</span></p>
+            <p>User ID: <span id="userId">{{ user.getUserId }}</span></p>
+            <p>Email: <span id="email">{{ user.getEmail }}</span></p>
         </div>
     </div>
 
