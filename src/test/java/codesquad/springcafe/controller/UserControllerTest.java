@@ -7,14 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.servlet.ModelAndView;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = UserController.class)
 class UserControllerTest {
@@ -50,16 +49,44 @@ class UserControllerTest {
     @Test
     @DisplayName("/user로 get 요청이 들어오면 user/list 페이지로 포워딩한다.")
     void userListTest() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/users");
-
-        MvcResult result = mockMvc.perform(request)
+        mockMvc.perform(get("/users"))
                 .andExpect(status().is2xxSuccessful())
-                .andReturn();
-
-        ModelAndView mv = result.getModelAndView();
-        String viewName = mv.getViewName();
-
-        assertThat(viewName).isEqualTo("user/list");
+                .andExpect(view().name("user/list"));
     }
 
+    @Test
+    @DisplayName("회원정보 수정에 성공하면 /users 로 리다이렉트")
+    void updateUserTest() throws Exception {
+        String userListUri = "/users";
+        String updateUserUri = "/users/cori123";
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.put(updateUserUri)
+                .param("password", "1111")
+                .param("newPassword", "2222")
+                .param("name", "cori")
+                .param("email", "cori@naver.com");
+
+        mockMvc.perform(request)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(userListUri));
+    }
+
+    @Test
+    @DisplayName("비밀번호가 일치하지 않으면 회원정보 수정 페이지 유지한다.")
+    void failedToUpdateUserTest() throws Exception {
+        doThrow(IllegalArgumentException.class).when(userService).update(any());
+
+        String userUpdateFormUri = "/users/cori123/form";
+        String updateUserUri = "/users/cori123";
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.put(updateUserUri)
+                .param("password", "1111")
+                .param("newPassword", "2222")
+                .param("name", "cori")
+                .param("email", "cori@naver.com");
+
+        mockMvc.perform(request)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(userUpdateFormUri));
+    }
 }
