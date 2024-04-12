@@ -68,7 +68,7 @@ class UserDatabaseTest {
         Long id = userDatabase.add(user).getId();
 
         UserEditForm form = new UserEditForm("sangchu@gmail.com", "배추", "123", "1234");
-        user.update(form);
+        user.update(form.getNickname(), form.getNewPassword());
 
         userDatabase.update(user);
 
