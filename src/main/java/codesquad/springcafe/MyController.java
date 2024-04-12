@@ -14,6 +14,11 @@ public class MyController {
 
     private static final Logger logger = LoggerFactory.getLogger(MyController.class);
 
+    @GetMapping({"/", "/index.html"})
+    public String index() {
+        return "index";
+    }
+
     @PostMapping("/users")
     public String createUser(@ModelAttribute User user) {
         UserDatabase.addUser(user);
@@ -26,5 +31,12 @@ public class MyController {
         List<User> userList = UserDatabase.getUserList();
         model.addAttribute("userList", userList);
         return "user/list";
+    }
+
+    @GetMapping("/users/{userid}")
+    public String showUser(@PathVariable String userid, Model model) {
+        User user = UserDatabase.getUser(userid);
+        model.addAttribute("user", user);
+        return "user/profile";
     }
 }
