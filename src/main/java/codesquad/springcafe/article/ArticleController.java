@@ -17,7 +17,6 @@ public class ArticleController {
         this.articleDatabase = articleDatabase;
     }
 
-
     @GetMapping("/form")
     public String articleForm() {
         return "article/form";
@@ -25,7 +24,7 @@ public class ArticleController {
 
     @PostMapping("/create")
     public String createArticle(ArticleCreateDto articleCreateDto) {
-        articleDatabase.saveArticle(articleCreateDto.toEntity());
+        articleDatabase.save(articleCreateDto.toEntity());
         return "redirect:/";
     }
 
