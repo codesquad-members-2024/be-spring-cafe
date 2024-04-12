@@ -23,10 +23,11 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    // userID 를 찾으면 유저 프로필 조회, 못 찾으면 로그인 페이지로 이동.
     @GetMapping("/users/{userId}")
     public String showProfile(@PathVariable String userId, Model model) {
+        // 저장소에서 유저 찾기
         Optional<User> optUser = userRepository.findUser(userId);
+        // 유저를 View에 넘기기 전 필요한 정보만 DTO에 담기
         Optional<UserDTO> optUserDTO = optUser.map(user -> {
             UserDTO userDTO = new UserDTO();
             userDTO.setName(user.getName());
@@ -34,6 +35,7 @@ public class UserController {
             return userDTO;
         });
 
+        // userID 를 찾으면 유저 프로필 조회, 못 찾으면 로그인 페이지로 이동.
         return optUserDTO.map(userDTO -> {
             model.addAttribute("user", userDTO);
             return "user/profile";
@@ -47,6 +49,7 @@ public class UserController {
         final String password = userDTO.getPassword();
         final String name = userDTO.getName();
         final String email = userDTO.getEmail();
+
         User user = new User(userId, password, name, email);
         userRepository.save(user);
         return "redirect:/users";
@@ -54,7 +57,9 @@ public class UserController {
 
     @GetMapping("/users")
     public String showUsers(Model model) {
+        // 저장소에서 모든 유저 목록 찾기
         Collection<User> users = userRepository.getAllUsers();
+        // 인덱스 번호를 유저마다 붙여 View 에게 전달하는 DTO생성
         AtomicLong atomicLong = new AtomicLong(0L);
         List<UserDTO> userDTOs = users.stream()
                 .map(user -> {
