@@ -2,6 +2,7 @@ package codesquad.springcafe.repository.member;
 
 import static org.assertj.core.api.Assertions.*;
 
+import codesquad.springcafe.controller.member.UpdateMember;
 import codesquad.springcafe.domain.member.Member;
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class MemberRepositoryTest {
 
-    @Autowired private MemberRepository repository;
+    @Autowired
+    private MemberRepository repository;
 
     @BeforeEach
     void clear() {
@@ -61,7 +63,7 @@ class MemberRepositoryTest {
         repository.save(member);
 
         // when
-        Optional<Member> findMember = repository.findById(1L);
+        Optional<Member> findMember = repository.findById("yelly");
 
         // then
         assertThat(findMember).isPresent();
@@ -72,7 +74,7 @@ class MemberRepositoryTest {
     @Test
     void findById_fail() {
         // when
-        Optional<Member> findMember = repository.findById(1L);
+        Optional<Member> findMember = repository.findById("yelly");
 
         // then
         assertThat(findMember).isEmpty();
@@ -91,5 +93,48 @@ class MemberRepositoryTest {
 
         // then
         assertThat(members).extracting("loginId").containsExactly("yelly", "ghost");
+    }
+
+    @DisplayName("기존 회원이 존재하면 기존 비밀번호인 'before'를 'after'로 바꿀 수 있다 ")
+    @Test
+    void validate_success() {
+        // given
+        Member member = new Member("yelly", "before", "yelly jelly", "yelly@test.com");
+
+        // update param
+        UpdateMember updateParam = new UpdateMember();
+        updateParam.setLoginId("yelly");
+        updateParam.setBeforePassword("before");
+        updateParam.setAfterPassword("after");
+        updateParam.setUserName("test");
+        updateParam.setEmail("test@test.com");
+
+        repository.save(member);
+
+        // when
+        repository.update("yelly", updateParam);
+        Member findMember = repository.findById("yelly").get();
+
+        // then
+        assertThat(findMember.getPassword()).isEqualTo("after");
+        assertThat(findMember.getUserName()).isEqualTo("test");
+        assertThat(findMember.getEmail()).isEqualTo("test@test.com");
+    }
+
+    @DisplayName("기존 회원이 존재하지 않으면 업데이트 시 예외를 발생시킨다.")
+    @Test
+    void validate_fail() {
+        // given
+        // update param
+        UpdateMember updateParam = new UpdateMember();
+        updateParam.setLoginId("yelly");
+        updateParam.setBeforePassword("before");
+        updateParam.setAfterPassword("after");
+        updateParam.setUserName("test");
+        updateParam.setEmail("test@test.com");
+
+        // when & then
+        assertThatThrownBy(() -> repository.update("yelly", updateParam))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

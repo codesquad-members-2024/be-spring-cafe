@@ -52,7 +52,7 @@ class MemberServiceTest {
         memberService.join(member2);
 
         // when
-        Optional<Member> findMember = memberService.findMember(2L);
+        Optional<Member> findMember = memberService.findMember("ghost");
 
         // then
         assertThat(findMember).isPresent();
@@ -74,5 +74,31 @@ class MemberServiceTest {
         // then
         assertThat(allMember.size()).isEqualTo(2);
         assertThat(allMember).extracting("loginId").contains("yelly", "ghost");
+    }
+
+    @DisplayName("멤버의 기존 비밀번호인 123과 같은 123은 비밀번호 일치 검증 시 true를 반환한다")
+    @Test
+    void validatePassword_true() {
+        // given
+        Member member = new Member("yelly", "123", "yelly jelly", "yelly@test.com");
+
+        // when
+        boolean result = memberService.validatePassword(member, "123");
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("멤버의 기존 비밀번호인 123과 다른 987654321은 비밀번호 일치 검증 시 false를 반환한다")
+    @Test
+    void validatePassword_false() {
+        // given
+        Member member = new Member("yelly", "123", "yelly jelly", "yelly@test.com");
+
+        // when
+        boolean result = memberService.validatePassword(member, "987654321");
+
+        // then
+        assertThat(result).isFalse();
     }
 }

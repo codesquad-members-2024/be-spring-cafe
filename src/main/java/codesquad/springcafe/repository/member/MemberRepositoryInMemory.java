@@ -1,5 +1,6 @@
 package codesquad.springcafe.repository.member;
 
+import codesquad.springcafe.controller.member.UpdateMember;
 import codesquad.springcafe.domain.member.Member;
 import java.util.List;
 import java.util.Map;
@@ -27,13 +28,28 @@ public class MemberRepositoryInMemory implements MemberRepository {
     }
 
     @Override
-    public Optional<Member> findById(long id) {
-        return Optional.ofNullable(store.get(id));
+    public Optional<Member> findById(String loginId) {
+        return store.values().stream()
+                .filter(member -> member.getLoginId().equals(loginId))
+                .findAny();
     }
 
     @Override
     public List<Member> findAll() {
         return store.values().stream().toList();
+    }
+
+    @Override
+    public void update(String loginId, UpdateMember updateParam) {
+        Optional<Member> optionalMember = findById(loginId);
+        if (optionalMember.isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 회원입니다.");
+        }
+
+        Member findMember = optionalMember.get();
+        findMember.setUserName(updateParam.getUserName());
+        findMember.setPassword(updateParam.getAfterPassword());
+        findMember.setEmail(updateParam.getEmail());
     }
 
     @Override
