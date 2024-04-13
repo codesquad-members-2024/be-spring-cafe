@@ -1,6 +1,7 @@
 package codesquad.springcafe.database.user;
 
 import codesquad.springcafe.model.User;
+import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,5 +40,13 @@ public class UserMemoryDatabase implements UserDatabase {
     @Override
     public void clear() {
         store.clear();
+    }
+
+    @PostConstruct
+    private void createTestUser() {
+        User user1 = new User("sangchu@gmail.com", "상추", "123");
+        User user2 = new User("baechu@gmail.com", "배추", "123");
+        add(user1);
+        add(user2);
     }
 }

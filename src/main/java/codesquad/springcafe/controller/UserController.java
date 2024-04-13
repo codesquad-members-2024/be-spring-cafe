@@ -108,19 +108,22 @@ public class UserController {
      * @return 유저가 존재하지 않으면 유저 리스트로 이동합니다. 현재 비밀번호가 일치하지 않으면 유저 수정 폼을 다시 보여줍니다. 수정이 정상적으로 완료되면 프로필을 보여줍니다.
      */
     @PostMapping("/edit/{nickname}")
-    public String updateUser(@PathVariable String nickname, @ModelAttribute UserEditForm userEditForm, Model model,
+    public String updateUser(@PathVariable String nickname, @Validated @ModelAttribute UserEditForm userEditForm,
                              BindingResult bindingResult) {
-        System.out.println(userEditForm);
         Optional<User> optionalUser = userDatabase.findBy(nickname);
         if (optionalUser.isEmpty()) {
             return "redirect:/users";
         }
         User user = optionalUser.get();
         if (!user.hasSamePassword(userEditForm.getCurrentPassword())) {
-            model.addAttribute("userEditForm", userEditForm);
-            bindingResult.reject("invalidCurrentPassword");
+            bindingResult.rejectValue("currentPassword", "invalidCurrentPassword");
+
+        }
+        if (bindingResult.hasErrors()) {
+            logger.error("errors={}", bindingResult);
             return "user/update";
         }
+
         user.update(userEditForm.getNickname(), userEditForm.getNewPassword());
         userDatabase.update(user);
 
