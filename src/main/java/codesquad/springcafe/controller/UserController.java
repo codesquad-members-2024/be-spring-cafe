@@ -45,7 +45,7 @@ public class UserController {
     @PostMapping("/create")
     public String create(@ModelAttribute User user) {
         User newUser = userRepository.createUser(user);
-        logger.info("회원가입 성공 {}", UserDto.from(newUser));
+        logger.info("회원가입 성공: {}", UserDto.from(newUser));
         return "redirect:/users"; // uri 리다이렉트
     }
 
@@ -54,7 +54,7 @@ public class UserController {
         Optional<User> optionalUser = userRepository.findByUserId(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            logger.info("사용자 프로필 조회 {}", UserDto.from(user));
+            logger.info("사용자 프로필 조회: {}", UserDto.from(user));
             model.addAttribute("user", user);
             return "user/profile";
         } else {
@@ -73,12 +73,19 @@ public class UserController {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             if (user.getPassword().equals(password)) {
-                logger.info("로그인 성공 {}", UserDto.from(user));
+                logger.info("로그인 성공: {}", UserDto.from(user));
                 return "redirect:/";
             }
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 조회 실패");
         }
         return null;
     }
+
+    @GetMapping("/{userId}/update")
+    public String updateForm(@RequestParam("userId") String userId, ) {
+
+    }
+
+
 }
