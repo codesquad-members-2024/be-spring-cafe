@@ -23,7 +23,7 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public String showProfile(@PathVariable String userId, Model model) {
         // 저장소에서 유저 찾기
         Optional<User> optUser = userRepository.findUser(userId);
@@ -40,6 +40,12 @@ public class UserController {
             model.addAttribute("user", userDTO);
             return "user/profile";
         }).orElse("user/login");
+    }
+
+    @GetMapping("/user/{userId}/form")
+    public String updateUser(@PathVariable String userId, Model model) {
+        model.addAttribute("userId", userId);
+        return "user/updateForm";
     }
 
     // 회원가입 기능
