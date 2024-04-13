@@ -1,10 +1,14 @@
 package codesquad.springcafe.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
     private String userId;
     private String nickname;
     private String email;
     private String password;
+    private List<Article> articles = new ArrayList<Article>();
 
     public User(String userId, String nickname, String email, String password) {
         this.userId = userId;

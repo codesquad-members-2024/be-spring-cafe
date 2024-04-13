@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 @Controller
@@ -44,7 +45,7 @@ public class UserController {
     @PostMapping("/create")
     public String create(@ModelAttribute User user) {
         User newUser = userRepository.createUser(user);
-        logger.info("회원가입이 성공했습니다. {}", UserDto.from(newUser));
+        logger.info("회원가입 성공 {}", UserDto.from(newUser));
         return "redirect:/users"; // uri 리다이렉트
     }
 
@@ -64,5 +65,20 @@ public class UserController {
     @GetMapping("/login")
     public String loginForm() {
         return "user/login";
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestParam("userId") String userId, @RequestParam("password") String password) {
+        Optional<User> optionalUser = userRepository.findByUserId(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (user.getPassword().equals(password)) {
+                logger.info("로그인 성공 {}", UserDto.from(user));
+                return "redirect:/";
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+        return null;
     }
 }
