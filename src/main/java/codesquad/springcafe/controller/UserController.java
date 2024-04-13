@@ -54,6 +54,10 @@ public class UserController {
      */
     @PostMapping("/add")
     public String addUser(@Validated @ModelAttribute User user, BindingResult bindingResult) {
+        if (userDatabase.findBy(user.getNickname()).isPresent()) {
+            bindingResult.rejectValue("nickname", "duplicateNickname");
+        }
+
         if (bindingResult.hasErrors()) {
             logger.error("errors={}", bindingResult);
             return "user/form";
@@ -115,6 +119,10 @@ public class UserController {
             return "redirect:/users";
         }
         User user = optionalUser.get();
+        if (isPresentNickname(userEditForm) && !user.hasSameNickname(userEditForm.getNickname())) {
+            bindingResult.rejectValue("nickname", "duplicateNickname");
+        }
+
         if (!user.hasSamePassword(userEditForm.getCurrentPassword())) {
             bindingResult.rejectValue("currentPassword", "invalidCurrentPassword");
 
@@ -130,5 +138,9 @@ public class UserController {
         logger.info("유저정보가 업데이트 되었습니다. {}", user);
         String newNickname = user.getNickname(); // 유저 닉네임이 수정될 경우를 반영
         return "redirect:/users/profile/" + URLEncoder.encode(newNickname, StandardCharsets.UTF_8);
+    }
+
+    private boolean isPresentNickname(UserEditForm userEditForm) {
+        return userDatabase.findBy(userEditForm.getNickname()).isPresent();
     }
 }
