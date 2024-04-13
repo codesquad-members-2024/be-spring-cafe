@@ -35,7 +35,7 @@ public class UserService {
 
     public void updateUser(String userId, UserUpdateDto userUpdateDto) {
         User findUser = findOne(userId);
-        findUser.setPassword(userUpdateDto.getPassword());
+        findUser.setPassword(userUpdateDto.getNewPassword());
         findUser.setName(userUpdateDto.getName());
         findUser.setEmail(userUpdateDto.getEmail());
         userRepository.update(findUser);
