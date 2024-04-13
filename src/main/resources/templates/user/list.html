@@ -89,6 +89,12 @@
                       <td th:text="${member.id}">id</td>
                       <td th:text="${member.name}">name</td>
                       <td th:text="${member.email}">email</td>
+                      <td>
+                          <a th:href="@{/users/{userId}(userId=${member.id})}"
+                             role="button" class="btn btn-default btn-circle">
+                              <i class="fa fa-info"></i>
+                          </a>
+                      </td>
                   </tr>
 <!--                <tr>-->
 <!--                    <th scope="row">1</th> <td>javajigi</td> <td>자바지기</td> <td>javajigi@sample.net</td><td><a href="#" class="btn btn-success" role="button">수정</a></td>-->
