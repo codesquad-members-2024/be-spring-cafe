@@ -1,4 +1,4 @@
-package codesquad.springcafe.repository;
+package codesquad.springcafe.repository.article;
 
 public interface ArticleRepositoryInterface {
 

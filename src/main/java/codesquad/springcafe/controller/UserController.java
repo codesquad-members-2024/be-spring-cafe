@@ -1,8 +1,8 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.domain.User;
-import codesquad.springcafe.repository.UserRepository;
-import codesquad.springcafe.repository.UserRepositoryInterface;
+import codesquad.springcafe.dto.UserDto;
+import codesquad.springcafe.repository.user.UserRepositoryInterface;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -44,8 +44,8 @@ public class UserController {
     @PostMapping("/create")
     public String create(@ModelAttribute User user) {
         User newUser = userRepository.createUser(user);
-        logger.info("회원가입이 성공했습니다. {}", newUser);
-        return "redirect:/users"; // uri response header 302
+        logger.info("회원가입이 성공했습니다. {}", UserDto.from(newUser));
+        return "redirect:/users"; // uri 리다이렉트
     }
 
     @GetMapping("/{userId}")
@@ -53,7 +53,7 @@ public class UserController {
         Optional<User> optionalUser = userRepository.findByUserId(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            logger.info("사용자 프로필 조회 {}", user);
+            logger.info("사용자 프로필 조회 {}", UserDto.from(user));
             model.addAttribute("user", user);
             return "user/profile";
         } else {
