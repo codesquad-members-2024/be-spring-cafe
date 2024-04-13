@@ -1,5 +1,7 @@
 package codesquad.springcafe.user;
 
+import codesquad.springcafe.user.DTO.SimpleUserInfo;
+import codesquad.springcafe.user.DTO.UserListRes;
 import codesquad.springcafe.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,11 +57,11 @@ public class UserService {
      * @param password 유저 password
      * @return 유저 정보
      */
-    public UserDTO login(String id, String password) {
+    public SimpleUserInfo login(String id, String password) {
         User user = userRepository.findUserById(id);
 
         if(user != null && user.isCorrectPassword(password)) {
-            return new UserDTO(0,id, user.getName(), user.getEmail());
+            return new SimpleUserInfo(id, user.getName());
         };
 
         return null;
@@ -68,7 +70,7 @@ public class UserService {
     /**
      * @return 회원가입 된 유저들의 정보
      */
-    public List<UserDTO> userList() {
+    public List<UserListRes> userList() {
         return userRepository.findAll();
     }
 

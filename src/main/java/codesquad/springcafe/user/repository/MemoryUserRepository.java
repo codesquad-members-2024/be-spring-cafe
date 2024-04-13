@@ -1,7 +1,7 @@
 package codesquad.springcafe.user.repository;
 
 import codesquad.springcafe.user.User;
-import codesquad.springcafe.user.UserDTO;
+import codesquad.springcafe.user.DTO.UserListRes;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -34,13 +34,13 @@ public class MemoryUserRepository implements UserRepository{
     }
 
     @Override
-    public List<UserDTO> findAll() {
+    public List<UserListRes> findAll() {
         List<User> values = new ArrayList<>(users.values());
-        List<UserDTO> users = new ArrayList<>();
+        List<UserListRes> users = new ArrayList<>();
 
         for(int i=0; i<values.size(); i++){
             User user = values.get(i);
-            users.add(new UserDTO(i+1 , user.getUserId() , user.getName(), user.getEmail()));
+            users.add(new UserListRes(i+1 , user.getUserId() , user.getName(), user.getEmail()));
         }
 
         return users;

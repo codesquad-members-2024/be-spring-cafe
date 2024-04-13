@@ -1,7 +1,7 @@
 package codesquad.springcafe.user.repository;
 
 import codesquad.springcafe.user.User;
-import codesquad.springcafe.user.UserDTO;
+import codesquad.springcafe.user.DTO.UserListRes;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -74,28 +74,28 @@ public class H2UserRepository implements UserRepository {
     }
 
     @Override
-    public List<UserDTO> findAll() {
+    public List<UserListRes> findAll() {
         String sql = "SELECT * FROM USERS";
 
         try (PreparedStatement query = dataSource.getConnection().prepareStatement(sql)) {
             try (ResultSet resultSet = query.executeQuery()) {
                 List<User> users = rowToUser(resultSet);
-                return getUserDTOS(users);
+                return getUserList(users);
             }
         } catch (SQLException e) {
             throw new RuntimeException(this.getClass() + ": findAll: " + e.getMessage());
         }
     }
 
-    private List<UserDTO> getUserDTOS(List<User> users) {
-        List<UserDTO> userDTOS = new ArrayList<>();
+    private List<UserListRes> getUserList(List<User> users) {
+        List<UserListRes> userListRes = new ArrayList<>();
 
         for (int i = 0; i < users.size(); i++) {
             User user = users.get(i);
-            userDTOS.add(new UserDTO(i + 1, user.getUserId(), user.getName(), user.getEmail()));
+            userListRes.add(new UserListRes(i + 1, user.getUserId(), user.getName(), user.getEmail()));
         }
 
-        return userDTOS;
+        return userListRes;
     }
 
     private List<User> rowToUser(ResultSet resultSet) throws SQLException {

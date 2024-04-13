@@ -1,5 +1,8 @@
 package codesquad.springcafe.user;
 
+import codesquad.springcafe.user.DTO.Alert;
+import codesquad.springcafe.user.DTO.SimpleUserInfo;
+import codesquad.springcafe.user.DTO.UserListRes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -32,10 +35,10 @@ public class UserController {
                         HttpServletRequest request,
                         Model model) {
 
-        UserDTO userDTO;
-        if ((userDTO = userService.login(id, password)) != null) {
+        SimpleUserInfo userInfo;
+        if ((userInfo = userService.login(id, password)) != null) {
             HttpSession session = request.getSession();
-            session.setAttribute("loginUser", userDTO);
+            session.setAttribute("loginUser", userInfo);
             session.setMaxInactiveInterval(60 * 30);
 
             log.info("로그인됨 : " + id);
@@ -87,7 +90,7 @@ public class UserController {
     // view
     @GetMapping("/users")
     public String userList(Model model) {
-        List<UserDTO> users = userService.userList();
+        List<UserListRes> users = userService.userList();
 
         model.addAttribute("users", users);
         return "user/list";
