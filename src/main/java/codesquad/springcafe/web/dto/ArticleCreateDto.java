@@ -1,19 +1,16 @@
-package codesquad.springcafe.domain.article;
+package codesquad.springcafe.web.dto;
 
 import java.time.LocalDateTime;
 
-public class Article {
+public class ArticleCreateDto {
 
     private String writer;
     private String title;
     private String contents;
-    private final LocalDateTime currentTime;
+    private LocalDateTime currentTime;
 
-    public Article(String writer, String title, String contents, LocalDateTime currentTime) {
-        this.writer = writer;
-        this.title = title;
-        this.contents = contents;
-        this.currentTime = currentTime;
+    public ArticleCreateDto() {
+        this.currentTime = LocalDateTime.now();
     }
 
     public String getWriter() {
