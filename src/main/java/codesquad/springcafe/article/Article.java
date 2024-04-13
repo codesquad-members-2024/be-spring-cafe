@@ -1,30 +1,24 @@
 package codesquad.springcafe.article;
 
+import codesquad.springcafe.user.DTO.SimpleUserInfo;
+
 import java.sql.Timestamp;
 
 public class Article {
     private int id;
     private Timestamp createdAt;
-    private String author;
+    private SimpleUserInfo author;
     private String title;
     private String content;
     private int point;
 
-    public Article(int id, Timestamp createdAt, String author, String title, String content, int point) {
+    public Article(int id, Timestamp createdAt, SimpleUserInfo simpleUserInfo, String title, String content, int point) {
         this.id = id;
         this.createdAt = createdAt;
-        this.author = author;
+        this.author = simpleUserInfo;
         this.title = title;
         this.content = content;
         this.point = point;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setCreatedAt(Timestamp created){
-        this.createdAt = created;
     }
 
     public void addPoint(){
@@ -39,7 +33,7 @@ public class Article {
         return createdAt;
     }
 
-    public String getAuthor() {
+    public SimpleUserInfo getAuthor() {
         return author;
     }
 

@@ -1,6 +1,9 @@
 package codesquad.springcafe.article;
 
+import codesquad.springcafe.article.DTO.ArticlePostReq;
 import codesquad.springcafe.article.repository.ArticleRepository;
+import codesquad.springcafe.user.DTO.SimpleUserInfo;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,8 +24,11 @@ public class ArticleController {
 
     // action
     @PostMapping("")
-    public String postArticle(@ModelAttribute ArticlePostReq articlePostReq){
-        articleRepository.add(articlePostReq);
+    public String postArticle(@ModelAttribute ArticlePostReq articlePostReq, HttpServletRequest request){
+        SimpleUserInfo author = (SimpleUserInfo) request.getSession().getAttribute("loginUser");
+
+        if(author == null) author = new SimpleUserInfo("guest", "익명");
+        articleRepository.add(articlePostReq, author);
 
         return "redirect:/";
     }
@@ -42,13 +48,13 @@ public class ArticleController {
         // 정상 흐름
         articleRepository.addPoint(article);
         model.addAttribute("article", article);
-        return "qna/show";
+        return "article/show";
     }
 
 
     // form
     @GetMapping("/form")
     public String articleForm(){
-        return "qna/form";
+        return "article/form";
     }
 }

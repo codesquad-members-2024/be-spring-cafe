@@ -9,10 +9,10 @@
                     <div class="article-header">
                         <div class="article-header-thumb">
                             <img src="https://graph.facebook.com/v2.3/100000059371774/picture"
-                                 class="article-author-thumb" alt="">
+                                 class="article-simpleUserInfo-thumb" alt="">
                         </div>
                         <div class="article-header-text">
-                            <a href="#" class="article-author-name">{{article.author}}</a>
+                            <a href="/user/{{{article.author.id}}}" class="author">{{article.author.name}}</a>
                             <a href="#" class="article-header-time" title="퍼머링크">
                                 {{article.createdAt}}
                                 <i class="icon-link"></i>
@@ -42,15 +42,14 @@
 
                 <div class="qna-comment">
                     <div class="qna-comment-slipp">
-                        <p class="qna-comment-count"><strong>2</strong>개의 의견</p>
+                        <p class="qna-comment-count"><strong>{{numberOfComments</strong>개의 의견</p>
                         <div class="qna-comment-slipp-articles">
-
-                            {{> components/qna/comment.partial}}
+                            {{> components/article/comment.partial}}
                             <form class="submit-write">
                                 <div class="form-group" style="padding:14px;">
                                     <textarea class="form-control" placeholder="Update your status"></textarea>
                                 </div>
-                                <button class="btn btn-success pull-right" type="button">답변하기</button>
+                                <button class="btn btn-success pull-right" type="button" href="/comment/form">답변하기</button>
                                 <div class="clearfix"/>
                             </form>
                         </div>

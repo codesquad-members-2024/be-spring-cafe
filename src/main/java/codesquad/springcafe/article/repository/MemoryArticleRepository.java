@@ -1,7 +1,8 @@
 package codesquad.springcafe.article.repository;
 
 import codesquad.springcafe.article.Article;
-import codesquad.springcafe.article.ArticlePostReq;
+import codesquad.springcafe.article.DTO.ArticlePostReq;
+import codesquad.springcafe.user.DTO.SimpleUserInfo;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
@@ -20,15 +21,15 @@ public class MemoryArticleRepository implements ArticleRepository {
     private int nowIndex = 1;
 
     public MemoryArticleRepository() {
-        add(new ArticlePostReq("테스터", " 테스트용 제목", "테스트용 내용"));
+        add(new ArticlePostReq(" 테스트용 제목", "테스트용 내용"), new SimpleUserInfo("테스터", "testerId"));
     }
 
     @Override
-    public void add(ArticlePostReq articlePostReq) throws IllegalArgumentException {
+    public void add(ArticlePostReq articlePostReq, SimpleUserInfo simpleUserInfo) throws IllegalArgumentException {
         Article article = new Article(
                 nowIndex,
                 Timestamp.valueOf(LocalDateTime.now()),
-                articlePostReq.author(),
+                simpleUserInfo,
                 articlePostReq.title(),
                 articlePostReq.content(),
                 DEFAULT_POINT);

@@ -1,13 +1,15 @@
 package codesquad.springcafe.article.repository;
 
 import codesquad.springcafe.article.Article;
-import codesquad.springcafe.article.ArticlePostReq;
+import codesquad.springcafe.article.DTO.ArticlePostReq;
+import codesquad.springcafe.user.DTO.SimpleUserInfo;
 
 import java.util.List;
 
 public interface ArticleRepository {
 
-    void add(ArticlePostReq articlePostReq) throws IllegalArgumentException;
+    void add(ArticlePostReq articlePostReq, SimpleUserInfo simpleUserInfo) throws IllegalArgumentException;
+
     Article findById(int id);
     List<Article> findAll();
     void addPoint(Article article);
