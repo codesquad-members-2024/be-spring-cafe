@@ -6,12 +6,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Optional;
 
 @Controller
 public class ArticleController {
@@ -22,37 +22,34 @@ public class ArticleController {
         articleRepository = repository;
     }
 
+    @GetMapping("/article/{id}")
+    public String showArticle(@PathVariable int id, Model model) {
+        Optional<Article> optArticle = articleRepository.findBy(id);
+        return optArticle.map(article -> {
+            model.addAttribute("article", article);
+            return "qna/show";
+        }).orElse("index");
+    }
+
+
     @PostMapping("/article")
     public String storeArticle(@ModelAttribute ArticleDto articleDto) {
         final String writer = articleDto.getWriter();
         final String title = articleDto.getTitle();
         final String contents = articleDto.getContents();
         final LocalDateTime createAt = LocalDateTime.now();
-        Article article = new Article(writer, title, contents, createAt);
+        final int id = articleRepository.size() + 1;
+        Article article = new Article(id, writer, title, contents, createAt);
 
         log.debug("들어온 게시글 : {}", article);
-        articleRepository.save(article);
+        articleRepository.save(id, article);
         return "redirect:/articles";
     }
 
     @GetMapping("/articles")
     public String showArticle(Model model) {
         Collection<Article> allArticles = articleRepository.findAll();
-
-        AtomicLong atomicLong = new AtomicLong(0L);
-        List<ArticleDto> articles = allArticles.stream()
-                .map(article -> {
-                    String writer = article.getWriter();
-                    String title = article.getTitle();
-                    String contents = article.getContents();
-                    LocalDateTime createAt = article.getCreateAt();
-                    ArticleDto dto = new ArticleDto(writer, title, contents);
-                    dto.setPoint(atomicLong.incrementAndGet());
-                    dto.setCreateAt(createAt);
-                    return dto;
-                }).toList();
-
-        model.addAttribute("articles", articles);
+        model.addAttribute("articles", allArticles);
         return "index";
     }
 }
