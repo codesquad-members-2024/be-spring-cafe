@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -15,5 +16,9 @@ public class ArticleRepository {
     public void save(Article article) {
         articles.add(article);
         log.debug("게시글 갯수 : {}", articles.size());
+    }
+
+    public Collection<Article> findAll() {
+        return articles;
     }
 }
