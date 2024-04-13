@@ -2,6 +2,7 @@ package codesquad.springcafe.service;
 
 import codesquad.springcafe.domain.article.Article;
 import codesquad.springcafe.domain.article.ArticleRepository;
+import codesquad.springcafe.web.dto.ArticleCreateDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +16,13 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public void saveArticle(Article article) {
-        articleRepository.save(article);
+    public void saveArticle(ArticleCreateDto articleCreateDto) {
+        articleRepository.save(new Article(
+                articleCreateDto.getWriter(),
+                articleCreateDto.getTitle(),
+                articleCreateDto.getContents(),
+                articleCreateDto.getCurrentTime()
+        ));
     }
 
     public Article findBySequence(int sequence) {

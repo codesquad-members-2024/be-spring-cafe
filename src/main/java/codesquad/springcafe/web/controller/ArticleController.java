@@ -1,7 +1,7 @@
 package codesquad.springcafe.web.controller;
 
-import codesquad.springcafe.domain.article.Article;
 import codesquad.springcafe.service.ArticleService;
+import codesquad.springcafe.web.dto.ArticleCreateDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +24,8 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/create")
-    public String quest(@ModelAttribute Article article) {
-        articleService.saveArticle(article);
+    public String quest(@ModelAttribute("article") ArticleCreateDto articleCreateDto) {
+        articleService.saveArticle(articleCreateDto);
         return "redirect:/";
     }
 
