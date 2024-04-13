@@ -3,11 +3,13 @@ package codesquad.springcafe.web.controller;
 import codesquad.springcafe.service.UserService;
 import codesquad.springcafe.web.dto.UserCreateDto;
 import codesquad.springcafe.web.dto.UserUpdateDto;
+import codesquad.springcafe.web.validation.UserCreateValidator;
+import codesquad.springcafe.web.validation.UserUpdateValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -15,9 +17,23 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final UserCreateValidator userCreateValidator;
+    private final UserUpdateValidator userUpdateValidator;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserCreateValidator userCreateValidator, UserUpdateValidator userUpdateValidator) {
         this.userService = userService;
+        this.userCreateValidator = userCreateValidator;
+        this.userUpdateValidator = userUpdateValidator;
+    }
+
+    @InitBinder("user")
+    public void initTargetCreate(WebDataBinder dataBinder) {
+        dataBinder.addValidators(userCreateValidator);
+    }
+
+    @InitBinder("update")
+    public void initTargetUpdate(WebDataBinder dataBinder) {
+        dataBinder.addValidators(userUpdateValidator);
     }
 
     @GetMapping("/create")
@@ -27,31 +43,7 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String join(@ModelAttribute("user") UserCreateDto userCreateDto, BindingResult bindingResult) {
-        if (!StringUtils.hasText(userCreateDto.getUserId())) {
-            bindingResult.addError(new FieldError("user", "userId", userCreateDto.getUserId(),
-                    false, null, null, "아이디를 입력하세요."));
-        }
-        if (!StringUtils.hasText(userCreateDto.getPassword())) {
-            bindingResult.addError(new FieldError("user", "password", userCreateDto.getPassword(),
-                    false, null, null, "비밀번호를 입력하세요."));
-        }
-        if (!StringUtils.hasText(userCreateDto.getPasswordCheck())) {
-            bindingResult.addError(new FieldError("user", "passwordCheck", userCreateDto.getPasswordCheck(),
-                    false, null, null, "비밀번호 확인을 입력하세요."));
-        }
-        if (!userCreateDto.getPassword().equals(userCreateDto.getPasswordCheck())) {
-            bindingResult.addError(new FieldError("user", "passwordCheck", userCreateDto.getPasswordCheck(),
-                    false, null, null, "비밀번호가 일치하지 않습니다."));
-        }
-        if (!StringUtils.hasText(userCreateDto.getName())) {
-            bindingResult.addError(new FieldError("user", "name", userCreateDto.getName(),
-                    false, null, null, "사용자 이름을 입력하세요."));
-        }
-        if (!StringUtils.hasText(userCreateDto.getEmail())) {
-            bindingResult.addError(new FieldError("user", "email", userCreateDto.getEmail(),
-                    false, null, null, "이메일을 입력하세요."));
-        }
+    public String join(@Validated @ModelAttribute("user") UserCreateDto userCreateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "/user/form";
         }
@@ -79,34 +71,9 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/update")
-    public String userUpdate(@PathVariable String userId, @ModelAttribute("update") UserUpdateDto userUpdateDto, BindingResult bindingResult, Model model) {
-        if (!StringUtils.hasText(userUpdateDto.getCurrentPassword())) {
-            bindingResult.addError(new FieldError("update", "currentPassword", userUpdateDto.getCurrentPassword(),
-                    false, null, null, "현재 비밀번호를 입력하세요."));
-        }
-        if (!StringUtils.hasText(userUpdateDto.getNewPassword())) {
-            bindingResult.addError(new FieldError("update", "newPassword", userUpdateDto.getNewPassword(),
-                    false, null, null, "새 비밀번호를 입력하세요."));
-        }
-        if (!StringUtils.hasText(userUpdateDto.getNewPasswordCheck())) {
-            bindingResult.addError(new FieldError("update", "newPasswordCheck", userUpdateDto.getNewPasswordCheck(),
-                    false, null, null, "새 비밀번호 확인을 입력하세요."));
-        }
-        if (!StringUtils.hasText(userUpdateDto.getName())) {
-            bindingResult.addError(new FieldError("update", "name", userUpdateDto.getName(),
-                    false, null, null, "이름을 입력하세요."));
-        }
-        if (!StringUtils.hasText(userUpdateDto.getEmail())) {
-            bindingResult.addError(new FieldError("update", "email", userUpdateDto.getEmail(),
-                    false, null, null, "이메일을 입력하세요."));
-        }
+    public String userUpdate(@Validated @ModelAttribute("update") UserUpdateDto userUpdateDto, BindingResult bindingResult, @PathVariable String userId, Model model) {
         if (!userService.findOne(userId).getPassword().equals(userUpdateDto.getCurrentPassword())) {
-            bindingResult.addError(new FieldError("update", "currentPassword", userUpdateDto.getCurrentPassword(),
-                    false, null, null, "비밀번호가 일치하지 않습니다."));
-        }
-        if (!userUpdateDto.getNewPassword().equals(userUpdateDto.getNewPasswordCheck())) {
-            bindingResult.addError(new FieldError("update", "newPasswordCheck", userUpdateDto.getCurrentPassword(),
-                    false, null, null, "비밀번호가 일치하지 않습니다."));
+            bindingResult.rejectValue("currentPassword", "temporary", null, "비밀번호가 일치하지 않습니다.");
         }
         if (bindingResult.hasErrors()) {
             model.addAttribute("userId", userId);
