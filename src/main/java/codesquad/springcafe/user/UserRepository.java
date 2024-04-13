@@ -25,4 +25,8 @@ public class UserRepository {
     public Optional<User> findUser(String userId) {
         return Optional.ofNullable(users.get(userId));
     }
+
+    public void updateUser(User user) {
+        users.put(user.getUserId(), user);
+    }
 }

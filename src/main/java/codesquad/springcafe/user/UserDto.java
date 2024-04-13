@@ -1,6 +1,6 @@
 package codesquad.springcafe.user;
 
-public class UserDTO {
+public class UserDto {
     private long index;
     private String userId;
     private String name;
