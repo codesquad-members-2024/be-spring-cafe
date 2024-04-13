@@ -2,6 +2,7 @@ package codesquad.springcafe.service;
 
 import codesquad.springcafe.domain.user.User;
 import codesquad.springcafe.domain.user.UserRepository;
+import codesquad.springcafe.web.dto.UserCreateDto;
 import codesquad.springcafe.web.dto.UserUpdateDto;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +17,12 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void join(User user) {
-        userRepository.save(user);
+    public void join(UserCreateDto userCreateDto) {
+        userRepository.save(
+                new User(userCreateDto.getUserId(),
+                userCreateDto.getPassword(),
+                userCreateDto.getName(),
+                userCreateDto.getEmail()));
     }
 
     public User findOne(String userId) {
