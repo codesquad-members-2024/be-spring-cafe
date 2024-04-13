@@ -9,7 +9,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/users")
@@ -28,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String join(@ModelAttribute("user") UserCreateDto userCreateDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String join(@ModelAttribute("user") UserCreateDto userCreateDto, BindingResult bindingResult) {
         if (!StringUtils.hasText(userCreateDto.getUserId())) {
             bindingResult.addError(new FieldError("user", "userId", userCreateDto.getUserId(),
                     false, null, null, "아이디를 입력하세요."));
