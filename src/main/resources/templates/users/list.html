@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="kr">
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:insert="~{fragment/header :: header}"></div>
 </head>
@@ -16,13 +16,13 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="user : ${users}">
-                    <th scope="row" th:text="${user.getKey()}">sequence</th>
+                <tr th:each="user, iterStat : ${users}">
+                    <th scope="row" th:text="${iterStat.count}">sequence</th>
                     <td>
-                        <a th:href="@{/templates/user/{userId}(userId=${user.getValue().getUserId()})}" th:text="${user.getValue().getUserId()}">userId</a>
+                        <a th:href="@{/users/{userId}(userId=${user.userId})}" th:text="${user.userId}">userId</a>
                     </td>
-                    <td th:text="${user.getValue().getName()}">name</td>
-                    <td th:text="${user.getValue().getEmail()}">email</td>
+                    <td th:text="${user.name}">name</td>
+                    <td th:text="${user.email}">email</td>
                     <td><a href="#" class="btn btn-success" role="button">수정</a></td>
                 </tr>
                 </tbody>
