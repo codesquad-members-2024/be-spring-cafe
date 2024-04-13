@@ -2,22 +2,37 @@ package codesquad.springcafe.web.dto;
 
 public class UserUpdateDto {
 
-    private String password;
+    private String currentPassword;
+    private String newPassword;
+    private String newPasswordCheck;
     private String name;
     private String email;
 
-    public UserUpdateDto(String password, String name, String email) {
-        this.password = password;
-        this.name = name;
-        this.email = email;
+    public UserUpdateDto() {
     }
 
-    public String getPassword() {
-        return password;
+    public String getCurrentPassword() {
+        return currentPassword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setCurrentPassword(String currentPassword) {
+        this.currentPassword = currentPassword;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    public String getNewPasswordCheck() {
+        return newPasswordCheck;
+    }
+
+    public void setNewPasswordCheck(String newPasswordCheck) {
+        this.newPasswordCheck = newPasswordCheck;
     }
 
     public String getName() {
