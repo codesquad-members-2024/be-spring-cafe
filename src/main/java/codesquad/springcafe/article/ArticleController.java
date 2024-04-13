@@ -16,8 +16,14 @@ public class ArticleController {
     }
 
     @PostMapping("/article")
-    public String storeArticle(@ModelAttribute Article article) {
-        log.debug("들어온 게시글 : {}", article.toString());
+    public String storeArticle(@ModelAttribute ArticleDto articleDto) {
+        final String writer = articleDto.getWriter();
+        final String title = articleDto.getTitle();
+        final String contents = articleDto.getContents();
+        final LocalDateTime createAt = LocalDateTime.now();
+        Article article = new Article(writer, title, contents, createAt);
+
+        log.debug("들어온 게시글 : {}", article);
         articleRepository.save(article);
         return "redirect:/";
     }
