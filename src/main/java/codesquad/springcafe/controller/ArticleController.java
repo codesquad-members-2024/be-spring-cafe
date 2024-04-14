@@ -1,6 +1,7 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.domain.Article;
+import codesquad.springcafe.dto.ArticleDto;
 import codesquad.springcafe.repository.article.ArticleRepositoryInterface;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -33,8 +34,9 @@ public class ArticleController {
     }
 
     @PostMapping("/create")
-    public String postArticle(@ModelAttribute Article article) {
-        articleRepository.createArticle(article);
+    public String postArticle(@ModelAttribute ArticleDto articleDto) {
+        Article newArticle = articleRepository.createArticle(articleDto);
+        logger.info("게시글 작성 성공: {}", newArticle);
         return "redirect:/";
     }
 
@@ -44,12 +46,11 @@ public class ArticleController {
         if (optionalArticle.isPresent()) {
             Article article = optionalArticle.get();
             logger.info("게시글 상세 조회: {}", article);
-            // 조회수 증가
+            article.increaseViews(); // 조회수 증가
             model.addAttribute("article", article);
             return "article/show";
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글 조회 실패");
         }
     }
-
 }
