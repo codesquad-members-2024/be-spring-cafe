@@ -29,7 +29,8 @@ public class UserController {
         Long userId = userService.join(userJoinData);
 
         httpSession.setAttribute("userId", userId);
-        httpSession.setMaxInactiveInterval(3600);
+        httpSession.setAttribute("isLoggedIn", true);
+        httpSession.setMaxInactiveInterval(30);
 
         model.addAttribute("user", userJoinData);
 
@@ -42,8 +43,17 @@ public class UserController {
                         HttpSession httpSession) {
         Long userId = userService.login(userLoginData);
         httpSession.setAttribute("userId", userId);
+        httpSession.setAttribute("isLoggedIn", true);
         httpSession.setMaxInactiveInterval(3600);
 
+        return "redirect:/";
+    }
+
+    // 로그아웃
+    @GetMapping("/user/logout")
+    public String logout(HttpSession httpSession) {
+        httpSession.removeAttribute("userId");
+        httpSession.removeAttribute("isLoggedIn");
         return "redirect:/";
     }
 

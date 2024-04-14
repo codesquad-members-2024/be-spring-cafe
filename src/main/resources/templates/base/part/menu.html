@@ -1,5 +1,15 @@
 <ul th:fragment="menu" class="nav navbar-nav navbar-right">
     <li class="active"><a href="/users">멤버 리스트</a></li>
-    <li><a class="black-component" href="/login" role="button">로그인</a></li>
-    <li><a class="black-component" href="/join" role="button">회원가입</a></li>
+    <li th:if="${session.isLoggedIn}">
+        <a class="black-component" href="/mypage" role="button">마이페이지</a>
+    </li>
+    <li th:if="${session.isLoggedIn}">
+        <a class="black-component" href="/user/logout" role="button">로그아웃</a>
+    </li>
+    <li th:unless="${session.isLoggedIn}">
+        <a class="black-component" href="/login" role="button">로그인</a>
+    </li>
+    <li th:unless="${session.isLoggedIn}">
+        <a class="black-component" href="/join" role="button">회원가입</a>
+    </li>
 </ul>
