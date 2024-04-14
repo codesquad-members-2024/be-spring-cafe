@@ -1,25 +1,29 @@
 package codesquad.springcafe.dto;
 
+import codesquad.springcafe.domain.User;
+
 public class UserUpdateDto {
-    private String nickname;
-    private String email;
     private String password;
+    private String newPassword;
+    private String newNickname;
+    private String newEmail;
 
-    public UserUpdateDto(String nickname, String email, String password) {
-        this.nickname = nickname;
-        this.email = email;
+    public UserUpdateDto(String password, String newPassword, String newNickname, String newEmail) {
         this.password = password;
+        this.newPassword = newPassword;
+        this.newNickname = newNickname;
+        this.newEmail = newEmail;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getNewPassword() {
+        return newPassword;
     }
 
-    public String getEmail() {
-        return email;
+    public String getNewNickname() {
+        return newNickname;
     }
 
-    public String getPassword() {
-        return password;
+    public String getNewEmail() {
+        return newEmail;
     }
 }
