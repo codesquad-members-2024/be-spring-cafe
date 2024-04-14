@@ -10,13 +10,14 @@ public class Question extends BaseTime {
     private User user;
     private String title;
     private String content;
+    private Integer viewCnt;
 
-
-    public Question(User user, String title, String content, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public Question(User user, String title, String content, Integer viewCnt, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         super(createdAt, modifiedAt);
         this.user = user;
         this.title = title;
         this.content = content;
+        this.viewCnt = viewCnt;
     }
 
     public void setId(Long id) {
@@ -37,5 +38,13 @@ public class Question extends BaseTime {
 
     public String getContent() {
         return content;
+    }
+
+    public Integer getViewCnt() {
+        return viewCnt;
+    }
+
+    public void viewCntUp() {
+        viewCnt++;
     }
 }

@@ -28,6 +28,6 @@ public class QuestionPostRequest {
     }
 
     public Question toQuestion(User user) {
-        return new Question(user, this.title, this.content, LocalDateTime.now(), LocalDateTime.now());
+        return new Question(user, this.title, this.content, 0, LocalDateTime.now(), LocalDateTime.now());
     }
 }
