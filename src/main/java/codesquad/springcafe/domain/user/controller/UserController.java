@@ -13,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -24,18 +23,20 @@ public class UserController {
     }
 
     // 회원 가입
-    @PostMapping
-    public String join(@Valid @ModelAttribute UserJoinData userJoinData, Model model) {
-        userService.join(userJoinData);
+    @PostMapping("/user")
+    public String join(@Valid @ModelAttribute UserJoinData userJoinData, Model model,
+                       HttpSession httpSession) {
+        Long userId = userService.join(userJoinData);
 
-        // TODO: 세션 설정 로직 추가
+        httpSession.setAttribute("userId", userId);
+        httpSession.setMaxInactiveInterval(3600);
 
         model.addAttribute("user", userJoinData);
 
         return "/user/registration_success";
     }
 
-    @PostMapping("/login")
+    @PostMapping("/user/login")
     public String login(@Valid @ModelAttribute UserLoginData userLoginData,
                         HttpSession httpSession) {
         Long userId = userService.login(userLoginData);
@@ -46,7 +47,7 @@ public class UserController {
     }
 
     // 회원 목록 조회
-    @GetMapping
+    @GetMapping("/users")
     public String getUsers(Model model) {
         UserListData userListData = userService.getUsers();
 
@@ -57,7 +58,7 @@ public class UserController {
     }
 
     // 회원 상세 조회 (프로필 조회)
-    @GetMapping("/{userId}")
+    @GetMapping("/profile/{userId}")
     public String getUser(@PathVariable(name = "userId") Long userId, Model model) {
         UserData userData = userService.getUser(userId);
 

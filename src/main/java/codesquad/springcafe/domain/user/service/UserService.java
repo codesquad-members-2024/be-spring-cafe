@@ -31,7 +31,7 @@ public class UserService {
 
     // TODO: 예외 클래스 생성해 처리
     // 회원가입
-    public void join(UserJoinData userJoinData) {
+    public Long join(UserJoinData userJoinData) {
         // 같은 이메일로 가입한 회원 조회
         userRepository.findByEmail(userJoinData.getEmail())
                 .ifPresent(u -> {
@@ -41,7 +41,9 @@ public class UserService {
         User user = userJoinData.toUser(
                 passwordEncoder.encode(userJoinData.getPassword())  // 비밀번호 암호화
         );
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        return savedUser.getId();
     }
 
     // 로그인

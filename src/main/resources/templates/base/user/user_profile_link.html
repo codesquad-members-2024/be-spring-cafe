@@ -10,11 +10,13 @@
                 </tr>
                 </thead>
                 <tbody>
+                {{#users}}
                 <tr>
-                    <td><a class="profile-link" href="/users/{{getId}}">{{ getName }}</a></td>
+                    <td><a class="profile-link" href="/profile/{{getId}}">{{ getName }}</a></td>
                     <td>{{ getEmail }}</td>
                     <td>{{ getCreatedAt }}</td>
                 </tr>
+                {{/users}}
                 </tbody>
             </table>
         </div>

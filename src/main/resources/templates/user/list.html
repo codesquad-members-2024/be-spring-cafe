@@ -21,12 +21,7 @@
 
     <p class="total_num">전체 멤버 {{totalUserCnt}}명</p>
 
-    {{#users}}
     {{> base/user/user_profile_link}}
-    {{/users}}
-    {{^users}}
-    <p style="font-weight: bold;">회원가입한 사용자가 없습니다.</p>
-    {{/users}}
 </div>
 </body>
 </html>
