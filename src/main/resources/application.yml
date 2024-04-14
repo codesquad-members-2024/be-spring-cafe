@@ -35,6 +35,12 @@ spring:
   datasource:
     url: 'jdbc:h2:tcp://localhost/~/springcafe_test'
 
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:sql/schema.sql
+      data-locations: classpath:sql/data.sql
+
 ---
 spring:
   config:
