@@ -1,17 +1,25 @@
 package codesquad.springcafe.users.repository;
 
-import model.user.User;
-import model.user.UserData;
-import model.user.UserUpdateData;
+import model.user.*;
+import model.user.dto.UserCredentialDto;
+import model.user.dto.UserPreviewDto;
+import model.user.dto.UserUpdateData;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public interface UserRepository {
-    void createUser(UserData userData);
+    void createUser(User user);
 
-    ArrayList<User> getAllUsers();
+    Optional<ArrayList<UserPreviewDto>> getAllUsers();
 
-    User findUserById(String userId);
+    /*
+     * userId, name, email, creationDate
+     * */
+    Optional<UserPreviewDto> findUserById(String userId);
+
+    Optional<UserCredentialDto> getUserCredential(String userId);
 
     void updateUser(String userId, UserUpdateData updateData);
+
 }

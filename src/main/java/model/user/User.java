@@ -1,5 +1,7 @@
 package model.user;
 
+import model.user.dto.UserUpdateData;
+
 import java.time.LocalDate;
 
 public class User {
