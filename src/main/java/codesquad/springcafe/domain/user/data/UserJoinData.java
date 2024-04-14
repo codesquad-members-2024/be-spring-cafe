@@ -1,7 +1,6 @@
 package codesquad.springcafe.domain.user.data;
 
 import codesquad.springcafe.domain.user.model.User;
-import codesquad.springcafe.global.security.PasswordEncoder;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 

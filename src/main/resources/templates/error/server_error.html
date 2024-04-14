@@ -10,9 +10,9 @@
 </head>
 <body>
 <div class="background">
-    {{> base/part/navbar}}
+    <div th:replace="~{base/part/navbar :: navbar}"></div>
 
-    {{> base/error/error}}
+    <div th:replace="~{base/error/error :: error}"></div>
 </div>
 </body>
 </html>

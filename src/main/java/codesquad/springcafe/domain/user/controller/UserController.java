@@ -36,6 +36,7 @@ public class UserController {
         return "/user/registration_success";
     }
 
+    // 로그인
     @PostMapping("/user/login")
     public String login(@Valid @ModelAttribute UserLoginData userLoginData,
                         HttpSession httpSession) {
