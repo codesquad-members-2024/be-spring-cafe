@@ -25,6 +25,7 @@ public class H2ArticleRepository implements ArticleRepository {
     private final String FIND_ALL_SQL = "SELECT * FROM article ORDER BY createdAt DESC;";
 
     private final String ADD_POINT_SQL = "UPDATE ARTICLE SET point = point + 1 WHERE id = ?;";
+    private final String DELETE_ALL = "DELETE FROM ARTICLE";
 
     private final DataSource dataSource;
 
@@ -82,22 +83,33 @@ public class H2ArticleRepository implements ArticleRepository {
 
     @Override
     public List<Article> findByUserId(String id) {
-         try (Connection connection = dataSource.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement query = connection.prepareStatement(FIND_BY_USER_SQL)) {
             query.setString(1, id);
             try (ResultSet resultSet = query.executeQuery()) {
-                return  rowToArticle(resultSet);
+                return rowToArticle(resultSet);
             }
         } catch (SQLException e) {
-             throw new RuntimeException(this.getClass() + ": findById : " + e.getMessage());
-         }
+            throw new RuntimeException(this.getClass() + ": findById : " + e.getMessage());
+        }
     }
 
     @Override
     public void addPoint(Article article) {
         try (Connection connection = dataSource.getConnection();
-                PreparedStatement query = connection.prepareStatement(ADD_POINT_SQL)) {
+             PreparedStatement query = connection.prepareStatement(ADD_POINT_SQL)) {
             query.setInt(1, article.getId());
+
+            query.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(this.getClass() + ": update : " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteAll() {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement query = connection.prepareStatement(DELETE_ALL)) {
 
             query.executeUpdate();
         } catch (SQLException e) {

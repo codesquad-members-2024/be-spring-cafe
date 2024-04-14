@@ -57,4 +57,9 @@ public class MemoryArticleRepository implements ArticleRepository {
     public void addPoint(Article article) {
         article.addPoint();
     }
+
+    @Override
+    public void deleteAll() {
+        articles.clear();
+    }
 }
