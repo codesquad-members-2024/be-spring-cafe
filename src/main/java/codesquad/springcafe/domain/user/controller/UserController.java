@@ -5,6 +5,7 @@ import codesquad.springcafe.domain.user.data.UserJoinData;
 import codesquad.springcafe.domain.user.data.UserListData;
 import codesquad.springcafe.domain.user.data.UserLoginData;
 import codesquad.springcafe.domain.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,10 +51,15 @@ public class UserController {
     }
 
     // 로그아웃
-    @GetMapping("/user/logout")
-    public String logout(HttpSession httpSession) {
-        httpSession.removeAttribute("userId");
-        httpSession.removeAttribute("isLoggedIn");
+    @PostMapping("/user/logout")
+    public String logout(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+
+        Object userId = session.getAttribute("userId");
+        userService.logout(request.getParameter("userId"), userId);
+
+        session.removeAttribute("userId");
+        session.removeAttribute("isLoggedIn");
         return "redirect:/";
     }
 

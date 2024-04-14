@@ -61,6 +61,20 @@ public class UserService {
         return user.getId();
     }
 
+    // 로그아웃
+    public void logout(String requestUserId, Object sessionUserId) {
+        if(sessionUserId == null || requestUserId == null) return;
+
+        Long ruid = Long.parseLong(requestUserId);
+        Long suid = (Long) sessionUserId;
+        if (ruid.equals(suid)) {
+            userRepository.findById((Long) sessionUserId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+            return;
+        }
+
+        throw new IllegalStateException("로그아웃 할 수 없습니다.");  // TODO : exception 추가
+    }
+
     // 회원 목록 조회
     public UserListData getUsers() {
         List<UserData> users = userRepository.findAll().stream()

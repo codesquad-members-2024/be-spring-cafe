@@ -4,7 +4,10 @@
         <a class="black-component" href="/mypage" role="button">마이페이지</a>
     </li>
     <li th:if="${session.isLoggedIn}">
-        <a class="black-component" href="/user/logout" role="button">로그아웃</a>
+        <form action="/user/logout" method="post">
+            <input type="hidden" name="userId" th:value="${session.userId}">
+            <button class="black-component" type="submit">로그아웃</button>
+        </form>
     </li>
     <li th:unless="${session.isLoggedIn}">
         <a class="black-component" href="/login" role="button">로그인</a>
