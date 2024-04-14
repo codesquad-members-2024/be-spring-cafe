@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    {{> /repeatedHtml/head_data}}
+    <![endif]-->
+    <link href="/css/user/form.css" rel="stylesheet">
+    <link href="/css/qna/form.css" rel="stylesheet">
+</head>
+<body>
+<div class="background">
+    <nav class="navbar navbar-fixed-top header">
+        <div class="col-md-12">
+            {{> /repeatedHtml/navbar_header}}
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active"><a href="list.html">멤버 리스트</a></li>
+                {{> /repeatedHtml/basic_button}}
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <form name="question" method="post" action="">
+            <div class="form-group">
+                <label for="writer">글쓴이</label>
+                <input class="input-field" id="writer" name="writer" placeholder="글쓴이"/>
+            </div>
+            <div class="form-group">
+                <label for="title">제목</label>
+                <input type="text" class="input-field" id="title" name="title" placeholder="제목"/>
+            </div>
+            <div class="form-group">
+                <label for="contents">내용</label>
+                <textarea name="contents" id="contents" rows="5" class="textarea-field"></textarea>
+            </div>
+            <button type="submit" class="btn-submit">질문하기</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
