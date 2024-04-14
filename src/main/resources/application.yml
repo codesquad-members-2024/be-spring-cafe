@@ -1,3 +1,10 @@
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
 spring:
   application:
     name: spring-cafe
@@ -6,6 +13,9 @@ spring:
     suffix: .html
     servlet:
       cache: false
+
+  profiles:
+    default: dev
 
   datasource:
     url: 'jdbc:h2:tcp://localhost/~/springcafe'
@@ -16,12 +26,20 @@ spring:
       connection-timeout: 1000
       connection-test-query: SELECT 1
 
+---
+spring:
+  config:
+    activate:
+      on-profile: test
 
-server:
-  servlet:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
+  datasource:
+    url: 'jdbc:h2:tcp://localhost/~/springcafe_test'
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+---
 
 
