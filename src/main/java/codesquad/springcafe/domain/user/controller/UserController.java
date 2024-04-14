@@ -3,7 +3,9 @@ package codesquad.springcafe.domain.user.controller;
 import codesquad.springcafe.domain.user.data.UserData;
 import codesquad.springcafe.domain.user.data.UserJoinData;
 import codesquad.springcafe.domain.user.data.UserListData;
+import codesquad.springcafe.domain.user.data.UserLoginData;
 import codesquad.springcafe.domain.user.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,9 +28,21 @@ public class UserController {
     public String join(@Valid @ModelAttribute UserJoinData userJoinData, Model model) {
         userService.join(userJoinData);
 
+        // TODO: 세션 설정 로직 추가
+
         model.addAttribute("user", userJoinData);
 
         return "/user/registration_success";
+    }
+
+    @PostMapping("/login")
+    public String login(@Valid @ModelAttribute UserLoginData userLoginData,
+                        HttpSession httpSession) {
+        Long userId = userService.login(userLoginData);
+        httpSession.setAttribute("userId", userId);
+        httpSession.setMaxInactiveInterval(3600);
+
+        return "redirect:/";
     }
 
     // 회원 목록 조회

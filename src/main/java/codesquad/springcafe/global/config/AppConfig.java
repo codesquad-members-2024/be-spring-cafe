@@ -1,5 +1,7 @@
 package codesquad.springcafe.global.config;
 
+import codesquad.springcafe.global.security.PasswordEncoder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.web.servlet.config.annotation.*;
@@ -16,5 +18,10 @@ public class AppConfig implements WebMvcConfigurer {
         registry.addViewController("/").setViewName("/index");  // 기본 경로로 접속 시 templates/index.html 뷰를 반환
         registry.addViewController("/user/login").setViewName("/user/login");
         registry.addViewController("/user/join").setViewName("/user/form");
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new PasswordEncoder();
     }
 }

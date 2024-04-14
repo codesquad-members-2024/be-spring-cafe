@@ -35,7 +35,6 @@ public class User extends BaseTime {
         return email;
     }
 
-    // TODO: 암호화 로직
     public String getPassword() {
         return password;
     }

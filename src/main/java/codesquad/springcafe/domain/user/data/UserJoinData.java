@@ -1,6 +1,7 @@
 package codesquad.springcafe.domain.user.data;
 
 import codesquad.springcafe.domain.user.model.User;
+import codesquad.springcafe.global.security.PasswordEncoder;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -35,13 +36,18 @@ public class UserJoinData {
         return name;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     /**
      * 저장된 속성 값을 활용해 User 객체를 생성합니다
+     * <p>암호화된 비밀번호를 전달받습니다.
      * <p>생성시간과 수정시간은 현재로 설정합니다
      * @return User 객체 생성해 반환
      */
-    public User toUser() {
-        return new User(this.name, this.email, this.password,
+    public User toUser(String encodedPwd) {
+        return new User(this.name, this.email, encodedPwd,
                 LocalDateTime.now(), LocalDateTime.now());
     }
 }
