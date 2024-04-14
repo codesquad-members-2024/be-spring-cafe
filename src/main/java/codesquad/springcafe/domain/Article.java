@@ -7,16 +7,16 @@ public class Article {
     private Long articleId;
     private String writer;
     private String title;
-    private String description;
+    private String content;
     private LocalDateTime localDateTime;
     private long views;
 
-    public Article(Long articleId, String writer, String title, String description, LocalDateTime localDateTime,
+    public Article(Long articleId, String writer, String title, String content, LocalDateTime localDateTime,
                    long views) {
         this.articleId = articleId;
         this.writer = writer;
         this.title = title;
-        this.description = description;
+        this.content = content;
         this.localDateTime = localDateTime;
         this.views = views;
     }
@@ -37,8 +37,8 @@ public class Article {
         return title;
     }
 
-    public String getDescription() {
-        return description;
+    public String getContent() {
+        return content;
     }
 
     public String getLocalDateTime() {
@@ -47,5 +47,17 @@ public class Article {
 
     public long getViews() {
         return views;
+    }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "articleId=" + articleId +
+                ", writer='" + writer + '\'' +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", localDateTime=" + localDateTime +
+                ", views=" + views +
+                '}';
     }
 }

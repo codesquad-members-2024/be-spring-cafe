@@ -5,14 +5,14 @@ import java.time.LocalDateTime;
 
 public class ArticleDto {
     private String title;
-    private String description;
+    private String content;
     private String writer;
     private LocalDateTime localDateTime;
     private long views;
 
-    public ArticleDto(String title, String description) {
+    public ArticleDto(String title, String content) {
         this.title = title;
-        this.description = description;
+        this.content = content;
         /* 나머지 필드 초기화 */
         this.writer = "익명";
         this.localDateTime = LocalDateTime.now();
@@ -20,6 +20,6 @@ public class ArticleDto {
     }
 
     public Article toEntity(Long articleId) {
-        return new Article(articleId, writer, title, description, localDateTime, views);
+        return new Article(articleId, writer, title, content, localDateTime, views);
     }
 }
