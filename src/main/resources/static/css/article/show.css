@@ -1,0 +1,108 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f6f6f6;
+    margin: 0;
+    padding: 0;
+}
+
+.background {
+    background-color: #f6f6f6;
+}
+
+.container-main {
+    width: 80%;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.post-header-main {
+    margin-bottom: 20px;
+}
+
+.post-title-main {
+    font-size: 28px; /* 제목 크기 */
+    font-weight: bold; /* 제목 굵기 */
+    margin: 0;
+}
+
+.article-content-main {
+    margin: 0;
+}
+
+.article-doc-main {
+    margin-top: 20px;
+}
+
+.post-comment-main {
+    margin-top: 30px;
+}
+
+.comment-main {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.comment-content-main {
+    margin: 0;
+}
+
+.comment-author-name-main {
+    font-weight: bold;
+}
+
+.post-write-btn-main {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.post-write-btn-main:hover {
+    background-color: #45a049;
+}
+
+.form-group-main {
+    margin-bottom: 20px;
+}
+
+.form-control-main {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.comment-writer-main {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.submit-write-main {
+    margin-top: 20px;
+}
+
+.comment-divider-main {
+    border-top: 3px solid #ddd;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.post-info-main {
+    color: #888; /* 회색 */
+    font-size: 14px;
+}
+
+p {
+    margin-top: 20px; /* 위쪽 간격을 늘립니다. */
+    margin-bottom: 20px; /* 아래쪽 간격을 늘립니다. */
+}
+
