@@ -69,9 +69,9 @@ public class UserController {
     }
 
     // 회원 상세 조회 (프로필 조회)
-    @GetMapping("/profile/{userId}")
-    public String getUser(@PathVariable(name = "userId") Long userId, Model model) {
-        UserData userData = userService.getUser(userId);
+    @GetMapping("/profile/{loginId}")
+    public String getUser(@PathVariable(name = "loginId") String loginId, Model model) {
+        UserData userData = userService.getUser(loginId);
 
         model.addAttribute("user", userData);
 

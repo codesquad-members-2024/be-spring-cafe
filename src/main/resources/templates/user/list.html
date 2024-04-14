@@ -27,6 +27,7 @@
                 <table class="table table-hover">
                     <thead>
                     <tr>
+                        <th>아이디</th>
                         <th>닉네임</th>
                         <th>이메일</th>
                         <th>가입일자</th>
@@ -34,7 +35,8 @@
                     </thead>
                     <tbody>
                     <tr th:each="user : ${users}">
-                        <td><a class="profile-link" th:href="@{'/profile/' + ${user.id}}" th:text="${user.name}"></a></td>
+                        <td><a class="profile-link" th:href="@{'/profile/' + ${user.loginId}}" th:text="${user.loginId}"></a></td>
+                        <td th:text="${user.name}"></td>
                         <td th:text="${user.email}"></td>
                         <td th:text="${user.createdAt}"></td>
                     </tr>

@@ -16,6 +16,7 @@
         <header class="post-header">
             <p class="title">가입이 완료되었습니다!</p>
         </header>
+        <p class="user-info">아이디: <span th:text="${user.getLoginId()}"></span></p>
         <p class="user-info">이메일: <span th:text="${user.getEmail}"></span></p>
         <p class="user-info">닉네임: <span th:text="${user.getName}"></span></p>
         <a href="/" class="btn">홈으로</a>

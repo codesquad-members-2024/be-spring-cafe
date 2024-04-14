@@ -82,8 +82,52 @@ salt를 생성하고, 내부적으로 구현된 encode 메서드로 인코딩한
   - 해시 함수로는 Hmac-Sha256을 사용했다 (이에 대해 더 자세한 정보는 https://sunphiz.me/wp/archives/1104)
   - salt 값은 랜덤으로 생성되기 때문에 별도로 저장되어야 암호 매칭이 가능. 따라서 합쳐 반환한다
 
+## thymeleaf
+- 더 유연하고 다양한 기능을 사용하기 위해 thymeleaf로 변경!
+
+- 사용자의 로그인 여부에 따라 네비게이션 바를 다르게 표시하고자 했다.
+- 타임리프의 if 문법에 대해서는 공부했지만, session에 로그인 여부 값을 저장한 뒤 어떻게 활용할 수 있는지 몰랐다.
+- 따라서 모든 요청마다 session을 확인하고, model에 addAttribute해야 하는 방법을 중심으로 생각했다.
+```
+<li th:if="${session.isLoggedIn}">
+    <a class="black-component" href="/mypage" role="button">마이페이지</a>
+</li>
+<li th:if="${session.isLoggedIn}">
+    <a class="black-component" href="/user/logout" role="button">로그아웃</a>
+</li>
+```
+- 어렵게 고민한 것에 비해 굉장히 단순히 해결했다
+- 로그인이나 회원가입 시 session에 isLoggedIn이라는 값을 true로 설정해주면 된다.
+- 그럼 session 변수를 얻어 해당 session의 속성을 얻어오는 것이 가능해 원하는 대로 기능을 구현할 수 있다
+
+## 로그아웃은 GET? POST?
+### GET 요청을 사용해도 된다?
+- 특별한 데이터를 담지 않고, 단순히 세션을 끊는 역할만 한다
+- GET을 사용해도 무방하다?
+
+### POST 요청을 사용해도 된다?
+- GET은 prefetch 때문에 문제가 발생할 수 있다.
+- 사용자를 위해 GET 링크를 미리 가져와, 사용자가 해당 링크를 클릭했을 때 즉시 제공함으로써 페이지 로딩 시간을 줄인다
+- GET 요청으로 구현 시 페이지에서 링크를 미리 가져오려고 시도하는 동안 실수로 사용자를 로그아웃 시킬 수 있다
+- prefetch와 같은 기술은 GET 메서드는 컨텐츠를 반환하기 위해 존재한다고 가정하기 때문이다
+
+### CSRF 공격
+- Cross-Site Request Forgery 사이트 간 요청 위조
+- 인증된 사용자가 자신의 의지와 무관하게 공격자가 의도한 요청을 실행하게 하는 공격
+- 공격자는 피해자가 인증된 세션을 가지고 있는 상태에서, 조작한 요청을 피해자에게 전송하여 실행시키는 것
+- 이를 통해 공격자는 피해자의 계정에서 비정상적인 작업 수행 가능
+- CSRF 토큰을 사용하는 방식으로 공격 방지 가능
+
+### 어떤 걸 선택할까
+- POST를 사용! CSRF 공격은 아래 설명과 같이 구현해 임시로 해결한다
+- 로그인, 회원가입 시 HttpSession에 userId를 설정하면, 브라우저의 쿠키에 JSessionID라는 값이 생긴다
+- 해당 값 자체로는 세션에 저장된 데이터를 확인할 수 없다
+- 서버 구현 상으로는 userId만 알면 로그아웃을 할 수 있는데, 그렇다면 외부에 userId를 노출시키지 않으면 된다
+- 문서를 작성하는 시점 기준 사용자 조회 로직은 /profile/{userId}와 같은 형식으로 되어 있는데, 유저 정보에 loginID (사용자가 지정한 아이디) 값을 추가해 해당 값으로 프로필을 조회하게 변경하자
+
 ---
 ## 참고 링크
 - https://www.baeldung.com/java-password-hashing
 - https://hyunseo-fullstackdiary.tistory.com/127
 - https://blog.jiniworld.me/172
+- https://velog.io/@bagt/HTTP-method-for-loginlogout

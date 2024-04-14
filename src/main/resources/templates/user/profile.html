@@ -18,6 +18,10 @@
             <div class="user-info">
                 <table>
                     <tr>
+                        <td class="label">아이디</td>
+                        <td class="loginId" th:text="${user.getLoginId()}"></td>
+                    </tr>
+                    <tr>
                         <td class="label">이메일</td>
                         <td class="email" th:text="${user.getEmail()}"></td>
                     </tr>
