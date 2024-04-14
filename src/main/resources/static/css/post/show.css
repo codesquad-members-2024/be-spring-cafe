@@ -70,7 +70,7 @@ li {
 }
 
 .article-header-text {
-    color: gray;
+    color: rgb(128, 128, 128);
     display: flex;
 }
 

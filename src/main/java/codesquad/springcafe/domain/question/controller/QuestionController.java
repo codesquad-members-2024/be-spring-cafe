@@ -46,7 +46,11 @@ public class QuestionController {
     public String getQuestion(HttpSession httpSession,
                               @PathVariable("questionId") Long questionId, Model model) {
         Object userId = httpSession.getAttribute("userId");
-        QuestionResponse questionResponse = questionService.getQuestion(userId, questionId);
+        // 세션에 userId 값이 없으면 권한 없음 예외
+        if (userId == null) {
+            throw new IllegalStateException("인증이 필요한 요청입니다.");
+        }
+        QuestionResponse questionResponse = questionService.getQuestion((Long) userId, questionId);
 
         model.addAttribute("question", questionResponse);
 

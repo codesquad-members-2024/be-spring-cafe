@@ -1,7 +1,7 @@
 <ul th:fragment="menu" class="nav navbar-nav navbar-right">
     <li class="active"><a href="/users">멤버 리스트</a></li>
     <li th:if="${session.isLoggedIn}">
-        <a class="black-component" href="/mypage" role="button">마이페이지</a>
+        <a class="black-component" href="/profile/my" role="button">마이페이지</a>
     </li>
     <li th:if="${session.isLoggedIn}">
         <form action="/user/logout" method="post">

@@ -83,4 +83,17 @@ public class UserController {
 
         return "user/profile";
     }
+
+    // 마이페이지 조회
+    @GetMapping("/profile/my")
+    public String getMyProfile(HttpSession httpSession, Model model) {
+        Object userId = httpSession.getAttribute("userId");
+        if (userId == null) {
+            throw new IllegalStateException("인증이 필요한 요청입니다.");
+        }
+        UserResponse userResponse = userService.getMyProfile((Long) userId);
+
+        model.addAttribute("user", userResponse);
+        return "user/profile";
+    }
 }

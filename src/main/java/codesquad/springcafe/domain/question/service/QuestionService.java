@@ -50,13 +50,9 @@ public class QuestionService {
     }
 
     // 질문 상세 조회
-    public QuestionResponse getQuestion(Object userId, Long questionId) {
-        // 세션에 userId 값이 없으면 권한 없음 예외
-        if (userId == null) {
-            throw new IllegalStateException("해당 요청에 대한 권한이 없습니다.");
-        }
+    public QuestionResponse getQuestion(Long userId, Long questionId) {
         // 사용자 인증
-        userRepository.findById((Long) userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
 
         // 질문 게시글 조회
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문 게시글입니다."));

@@ -7,6 +7,7 @@ import codesquad.springcafe.domain.user.data.UserLoginRequest;
 import codesquad.springcafe.domain.user.model.User;
 import codesquad.springcafe.domain.user.model.UserRepository;
 import codesquad.springcafe.global.security.PasswordEncoder;
+import codesquad.springcafe.global.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -91,6 +92,12 @@ public class UserService {
         // loginId로 회원 조회
         User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
         return new UserResponse(user.getLoginId(), user.getEmail(), user.getName(), convertCreatedAt(user.getCreatedAt()));
+    }
+
+    // 내 프로필 조회
+    public UserResponse getMyProfile(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        return new UserResponse(user.getLoginId(), user.getEmail(), user.getName(), DateUtils.convertCreatedAt(user.getCreatedAt()));
     }
 
 }
