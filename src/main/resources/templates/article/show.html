@@ -20,7 +20,7 @@
         <div class="col-md-12 col-sm-12 col-lg-12">
             <div class="panel panel-default">
                 <header class="post-header">
-                    <p class="post-title">자바 웹개발 교육 홈페이지 디자인 개발1</p>
+                    <p class="post-title" th:text="${article.getTitle()}">제목</p>
                 </header>
                 <div class="content-main">
                     <article class="article">
@@ -34,7 +34,7 @@
                             </div>
                         </div>
                         <div class="article-doc">
-                            <p class="article-content" th:text="${article.getDescription()}">내용</p>
+                            <p class="article-content" th:text="${article.getContent()}">내용</p>
                         </div>
                     </article>
 

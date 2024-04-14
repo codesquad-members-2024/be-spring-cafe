@@ -8,8 +8,9 @@ import java.util.Optional;
 public interface UserRepositoryInterface {
     User createUser(User user);
 
+    User updateUser(String userId, UserUpdateDto userUpdateDto);
+
     List<User> findAllUsers();
 
     Optional<User> findByUserId(String userId);
-    User updateUser(String userId, UserUpdateDto userUpdateDto);
 }
