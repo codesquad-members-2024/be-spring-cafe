@@ -19,11 +19,7 @@ class MemoryUserRepositoryTest {
 
     @Test
     void save() {
-        User user = new User();
-        user.setId("ddd");
-        user.setName("abc");
-        user.setPassword("ddd");
-        user.setEmail("ddd@naver.com");
+        User user = new User("ddd", "abc", "ddd", "ddd@naver.com");
 
         repository.save(user);
         User result = repository.findById("ddd").get();
@@ -32,11 +28,9 @@ class MemoryUserRepositoryTest {
 
     @Test
     void findById() {
-        User user1 = new User();
-        user1.setId("ddd");
+        User user1 = new User("ddd", "abc", "ddd", "ddd@naver.com");
 
-        User user2 = new User();
-        user2.setId("abc");
+        User user2 = new User("abc", "abc", "abc", "abc@naver.com");
 
         repository.save(user1);
         repository.save(user2);
@@ -47,11 +41,9 @@ class MemoryUserRepositoryTest {
 
     @Test
     void findAll() {
-        User userA = new User();
-        User userB = new User();
+        User userA = new User("asdf", "asdf", "asdf", "asdf@asdf.com");
+        User userB = new User("ddd", "ddd", "ddd", "ddd@ddd.com");
 
-        userA.setId("asdf");
-        userB.setId("ddd");
 
         repository.save(userA);
         repository.save(userB);

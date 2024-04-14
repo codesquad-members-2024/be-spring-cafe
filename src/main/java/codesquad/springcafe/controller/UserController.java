@@ -26,7 +26,7 @@ public class UserController {
         return "user/form";
     }
 
-//  회원가입 버튼 누를시 작동
+//    회원가입 버튼 누를시 작동
     @PostMapping("/users")
     public String join(@ModelAttribute User user) {
         service.join(user);
@@ -41,9 +41,9 @@ public class UserController {
         return "user/list";
     }
 
-    @GetMapping("/users/{userId}")
-    public String profile(@PathVariable String userId, Model model) {
-        User user = service.findUserById(userId).get();
+    @GetMapping("/users/{id}")
+    public String profile(@PathVariable String id, Model model) {
+        User user = service.findUserById(id).get();
         model.addAttribute("user", user);
         return "user/profile";
     }

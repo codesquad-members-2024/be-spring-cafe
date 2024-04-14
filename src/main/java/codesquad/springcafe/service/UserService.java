@@ -1,7 +1,6 @@
 package codesquad.springcafe.service;
 
 import codesquad.springcafe.domain.User;
-import codesquad.springcafe.repository.MemoryUserRepository;
 import codesquad.springcafe.repository.UserRepository;
 import org.springframework.stereotype.Service;
 

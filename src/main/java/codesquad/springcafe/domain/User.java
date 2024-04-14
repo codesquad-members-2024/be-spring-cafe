@@ -6,16 +6,19 @@ public class User {
     private String name;
     private String email;
 
+    public User(String id, String password, String name, String email) {
+        this.id = id;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+    }
+
     public String getId() {
         return id;
     }
 
     public boolean passwordIsIllegal() {
         return password == null || password.equals("");
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public void setPassword(String password) {
@@ -26,11 +29,15 @@ public class User {
         this.name = name;
     }
 
-    public String getName() { return this.name; }
+    public String getName() {
+        return this.name;
+    }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getEmail() { return this.email; }
+    public String getEmail() {
+        return this.email;
+    }
 }
