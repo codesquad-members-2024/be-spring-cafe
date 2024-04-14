@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/article")
 public class ArticleController {
@@ -24,7 +26,7 @@ public class ArticleController {
 
     // action
     @PostMapping("")
-    public String postArticle(@ModelAttribute ArticlePostReq articlePostReq, HttpServletRequest request){
+    public String postArticle(@ModelAttribute ArticlePostReq articlePostReq, HttpServletRequest request) {
         SimpleUserInfo author = (SimpleUserInfo) request.getSession().getAttribute("loginUser");
         articleService.postArticle(articlePostReq, author);
 
@@ -38,7 +40,7 @@ public class ArticleController {
         ArticleWithComments article = articleService.getArticle(id);
 
         // 존재하지 않는 게시글
-        if(article == null) {
+        if (article == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return null;
         }
@@ -54,7 +56,16 @@ public class ArticleController {
 
     // form
     @GetMapping("/form")
-    public String articleForm(){
+    public String articleForm() {
         return "article/form";
+    }
+
+    @GetMapping("user/{id}/articles")
+    public String articles(@PathVariable("id") String id, Model model) {
+        List<Article> articles = articleService.findByUserId(id);
+        model.addAttribute("articles", articles);
+        model.addAttribute("points", articles.stream().mapToInt(Article::getPoint).sum());
+
+        return "user/articles";
     }
 }

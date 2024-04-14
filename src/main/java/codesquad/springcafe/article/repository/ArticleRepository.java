@@ -12,5 +12,6 @@ public interface ArticleRepository {
 
     Article findById(int id);
     List<Article> findAll();
+    List<Article> findByUserId(String userId);
     void addPoint(Article article);
 }

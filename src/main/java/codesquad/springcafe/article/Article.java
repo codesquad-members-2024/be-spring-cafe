@@ -11,6 +11,7 @@ public class Article {
     private String title;
     private String content;
     private int point;
+    private String authorId;
 
     public Article(int id, Timestamp createdAt, SimpleUserInfo simpleUserInfo, String title, String content, int point) {
         this.id = id;
@@ -21,16 +22,12 @@ public class Article {
         this.point = point;
     }
 
-    public void addPoint(){
-        this.point +=1;
+    public void addPoint() {
+        this.point += 1;
     }
 
     public int getId() {
         return id;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
     }
 
     public SimpleUserInfo getAuthor() {
@@ -49,8 +46,8 @@ public class Article {
         return point;
     }
 
-    public void setPoint(int point) {
-        this.point = point;
+    public String getAuthorId() {
+        return authorId;
     }
 
     @Override
@@ -64,4 +61,6 @@ public class Article {
                 ", point=" + point +
                 '}';
     }
+
+
 }

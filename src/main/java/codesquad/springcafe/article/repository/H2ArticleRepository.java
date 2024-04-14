@@ -21,6 +21,7 @@ public class H2ArticleRepository implements ArticleRepository {
 
     private final String ADD_SQL = "INSERT INTO ARTICLE (CREATEDAT, AUTHOR, AUTHORID, TITLE, CONTENT, POINT) VALUES (?, ?, ?, ?, ?, ?);";
     private final String FIND_BY_ID_SQL = "SELECT * FROM ARTICLE WHERE Id = ?";
+    private final String FIND_BY_USER_SQL = "SELECT * FROM ARTICLE WHERE authorId = ?";
     private final String FIND_ALL_SQL = "SELECT * FROM article ORDER BY createdAt DESC;";
 
     private final String ADD_POINT_SQL = "UPDATE ARTICLE SET point = point + 1 WHERE id = ?;";
@@ -77,6 +78,19 @@ public class H2ArticleRepository implements ArticleRepository {
         } catch (SQLException e) {
             throw new RuntimeException(this.getClass() + ": findAllArticle : " + e.getMessage());
         }
+    }
+
+    @Override
+    public List<Article> findByUserId(String id) {
+         try (Connection connection = dataSource.getConnection();
+             PreparedStatement query = connection.prepareStatement(FIND_BY_USER_SQL)) {
+            query.setString(1, id);
+            try (ResultSet resultSet = query.executeQuery()) {
+                return  rowToArticle(resultSet);
+            }
+        } catch (SQLException e) {
+             throw new RuntimeException(this.getClass() + ": findById : " + e.getMessage());
+         }
     }
 
     @Override

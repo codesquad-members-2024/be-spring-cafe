@@ -49,6 +49,11 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
+    public List<Article> findByUserId(String userId) {
+        return articles.values().stream().filter(a -> a.getAuthorId().equals(userId)).toList();
+    }
+
+    @Override
     public void addPoint(Article article) {
         article.addPoint();
     }

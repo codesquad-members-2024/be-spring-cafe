@@ -13,6 +13,6 @@ public interface CommentRepository {
 
     List<Comment> findByArticleId(int id);
 
-    List<Comment> findByUserId(int id);
+    List<Comment> findByUserId(String id);
 }
 

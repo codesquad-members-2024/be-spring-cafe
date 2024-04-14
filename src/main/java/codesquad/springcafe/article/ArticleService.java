@@ -8,6 +8,8 @@ import codesquad.springcafe.user.DTO.SimpleUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ArticleService {
 
@@ -34,5 +36,9 @@ public class ArticleService {
 
     public void addPoint(Article article){
         articleRepository.addPoint(article);
+    }
+
+    public List<Article> findByUserId(String id) {
+        return articleRepository.findByUserId(id);
     }
 }

@@ -17,7 +17,7 @@ public class H2CommentRepository implements CommentRepository {
 
     private final String ADD_COMMENT = "INSERT INTO comment (ARTICLEID, CREATEDAT, AUTHOR, AUTHORID, CONTENT) VALUES (?, ?, ?, ?, ?);";
     private final String FIND_BY_ARTICLE_ID = "SELECT * FROM comment WHERE ArticleId = ? ORDER BY createdAt DESC;";
-    private final String FIND_BY_USER_ID = "SELECT * FROM comment WHERE ArticleId = ? ORDER BY createdAt DESC;";
+    private final String FIND_BY_USER_ID = "SELECT * FROM comment WHERE AuthorId = ? ORDER BY createdAt DESC;";
 
     private final DataSource dataSource;
 
@@ -58,10 +58,10 @@ public class H2CommentRepository implements CommentRepository {
     }
 
     @Override
-    public List<Comment> findByUserId(int userId) {
+    public List<Comment> findByUserId(String userId) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement query = connection.prepareStatement(FIND_BY_USER_ID)) {
-            query.setInt(1, userId);
+            query.setString(1, userId);
             try (ResultSet resultSet = query.executeQuery()) {
                 return rowToComment(resultSet);
             }
