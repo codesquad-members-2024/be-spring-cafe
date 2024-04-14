@@ -17,7 +17,7 @@ public class UserDatabase {
         return users;
     }
 
-    public static int getTotalUserNumber(){
+    public static int getUserSize(){
         return users.size();
     }
 
