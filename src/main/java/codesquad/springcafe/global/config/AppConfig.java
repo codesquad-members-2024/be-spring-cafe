@@ -32,7 +32,7 @@ public class AppConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new AuthenticationInterceptor())
                 // TODO: 인증이 필요한 경로 추가
-                .addPathPatterns("/profile/**", "/users/**", "/question") // 등록한 경로에 대해 인터셉트
+                .addPathPatterns("/profile/**", "/users/**", "/question/**") // 등록한 경로에 대해 인터셉트
                 .excludePathPatterns("/static/**");    // 제외할 경로 설정
     }
 

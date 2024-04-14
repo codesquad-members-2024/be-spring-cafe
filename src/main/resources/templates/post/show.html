@@ -16,22 +16,21 @@
         <div class="col-md-12 col-sm-12 col-lg-12">
             <div class="panel panel-default">
                 <header class="post-header">
-                    <p class="post-title">자바 웹개발 교육 홈페이지 디자인 개발1</p>
+                    <p class="post-title" th:text="${question.getTitle()}"></p>
                 </header>
                 <div class="content-main">
                     <article class="article">
                         <div class="article-header">
                             <div class="article-header-text">
-                                <p class="article-content">멋진삼</p>
+                                <p class="article-content" th:text = "${question.getUserLoginId()}"></p>
                                 <p class="article-content">
-                                    작성일자:2015-12-30 01:47
+                                    작성일자:<span th:text="${question.getCreatedAt()}"></span>
                                 </p>
-                                <p class="article-content">조회 4</p>
+                                <p class="article-content">조회 <span th:text = "${question.getViewCnt()}">0</span></p>
                             </div>
                         </div>
                         <div class="article-doc">
-                            <p>호눅스가 요청하신 페이지의 디자인 입니다.<br>
-                                각각의 글의 상세 페이지는 이런 느낌이네요!</p>
+                            <pre class="" th:text="${question.getContent()}"></pre>
                         </div>
                     </article>
 
@@ -64,7 +63,7 @@
                                     </div>
                                 </article>
 
-                                <form class="submit-write" method="get" action="/templates/index.html ">
+                                <form class="submit-write" method="get" action="/">
                                     <div class="comment-writer-container">
                                         <label for="writer">
                                             <input class="comment-writer" id="writer" name="writer" value="멋진상"
