@@ -22,8 +22,4 @@ public class ArticleDto {
     public Article toEntity(Long articleId) {
         return new Article(articleId, writer, title, description, localDateTime, views);
     }
-
-    public String getTitle() {
-        return title;
-    }
 }

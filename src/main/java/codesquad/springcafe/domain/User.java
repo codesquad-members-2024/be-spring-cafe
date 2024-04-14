@@ -21,6 +21,9 @@ public class User {
     }
 
     public void update(UserUpdateDto userUpdateDto) {
+        if (!password.equals(userUpdateDto.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
         this.password = userUpdateDto.getNewPassword();
         this.nickname = userUpdateDto.getNewNickname();
         this.email = userUpdateDto.getNewEmail();

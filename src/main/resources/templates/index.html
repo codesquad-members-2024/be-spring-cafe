@@ -40,13 +40,13 @@
                     <tbody>
                     <tr th:each="article: ${articles}">
                         <td>
-                            <a th:href="@{/article/show/{articleId}(articleId=${article.getId()})}"
+                            <a th:href="@{/articles/{articleId}(articleId=${article.getArticleId()})}"
                                th:text="${article.getTitle()}">Title
                             </a>
                         </td>
-                        <td th:text="${article.getAuthor()()}"></td>
-                        <td th:text="${article.getCreated()()}"></td>
-                        <td th:text="${article.getViews()()}"></td>
+                        <td th:text="${article.getWriter()}"></td>
+                        <td th:text="${article.getLocalDateTime()}"></td>
+                        <td th:text="${article.getViews()}"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -54,7 +54,7 @@
         </div>
     </div>
     <div class="post-btn-container">
-        <a class="post-write-btn btn btn-primary pull-right" th:href="@{/article/create}" role="button">글쓰기</a>
+        <a class="post-write-btn btn btn-primary pull-right" th:href="@{/articles/create}" role="button">글쓰기</a>
     </div>
 </div>
 

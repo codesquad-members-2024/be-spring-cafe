@@ -48,8 +48,8 @@
     <form th:action="@{/users/{userId}/update(userId=${userId})}" method="post"> <!-- HTML 폼은 POST 메서드를 사용 -->
         <input type="hidden" name="_method" value="put"> <!-- _method hidden 필드를 추가하여 PUT 메서드를 지정 -->
 
-        <label for="currentPassword">현재 비밀번호: </label>
-        <input type="password" id="currentPassword" name="currentPassword" required>
+        <label for="password">현재 비밀번호: </label>
+        <input type="password" id="password" name="password" required>
 
         <label for="newPassword">새로운 비밀번호: </label>
         <input type="password" id="newPassword" name="newPassword">

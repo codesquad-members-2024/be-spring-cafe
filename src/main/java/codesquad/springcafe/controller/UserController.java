@@ -46,8 +46,8 @@ public class UserController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute UserDto userDto) {
-        User createUser = userRepository.createUser(userDto.toEntity());
-        logger.info("회원가입 성공: {}", createUser.toDto());
+        User newUser = userRepository.createUser(userDto.toEntity());
+        logger.info("회원가입 성공: {}", newUser.toDto());
         return "redirect:/users"; // 이 uri로 리다이렉트
     }
 
@@ -62,6 +62,18 @@ public class UserController {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
+    }
+
+    @GetMapping("/{userId}/update")
+    public String updateForm(@PathVariable("userId") String userId) {
+        return "user/update";
+    }
+
+    @PutMapping("/{userId}/update")
+    public String update(@PathVariable("userId") String userId, @ModelAttribute UserUpdateDto userUpdateDto) {
+        User updatedUser = userRepository.updateUser(userId, userUpdateDto);
+        logger.info("업데이트 성공: {}", updatedUser.toDto());
+        return "redirect:/users";
     }
 
     @GetMapping("/login")
@@ -83,17 +95,4 @@ public class UserController {
         }
         return null;
     }
-
-    @GetMapping("/{userId}/update")
-    public String updateForm(@PathVariable("userId") String userId) {
-        return "user/update";
-    }
-
-    @PutMapping("/{userId}/update")
-    public String update(@PathVariable("userId") String userId, @ModelAttribute UserUpdateDto userUpdateDto) {
-        User updatedUser = userRepository.updateUser(userId, userUpdateDto);
-        logger.info("업데이트 성공: {}", updatedUser.toDto());
-        return "redirect:/users";
-    }
-
 }
