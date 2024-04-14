@@ -1,7 +1,5 @@
 package codesquad.springcafe.dto;
 
-import codesquad.springcafe.domain.User;
-
 public class UserUpdateDto {
     private String password;
     private String newPassword;
@@ -13,6 +11,10 @@ public class UserUpdateDto {
         this.newPassword = newPassword;
         this.newNickname = newNickname;
         this.newEmail = newEmail;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getNewPassword() {
