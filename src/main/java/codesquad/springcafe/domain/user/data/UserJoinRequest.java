@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 /**
  * 유저 회원가입 정보를 저장하는 데이터 클래스
  */
-public class UserJoinData {
+public class UserJoinRequest {
     @NotBlank(message = "아이디는 필수 입력 값입니다.")
     private final String loginId;
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
@@ -23,7 +23,7 @@ public class UserJoinData {
     private final String password;
 
     @ConstructorProperties({"userId", "email", "name", "password"})
-    public UserJoinData(String loginId, String email, String name, String password) {
+    public UserJoinRequest(String loginId, String email, String name, String password) {
         this.loginId = loginId;
         this.email = email;
         this.name = name;

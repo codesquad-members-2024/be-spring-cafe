@@ -3,13 +3,13 @@ package codesquad.springcafe.domain.user.data;
 /**
  * 각 유저 별 조회 정보를 저장합니다
  */
-public class UserData {
+public class UserResponse {
     private final String loginId;
     private final String email;
     private final String name;
     private final String createdAt;
 
-    public UserData(String loginId, String email, String name, String createdAt) {
+    public UserResponse(String loginId, String email, String name, String createdAt) {
         this.loginId = loginId;
         this.email = email;
         this.name = name;
