@@ -19,6 +19,7 @@ public class AppConfig implements WebMvcConfigurer {
         registry.addViewController("/").setViewName("/index");  // 기본 경로로 접속 시 templates/index.html 뷰를 반환
         registry.addViewController("/login").setViewName("/user/login");
         registry.addViewController("/join").setViewName("/user/form");
+        registry.addViewController("/question").setViewName("/post/form");
     }
 
     @Override
@@ -32,7 +33,7 @@ public class AppConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new AuthenticationInterceptor())
                 // TODO: 인증이 필요한 경로 추가
-                .addPathPatterns("/profile/**", "/users/**") // 등록한 경로에 대해 인터셉트
+                .addPathPatterns("/profile/**", "/users/**", "/question", "/questions/**") // 등록한 경로에 대해 인터셉트
                 .excludePathPatterns("/static/**");    // 제외할 경로 설정
     }
 
