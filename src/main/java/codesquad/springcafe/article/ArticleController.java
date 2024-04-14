@@ -1,7 +1,7 @@
 package codesquad.springcafe.article;
 
 import codesquad.springcafe.article.DTO.ArticlePostReq;
-import codesquad.springcafe.article.repository.ArticleRepository;
+import codesquad.springcafe.article.DTO.ArticleWithComments;
 import codesquad.springcafe.user.DTO.SimpleUserInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/article")
 public class ArticleController {
 
-    private final ArticleRepository articleRepository;
+    private final ArticleService articleService;
 
     @Autowired
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
 
@@ -26,9 +26,7 @@ public class ArticleController {
     @PostMapping("")
     public String postArticle(@ModelAttribute ArticlePostReq articlePostReq, HttpServletRequest request){
         SimpleUserInfo author = (SimpleUserInfo) request.getSession().getAttribute("loginUser");
-
-        if(author == null) author = new SimpleUserInfo("guest", "익명");
-        articleRepository.add(articlePostReq, author);
+        articleService.postArticle(articlePostReq, author);
 
         return "redirect:/";
     }
@@ -37,7 +35,7 @@ public class ArticleController {
     // view
     @GetMapping("/{id}")
     public String showArticle(@PathVariable("id") int id, Model model, HttpServletResponse response) {
-        Article article = articleRepository.findById(id);
+        ArticleWithComments article = articleService.getArticle(id);
 
         // 존재하지 않는 게시글
         if(article == null) {
@@ -46,8 +44,10 @@ public class ArticleController {
         }
 
         // 정상 흐름
-        articleRepository.addPoint(article);
-        model.addAttribute("article", article);
+        articleService.addPoint(article.article());
+        model.addAttribute("article", article.article());
+        model.addAttribute("comments", article.comments());
+        model.addAttribute("numberOfComments", article.comments().size());
         return "article/show";
     }
 

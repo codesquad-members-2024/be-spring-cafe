@@ -42,14 +42,16 @@
 
                 <div class="qna-comment">
                     <div class="qna-comment-slipp">
-                        <p class="qna-comment-count"><strong>{{numberOfComments</strong>개의 의견</p>
+                        <p class="qna-comment-count"><strong>{{numberOfComments}}</strong>개의 의견</p>
                         <div class="qna-comment-slipp-articles">
                             {{> components/article/comment.partial}}
-                            <form class="submit-write">
+                            <form class="submit-write" action="/comment" method="post">
+                                <input type="hidden" name = "articleId" value="{{article.id}}">
                                 <div class="form-group" style="padding:14px;">
-                                    <textarea class="form-control" placeholder="Update your status"></textarea>
+                                    <textarea class="form-control" name="content" placeholder="Update your status"></textarea>
                                 </div>
-                                <button class="btn btn-success pull-right" type="button" href="/comment/form">답변하기</button>
+                                <button class="btn btn-success pull-right" type="submit">답변하기
+                                </button>
                                 <div class="clearfix"/>
                             </form>
                         </div>

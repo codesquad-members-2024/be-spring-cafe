@@ -42,8 +42,7 @@ public class UserController {
             session.setMaxInactiveInterval(60 * 30);
 
             log.info("로그인됨 : " + id);
-        }
-        else {
+        } else {
             addAlert(model).add(new Alert("아이디 또는 비밀번호가 틀립니다. 다시 로그인 해주세요."));
             return "user/login";
         }
@@ -70,8 +69,9 @@ public class UserController {
         return "redirect:/user/users";
     }
 
-    @PostMapping("/update")
-    public String update(@RequestParam("prev_password") String prevPassword,
+    @PostMapping("/{id}")
+    public String update(@PathVariable String id,
+                         @RequestParam("prev_password") String prevPassword,
                          @ModelAttribute("user") User user,
                          Model model) {
 
@@ -82,7 +82,7 @@ public class UserController {
             alerts.add(new Alert("비밀번호가 일치하지 않습니다!"));
         }
 
-        model.addAttribute("userId", user.getUserId());
+        model.addAttribute("userId", id);
         return "user/update_form";
     }
 

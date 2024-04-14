@@ -3,14 +3,12 @@ package codesquad.springcafe.article.repository;
 import codesquad.springcafe.article.Article;
 import codesquad.springcafe.article.DTO.ArticlePostReq;
 import codesquad.springcafe.user.DTO.SimpleUserInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +21,13 @@ public class H2ArticleRepository implements ArticleRepository {
 
     private final String ADD_SQL = "INSERT INTO ARTICLE (CREATEDAT, AUTHOR, AUTHORID, TITLE, CONTENT, POINT) VALUES (?, ?, ?, ?, ?, ?);";
     private final String FIND_BY_ID_SQL = "SELECT * FROM ARTICLE WHERE Id = ?";
-    private final String FIND_ALL_SQL = "SELECT * FROM ARTICLE";
+    private final String FIND_ALL_SQL = "SELECT * FROM article ORDER BY createdAt DESC;";
+
     private final String ADD_POINT_SQL = "UPDATE ARTICLE SET point = point + 1 WHERE id = ?;";
 
     private final DataSource dataSource;
 
+    @Autowired
     public H2ArticleRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -53,7 +53,6 @@ public class H2ArticleRepository implements ArticleRepository {
 
     @Override
     public Article findById(int id) {
-        try (PreparedStatement query = dataSource.getConnection().prepareStatement(FIND_BY_ID_SQL)) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement query = connection.prepareStatement(FIND_BY_ID_SQL)) {
             query.setInt(1, id);
@@ -63,7 +62,7 @@ public class H2ArticleRepository implements ArticleRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException(this.getClass() + ": findById : " + e.getMessage());
-        }catch (IndexOutOfBoundsException noMatchId){
+        } catch (IndexOutOfBoundsException noMatchId) {
             return null;
         }
     }
