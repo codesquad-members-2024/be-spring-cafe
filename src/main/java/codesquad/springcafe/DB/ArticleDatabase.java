@@ -1,7 +1,7 @@
 package codesquad.springcafe.DB;
 
-public class ArticleController {
-    
+public class ArticleDatabase {
+    private static final List<Article> articles = new ArrayList<>();
 
 
 
