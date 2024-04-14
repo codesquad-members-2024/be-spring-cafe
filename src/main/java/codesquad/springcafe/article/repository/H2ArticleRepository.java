@@ -34,8 +34,10 @@ public class H2ArticleRepository implements ArticleRepository {
 
     @Override
     public void add(ArticlePostReq articlePostReq, SimpleUserInfo simpleUserInfo) throws IllegalArgumentException {
-        Timestamp  createdDateTime =Timestamp.valueOf(LocalDateTime.now());
-        try (PreparedStatement query = dataSource.getConnection().prepareStatement(ADD_SQL)) {
+        Timestamp createdDateTime = Timestamp.valueOf(LocalDateTime.now());
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement query = connection.prepareStatement(ADD_SQL)) {
+
             query.setTimestamp(1, createdDateTime);
             query.setString(2, simpleUserInfo.name());
             query.setString(3, simpleUserInfo.id());
@@ -52,6 +54,8 @@ public class H2ArticleRepository implements ArticleRepository {
     @Override
     public Article findById(int id) {
         try (PreparedStatement query = dataSource.getConnection().prepareStatement(FIND_BY_ID_SQL)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement query = connection.prepareStatement(FIND_BY_ID_SQL)) {
             query.setInt(1, id);
             try (ResultSet resultSet = query.executeQuery()) {
                 List<Article> articles = rowToArticle(resultSet);
@@ -66,18 +70,20 @@ public class H2ArticleRepository implements ArticleRepository {
 
     @Override
     public List<Article> findAll() {
-        try (PreparedStatement query = dataSource.getConnection().prepareStatement(FIND_ALL_SQL)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement query = connection.prepareStatement(FIND_ALL_SQL)) {
             try (ResultSet resultSet = query.executeQuery()) {
                 return rowToArticle(resultSet);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(this.getClass() + ": findByUserId : " + e.getMessage());
+            throw new RuntimeException(this.getClass() + ": findAllArticle : " + e.getMessage());
         }
     }
 
     @Override
     public void addPoint(Article article) {
-        try (PreparedStatement query = dataSource.getConnection().prepareStatement(ADD_POINT_SQL)) {
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement query = connection.prepareStatement(ADD_POINT_SQL)) {
             query.setInt(1, article.getId());
 
             query.executeUpdate();

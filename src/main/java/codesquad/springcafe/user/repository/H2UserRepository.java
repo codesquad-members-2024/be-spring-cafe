@@ -1,39 +1,42 @@
 package codesquad.springcafe.user.repository;
 
-import codesquad.springcafe.user.User;
 import codesquad.springcafe.user.DTO.UserListRes;
+import codesquad.springcafe.user.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 @Primary
 public class H2UserRepository implements UserRepository {
+    private final String FIND_ALL_USER = "SELECT * FROM USERS";
+    private final String FIND_BY_ID_USER = "SELECT * FROM USERS WHERE UserId = ?";
+    private final String UPDATE_USER = "UPDATE Users SET email = ?, name = ? WHERE userId = ?;";
+    private final String ADD_USER = "INSERT INTO Users (userId, password, name, email) VALUES (?, ?, ?, ?);";
+
     private final DataSource dataSource;
 
+    @Autowired
     public H2UserRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     @Override
     public void addUser(User user) throws IllegalArgumentException {
-        String sql = "INSERT INTO Users (userId, password, name, email) VALUES (?, ?, ?, ?);";
-
-        try (PreparedStatement query = dataSource.getConnection().prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement query = connection.prepareStatement(ADD_USER)) {
             query.setString(1, user.getUserId());
             query.setString(2, user.getPassword());
             query.setString(3, user.getName());
             query.setString(4, user.getEmail());
 
             query.executeUpdate();
-        } catch (SQLIntegrityConstraintViolationException alreadyExistsId){
+        } catch (SQLIntegrityConstraintViolationException alreadyExistsId) {
             throw new IllegalArgumentException(alreadyExistsId);
 
         } catch (SQLException e) {
@@ -43,9 +46,8 @@ public class H2UserRepository implements UserRepository {
 
     @Override
     public void update(User user) {
-        String sql = "UPDATE Users SET email = ?, name = ? WHERE userId = ?;";
-
-        try (PreparedStatement query = dataSource.getConnection().prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement query = connection.prepareStatement(UPDATE_USER)) {
             query.setString(1, user.getEmail());
             query.setString(2, user.getName());
             query.setString(3, user.getUserId());
@@ -58,9 +60,8 @@ public class H2UserRepository implements UserRepository {
 
     @Override
     public User findUserById(String id) {
-        String sql = "SELECT * FROM USERS WHERE UserId = ?";
-
-        try (PreparedStatement query = dataSource.getConnection().prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement query = connection.prepareStatement(FIND_BY_ID_USER)) {
             query.setString(1, id);
             try (ResultSet resultSet = query.executeQuery()) {
                 List<User> users = rowToUser(resultSet);
@@ -68,16 +69,15 @@ public class H2UserRepository implements UserRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException(this.getClass() + ": findByUserId : " + e.getMessage());
-        } catch (IndexOutOfBoundsException userNotFound){
+        } catch (IndexOutOfBoundsException userNotFound) {
             return null;
         }
     }
 
     @Override
     public List<UserListRes> findAll() {
-        String sql = "SELECT * FROM USERS";
-
-        try (PreparedStatement query = dataSource.getConnection().prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement query = connection.prepareStatement(FIND_ALL_USER)) {
             try (ResultSet resultSet = query.executeQuery()) {
                 List<User> users = rowToUser(resultSet);
                 return getUserList(users);

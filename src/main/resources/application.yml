@@ -12,6 +12,10 @@ spring:
     driver-class-name: 'org.h2.Driver'
     username: 'sa'
     password: ''
+    hikari:
+      connection-timeout: 1000
+      connection-test-query: SELECT 1
+
 
 server:
   servlet:
