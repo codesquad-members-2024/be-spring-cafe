@@ -9,9 +9,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ArticleRepository implements ArticleRepositoryInterface {
     private static final List<Article> articles = new ArrayList<>();
+    private Long articleId = 0L;
 
     @Override
     public Article createArticle(Article article) {
+        article.setArticleId(articleId++);
         articles.add(article);
         return article;
     }

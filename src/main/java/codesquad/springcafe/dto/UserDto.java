@@ -6,15 +6,17 @@ public class UserDto {
     private String userId;
     private String nickname;
     private String email;
+    private String password;
 
-    public UserDto(String userId, String nickname, String email) {
+    public UserDto(String userId, String nickname, String email, String password) {
         this.userId = userId;
         this.nickname = nickname;
         this.email = email;
+        this.password = password;
     }
 
-    public static UserDto from(User user) {
-        return new UserDto(user.getUserId(), user.getNickname(), user.getEmail());
+    public User toEntity() {
+        return new User(userId, nickname, email, password);
     }
 
     public String getUserId() {
@@ -27,6 +29,10 @@ public class UserDto {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     @Override

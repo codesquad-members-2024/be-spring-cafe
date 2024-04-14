@@ -42,4 +42,28 @@ public class Article {
     public int getViews() {
         return views;
     }
+
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
+    }
 }

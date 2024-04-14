@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <p class="total_num">전체 글 10명</p>
+    <p class="total_num">전체 글 <span th:text="${articles.size()}"></span></p>
 
     <div class="container" id="main">
         <div class="col-md-10 col-md-offset-1">
@@ -38,17 +38,15 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td><a th:href="@{/article/show}">국내에서 Ruby on Rails와 Play가 활성화되기 힘든 이유는 뭘까?</a></td>
-                        <td>닉네임 1</td>
-                        <td>2021-12-14</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td><a th:href="@{/article/show}">runtime 에 reflect 발동 주체 객체가 뭔지 알 방법이 있을까요?</a></td>
-                        <td>닉네임 1</td>
-                        <td>2021-12-14</td>
-                        <td>0</td>
+                    <tr th:each="article: ${articles}">
+                        <td>
+                            <a th:href="@{/article/show/{articleId}(articleId=${article.getId()})}"
+                               th:text="${article.getTitle()}">Title
+                            </a>
+                        </td>
+                        <td th:text="${article.getAuthor()()}"></td>
+                        <td th:text="${article.getCreated()()}"></td>
+                        <td th:text="${article.getViews()()}"></td>
                     </tr>
                     </tbody>
                 </table>

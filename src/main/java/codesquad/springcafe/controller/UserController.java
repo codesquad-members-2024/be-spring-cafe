@@ -2,6 +2,7 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.dto.UserDto;
+import codesquad.springcafe.dto.UserUpdateDto;
 import codesquad.springcafe.repository.user.UserRepositoryInterface;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
@@ -43,10 +45,10 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute User user) {
-        User newUser = userRepository.createUser(user);
-        logger.info("회원가입 성공: {}", UserDto.from(newUser));
-        return "redirect:/users"; // uri 리다이렉트
+    public String create(@ModelAttribute UserDto userDto) {
+        User user = userRepository.createUser(userDto.toEntity());
+        logger.info("회원가입 성공: {}", user.toDto());
+        return "redirect:/users"; // 이 uri로 리다이렉트
     }
 
     @GetMapping("/{userId}")
@@ -54,8 +56,8 @@ public class UserController {
         Optional<User> optionalUser = userRepository.findByUserId(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            logger.info("사용자 프로필 조회: {}", UserDto.from(user));
             model.addAttribute("user", user);
+            logger.info("사용자 프로필 조회: {}", user.toDto());
             return "user/profile";
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
@@ -73,7 +75,7 @@ public class UserController {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             if (user.getPassword().equals(password)) {
-                logger.info("로그인 성공: {}", UserDto.from(user));
+                logger.info("로그인 성공: {}", user.toDto());
                 return "redirect:/";
             }
         } else {
@@ -83,9 +85,15 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/update")
-    public String updateForm(@RequestParam("userId") String userId, ) {
-
+    public String updateForm(@PathVariable("userId") String userId) {
+        return "user/update";
     }
 
+    @PutMapping("/{userId}/update")
+    public String update(@PathVariable("userId") String userId, @ModelAttribute UserUpdateDto userUpdateDto) {
+        User updatedUser = userRepository.updateUser(userId, userUpdateDto);
+        logger.info("업데이트 성공: {}", updatedUser.toDto());
+        return "redirect:/users";
+    }
 
 }

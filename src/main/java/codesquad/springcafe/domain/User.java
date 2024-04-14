@@ -1,5 +1,6 @@
 package codesquad.springcafe.domain;
 
+import codesquad.springcafe.dto.UserDto;
 import codesquad.springcafe.dto.UserUpdateDto;
 
 public class User {
@@ -15,10 +16,14 @@ public class User {
         this.password = password;
     }
 
+    public UserDto toDto() {
+        return new UserDto(userId, nickname, email, password);
+    }
+
     public void update(UserUpdateDto userUpdateDto) {
-        this.nickname = userUpdateDto.getNickname();
-        this.email = userUpdateDto.getEmail();
-        this.password = userUpdateDto.getPassword();
+        this.password = userUpdateDto.getNewPassword();
+        this.nickname = userUpdateDto.getNewNickname();
+        this.email = userUpdateDto.getNewEmail();
     }
 
     public String getUserId() {

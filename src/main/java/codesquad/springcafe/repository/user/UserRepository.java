@@ -1,6 +1,7 @@
 package codesquad.springcafe.repository.user;
 
 import codesquad.springcafe.domain.User;
+import codesquad.springcafe.dto.UserUpdateDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,5 +25,12 @@ public class UserRepository implements UserRepositoryInterface {
     @Override
     public Optional<User> findByUserId(String userId) {
         return users.stream().filter(user -> user.getUserId().equals(userId)).findFirst();
+    }
+
+    @Override
+    public User updateUser(String userId, UserUpdateDto userUpdateDto) {
+        User user = findByUserId(userId).get();
+        user.update(userUpdateDto);
+        return user;
     }
 }
