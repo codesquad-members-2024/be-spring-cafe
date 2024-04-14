@@ -1,12 +1,12 @@
-package model.user;
+package model.user.dto;
 
-public class UserData {
+public class UserCreateDto {
     private final String userId;
     private final String email;
     private final String name;
     private final String password;
 
-    public UserData(String userId, String email, String name, String password) {
+    public UserCreateDto(String userId, String email, String name, String password) {
         this.userId = userId;
         this.email = email;
         this.name = name;
