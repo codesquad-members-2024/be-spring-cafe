@@ -26,6 +26,9 @@ public class LoginController {
         this.userDatabase = userDatabase;
     }
 
+    /**
+     * 사용자에게 로그인 폼을 보여줍니다.
+     */
     @GetMapping("/login")
     public String loginForm(Model model) {
         LoginForm loginForm = new LoginForm("", "");
@@ -33,6 +36,9 @@ public class LoginController {
         return "user/login";
     }
 
+    /**
+     * 사용자가 작성한 로그인폼을 받아 이메일과 비밀번호 모두 일치하는 User를 찾으면 세션에 입력하고 사용자가 원하는 경로로 리다이렉트합니다.
+     */
     @PostMapping("/login")
     public String login(@Validated @ModelAttribute LoginForm loginForm, BindingResult bindingResult,
                         HttpSession session, @RequestParam(defaultValue = "/") String redirectUrl) {
@@ -48,6 +54,12 @@ public class LoginController {
         session.setAttribute(LOGIN_SESSION_NAME, loginUser);
         logger.info("{} 님이 로그인하셨습니다", loginUser.getNickname());
         return "redirect:" + redirectUrl;
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/";
     }
 
     private void validateLoginInfo(String password, BindingResult bindingResult, Optional<User> optionalUser) {
