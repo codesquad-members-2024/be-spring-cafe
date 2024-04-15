@@ -1,0 +1,74 @@
+package codesquad.springcafe.repository;
+
+import codesquad.springcafe.model.Article;
+import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Repository
+@Primary
+public class ArticleJdbcRepository implements ArticleRepository {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public ArticleJdbcRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public Long save(Article article) {
+        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        jdbcInsert.withTableName("articles").usingGeneratedKeyColumns("article_id");
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("writer", article.getWriter());
+        parameters.put("title", article.getTitle());
+        parameters.put("contents", article.getContents());
+        parameters.put("local_date_time", article.getLocalDateTime());
+        parameters.put("hits", article.getHits());
+
+        Number key = jdbcInsert.executeAndReturnKey(parameters);
+        article.setArticleId((key.longValue()));
+
+        return article.getArticleId();
+    }
+
+    @Override
+    public Article findById(Long articleId) {
+        String sql = "SELECT article_id, writer, title, contents, local_date_time, hits FROM articles WHERE article_id = ?";
+        return jdbcTemplate.queryForObject(sql, articleRowMapper(), articleId);
+    }
+
+    @Override
+    public List<Article> findAllArticle() {
+        String sql = "SELECT article_id, writer, title, contents, local_date_time, hits FROM articles";
+        return jdbcTemplate.query(sql, articleRowMapper());
+    }
+
+    @Override
+    public void clear() {
+        String sql = "DELETE FROM articles";
+        jdbcTemplate.update(sql);
+    }
+
+    private RowMapper<Article> articleRowMapper() {
+        return (rs, rowNum) -> {
+            long articleId = rs.getLong("article_id");
+            String writer = rs.getString("writer");
+            String title = rs.getString("title");
+            String contents = rs.getString("contents");
+            LocalDateTime localDateTime = rs.getTimestamp("local_date_time").toLocalDateTime();
+            int hits = rs.getInt("hits");
+
+            return new Article(articleId, writer, title, contents, localDateTime, hits);
+        };
+    }
+
+}
