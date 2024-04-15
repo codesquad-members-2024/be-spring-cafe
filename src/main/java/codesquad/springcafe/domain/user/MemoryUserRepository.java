@@ -1,16 +1,13 @@
 package codesquad.springcafe.domain.user;
 
-import org.springframework.stereotype.Repository;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Repository
-public class UserMemoryRepository implements UserRepository {
+public class MemoryUserRepository implements UserRepository {
 
     private final Map<String, User> users;
 
-    public UserMemoryRepository() {
+    public MemoryUserRepository() {
         this.users = new ConcurrentHashMap<>();
     }
 
