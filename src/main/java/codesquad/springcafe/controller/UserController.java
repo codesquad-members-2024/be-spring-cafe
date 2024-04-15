@@ -76,7 +76,7 @@ public class UserController {
      */
     @GetMapping("/profile/{nickname}")
     public String userProfile(@PathVariable String nickname, Model model) {
-        Optional<User> optionalUser = userDatabase.findBy(nickname);
+        Optional<User> optionalUser = userDatabase.findByNickname(nickname);
         if (optionalUser.isEmpty()) {
             return "redirect:/users";
         }
@@ -93,7 +93,7 @@ public class UserController {
      */
     @GetMapping("/edit/{nickname}")
     public String updateForm(@PathVariable String nickname, Model model) {
-        Optional<User> optionalUser = userDatabase.findBy(nickname);
+        Optional<User> optionalUser = userDatabase.findByNickname(nickname);
         if (optionalUser.isEmpty()) {
             return "redirect:/users";
         }
@@ -114,7 +114,7 @@ public class UserController {
     @PostMapping("/edit/{nickname}")
     public String updateUser(@PathVariable String nickname, @Validated @ModelAttribute UserEditForm userEditForm,
                              BindingResult bindingResult) {
-        Optional<User> optionalUser = userDatabase.findBy(nickname);
+        Optional<User> optionalUser = userDatabase.findByNickname(nickname);
         if (optionalUser.isEmpty()) {
             return "redirect:/users";
         }
@@ -150,6 +150,6 @@ public class UserController {
     }
 
     private boolean isPresentNickname(String nickname) {
-        return userDatabase.findBy(nickname).isPresent();
+        return userDatabase.findByNickname(nickname).isPresent();
     }
 }

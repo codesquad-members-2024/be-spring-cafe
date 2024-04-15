@@ -21,6 +21,11 @@ public class User {
         return this.nickname.equals(nickname);
     }
 
+    public boolean hasSameEmail(String email) {
+        return this.email.equals(email);
+    }
+
+
     public boolean hasSamePassword(String password) {
         return this.password.equals(password);
     }

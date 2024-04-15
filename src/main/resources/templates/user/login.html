@@ -14,21 +14,29 @@
 <body>
 <div class="background">
     <div th:replace="~{fragments/navbar :: navbar}"></div>
-    s
 
     <div class="container" id="main">
         <header class="post-header">
             <p class="title">로그인</p>
         </header>
-        <form name="question" class="info-container" method="post" action="/users">
-            <div class="form-group">
+        <form name="question" class="info-container" method="post" action th:object="${loginForm}">
+            <div th:if="${#fields.hasGlobalErrors()}">
+                <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
+            </div>
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('email')}? 'field-error'">
                 <label for="email">이메일</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="이메일을 입력하세요">
+                <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="이메일을 입력하세요">
             </div>
-            <div class="form-group">
+            <div class="field-error" th:errors="*{email}">이메일 오류</div>
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('password')}? 'field-error'">
                 <label for="password">비밀번호</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요">
+                <input type="password" class="form-control" id="password" th:field="*{password}"
+                       placeholder="비밀번호를 입력하세요">
             </div>
+            <div class="field-error" th:errors="*{password}">비밀번호 오류</div>
+
             <button type="submit" class="btn btn-success clearfix pull-right">완료</button>
         </form>
     </div>

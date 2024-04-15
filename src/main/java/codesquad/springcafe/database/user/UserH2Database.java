@@ -36,9 +36,17 @@ public class UserH2Database implements UserDatabase {
     }
 
     @Override
-    public Optional<User> findBy(String nickname) {
+    public Optional<User> findByNickname(String nickname) {
         String sql = "select id, nickname, email, password, joindate from users where nickname = ?";
         List<User> result = jdbcTemplate.query(sql, userRowMapper(), nickname);
+
+        return result.stream().findAny();
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        String sql = "select id, nickname, email, password, joindate from users where email = ?";
+        List<User> result = jdbcTemplate.query(sql, userRowMapper(), email);
 
         return result.stream().findAny();
     }

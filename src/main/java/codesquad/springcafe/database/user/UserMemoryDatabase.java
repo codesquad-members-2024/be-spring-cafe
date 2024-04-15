@@ -21,9 +21,16 @@ public class UserMemoryDatabase implements UserDatabase {
     }
 
     @Override
-    public Optional<User> findBy(String nickname) {
+    public Optional<User> findByNickname(String nickname) {
         return findAll().stream()
                 .filter(user -> user.hasSameNickname(nickname))
+                .findAny();
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return findAll().stream()
+                .filter(user -> user.hasSameEmail(email))
                 .findAny();
     }
 

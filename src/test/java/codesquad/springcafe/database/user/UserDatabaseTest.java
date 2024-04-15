@@ -36,7 +36,7 @@ class UserDatabaseTest {
     void findByNickname() {
         User user = new User("sangchu@gmail.com", "상추", "123");
         userDatabase.add(user);
-        User find = userDatabase.findBy("상추").get();
+        User find = userDatabase.findByNickname("상추").get();
         assertThat(find).isEqualTo(user);
     }
 
@@ -45,7 +45,7 @@ class UserDatabaseTest {
     void findByNicknameFailed() {
         User user = new User("sangchu@gmail.com", "상추", "123");
         userDatabase.add(user);
-        Optional<User> optionalUser = userDatabase.findBy("배추");
+        Optional<User> optionalUser = userDatabase.findByNickname("배추");
         assertThat(optionalUser).isEmpty();
     }
 
