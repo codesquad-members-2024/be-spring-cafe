@@ -91,6 +91,7 @@ public class UserController {
         UserResponse userResponse = userService.getMyProfile((Long) userId);
 
         model.addAttribute("user", userResponse);
+        model.addAttribute("my", true); // 마이페이지에서만 버튼 보기 가능
         return "user/profile";
     }
 

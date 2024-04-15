@@ -31,9 +31,9 @@
                     </tr>
                 </table>
             </div>
-            <div class="buttons">
-                <a class="edit-button" th:href="@{'/profile/' + ${user.loginId} + '/edit'}">정보 수정</a>
-                <a class="delete-button">회원 탈퇴</a>
+            <div th:fragment="profile" class="buttons">
+                <a th:if="${my}" class="edit-button" th:href="@{'/profile/' + ${user.loginId} + '/edit'}">정보 수정</a>
+                <a th:if="${my}" class="delete-button">회원 탈퇴</a>
             </div>
         </div>
     </div>
