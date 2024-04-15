@@ -25,6 +25,15 @@ public class H2Database {
         );
         return article;
     };
+    private final RowMapper<User> userRowMapper = (resultSet, rowNum) -> {
+        User user = new User(
+                resultSet.getString("userId"),
+                resultSet.getString("name"),
+                resultSet.getString("email"),
+                resultSet.getString("password")
+        );
+        return user;
+    };
 
     @Autowired
     public H2Database(DataSource dataSource) {
@@ -36,8 +45,8 @@ public class H2Database {
                 user.getUserId(), user.getName(), user.getEmail(), user.getPassword());
     }
 
-    public List<Map<String, Object>> getAllUsers() {
-        return jdbcTemplate.queryForList("SELECT * FROM USERS");
+    public List<User> getAllUsers() {
+        return jdbcTemplate.query("SELECT * FROM USERS", userRowMapper);
     }
 
     public void addArticle(ArticleDto articleDto) {
