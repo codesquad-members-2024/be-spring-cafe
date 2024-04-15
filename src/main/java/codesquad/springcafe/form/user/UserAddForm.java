@@ -3,21 +3,18 @@ package codesquad.springcafe.form.user;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 
-public class UserEditForm {
+public class UserAddForm {
     @NotBlank
     private String email;
     @Length(min = 2, max = 10)
     private String nickname;
     @Length(min = 3, max = 10)
-    private String currentPassword;
-    @Length(min = 3, max = 10)
-    private String newPassword;
+    private String password;
 
-    public UserEditForm(String email, String nickname, String currentPassword, String newPassword) {
+    public UserAddForm(String email, String nickname, String password) {
         this.email = email;
         this.nickname = nickname;
-        this.currentPassword = currentPassword;
-        this.newPassword = newPassword;
+        this.password = password;
     }
 
     public String getEmail() {
@@ -28,12 +25,7 @@ public class UserEditForm {
         return nickname;
     }
 
-    public String getCurrentPassword() {
-        return currentPassword;
+    public String getPassword() {
+        return password;
     }
-    
-    public String getNewPassword() {
-        return newPassword;
-    }
-
 }

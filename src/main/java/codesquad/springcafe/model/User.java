@@ -1,15 +1,11 @@
 package codesquad.springcafe.model;
 
-import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.Objects;
 
 public class User {
-    @NotBlank
     private final String email;
-    @NotBlank
     private String nickname;
-    @NotBlank
     private String password;
     private LocalDate joinDate;
     private Long id;

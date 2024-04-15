@@ -1,6 +1,7 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.database.user.UserDatabase;
+import codesquad.springcafe.form.user.UserAddForm;
 import codesquad.springcafe.form.user.UserEditForm;
 import codesquad.springcafe.model.User;
 import java.net.URLEncoder;
@@ -44,8 +45,8 @@ public class UserController {
      */
     @GetMapping("/add")
     public String userForm(Model model) {
-        User user = new User("", "", "");
-        model.addAttribute("user", user);
+        UserAddForm userAddForm = new UserAddForm("", "", "");
+        model.addAttribute("userAddForm", userAddForm);
         return "user/form";
     }
 
@@ -53,16 +54,15 @@ public class UserController {
      * 사용자가 작성한 내용을 바탕으로 유저를 생성하고 데이터베이스에 저장합니다.
      */
     @PostMapping("/add")
-    public String addUser(@Validated @ModelAttribute User user, BindingResult bindingResult) {
-        if (userDatabase.findBy(user.getNickname()).isPresent()) {
-            bindingResult.rejectValue("nickname", "duplicateNickname");
-        }
+    public String addUser(@Validated @ModelAttribute UserAddForm userAddForm, BindingResult bindingResult) {
+        validateAddForm(userAddForm, bindingResult);
 
         if (bindingResult.hasErrors()) {
             logger.error("errors={}", bindingResult);
             return "user/form";
         }
 
+        User user = new User(userAddForm.getEmail(), userAddForm.getNickname(), userAddForm.getPassword());
         userDatabase.add(user);
         logger.info("새로운 유저가 생성되었습니다. {}", user);
         return "redirect:/users";
@@ -119,14 +119,7 @@ public class UserController {
             return "redirect:/users";
         }
         User user = optionalUser.get();
-        if (isPresentNickname(userEditForm) && !user.hasSameNickname(userEditForm.getNickname())) {
-            bindingResult.rejectValue("nickname", "duplicateNickname");
-        }
-
-        if (!user.hasSamePassword(userEditForm.getCurrentPassword())) {
-            bindingResult.rejectValue("currentPassword", "invalidCurrentPassword");
-
-        }
+        validateUpdateForm(userEditForm, bindingResult, user);
         if (bindingResult.hasErrors()) {
             logger.error("errors={}", bindingResult);
             return "user/update";
@@ -140,7 +133,23 @@ public class UserController {
         return "redirect:/users/profile/" + URLEncoder.encode(newNickname, StandardCharsets.UTF_8);
     }
 
-    private boolean isPresentNickname(UserEditForm userEditForm) {
-        return userDatabase.findBy(userEditForm.getNickname()).isPresent();
+    private void validateAddForm(UserAddForm userAddForm, BindingResult bindingResult) {
+        if (isPresentNickname(userAddForm.getNickname())) {
+            bindingResult.rejectValue("nickname", "Duplicate");
+        }
+    }
+
+    private void validateUpdateForm(UserEditForm userEditForm, BindingResult bindingResult, User user) {
+        if (isPresentNickname(userEditForm.getNickname()) && !user.hasSameNickname(userEditForm.getNickname())) {
+            bindingResult.rejectValue("nickname", "Duplicate");
+        }
+
+        if (!user.hasSamePassword(userEditForm.getCurrentPassword())) {
+            bindingResult.rejectValue("currentPassword", "Wrong");
+        }
+    }
+
+    private boolean isPresentNickname(String nickname) {
+        return userDatabase.findBy(nickname).isPresent();
     }
 }
