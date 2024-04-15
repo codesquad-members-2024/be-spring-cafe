@@ -1,6 +1,9 @@
 package codesquad.springcafe.domain.user;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MemoryUserRepository implements UserRepository {
@@ -23,11 +26,12 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User findByUserId(String userId) {
-        return users.get(userId);
+    public Optional<User> findByUserId(String userId) {
+        return Optional.ofNullable(users.get(userId));
     }
 
-    public Map<String, User> getUsers() {
-        return users;
+    @Override
+    public List<User> findAll() {
+        return new ArrayList<>(users.values());
     }
 }

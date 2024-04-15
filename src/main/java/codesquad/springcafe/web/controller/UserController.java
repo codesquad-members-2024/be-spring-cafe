@@ -53,7 +53,7 @@ public class UserController {
 
     @GetMapping
     public String userList(Model model) {
-        model.addAttribute("users", userService.getUsers().values());
+        model.addAttribute("users", userService.getUsers());
         return "/user/list";
     }
 

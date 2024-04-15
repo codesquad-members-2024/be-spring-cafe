@@ -6,7 +6,7 @@ import codesquad.springcafe.web.dto.UserCreateDto;
 import codesquad.springcafe.web.dto.UserUpdateDto;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -26,11 +26,11 @@ public class UserService {
     }
 
     public User findOne(String userId) {
-        return userRepository.findByUserId(userId);
+        return userRepository.findByUserId(userId).get();
     }
 
-    public Map<String, User> getUsers() {
-        return userRepository.getUsers();
+    public List<User> getUsers() {
+        return userRepository.findAll();
     }
 
     public void updateUser(String userId, UserUpdateDto userUpdateDto) {
