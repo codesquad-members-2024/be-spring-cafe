@@ -5,11 +5,20 @@ server:
       enabled: true
       force: true
 
+    session:
+      tracking-modes: cookie
+
 spring:
   application:
     name: spring-cafe
 
+  mvc:
+    hidden-method:
+      filter:
+        enabled: true
+
   mustache:
+    expose-session-attributes: true
     suffix: .html
     servlet:
       cache: false

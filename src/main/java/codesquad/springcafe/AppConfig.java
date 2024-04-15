@@ -13,6 +13,8 @@ public class AppConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginCheckInterceptor())
                 .addPathPatterns("/user/*")
+                .addPathPatterns("/article/*")
+                .addPathPatterns("/comment/*")
                 .excludePathPatterns("/user/log*") // 로그인, 로그아웃 제외
                 .excludePathPatterns("/user/form*"); // 회원가입 제외
 
