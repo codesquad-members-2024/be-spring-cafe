@@ -54,8 +54,8 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public void addPoint(Article article) {
-        article.addPoint();
+    public void addPoint(int articleId) {
+        articles.get(articleId).addPoint();
     }
 
     @Override

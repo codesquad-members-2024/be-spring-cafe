@@ -13,7 +13,7 @@ public interface ArticleRepository {
     Article findById(int id);
     List<Article> findAll();
     List<Article> findByUserId(String userId);
-    void addPoint(Article article);
+    void addPoint(int articleId);
     void update(int id, ArticlePostReq articlePostReq);
 
     void deleteAll();

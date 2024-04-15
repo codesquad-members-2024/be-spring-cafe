@@ -29,13 +29,10 @@ public class ArticleService {
     }
 
     public ArticleWithComments getArticle(int articleId){
+        articleRepository.addPoint(articleId);
         return new ArticleWithComments(
                 articleRepository.findById(articleId),
                 commentRepository.findByArticleId(articleId));
-    }
-
-    public void addPoint(Article article){
-        articleRepository.addPoint(article);
     }
 
     public List<Article> findByUserId(String id) {

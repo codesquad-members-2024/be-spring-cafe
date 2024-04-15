@@ -55,7 +55,6 @@ public class ArticleController {
         }
 
         // 정상 흐름
-        articleService.addPoint(article.article());
         model.addAttribute("article", article.article());
         model.addAttribute("comments", article.comments());
         model.addAttribute("numberOfComments", article.comments().size());
