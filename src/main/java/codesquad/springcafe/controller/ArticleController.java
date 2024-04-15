@@ -34,18 +34,18 @@ public class ArticleController {
         return "redirect:/main";
     }
 
-//    @GetMapping("/detail/{id}")
-//    public String showArticle(@PathVariable Long id, Model model) {
-//        Optional<Article> optionalArticle = articleDatabase.findBy(id);
-//        if (optionalArticle.isEmpty()) {
-//            return "redirect:/";
-//        }
-//        Article article = optionalArticle.get();
-//        article.increaseViews();
-//        model.addAttribute("article", article);
-//
-//        return "article/show";
-//    }
+    // 게시글 상세 페이지
+    @GetMapping("/article/{id}")
+    public String showArticle(@PathVariable Integer id, Model model) {
+        if (ArticleDatabase.isArticleEmpty()){
+            return "redirect:/main";
+        }
+
+        Article article = ArticleDatabase.getArticleById(id);
+        model.addAttribute("article", article); // 해당 id에 맞는 article 반환
+
+        return "/article/show";
+    }
 
 
 }

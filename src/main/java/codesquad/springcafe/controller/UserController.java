@@ -13,7 +13,7 @@ import java.util.Optional;
 @Controller
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-
+  
     @GetMapping("/users/success")
     // @RequestParam을 통해 쿼리문의 userId를 받아온다.
     // userId를 통해 DB에서 해당 사용자의 email, nickname을 받아온다.
@@ -41,7 +41,7 @@ public class UserController {
     @GetMapping("/users/list")
     public String showUsers(Model model) {
         model.addAttribute("users", UserDatabase.getAllUsers()); // 전체 user 반환
-        model.addAttribute("totalNumber", Integer.toString(UserDatabase.getTotalUserNumber())); //user 개수 반환
+        model.addAttribute("totalNumber", Integer.toString(UserDatabase.getUserSize())); //user 개수 반환
 
         return "/user/list";
     }

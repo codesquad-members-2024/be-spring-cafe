@@ -22,15 +22,14 @@
         <div class="col-md-12 col-sm-12 col-lg-12">
             <div class="panel panel-default">
                 <header class="post-header-main">
-                    <p class="post-title-main">제목제목제목</p>
-                    <p class="post-info-main">작성일자:2024-12-30 01:00 조회 4</p>
+                    <p class="post-title-main">{{ article.getTitle }}</p>
+                    <p class="post-info-main">{{ article.getFormattedTime }}</p>
                 </header>
                 <div class="content-main">
                     <article class="article">
                         <div class="article-header-main">
                             <div class="article-header-text-main">
-                                <p class="article-content-main">본문본문본문<br>
-                                    각각의 글의 상세 페이지는 이런 느낌이네요!</p>
+                                <p class="article-content-main">{{ article.getContent }}</p>
                             </div>
                         </div>
                     </article>
