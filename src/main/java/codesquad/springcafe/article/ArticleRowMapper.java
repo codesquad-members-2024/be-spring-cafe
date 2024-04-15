@@ -8,12 +8,12 @@ public class ArticleRowMapper implements RowMapper<Article> {
 
     @Override
     public Article mapRow(ResultSet resultSet, int i) throws SQLException {
-        Article article = new Article();
-        article.setArticleId(resultSet.getLong("articleId"));
-        article.setAuthor(resultSet.getString("author"));
-        article.setTitle(resultSet.getString("title"));
-        article.setContents(resultSet.getString("contents"));
-        return article;
+        return new ArticleBuilder()
+            .articleId(resultSet.getLong("articleId"))
+            .author(resultSet.getString("author"))
+            .title(resultSet.getString("title"))
+            .contents(resultSet.getString("contents"))
+            .build();
     }
 
 }
