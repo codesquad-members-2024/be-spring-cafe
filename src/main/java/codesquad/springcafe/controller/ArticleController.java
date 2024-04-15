@@ -27,7 +27,8 @@ public class ArticleController {
 
     @PostMapping
     public String writeQuestion(@ModelAttribute ArticleRequestDto articleRequestDto) {
-        articleRepository.save(articleRequestDto);
+        Article article = new Article(articleRequestDto);
+        articleRepository.save(article);
         return "redirect:/";
     }
 

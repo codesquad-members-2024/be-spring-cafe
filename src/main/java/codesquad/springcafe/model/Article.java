@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 
 public class Article {
 
-    private final Long articleId;
+    private Long articleId;
     private final String writer;
     private final String title;
     private final String contents;
@@ -25,6 +25,14 @@ public class Article {
 
     public Article(long articleId, ArticleRequestDto articleRequestDto) {
         this(articleId, articleRequestDto.getWriter(), articleRequestDto.getTitle(), articleRequestDto.getContents());
+    }
+
+    public Article(ArticleRequestDto articleRequestDto) {
+        this.writer = articleRequestDto.getWriter();
+        this.title = articleRequestDto.getTitle();
+        this.contents = articleRequestDto.getContents();
+        this.localDateTime = LocalDateTime.now();
+        this.hits = 0;
     }
 
     public Long getArticleId() {
@@ -49,6 +57,10 @@ public class Article {
 
     public int getHits() {
         return hits;
+    }
+
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
     }
 
     public void increaseHits() {
