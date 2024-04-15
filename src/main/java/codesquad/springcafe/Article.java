@@ -1,11 +1,15 @@
 package codesquad.springcafe;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Article {
 
     private final String writer;
     private String title;
     private String content;
     private final Long articleId;
+    private final LocalDateTime createdTime;
     private static Long idCounter = 0L;
 
     public Article(String writer, String title, String content) {
@@ -13,6 +17,7 @@ public class Article {
         this.title = title;
         this.content = content;
         this.articleId = ++idCounter;
+        this.createdTime = LocalDateTime.now();
     }
 
     public String getWriter() {
@@ -42,6 +47,11 @@ public class Article {
 
     public Long getArticleId() {
         return articleId;
+    }
+
+    public String getFormattedTime() {
+        String formattedTime = this.createdTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
+        return formattedTime;
     }
 
     @Override
