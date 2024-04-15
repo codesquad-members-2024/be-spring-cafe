@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ArticleRepositoryTest {
+class ArticleMemoryRepositoryTest {
 
-    ArticleRepository articleRepository = new ArticleRepository();
+    ArticleRepository articleRepository = new ArticleMemoryRepository();
 
     @BeforeEach
     void init() {
@@ -21,7 +21,7 @@ class ArticleRepositoryTest {
     @DisplayName("게시글을 저장할 수 있다.")
     void saveArticle() {
         ArticleRequestDto articleRequestDto = new ArticleRequestDto("cori", "안녕하세요.", "오늘은 4월 11일 입니다.");
-        Long articleId = articleRepository.save(articleRequestDto);
+        Long articleId = articleRepository.save(new Article(articleRequestDto));
 
         Article findArticle = articleRepository.findById(articleId);
 
