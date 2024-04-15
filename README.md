@@ -99,7 +99,15 @@
 ![img_2.png](readme/article/img7.png)
 
 ---
+# EC2 인스턴스에서 서버 동작
+> http://3.34.194.184:8080/
+>   - 인스턴스 종료 [04.15]
 
+![img.png](readme/img.png)
+
+
+
+---
 # 구현한 기능
 
 ## Mustache를 사용하여 중복 html 제거
@@ -200,3 +208,20 @@ public class MvcConfig implements WebMvcConfigurer {
 ### 사용자의 비밀번호가 틀린 경우 : ```PasswordMisMatchException```
 
 ---
+
+## DB 모델링
+
+![img.png](docs/img/img_3.png)
+
+- Article 객체의 userId는 FK로, User 객체의 userId를 참조합니다.
+- 위와 같이 구성을 하여서, Article을 작성하려면 **무조건** userId가 있어야 합니다.
+  - 따라서, USER 테이블에 User row를 하나 추가하여 구현하였습니다.
+
+> 위와 같이 구현한 이유는, 로그인을 해야만 게시글을 쓸 수 있는 기능을 구현하고 싶어서 FK를 가지도록 구현하였습니다.
+> 
+> 그러다보니, User가 없는 경우에는 Article이 생성되지 않는 문제가 있어 User 를 하나 추가하여 구현하였습니다.
+
+
+---
+
+
