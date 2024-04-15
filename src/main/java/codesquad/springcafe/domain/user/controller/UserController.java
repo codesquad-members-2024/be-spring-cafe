@@ -1,9 +1,6 @@
 package codesquad.springcafe.domain.user.controller;
 
-import codesquad.springcafe.domain.user.data.UserResponse;
-import codesquad.springcafe.domain.user.data.UserJoinRequest;
-import codesquad.springcafe.domain.user.data.UserListResponse;
-import codesquad.springcafe.domain.user.data.UserLoginRequest;
+import codesquad.springcafe.domain.user.data.*;
 import codesquad.springcafe.domain.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -95,19 +92,33 @@ public class UserController {
         return "user/profile";
     }
 
-    // 회원 수정 페이지 접근
-    @GetMapping("/profile/{loginId}/edit")
+    // 내 프로필 수정 페이지 접근
+    @GetMapping("/profile/my/edit")
     public String getProfileEditForm(HttpSession httpSession,
-                                     @PathVariable("loginId") String loginId,
                                      Model model) {
         Object userId = httpSession.getAttribute("userId");
         if (userId == null) {
             throw new IllegalStateException("인증이 필요한 요청입니다.");
         }
 
-        UserResponse userEditInfo = userService.getUserEditInfo((Long) userId, loginId);
-        model.addAttribute("user", userEditInfo);
+        UserResponse userInfo = userService.getMyProfile((Long) userId);
+        model.addAttribute("user", userInfo);
 
         return "/user/edit_form";
+    }
+
+    // 내 프로필 수정 (이름, 이메일만 수정 가능)
+    @PutMapping("/profile/my/edit")
+    public String updateMyProfile(HttpSession httpSession,
+                                 @Valid @ModelAttribute UserUpdateRequest userUpdateRequest,
+                                 Model model) {
+        Object userId = httpSession.getAttribute("userId");
+        if (userId == null) {
+            throw new IllegalStateException("인증이 필요한 요청입니다.");
+        }
+
+        userService.updateMyProfile((Long) userId, userUpdateRequest);
+
+        return "redirect:/profile/my";
     }
 }

@@ -1,9 +1,6 @@
 package codesquad.springcafe.domain.user.service;
 
-import codesquad.springcafe.domain.user.data.UserResponse;
-import codesquad.springcafe.domain.user.data.UserJoinRequest;
-import codesquad.springcafe.domain.user.data.UserListResponse;
-import codesquad.springcafe.domain.user.data.UserLoginRequest;
+import codesquad.springcafe.domain.user.data.*;
 import codesquad.springcafe.domain.user.model.User;
 import codesquad.springcafe.domain.user.model.UserRepository;
 import codesquad.springcafe.global.security.PasswordEncoder;
@@ -100,12 +97,11 @@ public class UserService {
         return new UserResponse(user.getLoginId(), user.getEmail(), user.getName(), DateUtils.convertCreatedAt(user.getCreatedAt()));
     }
 
-    // 프로필 수정 접근
-    public UserResponse getUserEditInfo(Long userId, String loginId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
-        if (!user.getLoginId().equals(loginId)) {
-            throw new IllegalStateException("접근 권한이 없습니다.");
-        }
-        return new UserResponse(user.getLoginId(), user.getEmail(), user.getName(), DateUtils.convertCreatedAt(user.getCreatedAt()));
+    // 내 프로필 수정
+    public void updateMyProfile(Long userId, UserUpdateRequest userUpdateRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+
+        user.update(userUpdateRequest.getName(), userUpdateRequest.getEmail());
     }
 }

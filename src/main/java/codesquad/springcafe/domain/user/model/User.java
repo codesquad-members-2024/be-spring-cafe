@@ -44,4 +44,9 @@ public class User extends BaseTime {
     public String getPassword() {
         return password;
     }
+
+    public void update(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
 }

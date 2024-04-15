@@ -56,6 +56,7 @@ class UserControllerTest {
     void testPostUser() throws Exception {
         //given
         final String url = "/users";
+        final String userId = "hong";
         final String email = "hong@gmail.com";
         final String name = "hong";
         final String password = "1234";
@@ -63,6 +64,7 @@ class UserControllerTest {
         //when
         final ResultActions result = mockMvc.perform(
                 post(url).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("userId", userId)
                         .param("email", email)
                         .param("name", name)
                         .param("password", password)); // POST
@@ -72,6 +74,7 @@ class UserControllerTest {
                 .andExpect(content().contentType(MediaType.TEXT_HTML))
                 .andExpect(view().name("/user/registration_success"))
                 .andExpect(model().attribute("user", allOf( // userJoinData에는 getPwd가 없다. email, name만 확인
+                        hasProperty("userId", equalTo(userId)),
                         hasProperty("email", equalTo(email)),
                         hasProperty("name", equalTo(name))
                 )));
@@ -83,9 +86,9 @@ class UserControllerTest {
         //given
         final String url = "/users";
         List<User> userList = Arrays.asList(
-                new User("홍길동", "hong@gmail.com", "1234", LocalDateTime.now(), LocalDateTime.now()),
-                new User("임꺽정", "lim@gmail.com", "5678", LocalDateTime.now(), LocalDateTime.now()),
-                new User("신사임당", "shin@gmail.com", "9012", LocalDateTime.now(), LocalDateTime.now())
+                new User("hong", "홍길동", "hong@gmail.com", "1234", LocalDateTime.now(), LocalDateTime.now()),
+                new User("lim","임꺽정", "lim@gmail.com", "5678", LocalDateTime.now(), LocalDateTime.now()),
+                new User("shin","신사임당", "shin@gmail.com", "9012", LocalDateTime.now(), LocalDateTime.now())
         );
         userList.forEach(user -> userRepository.save(user));
 
@@ -101,6 +104,7 @@ class UserControllerTest {
                         userList.stream().map(user ->
                                 allOf(
                                         hasProperty("id", equalTo(user.getId())),
+                                        hasProperty("loginId", equalTo(user.getLoginId())),
                                         hasProperty("name", equalTo(user.getName())),
                                         hasProperty("email", equalTo(user.getEmail()))
                                 )
@@ -113,7 +117,7 @@ class UserControllerTest {
     void testGetUserProfile() throws Exception {
         //given
         final String url = "/users/{userId}";
-        User user = new User("hong", "hong@gmail.com", "1234", LocalDateTime.now(), LocalDateTime.now());
+        User user = new User("hong", "hong", "hong@gmail.com", "1234", LocalDateTime.now(), LocalDateTime.now());
         Long userSavedId = userRepository.save(user).getId();
 
         //when
