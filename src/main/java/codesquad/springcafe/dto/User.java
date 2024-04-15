@@ -1,7 +1,7 @@
 package codesquad.springcafe.dto;
 
 public class User {
-    private Long id;
+    private Long id; // 자동 생성
     private String userId;
     private String password;
     private String name;
