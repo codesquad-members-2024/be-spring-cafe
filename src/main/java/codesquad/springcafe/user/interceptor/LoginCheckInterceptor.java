@@ -16,6 +16,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
         SimpleUserInfo loginUser = (SimpleUserInfo) session.getAttribute("loginUser");
         if (loginUser == null) {
+            session.setAttribute("toGo", request.getRequestURI());
             response.sendRedirect("/user/login");
             return false;
         }

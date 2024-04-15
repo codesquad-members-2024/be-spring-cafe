@@ -35,9 +35,10 @@ public class UserController {
                         HttpServletRequest request,
                         Model model) {
 
+
+        HttpSession session = request.getSession();
         SimpleUserInfo userInfo;
         if ((userInfo = userService.login(id, password)) != null) {
-            HttpSession session = request.getSession();
             session.setAttribute("loginUser", userInfo);
             session.setMaxInactiveInterval(60 * 30);
 
@@ -47,6 +48,11 @@ public class UserController {
             return "user/login";
         }
 
+        String toGoURL;
+        if((toGoURL = (String) session.getAttribute("toGo")) != null){
+            session.removeAttribute("toGo");
+            return "redirect:" + toGoURL;
+        }
         return "redirect:/";
     }
 
