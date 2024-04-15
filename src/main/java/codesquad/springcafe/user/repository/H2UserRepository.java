@@ -4,10 +4,12 @@ import codesquad.springcafe.user.DTO.UserListRes;
 import codesquad.springcafe.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,59 +18,39 @@ import java.util.List;
 public class H2UserRepository implements UserRepository {
     private final String FIND_ALL_USER = "SELECT * FROM USERS";
     private final String FIND_BY_ID_USER = "SELECT * FROM USERS WHERE UserId = ?";
-    private final String UPDATE_USER = "UPDATE Users SET email = ?, name = ? WHERE userId = ?;";
+    private final String UPDATE_USER = "UPDATE Users SET name = ?, email = ?, password = ? WHERE userId = ?;";
     private final String ADD_USER = "INSERT INTO Users (userId, password, name, email) VALUES (?, ?, ?, ?);";
 
-    private final DataSource dataSource;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public H2UserRepository(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public H2UserRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public void addUser(User user) throws IllegalArgumentException {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement query = connection.prepareStatement(ADD_USER)) {
-            query.setString(1, user.getUserId());
-            query.setString(2, user.getPassword());
-            query.setString(3, user.getName());
-            query.setString(4, user.getEmail());
+        try {
+            String[] args = new String[]{user.getUserId(), user.getPassword(), user.getName(), user.getEmail()};
+            int[] pramTypes = new int[]{Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR};
+            jdbcTemplate.update(ADD_USER, args, pramTypes);
 
-            query.executeUpdate();
-        } catch (SQLIntegrityConstraintViolationException alreadyExistsId) {
+        } catch (DuplicateKeyException alreadyExistsId) {
             throw new IllegalArgumentException(alreadyExistsId);
-
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(this.getClass() + ": addUser : " + e.getMessage());
         }
     }
 
     @Override
     public void update(User user) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement query = connection.prepareStatement(UPDATE_USER)) {
-            query.setString(1, user.getEmail());
-            query.setString(2, user.getName());
-            query.setString(3, user.getUserId());
-
-            query.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(this.getClass() + ": update : " + e.getMessage());
-        }
+        jdbcTemplate.update(UPDATE_USER, user.getName(), user.getEmail(), user.getPassword(), user.getUserId());
     }
 
     @Override
     public User findUserById(String id) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement query = connection.prepareStatement(FIND_BY_ID_USER)) {
-            query.setString(1, id);
-            try (ResultSet resultSet = query.executeQuery()) {
-                List<User> users = rowToUser(resultSet);
-                return users.get(0);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(this.getClass() + ": findByUserId : " + e.getMessage());
+        try {
+            String[] args = new String[]{id};
+            int[] pramTypes = new int[]{Types.VARCHAR};
+            return jdbcTemplate.query(FIND_BY_ID_USER, args, pramTypes, userRowMapper()).get(0);
         } catch (IndexOutOfBoundsException userNotFound) {
             return null;
         }
@@ -76,15 +58,7 @@ public class H2UserRepository implements UserRepository {
 
     @Override
     public List<UserListRes> findAll() {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement query = connection.prepareStatement(FIND_ALL_USER)) {
-            try (ResultSet resultSet = query.executeQuery()) {
-                List<User> users = rowToUser(resultSet);
-                return getUserList(users);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(this.getClass() + ": findAll: " + e.getMessage());
-        }
+        return getUserList(jdbcTemplate.query(FIND_ALL_USER, userRowMapper()));
     }
 
     private List<UserListRes> getUserList(List<User> users) {
@@ -98,15 +72,12 @@ public class H2UserRepository implements UserRepository {
         return userListRes;
     }
 
-    private List<User> rowToUser(ResultSet resultSet) throws SQLException {
-        List<User> users = new ArrayList<>();
+    private RowMapper<User> userRowMapper() {
+        return (rs, rowNum) -> new User(
+                rs.getString("userId"),
+                rs.getString("password"),
+                rs.getString("name"),
+                rs.getString("email"));
 
-        while (resultSet.next()) {
-            users.add(new User(resultSet.getString("userId"),
-                    resultSet.getString("password"),
-                    resultSet.getString("name"),
-                    resultSet.getString("email")));
-        }
-        return users;
     }
 }
