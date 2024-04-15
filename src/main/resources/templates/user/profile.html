@@ -2,7 +2,7 @@
 <html lang="kr">
 <head>
     {{> /repeatedHtml/head_data}}
-    <![endif]-->
+    <!--[if IE 9]><link href="/css/ie9.css" rel="stylesheet"><![endif]-->
     <link href="/css/index.css" rel="stylesheet">
 
     <style>
@@ -21,8 +21,7 @@
             padding: 20px;
             margin: 50px auto;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
+            text-align: center;
         }
 
         .profile-img {
@@ -34,20 +33,40 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
-        .profile-info {
-            margin-left: 20px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
         }
 
-        p {
-            margin: 8px 0;
-            font-size: 16px;
-            color: #333;
+        table td {
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd; /* 가로 줄만 표시 */
         }
 
-        span {
+        table td:first-child {
             font-weight: bold;
-            color: #ff6600;
+            color: black; /* 검은색 */
+            width: 120px; /* 첫 번째 열의 너비를 고정 */
         }
+
+        .btn-edit-profile {
+            background-color: #4caf50; /* 녹색 */
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            margin: auto;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .btn-edit-profile:hover {
+            background-color: #45a049;
+        }
+
     </style>
 </head>
 <body>
@@ -64,12 +83,25 @@
 
     <div class="profile-container">
         <img class="profile-img" src="/images/user.png" alt="프로필 사진">
-        <div class="profile-info">
-            <p>Nickname: <span id="nickname">{{ user.getNickname }}</span></p>
-            <p>User ID: <span id="userId">{{ user.getUserId }}</span></p>
-            <p>Email: <span id="email">{{ user.getEmail }}</span></p>
-        </div>
+        <table>
+            <tbody>
+            <tr>
+                <td>Nickname</td>
+                <td>{{ nickname }}</td>
+            </tr>
+            <tr>
+                <td>User ID</td>
+                <td>{{ userId }}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>{{ email }}</td>
+            </tr>
+            </tbody>
+        </table>
+        <a class="btn-edit-profile" href="/users/update/{{userId}}" role="button">프로필 수정</a>
     </div>
+
 
 </div>
 </body>
