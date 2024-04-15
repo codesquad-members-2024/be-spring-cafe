@@ -1,19 +1,36 @@
-# Read Me First
-The following was discovered as part of building this project:
+## URL 컨벤션
+| URL             | 기능            |
+|-----------------|---------------|
+| GET /user/:id/form | 유저 정보 수정 form |
+| POST /user/:id  | 유저 정보 수정      |
+| GET /qna/:id    | 글 상세 조회       |
+| POST /qna      | 질문 글 등록       |
 
-* The original package name 'codesquad.spring-cafe' is invalid and this project uses 'codesquad.springcafe' instead.
 
-# Getting Started
 
-### Reference Documentation
-For further reference, please consider the following sections:
+### Nav의 `개인정보 수정` 버튼
 
-* [Official Gradle documentation](https://docs.gradle.org)
-* [Spring Boot Gradle Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/3.2.4/gradle-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/3.2.4/gradle-plugin/reference/html/#build-image)
+- 상단의 `개인정보 수정` 버튼을 누르면 로그인 된 계정의 정보 수정 페이지로 이동시킴
+- 로그인 상태가 아니라면 로그인으로 리다이렉트
+  - Interceptor 사용하여 /user 요청에 대해서는 로그인 여부를 확인하도록 함
+  
+| URL               | 기능                  |
+|-------------------|---------------------|
+| POST /user/login  | 로그인                 |
+| GET /user/update  | 로그인 된 계정의 정보 수정 페이지 |
+| POST /user/logout | 로그아웃                |
 
-### Additional Links
-These additional references should also help you:
 
-* [Gradle Build Scans – insights for your project's build](https://scans.gradle.com#gradle)
+### `글쓴이 이름` 클릭시 프로필 페이지로 이동 
+
+- 글 목록이나 상세 페이지를 렌더링하기 위해 글쓴이 닉네임만을 전달하고 있음
+- 유저 프로필 페이지는 유저 ID로 접근할 수 있기 때문에 별도의 정보가 필요
+
+
+### 글 수정 / 삭제 기능
+
+### 댓글 기능 구현
+
+
+
 

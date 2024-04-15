@@ -17,6 +17,10 @@ public class User {
         return userId;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public String getName() {
         return name;
     }
@@ -25,7 +29,7 @@ public class User {
         return email;
     }
 
-    public boolean isCorrectPassword(String password){
+    public boolean isCorrectPassword(String password) {
         return this.password.equals(password);
     }
 

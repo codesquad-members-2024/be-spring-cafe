@@ -7,9 +7,17 @@ spring:
     servlet:
       cache: false
 
+  datasource:
+    url: 'jdbc:h2:tcp://localhost/~/springcafe'
+    driver-class-name: 'org.h2.Driver'
+    username: 'sa'
+    password: ''
+
 server:
   servlet:
     encoding:
       charset: UTF-8
       enabled: true
       force: true
+
+
