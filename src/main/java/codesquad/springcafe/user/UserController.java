@@ -60,7 +60,7 @@ public class UserController {
         if (foundUser.checkPassword(userUpdateDto.getPassword())) {
             User updatedUser = new User(userId, userUpdateDto.getEmail(),
                 userUpdateDto.getNickname(), userUpdateDto.getPassword());
-            userDatabase.updateUser(updatedUser, userId);
+            userDatabase.update(updatedUser, userId);
         } else {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }

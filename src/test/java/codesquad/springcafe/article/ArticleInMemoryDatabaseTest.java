@@ -23,9 +23,9 @@ class ArticleInMemoryDatabaseTest {
     @DisplayName("ArticleDatabase에 게시글이 잘 저장되는지 테스트")
     void saveArticle() {
         Article article = new ArticleBuilder().articleId(1).author("jayden").title("제목")
-            .content("내용").build();
+            .contents("내용").build();
 
-        articleInMemoryDatabase.saveArticle(article);
+        articleInMemoryDatabase.save(article);
         assertThat(articleInMemoryDatabase.findAll()).hasSize(1);
     }
 
@@ -34,9 +34,9 @@ class ArticleInMemoryDatabaseTest {
     void testFindAllArticles() {
 
         Article article = new ArticleBuilder().articleId(1).author("jayden").title("제목")
-            .content("내용").build();
+            .contents("내용").build();
 
-        articleInMemoryDatabase.saveArticle(article);
+        articleInMemoryDatabase.save(article);
         assertThat(articleInMemoryDatabase.findAll()).hasSize(1);
     }
 }
