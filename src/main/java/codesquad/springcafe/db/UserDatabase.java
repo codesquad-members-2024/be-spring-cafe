@@ -28,4 +28,8 @@ public class UserDatabase {
     public static void clearDatabase(){
         userDatabase.clear();
     }
+
+    public static int getTotalUserNumber(){
+        return userDatabase.size();
+    }
 }

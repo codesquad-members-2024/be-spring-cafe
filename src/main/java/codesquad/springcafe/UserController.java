@@ -24,6 +24,7 @@ public class UserController {
     public String userList(Model model){
         List<User> users = UserDatabase.findAllUsers();
         model.addAttribute("users", users);
+        model.addAttribute("totalUserNumber", UserDatabase.getTotalUserNumber());
         return "users/list";
     }
 
