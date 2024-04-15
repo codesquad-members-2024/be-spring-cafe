@@ -1,12 +1,14 @@
 package codesquad.springcafe.domain;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Article {
     private String writer;
     private String title;
     private String content;
     private LocalDateTime time;
+    private String formattedTime;
     private String id;
 
 
@@ -15,6 +17,12 @@ public class Article {
         this.title = title;
         this.content = content;
         this.time = LocalDateTime.now();
+        setFormattedTime();
+    }
+
+    public void setFormattedTime(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        this.formattedTime = time.format(formatter);
     }
 
     public String getWriter(){
@@ -33,6 +41,11 @@ public class Article {
         return time;
     }
 
+    public String getFormattedTime(){
+        return formattedTime;
+    }
+
+
     public String getId(){
         return id;
     }
@@ -44,7 +57,7 @@ public class Article {
 
     @Override
     public String toString() {
-        return "[" + "id" + "] " + "writer: " + writer + ", title: " + title + ", content: " + content;
+        return "[id:" + id + "] " + "writer: " + writer + ", title: " + title + ", content: " + content;
     }
     
 }

@@ -16,12 +16,16 @@ public class ArticleDatabase {
         return articles;
     }
 
+    public static Article getArticleById(int id) {
+        return articles.get(id-1);
+    }
+
     public static int getArticleSize() {
         return articles.size();
     }
 
-//    public static Article getArticle(int index) {
-//        return articles.get(index - 1);
-//    }
+    public static boolean isArticleEmpty(){
+        return articles.isEmpty();
+    }
 
 }
