@@ -125,11 +125,11 @@ public class UserController {
             return "user/update";
         }
 
-        user.update(userEditForm.getNickname(), userEditForm.getNewPassword());
-        userDatabase.update(user);
+        User updateUser = user.update(userEditForm.getNickname(), userEditForm.getNewPassword());
+        userDatabase.update(updateUser);
 
-        logger.info("유저정보가 업데이트 되었습니다. {}", user);
-        String newNickname = user.getNickname(); // 유저 닉네임이 수정될 경우를 반영
+        logger.info("유저정보가 업데이트 되었습니다. {}", updateUser);
+        String newNickname = updateUser.getNickname(); // 유저 닉네임이 수정될 경우를 반영
         return "redirect:/users/profile/" + URLEncoder.encode(newNickname, StandardCharsets.UTF_8);
     }
 

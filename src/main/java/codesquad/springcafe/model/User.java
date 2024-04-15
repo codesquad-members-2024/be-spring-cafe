@@ -25,9 +25,11 @@ public class User {
         return this.password.equals(password);
     }
 
-    public void update(String nickname, String password) {
-        this.nickname = nickname;
-        this.password = password;
+    public User update(String nickname, String password) {
+        User updateUser = new User(email, nickname, password);
+        updateUser.setJoinDate(joinDate);
+        updateUser.setId(id);
+        return updateUser;
     }
 
     public String getEmail() {
