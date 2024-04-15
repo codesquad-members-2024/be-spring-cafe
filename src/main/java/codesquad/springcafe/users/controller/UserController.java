@@ -73,7 +73,7 @@ public class UserController {
             UserPreviewDto userPreviewDto = userService.findUserById(userId);
             model.addAttribute("user", userPreviewDto);
             model.addAttribute("error", true);
-            return "/user/updateForm";
+            return "user/updateForm";
         }
         return "redirect:/users";
     }
