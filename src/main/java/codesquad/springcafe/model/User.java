@@ -1,4 +1,4 @@
-package codesquad.springcafe;
+package codesquad.springcafe.model;
 
 public class User {
 
