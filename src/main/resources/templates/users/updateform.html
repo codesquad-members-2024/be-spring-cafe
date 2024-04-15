@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}"></head>
+<body>
+<nav class="navbar navbar-fixed-top header" th:replace="~{fragments/headernav :: headernav}"></nav>
+<div class="navbar navbar-default" id="subnav" th:replace="~{fragments/subnav :: subnav}"></div>
+<div class="container" id="main">
+   <div class="col-md-6 col-md-offset-3">
+      <div class="panel panel-default content-main">
+          <form name="question" th:method="post" th:action="@{/users/{userId}/update(userId=${user.getUserId()})}" th:object="${user}">
+              <input type="hidden" name="_method" value="PUT" />
+              <div class="form-group">
+                  <label for="userId">변경할 유저</label>
+                  <a id="userId" th:text="${user.userId}"></a>
+              </div>
+              <div class="form-group">
+                  <label for="currentPassword">현재 비밀번호</label>
+                  <input type="password" class="form-control" id="currentPassword" name="currentPassword" placeholder="현재 비밀번호" required>
+              </div>
+              <div th:if="${error}">
+                  <div class="alert alert-danger" role="alert">
+                      비밀번호가 맞지 않습니다.
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label for="password">새 비밀번호</label>
+                  <input type="password" class="form-control" id="password" name="password" placeholder="Password" th:field="*{password}" required>
+              </div>
+              <div class="form-group">
+                  <label for="name">이름 변경</label>
+                  <input class="form-control" id="name" name="name" placeholder="Name" th:field="*{name}" required>
+              </div>
+              <div class="form-group">
+                  <label for="email">이메일 변경</label>
+                  <input type="email" class="form-control" id="email" name="email" placeholder="Email" th:field="*{email}" required>
+              </div>
+              <button type="submit" class="btn btn-success clearfix pull-right">변경</button>
+              <div class="clearfix" />
+          </form>
+        </div>
+    </div>
+</div>
+
+<!-- script references -->
+<script src="../js/jquery-2.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/scripts.js"></script>
+	</body>
+</html>
