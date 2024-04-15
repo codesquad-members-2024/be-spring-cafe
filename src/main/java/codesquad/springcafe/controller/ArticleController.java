@@ -1,9 +1,10 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.DB.Database;
-import codesquad.springcafe.domain.Article;
+import codesquad.springcafe.DB.H2Database;
+import codesquad.springcafe.dto.ArticleDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class ArticleController {
     private final Logger logger = LoggerFactory.getLogger(ArticleController.class);
+    private final H2Database h2Database;
+
+    @Autowired
+    public ArticleController(H2Database h2Database) {
+        this.h2Database = h2Database;
+    }
 
     @GetMapping("/qna")
     public String showForm() {
@@ -20,16 +27,14 @@ public class ArticleController {
     }
 
     @PostMapping("/qna")
-    public String register(Article article) {
-        Database.addArticle(article);
-        article.setId(Database.articlesSize());
-        logger.debug("new article: " + article);
+    public String register(ArticleDto articleDto) {
+        h2Database.addArticle(articleDto);
         return "redirect:/";
     }
 
     @GetMapping("/article/{articleId}")
     public String showArticle(Model model, @PathVariable("articleId") String articleId) {
-        model.addAttribute("article", Database.getArticle(Integer.parseInt(articleId)));
+        model.addAttribute("article", h2Database.getArticle(Long.parseLong(articleId)));
         return "qna/show";
     }
 }
