@@ -4,9 +4,11 @@ import codesquad.springcafe.database.article.ArticleDatabase;
 import codesquad.springcafe.database.article.ArticleH2Database;
 import codesquad.springcafe.database.user.UserDatabase;
 import codesquad.springcafe.database.user.UserH2Database;
+import codesquad.springcafe.interceptor.LoginInterceptor;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -18,6 +20,14 @@ public class WebConfig implements WebMvcConfigurer {
 
     public WebConfig(DataSource dataSource) {
         this.dataSource = dataSource;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new LoginInterceptor())
+                .order(1)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/", "/users/add", "/login", "/images/**", "/css/**", "/*.ico", "/error");
     }
 
     /**

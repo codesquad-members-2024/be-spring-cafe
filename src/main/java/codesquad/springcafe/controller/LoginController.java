@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class LoginController {
@@ -34,7 +35,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(@Validated @ModelAttribute LoginForm loginForm, BindingResult bindingResult,
-                        HttpSession session) {
+                        HttpSession session, @RequestParam(defaultValue = "/") String redirectUrl) {
         Optional<User> optionalUser = userDatabase.findByEmail(loginForm.getEmail());
         validateLoginInfo(loginForm.getPassword(), bindingResult, optionalUser);
 
@@ -43,9 +44,10 @@ public class LoginController {
             return "user/login";
         }
         User loginUser = optionalUser.get();
+
         session.setAttribute(LOGIN_SESSION_NAME, loginUser);
         logger.info("{} 님이 로그인하셨습니다", loginUser.getNickname());
-        return "redirect:/";
+        return "redirect:" + redirectUrl;
     }
 
     private void validateLoginInfo(String password, BindingResult bindingResult, Optional<User> optionalUser) {
