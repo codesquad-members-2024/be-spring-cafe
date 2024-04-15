@@ -28,6 +28,6 @@ public class MainController {
         model.addAttribute("articlePreviews", articlePreviews);
         model.addAttribute("totalArticles", articlePreviews.size());
 
-        return "/main/index";
+        return "main/index";
     }
 }

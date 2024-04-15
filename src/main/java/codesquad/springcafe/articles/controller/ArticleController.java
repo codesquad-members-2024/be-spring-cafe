@@ -35,6 +35,6 @@ public class ArticleController {
 
         model.addAttribute("articleContent", articleContent);
 
-        return "/article/show";
+        return "article/show";
     }
 }

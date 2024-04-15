@@ -15,12 +15,12 @@ public class ExceptionController {
     @ExceptionHandler(UserNotFoundException.class)
     public String handleUserNotFoundException(UserNotFoundException e) {
         logger.error(e.getClass().getSimpleName() + " : " + e.getMessage());
-        return "/error/404page";
+        return "error/404page";
     }
 
     @ExceptionHandler(ArticleNotFoundException.class)
     public String handleArticleNotFoundException(ArticleNotFoundException e) {
         logger.error(e.getClass().getSimpleName() + " : " + e.getMessage());
-        return "/error/404page";
+        return "error/404page";
     }
 }
