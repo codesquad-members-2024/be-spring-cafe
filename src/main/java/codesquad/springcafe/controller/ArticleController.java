@@ -1,7 +1,6 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.DB.ArticleDatabase;
-import codesquad.springcafe.DB.UserDatabase;
 import codesquad.springcafe.domain.Article;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
