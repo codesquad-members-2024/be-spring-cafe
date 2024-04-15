@@ -18,6 +18,8 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-web:3.2.4' // 추가
+	implementation 'org.springframework.boot:spring-boot-starter-mustache' // Mustache 추가
 }
 
 tasks.named('test') {

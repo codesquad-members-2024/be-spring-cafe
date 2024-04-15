@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    {{> /repeatedHtml/head_data}}
+    <![endif]-->
+    <link href="/css/index.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .profile-container {
+            width: 450px;
+            border: 2px solid #ffcc00;
+            border-radius: 10px;
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 50px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #ffcc00;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-info {
+            margin-left: 20px;
+        }
+
+        p {
+            margin: 8px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        span {
+            font-weight: bold;
+            color: #ff6600;
+        }
+    </style>
+</head>
+<body>
+<div class="background">
+    <nav class="navbar navbar-fixed-top header">
+        <div class="col-md-12">
+            {{> /repeatedHtml/navbar_header}}
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active"><a href="/main">멤버 리스트</a></li>
+                {{> /repeatedHtml/basic_button}}
+            </ul>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <img class="profile-img" src="/images/user.png" alt="프로필 사진">
+        <div class="profile-info">
+            <p>Nickname: <span id="nickname">{{ user.getNickname }}</span></p>
+            <p>User ID: <span id="userId">{{ user.getUserId }}</span></p>
+            <p>Email: <span id="email">{{ user.getEmail }}</span></p>
+        </div>
+    </div>
+
+</div>
+</body>
+
+</html>
