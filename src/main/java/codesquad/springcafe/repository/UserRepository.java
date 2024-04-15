@@ -1,5 +1,6 @@
 package codesquad.springcafe.repository;
 
+import codesquad.springcafe.dto.UserUpdateDto;
 import codesquad.springcafe.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,7 @@ public class UserRepository {
 
     public void saveUser(User user) {
         users.put(user.getUserId(), user);
-        log.info("user saved: {}", user.getUserId());
+        log.debug("user saved: {}", user.getUserId());
     }
 
     public List<User> findAllUsers() {
@@ -33,4 +34,5 @@ public class UserRepository {
     public void clear() {
         users.clear();
     }
+
 }
