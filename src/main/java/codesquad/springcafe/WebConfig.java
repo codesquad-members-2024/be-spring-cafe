@@ -4,7 +4,7 @@ import codesquad.springcafe.database.article.ArticleDatabase;
 import codesquad.springcafe.database.article.ArticleH2Database;
 import codesquad.springcafe.database.user.UserDatabase;
 import codesquad.springcafe.database.user.UserH2Database;
-import codesquad.springcafe.interceptor.LoginInterceptor;
+import codesquad.springcafe.interceptor.LoginCheckInterceptor;
 import codesquad.springcafe.interceptor.UserProfileInterceptor;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
@@ -25,10 +25,11 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor())
+        registry.addInterceptor(new LoginCheckInterceptor())
                 .order(1)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/", "/users/add", "/login", "/logout", "/images/**", "/css/**", "/*.ico",
+                .excludePathPatterns("/", "/articles/detail/*", "/users/add", "/login", "/logout", "/images/**",
+                        "/css/**", "/*.ico",
                         "/error");
 
         registry.addInterceptor(new UserProfileInterceptor())
