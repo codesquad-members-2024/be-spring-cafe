@@ -11,7 +11,6 @@ public class Article {
     private String title;
     private String content;
     private int point;
-    private String authorId;
 
     public Article(int id, Timestamp createdAt, SimpleUserInfo simpleUserInfo, String title, String content, int point) {
         this.id = id;
@@ -44,10 +43,6 @@ public class Article {
 
     public int getPoint() {
         return point;
-    }
-
-    public String getAuthorId() {
-        return authorId;
     }
 
     @Override

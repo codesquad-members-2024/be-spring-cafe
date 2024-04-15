@@ -18,7 +18,6 @@ CREATE TABLE article(
     title VARCHAR(255),
     content TEXT,
     createdAt TIMESTAMP,
-    author VARCHAR(255),
     authorId VARCHAR(255),
     POINT INT
 );
@@ -30,7 +29,6 @@ CREATE TABLE comment(
     title VARCHAR(255),
     content TEXT,
     createdAt TIMESTAMP,
-    author VARCHAR(255),
     authorId VARCHAR(255)
 );
 
@@ -38,8 +36,8 @@ CREATE TABLE comment(
 
 ALTER TABLE USERS ADD CONSTRAINT unique_userid_name UNIQUE (USERID, NAME);
 -- article 테이블에 외래 키(FK) 및 ON DELETE CASCADE 설정
-ALTER TABLE article ADD CONSTRAINT fk_authorId FOREIGN KEY (authorId, AUTHOR) REFERENCES users (userId, name) ON DELETE CASCADE;
+ALTER TABLE article ADD CONSTRAINT fk_authorId FOREIGN KEY (authorId) REFERENCES users (userId) ON DELETE CASCADE;
 
 -- comment 테이블에 외래 키(FK) 및 ON DELETE CASCADE 설정
 ALTER TABLE comment ADD CONSTRAINT fk_articleId FOREIGN KEY (articleId) REFERENCES article (id) ON DELETE CASCADE;
-ALTER TABLE comment ADD CONSTRAINT fk_authorId_c FOREIGN KEY (authorId, AUTHOR) REFERENCES users (userId, NAME) ON DELETE CASCADE;
+ALTER TABLE comment ADD CONSTRAINT fk_authorId_c FOREIGN KEY (authorId) REFERENCES users (userId) ON DELETE CASCADE;

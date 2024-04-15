@@ -50,7 +50,7 @@ public class MemoryArticleRepository implements ArticleRepository {
 
     @Override
     public List<Article> findByUserId(String userId) {
-        return articles.values().stream().filter(a -> a.getAuthorId().equals(userId)).toList();
+        return articles.values().stream().filter(a -> a.getAuthor().id().equals(userId)).toList();
     }
 
     @Override

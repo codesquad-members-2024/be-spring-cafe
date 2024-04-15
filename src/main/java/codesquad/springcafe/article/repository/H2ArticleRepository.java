@@ -19,12 +19,14 @@ import static codesquad.springcafe.article.repository.ArticleConsts.DEFAULT_POIN
 @Primary
 public class H2ArticleRepository implements ArticleRepository {
 
-    private final String ADD_SQL = "INSERT INTO ARTICLE (CREATEDAT, AUTHOR, AUTHORID, TITLE, CONTENT, POINT) VALUES (?, ?, ?, ?, ?, ?);";
+    private final String ADD_SQL = "INSERT INTO ARTICLE (CREATEDAT, AUTHORID, TITLE, CONTENT, POINT) VALUES ( ?, ?, ?, ?, ?);";
     private final String FIND_BY_ID_SQL = "SELECT * FROM ARTICLE WHERE Id = ?";
     private final String FIND_BY_USER_SQL = "SELECT * FROM ARTICLE WHERE authorId = ?";
     private final String FIND_ALL_SQL = "SELECT * FROM article ORDER BY createdAt DESC;";
 
     private final String ADD_POINT_SQL = "UPDATE ARTICLE SET point = point + 1 WHERE id = ?;";
+
+    private final String GET_USER_NAME = "SELECT NAME FROM USERS WHERE USERID = ?";
     private final String DELETE_ALL = "DELETE FROM ARTICLE";
 
     private final DataSource dataSource;
@@ -41,11 +43,10 @@ public class H2ArticleRepository implements ArticleRepository {
              PreparedStatement query = connection.prepareStatement(ADD_SQL)) {
 
             query.setTimestamp(1, createdDateTime);
-            query.setString(2, simpleUserInfo.name());
-            query.setString(3, simpleUserInfo.id());
-            query.setString(4, articlePostReq.title());
-            query.setString(5, articlePostReq.content());
-            query.setInt(6, DEFAULT_POINT);
+            query.setString(2, simpleUserInfo.id());
+            query.setString(3, articlePostReq.title());
+            query.setString(4, articlePostReq.content());
+            query.setInt(5, DEFAULT_POINT);
 
             query.executeUpdate();
         } catch (SQLException e) {
@@ -124,12 +125,26 @@ public class H2ArticleRepository implements ArticleRepository {
             articles.add(new Article(
                     resultSet.getInt("id"),
                     resultSet.getTimestamp("createdAt"),
-                    new SimpleUserInfo(resultSet.getString("authorId"), resultSet.getString("author")),
+                    new SimpleUserInfo(resultSet.getString("authorId"), getUserName(resultSet.getString("authorId"))),
                     resultSet.getString("title"),
                     resultSet.getString("content"),
                     resultSet.getInt("point")
             ));
         }
         return articles;
+    }
+
+    private String getUserName(String id) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement query = connection.prepareStatement(GET_USER_NAME)) {
+            query.setString(1, id);
+            try (ResultSet resultSet = query.executeQuery()) {
+                if(resultSet.next()) return resultSet.getString("name");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(this.getClass() + ": getName : " + e.getMessage());
+        }
+
+        return null;
     }
 }

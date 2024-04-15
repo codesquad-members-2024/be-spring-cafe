@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public class H2CommentRepository implements CommentRepository {
 
-    private final String ADD_COMMENT = "INSERT INTO comment (ARTICLEID, CREATEDAT, AUTHOR, AUTHORID, CONTENT) VALUES (?, ?, ?, ?, ?);";
+    private final String ADD_COMMENT = "INSERT INTO comment (ARTICLEID, CREATEDAT, AUTHORID, CONTENT) VALUES (?, ?, ?, ?);";
     private final String FIND_BY_ARTICLE_ID = "SELECT * FROM comment WHERE ArticleId = ? ORDER BY createdAt DESC;";
     private final String FIND_BY_USER_ID = "SELECT * FROM comment WHERE AuthorId = ? ORDER BY createdAt DESC;";
 
@@ -34,9 +34,8 @@ public class H2CommentRepository implements CommentRepository {
 
             query.setInt(1, commentPostReq.articleId());
             query.setTimestamp(2, createdDateTime);
-            query.setString(3, simpleUserInfo.name());
-            query.setString(4, simpleUserInfo.id());
-            query.setString(5, commentPostReq.content());
+            query.setString(3, simpleUserInfo.id());
+            query.setString(4, commentPostReq.content());
 
             query.executeUpdate();
         } catch (SQLException e) {
@@ -79,11 +78,26 @@ public class H2CommentRepository implements CommentRepository {
                             resultSet.getInt("articleId"),
                             resultSet.getString("content"),
                             resultSet.getTimestamp("createdAt"),
-                            resultSet.getString("author"),
+                            getUserName(resultSet.getString("authorId")),
                             resultSet.getString("authorId")
                     )
             );
         }
         return comments;
+    }
+
+    private final String GET_USER_NAME = "SELECT NAME FROM USERS WHERE USERID = ?";
+    private String getUserName(String id) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement query = connection.prepareStatement(GET_USER_NAME)) {
+            query.setString(1, id);
+            try (ResultSet resultSet = query.executeQuery()) {
+                if (resultSet.next()) return resultSet.getString("name");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(this.getClass() + ": getName : " + e.getMessage());
+        }
+
+        return null;
     }
 }
