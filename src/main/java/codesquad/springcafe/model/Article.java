@@ -14,6 +14,15 @@ public class Article {
     private final LocalDateTime localDateTime;
     private int hits;
 
+    public Article(Long articleId, String writer, String title, String contents, LocalDateTime localDateTime, int hits) {
+        this.articleId = articleId;
+        this.writer = writer;
+        this.title = title;
+        this.contents = contents;
+        this.localDateTime = localDateTime;
+        this.hits = hits;
+    }
+
     public Article(Long articleId, String writer, String title, String contents) {
         this.articleId = articleId;
         this.writer = writer;
