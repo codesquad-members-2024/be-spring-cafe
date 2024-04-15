@@ -118,14 +118,15 @@ public class UserController {
         if (optionalUser.isEmpty()) {
             return "redirect:/users";
         }
-        User user = optionalUser.get();
-        validateUpdateForm(userEditForm, bindingResult, user);
+        User targetUser = optionalUser.get();
+
+        validateUpdateForm(userEditForm, bindingResult, targetUser);
         if (bindingResult.hasErrors()) {
             logger.error("errors={}", bindingResult);
             return "user/update";
         }
 
-        User updateUser = user.update(userEditForm.getNickname(), userEditForm.getNewPassword());
+        User updateUser = targetUser.update(userEditForm.getNickname(), userEditForm.getNewPassword());
         userDatabase.update(updateUser);
 
         logger.info("유저정보가 업데이트 되었습니다. {}", updateUser);

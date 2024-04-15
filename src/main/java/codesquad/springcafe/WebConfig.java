@@ -5,6 +5,7 @@ import codesquad.springcafe.database.article.ArticleH2Database;
 import codesquad.springcafe.database.user.UserDatabase;
 import codesquad.springcafe.database.user.UserH2Database;
 import codesquad.springcafe.interceptor.LoginInterceptor;
+import codesquad.springcafe.interceptor.UserProfileInterceptor;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +30,10 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/", "/users/add", "/login", "/logout", "/images/**", "/css/**", "/*.ico",
                         "/error");
+
+        registry.addInterceptor(new UserProfileInterceptor())
+                .order(2)
+                .addPathPatterns("/users/edit/*", "/users/profile/*");
     }
 
     /**
