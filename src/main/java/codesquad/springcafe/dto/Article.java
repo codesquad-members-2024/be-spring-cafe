@@ -30,4 +30,8 @@ public class Article {
     public String getContent() {
         return content;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

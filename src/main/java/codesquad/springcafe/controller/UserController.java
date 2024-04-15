@@ -34,14 +34,22 @@ public class UserController {
 
     // 회원 가입 양식
     @GetMapping("/signup")
-    public String showSignUpForm(Model model){
+    public String showSignUpForm(Model model){ // 뷰로 데이터 전달
         model.addAttribute("user", new User());
         return "users/form";
     }
 
     // 회원 가입 처리
     @PostMapping("/signup")
-    public String createUser(@ModelAttribute  User user, RedirectAttributes redirectAttributes){
+    public String createUser(@ModelAttribute  User user, RedirectAttributes redirectAttributes){ // 서버에서 폼 데이터 처리
+        User savedUser = userService.signup(user);
+        redirectAttributes.addAttribute("id", savedUser.getId());
+        return "redirect:/users/{id}";
+    }
+
+    // 회원 가입 처리
+    @PostMapping("/signup")
+    public String createUser2(@ModelAttribute User user, RedirectAttributes redirectAttributes){
         User savedUser = userService.signup(user);
         redirectAttributes.addAttribute("id", savedUser.getId());
         return "redirect:/users/{id}";
