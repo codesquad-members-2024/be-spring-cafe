@@ -1,14 +1,18 @@
 package codesquad.springcafe;
 
 public class Article {
-    private String writer;
+
+    private final String writer;
     private String title;
     private String content;
+    private final Long articleId;
+    private static Long idCounter = 0L;
 
     public Article(String writer, String title, String content) {
         this.writer = writer;
         this.title = title;
         this.content = content;
+        this.articleId = ++idCounter;
     }
 
     public String getWriter() {
@@ -36,8 +40,12 @@ public class Article {
         this.content = content;
     }
 
+    public Long getArticleId() {
+        return articleId;
+    }
+
     @Override
     public String toString() {
-        return "writer : " + writer + ", title : " + title + ", content : " + content;
+        return "articleId : " + articleId + ", writer : " + writer + ", title : " + title + ", content : " + content;
     }
 }
