@@ -57,7 +57,7 @@ public class UserController {
 
     @GetMapping("/join")
     public String getSignUpForm() {
-        return "/user/form";
+        return "user/form";
     }
 
     @GetMapping("/{userId}/form")
