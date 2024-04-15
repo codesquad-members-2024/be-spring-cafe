@@ -32,5 +32,6 @@ public class UserService {
         String userId = userUpdateDto.getUserId();
         User user = userRepository.findUserById(userId);
         user.update(userUpdateDto);
+        userRepository.update(user);
     }
 }

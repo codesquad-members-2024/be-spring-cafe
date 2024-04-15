@@ -2,6 +2,7 @@ package codesquad.springcafe.service;
 
 import codesquad.springcafe.dto.UserUpdateDto;
 import codesquad.springcafe.model.User;
+import codesquad.springcafe.repository.UserMemoryRepository;
 import codesquad.springcafe.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class UserServiceTest {
 
-    UserRepository userRepository = new UserRepository();
+    UserRepository userRepository = new UserMemoryRepository();
     UserService userService = new UserService(userRepository);
 
     @BeforeEach
