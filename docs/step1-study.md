@@ -1,0 +1,162 @@
+# step1
+> 스프링 카페 - 회원 가입 및 목록 조회 기능
+- 기능을 구현하며 공부했던 내용들을 정리합니다
+---
+## ModelAttribute 어노테이션의 동작 방식
+
+적절한 생성자를 찾아 바인딩할 객체를 생성하는데, 생성자 인수 이름과 요청 파라미터의 이름이 같다면 값을 바인딩한다
+- 빈 생성자라면, 인스턴스를 생성하고 setter 메서드를 통해 빈 속성을 바인딩
+- 모든 속성을 받는 생성자라면, 생성자 파라미터 이름을 통해 바인딩
+
+### 적절한 생성자를 찾는 법
+- 타겟 오브젝트 타입에서 사용 가능한 경우 인수가 없는 public 생성자를 사용하고, 다음과 같이 데이터 클래스에 대한 primary 생성자 접근 방식도 지원한다
+- JavaBeans의 ConstructorProperties 어노테이션과 바이트코드에 있는 런타임에 유지되는 매개변수명을 이해하며 입력 값을 이름으로 생성자 인수와 연결한다
+- 이런 생성자를 찾을 수 없는 경우 기본 생성자가 사용되고(public이 아니더라도), setter 메서드를 통한 후속 빈 속성 바인딩을 가정한다
+- 적절한 생성자를 찾는 로직은 BeanUtils의 getResolvableConstructor에 구현되어 있다
+    - 코틀린의 경우 primary 생성자를 찾는다
+    - 아닌 경우 public 생성자를 찾는다
+    - 하나라면 해당하는 생성자를, 없으면 public이 아닌 생성자가 하나라면 해당 생성자를 반환한다
+    - 위 조건에 모두 해당하지 않으면 여러 개 생성자들 중 기본 생성자를 반환하려고 한다
+
+### 어노테이션이 없어도 바인딩이 되나?
+```
+  @Override
+  public boolean supportsParameter(MethodParameter parameter) {
+      return (parameter.hasParameterAnnotation(ModelAttribute.class) ||
+              (this.annotationNotRequired && !BeanUtils.isSimpleProperty(parameter.getParameterType())));
+  }
+```
+- ModelAttribute 어노테이션이 없어도 파라미터 바인딩이 실행된다
+- 따라서 Controller 메서드에서 ModelAttribute 어노테이션이 생략되어도 해당 타입으로 매핑해주는 로직이 동작한다
+
+---
+## DispatcherServlet
+- 디스패처 서블릿이란 서블릿 컨테이너의 가장 앞단에서 HTTP 프로토콜로 들어오는 모든 요청을 가장 먼저 받아 적합한 컨트롤러에 위임해주는 프론트 컨트롤러이다.
+
+클라이언트가 톰캣과 같은 서블릿 컨테이너*에 요청을 보내면, 프론트 컨트롤러인 디스패처 서블릿이 가장 먼저 받게 된다. 디스패처 서블릿은 공통적인 작업을 먼저 처리한 후에 해당 요청을 처리해야 하는 컨트롤러를 찾아 작업을 위임한다.
+
+### 장점
+- 과거에는 모든 서블릿을 URL 매핑을 위해 web.xml에 모두 등록해주어야 했다.
+- 이제는 dispatcher servlet이 해당 어플리케이션으로 들어오는 모든 요청을 핸들링해주고, 공통 작업을 처리하면서 상당히 편리하게 이용할 수 있게 됨
+
+### 정적 자원의 처리
+- 모든 요청을 처리하다보니 이미지나 HTML/CSS/JS 등과 같은 정적 파일에 대한 요청까지 모두 가로챔
+- 따라서 애플리케이션 요청을 탐색하고 없으면 정적 자원 요청으로 처리하는 방식을 사용
+
+### 조금 더 자세히?
+- 디스패처 서블릿으로 클라이언트의 HTTP 요청이 들어온다 
+- 디스패처 서블릿은 요청을 처리하기 위해 매핑된 핸들러를 조회 
+- 요청을 처리할 핸들러 어댑터를 찾는다
+- 핸들러 어댑터는 요청을 해당 핸들러(컨트롤러)로 위임 
+- 핸들러(컨트롤러)는 비즈니스 로직을 처리하고 ModelAndView(또는 Model과 View의 조합)가 반환된다 
+- 디스패처 서블릿은 ViewResolver를 사용하여 반환된 ModelAndView의 View를 찾는다
+- 뷰 리졸버가 적절한 View를 반환한다
+- 반환된 View를 사용하여 뷰를 렌더링하여 HTML을 생성하고, 이를 클라이언트에게 응답한다
+
+---
+#### 서블릿 컨테이너
+> 자바 웹 어플리케이션의 실행 환경을 제공하는 서버 구성 요소
+서블릿*과 JSP* 파일을 실행하고, 웹 어플리케이션의 생명주기*를 관리, 네트워크 요청에 대한 응답을 처리하는 역할 등을 한다
+
+- 서블릿을 만들었다고 스스로 작동하지 않는다. 서블릿을 관리해주는 역할을 하는 것이 이 서블릿 컨테이너.
+- 대표적으로 톰캣이 있음
+
+#### 서블릿
+> 클라이언트의 요청을 처리하고, 그 결과를 반환하는 Servlet 클래스의 구현 규칙을 지킨 자바 웹 프로그래밍 기술
+
+자바로 구현된 CGI*.
+
+서블릿은 다음과 같은 특징을 가진다
+- 클라이언트 요청에 대해 동적으로 작동하는 웹 어플리케이션 컴포넌트
+- HTML을 사용해 요청에 응답
+- 자바 스레드를 이용해 동작
+- MVC 패턴에서 Controller로 이용
+- HTTP 프로토콜 서비스를 지원하는 HttpServlet 클래스 상속
+- UDP보다 처리 속도가 느리다
+- HTML 변경 시 Servlet을 재컴파일해야 하는 단점
+
+#### CGI
+> 공용 게이트웨이 인터페이스/ 웹 서버와 프로그램간의 교환 방식을 정의한 것
+
+- 웹 서버 -> 미리 준비된 정적 컨텐츠를 클라이언트의 요구에 응답해 보냄
+- 정보를 그 장소에서 동적으로 생성하고 클라이언트에게 송신 => 불가
+
+- 서버 프로그램에서 다른 프로그램을 불러내고 그 처리 결과를 클라이언트에 송신하는 방법이 고안됨
+=> 이를 실현하기 위한 서버 프로그램과 외부 프로그램과의 연계법을 정한 것 이 CGI
+
+CGI는 인터페이스로 특정 플랫폼에 의존하지 않고, 웹 서버 등으로부터 외부 프로그램을 호출하는 조합을 가리킴
+따라서 그 조합을 사용해 기동되는 프로그램 본체를 CGI로 호칭하는 것은 잘못되었다.
+
+#### 서블릿의 생명주기
+
+클라이언트 요청이 들어오면 해당 서블릿이 메모리에 있는지 확인, 없을 경우 init() 호출해 적재.
+처음 한 번만 실행되므로 서블릿 스레드에서 공통 사용할 것이 있다면 오버라이딩해 구현
+실행 중 서블릿 변경 시 기존 서블릿 파괴, init()으로 새로운 내용 다시 메모리 적재
+
+init() 후 클라이언트 요청에 따라 service() 메서드를 통해 응답이 분기됨
+서블릿 컨테이너가 클라이언트 요청을 가장 먼저 처리하며 생성된 HttpServletRequest, HttpServletResponse에 의해 요청, 응답 객체 제공됨
+
+컨테이너가 서블릿에 종료 요청시 destroy() 메서드 호출.
+한 번만 실행되며, 종료 시 처리해야 하는 작업은 destroy() 오버라이딩해 구현
+
+#### JSP
+> JAVA 코드가 들어가 있는 HTML 코드!
+
+- 서블릿은 자바 소스코드 속에 HTML코드가 들어가는 형태, 이와 반대로 HTML 코드 속에 자바 소스코드가 들어가는 구조
+- 자바로 작성된 부분은 웹 브라우저가 아닌 웹 서버에서 실행되는 부분
+- WAS에 의해 서블릿 클래스로 변환되어 사용됨
+
+서블릿만 사용해 사용자가 요청한 웹 페이지를 보여주려면 서블릿의 표준 출력 응답으로 HTML을 작성해야 하는데 이는 추가/수정이 어렵고 가독성이 떨어진다
+=> JSP로 비즈니스 로직과 프레젠테이션 로직 분리
+
+- 서블릿은 데이터 입력, 수정 등에 대한 제어를 JSP에게 넘겨 프레젠테이션 로직 수행 후 컨테이너에 Response 전달
+- 이 결과물은 사용자가 해당 페이지 요청 시 .jsp -> .java -> .class => 서블릿 객체가 된다
+
+서블릿의 번거로움을 JSP가 대신 수행!
+
+---
+## WebMvcConfigurer로 URL과 html 쉽게 연결하기
+- html에서 중복을 제거하는 기능은 template engine에서 제공하는 기능
+- 모든 html의 기능의 중복을 제거하려면 static의 html 또한 templates 폴더로 이동해야 한다
+- 이와 같은 구현 방법은 특별한 로직이 없음에도 매번 controller 메서드를 만들어 매핑해야 한다
+- 이런 번거로운 작업을 제거하기 위해 WebMvcConfigurer의 메서드를 override해 구현할 수 있다
+
+### WebMvcConfigurerAdapter
+- 전에는 WebMvcConfigurerAdapter가 사용되었다.
+- 하지만 자바가 인터페이스의 default 메서드를 지원하면서 WebMvcConfigurer를 구현하는 클래스에서 모든 메서드를 구현해야 하는 강제력이 사려졌다.
+- 따라서 기존의 WebMvcConfigurerAdapter 클래스는 쓰임새가 사라져 스프링부트 2.0에서 deprecated 되었다.
+
+### 사용 예시
+```java
+@Configuration
+public class AppConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+
+        registry.addViewController("/").setViewName("/index");
+        registry.addViewController("/user/login").setViewName("/user/login");
+        registry.addViewController("/user/join").setViewName("/user/form");
+    }
+}
+```
+- Configuration 어노테이션으로 해당 클래스가 어플리케이션 컨텍스트의 구성을 정의한다는 것을 나타낸다
+- addViewController 메서드는 스프링 MVC에서 사용되는 메서드로, 컨트롤러를 등록하는 데 사용
+- 특정 URL 경로에 대한 요청을 처리하는 컨트롤러를 등록
+- 실제 작업을 수행하는 컨트롤러가 아닌 단순히 특정 뷰로 이동시키는 역할!(라우팅이 아님)
+- 예를 들어 위 코드에서 "/" 경로에 대한 요청이 발생하면, "/index" 뷰로 이동하도록 설정한다
+- registry.setOrder(Ordered.HIGHEST_PRECEDENCE);로 빈 레지스트리의 순서를 설정
+  - 더 높은 우선순위로 설정해 다른 빈들보다 먼저 처리되도록 설정
+  - Ordered.HIGHEST_PRECEDENCE는 빈의 최고 우선순위를 나타내는 상수
+
+---
+## Application Context?
+- 스프링 프레임워크의 핵심적인 컨테이너
+- 스프링 어플리케이션을 설정하고 구성하는 데 사용되며, 런타임 중에 스프링 빈의 인스턴스를 관리하고 의존성 주입을 수행한다
+---
+## 참고 내용 출처
+- https://velog.io/@0_0_yoon/%EB%A0%88%EB%B2%A83-ServletModelAttributeMethodProcessor%EA%B0%80-%EB%8F%99%EC%9E%91%ED%95%98%EB%8A%94-%EA%B3%BC%EC%A0%95
+- https://mangkyu.tistory.com/14
+- https://mangkyu.tistory.com/18
+- https://mozzi-devlog.tistory.com/8
