@@ -7,10 +7,8 @@ public class Article {
     private String author;
     private String contents;
 
-    public Article() {
-    }
-
-    public Article(String title, String author, String contents) {
+    public Article(Long articleId, String title, String author, String contents) {
+        this.articleId = articleId;
         this.title = title;
         this.author = author;
         this.contents = contents;

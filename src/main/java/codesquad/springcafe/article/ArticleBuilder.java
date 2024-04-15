@@ -28,7 +28,7 @@ public class ArticleBuilder {
     }
 
     public Article build() {
-        return new Article(title, author, contents);
+        return new Article(articleId, title, author, contents);
     }
 
 }
