@@ -26,4 +26,11 @@ public class ArticleController {
         model.addAttribute("article", newArticle);
         return "redirect:/";
     }
+
+    @GetMapping("/")
+    public String showArticleList(Model model) {
+        List<Article> articles = articleService.findAllArticles();
+        model.addAttribute("articles", articles);
+        return "index";
+    }
 }
