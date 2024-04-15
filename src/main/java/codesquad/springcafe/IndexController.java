@@ -12,7 +12,7 @@ public class IndexController {
 
     @GetMapping({"/", "/index", "/index.html"})
     public String index(Model model) {
-        List<Article> articleList = ArticleDatabase.getArticleList();
+        List<Article> articleList = ArticleDatabase.getReversedArticleList();
         model.addAttribute("articleList", articleList);
         return "index";
     }

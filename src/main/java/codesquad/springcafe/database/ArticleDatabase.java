@@ -7,14 +7,17 @@ import java.util.List;
 
 public class ArticleDatabase {
 
-    private final static List<Article> articlelist = new ArrayList<>();
+    private final static List<Article> articleList = new ArrayList<>();
 
     public static void addArticle(Article article) {
-        articlelist.add(article);
+        articleList.add(article);
     }
 
     public static List<Article> getArticleList() {
-        return articlelist;
+        return articleList;
     }
 
+    public static List<Article> getReversedArticleList() {
+        return articleList.reversed();
+    }
 }
