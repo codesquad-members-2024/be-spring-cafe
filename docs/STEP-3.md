@@ -39,12 +39,12 @@ CREATE TABLE USERS (
 - ARTICLES 테이블 생성
 ```
 CREATE TABLE ARTICLES (
-    articleId INT AUTO_INCREMENT PRIMARY KEY,
-    userId VARCHAR(255),
-    title VARCHAR(255),
-    content VARCHAR(255),
-    creationDate DATE, -- creationDate를 DATE 타입으로 변경
-    FOREIGN KEY (userId) REFERENCES USERS(userId)
+      articleId INT AUTO_INCREMENT PRIMARY KEY,
+      userId VARCHAR(255),
+      title VARCHAR(255),
+      content VARCHAR(255),
+      creationDate VARCHAR(255), -- creationDate를 DATE 타입으로 변경
+      FOREIGN KEY (userId) REFERENCES USERS(userId)
 );
 ```
 
