@@ -100,4 +100,12 @@ public class UserService {
         return new UserResponse(user.getLoginId(), user.getEmail(), user.getName(), DateUtils.convertCreatedAt(user.getCreatedAt()));
     }
 
+    // 프로필 수정 접근
+    public UserResponse getUserEditInfo(Long userId, String loginId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        if (!user.getLoginId().equals(loginId)) {
+            throw new IllegalStateException("접근 권한이 없습니다.");
+        }
+        return new UserResponse(user.getLoginId(), user.getEmail(), user.getName(), DateUtils.convertCreatedAt(user.getCreatedAt()));
+    }
 }

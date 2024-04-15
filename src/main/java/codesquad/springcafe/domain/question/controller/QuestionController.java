@@ -21,6 +21,7 @@ public class QuestionController {
         this.questionService = questionService;
     }
 
+    // 게시글 작성
     @PostMapping("/post")
     public String postQuestion(HttpSession httpSession, @Valid @ModelAttribute QuestionPostRequest questionPostRequest) {
         Object attr = httpSession.getAttribute("userId");
@@ -32,6 +33,7 @@ public class QuestionController {
         return "redirect:/questions";
     }
 
+    // 게시글 목록 조회
     @GetMapping({"/", "/questions"})
     public String getQuestions(Model model) {
         QuestionListResponse questionListResponse = questionService.getQuestions();
@@ -42,6 +44,7 @@ public class QuestionController {
         return "index";
     }
 
+    // 게시글 상세 조회
     @GetMapping("/question/{questionId}")
     public String getQuestion(HttpSession httpSession,
                               @PathVariable("questionId") Long questionId, Model model) {

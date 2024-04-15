@@ -32,8 +32,8 @@
                 </table>
             </div>
             <div class="buttons">
-                <button class="edit-button">정보 수정</button>
-                <button class="delete-button">회원 탈퇴</button>
+                <a class="edit-button" th:href="@{'/profile/' + ${user.loginId} + '/edit'}">정보 수정</a>
+                <a class="delete-button">회원 탈퇴</a>
             </div>
         </div>
     </div>

@@ -30,8 +30,7 @@ public class UserController {
         Long userId = userService.join(userJoinRequest);
 
         httpSession.setAttribute("userId", userId);
-        httpSession.setAttribute("isLoggedIn", true);
-        httpSession.setMaxInactiveInterval(30);
+        httpSession.setMaxInactiveInterval(3600);
 
         model.addAttribute("user", userJoinRequest);
 
@@ -44,7 +43,6 @@ public class UserController {
                         HttpSession httpSession) {
         Long userId = userService.login(userLoginRequest);
         httpSession.setAttribute("userId", userId);
-        httpSession.setAttribute("isLoggedIn", true);
         httpSession.setMaxInactiveInterval(3600);
 
         return "redirect:/";
@@ -59,7 +57,6 @@ public class UserController {
         userService.logout(request.getParameter("userId"), userId);
 
         session.removeAttribute("userId");
-        session.removeAttribute("isLoggedIn");
         return "redirect:/";
     }
 
@@ -95,5 +92,21 @@ public class UserController {
 
         model.addAttribute("user", userResponse);
         return "user/profile";
+    }
+
+    // 회원 수정 페이지 접근
+    @GetMapping("/profile/{loginId}/edit")
+    public String getProfileEditForm(HttpSession httpSession,
+                                     @PathVariable("loginId") String loginId,
+                                     Model model) {
+        Object userId = httpSession.getAttribute("userId");
+        if (userId == null) {
+            throw new IllegalStateException("인증이 필요한 요청입니다.");
+        }
+
+        UserResponse userEditInfo = userService.getUserEditInfo((Long) userId, loginId);
+        model.addAttribute("user", userEditInfo);
+
+        return "/user/edit_form";
     }
 }

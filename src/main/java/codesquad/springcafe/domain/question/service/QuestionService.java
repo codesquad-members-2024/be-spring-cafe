@@ -56,6 +56,10 @@ public class QuestionService {
 
         // 질문 게시글 조회
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문 게시글입니다."));
+
+        // 게시글 조회 수 up
+        question.viewCntUp();
+        
         return new QuestionResponse(question.getId(), question.getUser().getLoginId(), question.getTitle(), question.getContent(),
                 DateUtils.convertCreatedAt(question.getCreatedAt()), question.getViewCnt());
     }
