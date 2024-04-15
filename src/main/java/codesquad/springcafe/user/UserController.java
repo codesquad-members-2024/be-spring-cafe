@@ -69,7 +69,7 @@ public class UserController {
         return "redirect:/user/users";
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public String update(@PathVariable String id,
                          @RequestParam("prev_password") String prevPassword,
                          @ModelAttribute("user") User user,
