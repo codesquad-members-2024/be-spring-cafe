@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -21,21 +23,21 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/users")
+    @PostMapping
     public String signUp(@ModelAttribute("user") User user, Model model) {
         User newUser = userService.createUser(user.getUserId(), user.getPassword(), user.getName(), user.getEmail());
         model.addAttribute("user", newUser);
         return "redirect:/users";
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public String showUserList(Model model) {
         List<User> users = userService.findAllUsers();
         model.addAttribute("users", users);
         return "/user/list";
     }
 
-    @GetMapping("/users/{userId}")
+    @GetMapping("/{userId}")
     public String showUserProfile(@PathVariable String userId,
         Model model) {
         User user = userService.findUserById(userId);
