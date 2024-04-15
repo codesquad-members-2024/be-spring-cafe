@@ -1,5 +1,7 @@
-package codesquad.springcafe.article;
+package codesquad.springcafe.article.database;
 
+import codesquad.springcafe.article.Article;
+import codesquad.springcafe.article.ArticleRowMapper;
 import java.util.List;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;

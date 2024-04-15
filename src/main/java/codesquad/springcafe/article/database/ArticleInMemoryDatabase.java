@@ -1,6 +1,7 @@
-package codesquad.springcafe.article;
+package codesquad.springcafe.article.database;
 
 
+import codesquad.springcafe.article.Article;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

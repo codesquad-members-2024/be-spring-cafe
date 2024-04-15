@@ -1,5 +1,6 @@
 package codesquad.springcafe.article;
 
+import codesquad.springcafe.article.database.ArticleDatabase;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

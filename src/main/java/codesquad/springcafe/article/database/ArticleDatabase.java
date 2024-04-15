@@ -1,5 +1,6 @@
-package codesquad.springcafe.article;
+package codesquad.springcafe.article.database;
 
+import codesquad.springcafe.article.Article;
 import java.util.List;
 
 public interface ArticleDatabase {
