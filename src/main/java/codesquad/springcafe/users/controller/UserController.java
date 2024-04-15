@@ -29,7 +29,6 @@ public class UserController {
     @GetMapping
     public String showUsers(Model model) {
         ArrayList<UserPreviewDto> users = userService.getAllUsers();
-        logger.debug("users : {}", users.size());
         model.addAttribute("users", users);
         model.addAttribute("totalUsers", users.size());
 
