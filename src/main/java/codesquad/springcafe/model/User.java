@@ -10,6 +10,7 @@ public class User {
     public User(){
 
     }
+
     public User(Long id, String userId, String password, String name, String email){
         this.id = id;
         this.userId = userId;
@@ -25,6 +26,7 @@ public class User {
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getUserId() {
         return userId;
     }
@@ -55,5 +57,10 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
     }
 }
