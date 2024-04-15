@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -32,5 +33,13 @@ public class ArticleController {
         List<Article> articles = articleService.findAllArticles();
         model.addAttribute("articles", articles);
         return "index";
+    }
+
+    @GetMapping("articles/{index}")
+    public String showArticle(@PathVariable Long index,
+        Model model) {
+        Article article = articleService.findArticleByIndex(index);
+        model.addAttribute("article", article);
+        return "/qna/show";
     }
 }
