@@ -34,4 +34,19 @@ public class UserController {
         model.addAttribute("user", user);
         return "user/profile";
     }
+
+    @GetMapping("/users/{userid}/form")
+    public String showUserEditForm(@PathVariable String userid, Model model) {
+        model.addAttribute("userid",  userid);
+        return "user/updateForm";
+    }
+
+    @PutMapping("/users/{userid}")
+    public String updateUser(@ModelAttribute User editedUser) {
+        User oldUser = UserDatabase.getUser(editedUser.getUserId());
+        oldUser.updateUser(editedUser.getPassword(), editedUser.getName(), editedUser.getEmail());
+        logger.info("update user : {}", oldUser.getUserId());
+        return "redirect:/users";
+    }
+
 }
