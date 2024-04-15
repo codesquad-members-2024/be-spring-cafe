@@ -3,10 +3,11 @@ package codesquad.springcafe.web.controller;
 import codesquad.springcafe.web.domain.User;
 import codesquad.springcafe.web.service.UserService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class UserController {
@@ -40,6 +41,22 @@ public class UserController {
 
         userService.join(user);
         return "redirect:/user/list";
+    }
+
+    @GetMapping("/user/list")
+    public String userList(Model model) {
+        List<User> users = userService.findUsers();
+        model.addAttribute("users", users);
+        return "user/list";
+    }
+
+    @GetMapping("/user/profile/{userName}")
+    public String userProfile(@PathVariable String userName, Model model) {
+        System.out.println("userName = " + userName);
+        Optional<User> user = userService.findUser(userName);
+        user.ifPresent(u -> model.addAttribute("user", u));
+
+        return "user/profile";
     }
 
 }
