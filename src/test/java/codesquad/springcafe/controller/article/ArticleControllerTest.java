@@ -32,7 +32,7 @@ class ArticleControllerTest {
     @Autowired
     ArticleRepository articleRepository;
 
-    private static final String BASE_URL = "/question";
+    private static final String BASE_URL = "/questions";
 
     @Test
     void get_request_publish() throws Exception {

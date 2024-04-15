@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/question")
+@RequestMapping("/questions")
 public class ArticleController {
     private final ArticleManager articleManager;
 

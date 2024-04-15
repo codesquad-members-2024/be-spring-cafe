@@ -1,6 +1,7 @@
 package codesquad.springcafe.repository.member;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import codesquad.springcafe.controller.member.UpdateMember;
 import codesquad.springcafe.domain.member.Member;
@@ -9,14 +10,10 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class MemberRepositoryTest {
+class MemberRepositoryInMemoryTest {
 
-    @Autowired
-    private MemberRepository repository;
+    private final MemberRepository repository = new MemberRepositoryInMemory();
 
     @BeforeEach
     void clear() {
