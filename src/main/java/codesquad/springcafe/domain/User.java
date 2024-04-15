@@ -26,6 +26,10 @@ public class User {
         return password;
     }
 
+    public boolean comparePassword(String inputPassword){
+        return password.equals(inputPassword);
+    }
+
     @Override
     public String toString() {
         return "userId: " + userId + ", nickname: " + nickname + ", email: " + email;
