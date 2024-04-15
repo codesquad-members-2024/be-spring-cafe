@@ -3,8 +3,6 @@ package codesquad.springcafe.repository;
 import codesquad.springcafe.dto.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,7 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
-@Component
 public class MemoryUserRepository implements UserRepository{
     private static final Logger logger = LoggerFactory.getLogger(MemoryUserRepository.class);
     private final Map<Long, User> store = new ConcurrentHashMap<>();

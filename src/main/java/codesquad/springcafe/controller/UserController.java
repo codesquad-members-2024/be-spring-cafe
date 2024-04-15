@@ -5,7 +5,6 @@ import codesquad.springcafe.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +15,11 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/users") // 공유매핑
-@Component
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
-    @Autowired
+    @Autowired // 생성자가 하나일 때 생략 가능하지만, 우선 남겨둠 ...!
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -55,6 +53,7 @@ public class UserController {
         Optional<User> userOptional = userService.findUserById(id);
 
         if (!userOptional.isPresent()){
+            logger.error("User with id {} not found", id);
             return "redirect:/users/list";
         }
 
