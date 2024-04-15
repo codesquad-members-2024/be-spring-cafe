@@ -59,6 +59,12 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
+    public void update(int id, ArticlePostReq articlePostReq) {
+        SimpleUserInfo author = articles.remove(id).getAuthor();
+        add(articlePostReq, author);
+    }
+
+    @Override
     public void deleteAll() {
         articles.clear();
     }

@@ -14,6 +14,7 @@ public interface ArticleRepository {
     List<Article> findAll();
     List<Article> findByUserId(String userId);
     void addPoint(Article article);
+    void update(int id, ArticlePostReq articlePostReq);
 
     void deleteAll();
 }

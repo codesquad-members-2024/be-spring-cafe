@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -31,6 +32,14 @@ public class ArticleController {
         articleService.postArticle(articlePostReq, author);
 
         return "redirect:/";
+    }
+
+    @PutMapping("/{id}")
+    public String modifyArticle(@PathVariable int id, @ModelAttribute ArticlePostReq articlePostReq, RedirectAttributes ra){
+        articleService.modify(id, articlePostReq);
+
+        ra.addAttribute("id", id);
+        return "redirect:/article/{id}";
     }
 
 
@@ -67,5 +76,18 @@ public class ArticleController {
         model.addAttribute("points", articles.stream().mapToInt(Article::getPoint).sum());
 
         return "user/articles";
+    }
+
+    @GetMapping("/{id}/form")
+    public String getModifyForm(@PathVariable int id, HttpServletRequest request, Model model, RedirectAttributes ra){
+        SimpleUserInfo loginUser = (SimpleUserInfo) request.getSession().getAttribute("loginUser");
+
+        if(articleService.canModify(id,loginUser)){
+            model.addAttribute("articleId", id);
+            return "article/update_form";
+        }
+
+        ra.addAttribute("id", id);
+        return "redirect:/article/{id}";
     }
 }

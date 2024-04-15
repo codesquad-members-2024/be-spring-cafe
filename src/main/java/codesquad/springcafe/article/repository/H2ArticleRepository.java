@@ -23,8 +23,8 @@ public class H2ArticleRepository implements ArticleRepository {
     private final String FIND_BY_ID_SQL = "SELECT * FROM ARTICLE WHERE Id = ?";
     private final String FIND_BY_USER_SQL = "SELECT * FROM ARTICLE WHERE authorId = ?";
     private final String FIND_ALL_SQL = "SELECT * FROM article ORDER BY createdAt DESC;";
-
     private final String ADD_POINT_SQL = "UPDATE ARTICLE SET point = point + 1 WHERE id = ?;";
+    private final String UPDATE_ARTICLE = "UPDATE ARTICLE SET TITLE = ?, CONTENT = ?,  CREATEDAT = ?  WHERE ID = ?;";
 
     private final String GET_USER_NAME = "SELECT NAME FROM USERS WHERE USERID = ?";
     private final String DELETE_ALL = "DELETE FROM ARTICLE";
@@ -108,6 +108,22 @@ public class H2ArticleRepository implements ArticleRepository {
     }
 
     @Override
+    public void update(int id, ArticlePostReq articlePostReq) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement query = connection.prepareStatement(UPDATE_ARTICLE)) {
+            query.setString(1, articlePostReq.title());
+            query.setString(2, articlePostReq.content());
+            Timestamp createdDateTime = Timestamp.valueOf(LocalDateTime.now());
+            query.setTimestamp(3, createdDateTime);
+            query.setInt(4, id);
+
+            query.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(this.getClass() + ": update : " + e.getMessage());
+        }
+    }
+
+    @Override
     public void deleteAll() {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement query = connection.prepareStatement(DELETE_ALL)) {
@@ -139,7 +155,7 @@ public class H2ArticleRepository implements ArticleRepository {
              PreparedStatement query = connection.prepareStatement(GET_USER_NAME)) {
             query.setString(1, id);
             try (ResultSet resultSet = query.executeQuery()) {
-                if(resultSet.next()) return resultSet.getString("name");
+                if (resultSet.next()) return resultSet.getString("name");
             }
         } catch (SQLException e) {
             throw new RuntimeException(this.getClass() + ": getName : " + e.getMessage());

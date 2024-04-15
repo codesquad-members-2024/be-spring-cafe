@@ -41,4 +41,12 @@ public class ArticleService {
     public List<Article> findByUserId(String id) {
         return articleRepository.findByUserId(id);
     }
+
+    public void modify(int id, ArticlePostReq articlePostReq) {
+        articleRepository.update(id, articlePostReq);
+    }
+
+    public boolean canModify(int id, SimpleUserInfo loginUser) {
+        return articleRepository.findById(id).getAuthor().id().equals(loginUser.id());
+    }
 }
