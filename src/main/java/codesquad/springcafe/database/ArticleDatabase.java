@@ -13,4 +13,8 @@ public class ArticleDatabase {
         articlelist.add(article);
     }
 
+    public static List<Article> getArticleList() {
+        return articlelist;
+    }
+
 }
