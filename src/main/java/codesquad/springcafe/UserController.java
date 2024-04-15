@@ -1,6 +1,6 @@
 package codesquad.springcafe;
 
-import codesquad.springcafe.database.UserDatabase;
+import codesquad.springcafe.database.UserMemoryDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -13,24 +13,25 @@ import java.util.List;
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    UserMemoryDatabase userDB = new UserMemoryDatabase();
 
     @PostMapping("/users")
     public String createUser(@ModelAttribute User user) {
-        UserDatabase.addUser(user);
+        userDB.addUser(user);
         logger.debug("add user : {}", user);
         return "redirect:/users";
     }
 
     @GetMapping("/users")
     public String showUsers(Model model) {
-        List<User> userList = UserDatabase.getUserList();
+        List<User> userList = userDB.getUserList();
         model.addAttribute("userList", userList);
         return "user/list";
     }
 
     @GetMapping("/users/{userid}")
     public String showUser(@PathVariable String userid, Model model) {
-        User user = UserDatabase.getUser(userid);
+        User user = userDB.getUser(userid);
         model.addAttribute("user", user);
         return "user/profile";
     }
@@ -43,7 +44,7 @@ public class UserController {
 
     @PutMapping("/users/{userid}")
     public String updateUser(@ModelAttribute User editedUser) {
-        User oldUser = UserDatabase.getUser(editedUser.getUserId());
+        User oldUser = userDB.getUser(editedUser.getUserId());
         oldUser.updateUser(editedUser.getPassword(), editedUser.getName(), editedUser.getEmail());
         logger.info("update user : {}", oldUser.getUserId());
         return "redirect:/users";

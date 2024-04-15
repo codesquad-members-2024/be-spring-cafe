@@ -3,22 +3,12 @@ package codesquad.springcafe.database;
 import codesquad.springcafe.User;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-public class UserDatabase {
+public interface UserDatabase {
 
-    private final static Map<String, User> userMap = new ConcurrentHashMap<>();
+     void addUser(User user);
 
-    public static void addUser(User user) {
-        userMap.put(user.getUserId(), user);
-    }
+     List<User> getUserList();
 
-    public static List<User> getUserList() {
-        return userMap.values().stream().toList();
-    }
-
-    public static User getUser(String userId) {
-        return userMap.get(userId);
-    }
+     User getUser(String userId);
 }
