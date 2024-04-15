@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository; //컨테이너가 등록
 
-@Repository
+
 public class UserRepositoryImpl implements UserRepository {
 
     List<User> userDB = new ArrayList<>();

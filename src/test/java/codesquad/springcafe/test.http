@@ -1,0 +1,8 @@
+### index 접근
+GET http://localhost:8080
+
+### login form 접근
+POST http://localhost:8080/users
+Content-Type: application/x-www-form-urlencoded
+
+userid=id&password=pw&name=name&email=em@il

@@ -25,6 +25,9 @@ public class User {
         this.password = password;
     }
 
+    public void setSignUpDate(LocalDate signUpDate) {
+        this.signUpDate = signUpDate;
+    }
     public String getEmail() {
         return email;
     }

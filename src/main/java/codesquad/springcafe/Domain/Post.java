@@ -1,8 +1,10 @@
 package codesquad.springcafe.Domain;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 public class Post {
+
     private Long id;
     private String title;
     private String content;
@@ -40,6 +42,10 @@ public class Post {
 
     public LocalDate getCreatedAt() {
         return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate localDate) {
+        this.createdAt = localDate;
     }
 
 
