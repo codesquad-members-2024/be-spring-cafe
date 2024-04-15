@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UserRepositoryTest {
+class UserMemoryRepositoryTest {
 
-    UserRepository userRepository = new UserRepository();
+    UserRepository userRepository = new UserMemoryRepository();
 
     @BeforeEach
     void init() {
