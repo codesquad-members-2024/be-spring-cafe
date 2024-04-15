@@ -28,7 +28,7 @@
             <input type="hidden" name="_method" value="PUT">
             <div class="form-group">
                 <label for="newEmail">새로운 이메일</label>
-                <input class="form-control" id="newEmail" name="newEmail" placeholder="이메일을 입력하세요">
+                <input class="form-control" type="email" id="newEmail" name="newEmail" placeholder="이메일을 입력하세요">
             </div>
             <div class="form-group">
                 <label for="newName">새로운 닉네임</label>
@@ -40,7 +40,7 @@
                        placeholder="기존 비밀번호를 입력하세요">
             </div>
             {{#error}}
-                {{> /base/passwordError}}
+                {{> base/passwordError}}
             {{/error}}
             <div class="form-group">
                 <label for="newPassword">변경할 비밀번호</label>
