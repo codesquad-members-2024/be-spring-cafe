@@ -1,6 +1,7 @@
 package codesquad.springcafe;
 
 import codesquad.springcafe.db.UserDatabase;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,23 +15,30 @@ import java.util.Optional;
 @Controller
 public class UserController {
 
+    private final UserDatabase userDatabase;
+
+    @Autowired
+    public UserController(UserDatabase userDatabase){
+        this.userDatabase = userDatabase;
+    }
+
     @PostMapping("/users")
     public String createUser(@ModelAttribute User user) {
-        UserDatabase.addUser(user);
+        userDatabase.addUser(user);
         return "redirect:/users";
     }
 
     @GetMapping("/users")
     public String userList(Model model){
-        List<User> users = UserDatabase.findAllUsers();
+        List<User> users = userDatabase.findAllUsers();
         model.addAttribute("users", users);
-        model.addAttribute("totalUserNumber", UserDatabase.getTotalUserNumber());
+        model.addAttribute("totalUserNumber", userDatabase.getTotalUserNumber());
         return "users/list";
     }
 
     @GetMapping("/users/{userId}")
     public String userProfile(@PathVariable String userId, Model model){
-        Optional<User> user = UserDatabase.findUserByUserId(userId);
+        Optional<User> user = userDatabase.findUserByUserId(userId);
         if(user.isEmpty()){
             throw new IllegalArgumentException();
         }
