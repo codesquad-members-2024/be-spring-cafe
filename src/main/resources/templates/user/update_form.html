@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/header :: head}">
+</head>
+
+<body>
+<nav class="navbar navbar-fixed-top header" th:replace="~{layout/headernav :: headernav}"></nav>
+
+<div class="navbar navbar-default" id="subnav" th:replace="~{layout/subbnav :: sunav}"></div>
+
+<div class="container" id="main">
+  <div class="col-md-6 col-md-offset-3">
+    <div class="panel panel-default content-main">
+      <form name="userForm" th:action="@{/user/{userId}/form(userId=${user.userId})}" method="post">
+
+        <!-- PUT 메소드를 전달하기 위한 hidden input -->
+        <input type="hidden" name="_method" th:value="PUT"/>
+
+        <input type="hidden" name="userId" th:value="${user.userId}">
+        <div class="form-group">
+          <label for="password">비밀번호</label>
+          <input type="password" class="form-control" id="password" name="password">
+        </div>
+        <div class="form-group">
+          <label for="nickname">새 이름</label>
+          <input class="form-control" id="nickname" name="nickname">
+        </div>
+        <div class="form-group">
+          <label for="email">새 이메일</label>
+          <input type="email" class="form-control" id="email" name="email">
+        </div>
+        <button type="submit" class="btn btn-success clearfix pull-right">정보 수정</button>
+        <div class="clearfix"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- script references -->
+<script src="/js/jquery-2.2.0.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/scripts.js"></script>
+</body>
+</html>

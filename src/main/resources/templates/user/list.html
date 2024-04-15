@@ -28,7 +28,8 @@
           </td>
           <td th:text="${user.nickname}"></td>
           <td th:text="${user.email}"></td>
-          <td><a href="#" class="btn btn-success" role="button">수정</a></td>
+          <td><a th:href="@{/user/{userId}/form(userId=${user.userId})}" class="btn btn-success"
+                 role="button">수정</a></td>
         </tr>
         </tbody>
       </table>
