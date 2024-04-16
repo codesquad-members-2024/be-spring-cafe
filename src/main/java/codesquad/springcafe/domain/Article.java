@@ -1,18 +1,24 @@
 package codesquad.springcafe.domain;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Article {
     private String writer;
     private String title;
     private String contents;
     private LocalDateTime time;
-    private String id;
+    private Long id;
 
-    public Article(String writer, String title, String contents) {
+    public Article(String writer, String title, String contents, LocalDateTime time, Long id) {
         this.writer = writer;
         this.title = title;
         this.contents = contents;
+        this.time = time;
+        this.id = id;
+    }
+
+    public Article() {
         this.time = LocalDateTime.now();
     }
 
@@ -28,16 +34,28 @@ public class Article {
         return contents;
     }
 
-    public LocalDateTime getTime() {
-        return time;
+    public void setWriter(String writer) {
+        this.writer = writer;
     }
 
-    public String getId() {
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setContents(String contents) {
+        this.contents = contents;
+    }
+
+    public void setTime(LocalDateTime time) {
+        this.time = time;
+    }
+
+    public String getTime() {
+        return time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    }
+
+    public Long getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = String.valueOf(id);
     }
 
     @Override
