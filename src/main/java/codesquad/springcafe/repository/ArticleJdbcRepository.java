@@ -65,7 +65,7 @@ public class ArticleJdbcRepository implements ArticleRepository {
             String title = rs.getString("title");
             String contents = rs.getString("contents");
             LocalDateTime localDateTime = rs.getTimestamp("local_date_time").toLocalDateTime();
-            int hits = rs.getInt("hits");
+            long hits = rs.getLong("hits");
 
             return new Article(articleId, writer, title, contents, localDateTime, hits);
         };
