@@ -65,7 +65,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="../index.html">Posts</a></li>
                 <li><a href="../user/login.html" role="button">로그인</a></li>
-                <li><a href="../user/form.html" role="button">회원가입</a></li>
+                <li><a href="/user/register" role="button">회원가입</a></li>
                 <li><a href="#" role="button">로그아웃</a></li>
                 <li><a href="#" role="button">개인정보수정</a></li>
             </ul>
@@ -85,10 +85,10 @@
               <tbody>
               <tr th:each="user, index : ${users}">
                   <th scope="row" th:text="${index.index + 1}"></th> <!-- 번호 -->
-                  <td><a th:href="@{'/users/' + ${user.userId}}" th:text="${user.userId}"></a></td> <!-- 사용자 아이디 -->
+                  <td><a th:href="@{'/user/profile/' + ${user.userId}}" th:text="${user.userId}"></a></td> <!-- 사용자 아이디 -->
                   <td th:text="${user.name}"></td> <!-- 이름 -->
                   <td th:text="${user.email}"></td> <!-- 이메일 -->
-                  <td><a href="#" class="btn btn-success" role="button">수정</a></td> <!-- 수정 버튼 -->
+                  <td><a th:href="@{'/user/profile/' + ${user.userId} + '/update'}" class="btn btn-success" role="button">수정</a></td> <!-- 수정 버튼 -->
               </tr>
               </tbody>
           </table>
