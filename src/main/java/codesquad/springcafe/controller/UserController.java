@@ -4,6 +4,8 @@ import codesquad.springcafe.database.user.UserDatabase;
 import codesquad.springcafe.form.user.UserAddForm;
 import codesquad.springcafe.form.user.UserEditForm;
 import codesquad.springcafe.model.User;
+import codesquad.springcafe.util.LoginUserProvider;
+import jakarta.servlet.http.HttpSession;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -113,7 +115,7 @@ public class UserController {
      */
     @PostMapping("/edit/{nickname}")
     public String updateUser(@PathVariable String nickname, @Validated @ModelAttribute UserEditForm userEditForm,
-                             BindingResult bindingResult) {
+                             BindingResult bindingResult, HttpSession session) {
         Optional<User> optionalUser = userDatabase.findByNickname(nickname);
         if (optionalUser.isEmpty()) {
             return "redirect:/users";
@@ -128,6 +130,8 @@ public class UserController {
 
         User updateUser = targetUser.update(userEditForm.getNickname(), userEditForm.getNewPassword());
         userDatabase.update(updateUser);
+
+        session.setAttribute(LoginUserProvider.LOGIN_SESSION_NAME, updateUser);
 
         logger.info("유저정보가 업데이트 되었습니다. {}", updateUser);
         String newNickname = updateUser.getNickname(); // 유저 닉네임이 수정될 경우를 반영
