@@ -50,9 +50,9 @@
     <div class="error-page">
         <div class="error-message">
             <h1>오류 발생!</h1>
-            {{#alert}}
-            <p>{{alert}}</p>
-            {{/alert}}
+            {{#exception}}
+            <p>{{getMessage}}</p>
+            {{/exception}}
         </div>
         <a href="/" class="back-to-home">홈으로 가기</a>
     </div>

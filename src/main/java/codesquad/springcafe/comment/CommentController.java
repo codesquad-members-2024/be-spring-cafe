@@ -2,6 +2,7 @@ package codesquad.springcafe.comment;
 
 import codesquad.springcafe.comment.DTO.Comment;
 import codesquad.springcafe.comment.DTO.CommentPostReq;
+import codesquad.springcafe.exception.AuthorizationException;
 import codesquad.springcafe.user.DTO.SimpleUserInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -82,8 +83,7 @@ public class CommentController {
             return "comment/form";
         }
 
-        model.addAttribute("alert", "다른 사람의 댓글을 수정할 수 없습니다!");
-        return "error";
+        throw new AuthorizationException("다른 사람의 댓글을 수정할 수 없습니다!");
     }
 
     @GetMapping("/{id}/delete")
@@ -96,7 +96,6 @@ public class CommentController {
             return "comment/delete";
         }
 
-        model.addAttribute("alert", "다른 사람의 댓글을 삭제할 수 없습니다!");
-        return "error";
+        throw new AuthorizationException("다른 사람의 댓글을 삭제할 수 없습니다!");
     }
 }

@@ -15,6 +15,8 @@ import static org.springframework.http.HttpStatus.*;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private final String EXCEPTION = "exception";
+
     private static final Logger log = getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(NotFoundException.class)
@@ -22,7 +24,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public String handleNotFoundException(HttpServletRequest req, Model model, NotFoundException exception) {
         logDebug(NOT_FOUND, req);
 
-        model.addAttribute("alert", exception.getMessage());
+        model.addAttribute(EXCEPTION, exception);
         return "error";
     }
 
@@ -31,7 +33,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public String handleAuthorizationException(HttpServletRequest req, Model model, AuthorizationException exception) {
         logDebug(FORBIDDEN, req);
 
-        model.addAttribute("alert", exception.getMessage());
+        model.addAttribute(EXCEPTION, exception);
         return "error";
     }
 
