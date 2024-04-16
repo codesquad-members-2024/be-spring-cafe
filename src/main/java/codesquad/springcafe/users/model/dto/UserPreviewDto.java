@@ -1,4 +1,4 @@
-package codesquad.springcafe.model.user.dto;
+package codesquad.springcafe.users.model.dto;
 
 public class UserPreviewDto {
     private final String userId;

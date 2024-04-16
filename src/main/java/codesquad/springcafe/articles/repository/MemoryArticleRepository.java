@@ -1,11 +1,10 @@
 package codesquad.springcafe.articles.repository;
 
 import codesquad.springcafe.db.ArticleDatabase;
-import codesquad.springcafe.model.article.Article;
+import codesquad.springcafe.articles.model.Article;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

@@ -2,7 +2,7 @@ package codesquad.springcafe.users.controller;
 
 import codesquad.springcafe.exception.PasswordMismatchException;
 import codesquad.springcafe.exception.UserNotFoundException;
-import codesquad.springcafe.model.user.dto.*;
+import codesquad.springcafe.users.model.dto.*;
 import codesquad.springcafe.users.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
