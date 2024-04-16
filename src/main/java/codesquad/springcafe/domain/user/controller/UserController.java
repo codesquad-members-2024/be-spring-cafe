@@ -55,7 +55,9 @@ public class UserController {
         HttpSession session = request.getSession();
 
         Object userId = session.getAttribute("userId");
-        userService.logout(request.getParameter("userId"), userId);
+        if (!userService.logout(request.getParameter("userId"), userId)) {
+            throw new IllegalStateException("로그아웃 할 수 없습니다.");  // TODO : exception 추가
+        }
 
         session.removeAttribute("userId");
         return "redirect:/";

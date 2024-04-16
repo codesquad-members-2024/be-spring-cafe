@@ -30,7 +30,7 @@ public class UserService {
     // TODO: 예외 클래스 생성해 처리
     // 회원가입
     public Long join(UserJoinRequest userJoinRequest) {
-        // 같은 이메일로 가입한 회원 조회
+        // 같은 아이디로 가입한 회원 조회
         userRepository.findByLoginId(userJoinRequest.getLoginId())
                 .ifPresent(u -> {
                     throw new IllegalStateException("이미 존재하는 사용자입니다.");
@@ -47,8 +47,7 @@ public class UserService {
     // 로그인
     public Long login(UserLoginRequest userLoginRequest) {
         // 회원 존재 여부 확인
-        User user = userRepository.findByLoginId(userLoginRequest.getLoginId())
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        User user = findUserByLoginId(userLoginRequest.getLoginId());
 
         // 비밀번호 비교 TODO: 예외 클래스 생성, ExceptionHandler에서 처리
         if (!passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
@@ -60,17 +59,13 @@ public class UserService {
     }
 
     // 로그아웃
-    public void logout(String requestUserId, Object sessionUserId) {
-        if(sessionUserId == null || requestUserId == null) return;
+    public boolean logout(String requestUserId, Object sessionUserId) {
+        if(sessionUserId == null || requestUserId == null) return false;
 
         Long ruid = Long.parseLong(requestUserId);
         Long suid = (Long) sessionUserId;
-        if (ruid.equals(suid)) {
-            userRepository.findById((Long) sessionUserId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
-            return;
-        }
 
-        throw new IllegalStateException("로그아웃 할 수 없습니다.");  // TODO : exception 추가
+        return ruid.equals(suid) && userRepository.existsById(suid);
     }
 
     // 회원 목록 조회
@@ -87,21 +82,29 @@ public class UserService {
     // 회원 상세 조회
     public UserResponse getUser(String loginId) {
         // loginId로 회원 조회
-        User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        User user = findUserByLoginId(loginId);
         return new UserResponse(user.getLoginId(), user.getEmail(), user.getName(), convertCreatedAt(user.getCreatedAt()));
     }
 
     // 내 프로필 조회
     public UserResponse getMyProfile(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        User user = findUserById(userId);
         return new UserResponse(user.getLoginId(), user.getEmail(), user.getName(), DateUtils.convertCreatedAt(user.getCreatedAt()));
     }
 
-    // 내 프로필 수정
+    // 내 프로필 수정 TODO : 테스트 가능하도록 수정
     public void updateMyProfile(Long userId, UserUpdateRequest userUpdateRequest) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
-
+        User user = findUserById(userId);
         user.update(userUpdateRequest.getName(), userUpdateRequest.getEmail());
+    }
+
+    private User findUserByLoginId(String loginId) {
+        return userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+    }
+
+    private User findUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
     }
 }

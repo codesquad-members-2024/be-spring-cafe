@@ -51,4 +51,9 @@ public class UserRepositoryLocal implements UserRepository{
     public void deleteAll() {
         users.clear();
     }
+
+    @Override
+    public Boolean existsById(Long userId) {
+        return users.containsKey(userId);
+    }
 }
