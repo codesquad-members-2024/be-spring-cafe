@@ -1,12 +1,12 @@
-package codesquad.springcafe.domain;
+package codesquad.springcafe.dto;
 
-public class UserEdit {
+public class UpdateUser {
     private final String name;
     private final String email;
     private final String password;
     private final String newPassword;
 
-    public UserEdit(String name, String email, String password, String newPassword) {
+    public UpdateUser(String name, String email, String password, String newPassword) {
         this.name = name;
         this.email = email;
         this.password = password;
