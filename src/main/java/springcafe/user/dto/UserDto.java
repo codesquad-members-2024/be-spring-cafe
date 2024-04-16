@@ -1,6 +1,6 @@
-package springcafe.dto;
+package springcafe.user.dto;
 
-import springcafe.model.User;
+import springcafe.user.model.User;
 
 public class UserDto {
     String userId;
@@ -14,7 +14,7 @@ public class UserDto {
     }
 
     public static UserDto toUserDto(User user){
-        return new UserDto(user.getId(), user.getName(), user.getEmail());
+        return new UserDto(user.getUserId(), user.getName(), user.getEmail());
     }
 
 

@@ -1,6 +1,6 @@
-package springcafe.repository;
+package springcafe.user.repository;
 
-import springcafe.model.User;
+import springcafe.user.model.User;
 
 import java.util.List;
 
