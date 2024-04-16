@@ -1,9 +1,8 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.DB.Database;
 import codesquad.springcafe.DB.H2Database;
+import codesquad.springcafe.dto.UpdateUser;
 import codesquad.springcafe.domain.User;
-import codesquad.springcafe.domain.UserEdit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,19 +54,19 @@ public class UserController {
     }
 
     @PutMapping("/user/profile/{userId}/update")
-    public String editProfile(UserEdit userEdit, @PathVariable("userId") String userId, Model model) {
+    public String editProfile(UpdateUser updateUser, @PathVariable("userId") String userId, Model model) {
         User target = h2Database.getUser(userId);
-        String password = userEdit.getPassword();
+        String password = updateUser.getPassword();
 
         if (target.checkPassword(password)) {
-            String newPassword = userEdit.getNewPassword();
-            String newName = userEdit.getName();
-            String newEmail = userEdit.getEmail();
-            h2Database.putUser(newPassword, newName, newEmail, userId);
+            String newPassword = updateUser.getNewPassword();
+            String newName = updateUser.getName();
+            String newEmail = updateUser.getEmail();
+            h2Database.updateUser(newPassword, newName, newEmail, userId);
             return "redirect:/user/list";
         } else {
             model.addAttribute("error", true);
-            model.addAttribute("userEdit", userEdit);
+            model.addAttribute("userEdit", updateUser);
             return "user/updateForm";
         }
     }
