@@ -32,7 +32,7 @@ public class UserService {
      * 전체 회원 조회
      */
     public List<User> findUsers() {
-        return (List<User>) userRepository.findAll();
+        return userRepository.findAll();
     }
 
     public Optional<User> findOne(String userId) {
