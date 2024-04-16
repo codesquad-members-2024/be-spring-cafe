@@ -20,8 +20,8 @@ public class UserInMemoryDatabase implements UserDatabase {
 
     @Override
     public void update(User user, String userId) {
-        userDatabase.remove(findByUserId(userId));
-        save(user);
+        User foundUser = findByUserId(userId);
+        foundUser.update(user);
     }
 
     @Override
