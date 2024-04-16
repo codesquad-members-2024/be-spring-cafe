@@ -18,10 +18,10 @@ spring:
         enabled: true
 
   mustache:
-    expose-session-attributes: true
     suffix: .html
     servlet:
       cache: false
+      expose-session-attributes: true
 
   profiles:
     default: dev

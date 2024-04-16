@@ -3,6 +3,7 @@ package codesquad.springcafe.article;
 import codesquad.springcafe.user.DTO.SimpleUserInfo;
 
 import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 
 public class Article {
     private int id;
@@ -43,6 +44,11 @@ public class Article {
 
     public int getPoint() {
         return point;
+    }
+
+    public String formedTime(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return this.createdAt.toLocalDateTime().format(formatter);
     }
 
     @Override
