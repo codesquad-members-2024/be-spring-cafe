@@ -1,5 +1,6 @@
-package codesquad.springcafe;
+package codesquad.springcafe.controller;
 
+import codesquad.springcafe.model.Article;
 import codesquad.springcafe.db.ArticleDatabase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -1,6 +1,6 @@
 package codesquad.springcafe.db;
 
-import codesquad.springcafe.User;
+import codesquad.springcafe.model.User;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

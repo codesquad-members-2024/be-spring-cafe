@@ -1,4 +1,4 @@
-package codesquad.springcafe;
+package codesquad.springcafe.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

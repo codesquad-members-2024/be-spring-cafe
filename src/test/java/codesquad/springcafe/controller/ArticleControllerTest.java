@@ -1,6 +1,8 @@
-package codesquad.springcafe;
+package codesquad.springcafe.controller;
 
+import codesquad.springcafe.controller.ArticleController;
 import codesquad.springcafe.db.ArticleDatabase;
+import codesquad.springcafe.model.Article;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
