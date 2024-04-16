@@ -1,12 +1,16 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.database.article.ArticleDatabase;
+import codesquad.springcafe.database.comment.CommentDatabase;
 import codesquad.springcafe.form.article.ArticleDeleteForm;
 import codesquad.springcafe.form.article.ArticleWriteForm;
+import codesquad.springcafe.form.comment.CommentWriteForm;
 import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.Comment;
 import codesquad.springcafe.model.User;
 import codesquad.springcafe.util.LoginUserProvider;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +32,11 @@ public class ArticleController {
     private final Logger logger = LoggerFactory.getLogger(ArticleController.class);
 
     private final ArticleDatabase articleDatabase;
+    private final CommentDatabase commentDatabase;
 
-    public ArticleController(ArticleDatabase articleDatabase) {
+    public ArticleController(ArticleDatabase articleDatabase, CommentDatabase commentDatabase) {
         this.articleDatabase = articleDatabase;
+        this.commentDatabase = commentDatabase;
     }
 
     /**
@@ -75,6 +81,8 @@ public class ArticleController {
         articleDatabase.update(article);
 
         model.addAttribute("article", article);
+        model.addAttribute("comments", commentDatabase.findAll(id));
+        model.addAttribute("commentWriteForm", new CommentWriteForm(""));
 
         User loginUser = LoginUserProvider.provide(session);
         if (loginUser.hasSameNickname(article.getWriter())) {
@@ -142,6 +150,37 @@ public class ArticleController {
         logger.info("게시글이 삭제 되었습니다. {}", targetArticle);
         return "redirect:/articles/detail/" + id;
     }
+
+    @PostMapping("/detail/{articleId}/comments")
+    public String writeComment(@PathVariable Long articleId,
+                               @Validated @ModelAttribute CommentWriteForm commentWriteForm,
+                               BindingResult bindingResult, Model model,
+                               HttpSession session) {
+        Optional<Article> optionalArticle = articleDatabase.findBy(articleId);
+        System.out.println("commentWriteForm = " + commentWriteForm.getContent());
+        if (optionalArticle.isEmpty()) {
+            return "redirect:/";
+        }
+        Article article = optionalArticle.get();
+        User loginUser = LoginUserProvider.provide(session);
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("article", article);
+            model.addAttribute("comments", commentDatabase.findAll(articleId));
+            if (loginUser.hasSameNickname(article.getWriter())) {
+                model.addAttribute("isLoginUser", true);
+            }
+            return "article/show";
+        }
+
+        Comment comment = new Comment(loginUser.getNickname(), commentWriteForm.getContent(), articleId,
+                LocalDateTime.now());
+        commentDatabase.add(comment);
+        logger.info("새로운 코멘트가 추가되었습니다. {}", comment);
+
+        return "redirect:/articles/detail/" + articleId;
+    }
+
 
     private void validatePassword(ArticleDeleteForm articleDeleteForm, BindingResult bindingResult,
                                   HttpSession session) {

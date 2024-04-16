@@ -175,6 +175,11 @@ li {
     padding-right: 0px; /* 마지막 링크에는 패딩을 제거 */
 }
 
+.field-error {
+    margin-top: 5px;
+    border-color: #dc3545;
+    color: #dc3545;
+}
 
 
 

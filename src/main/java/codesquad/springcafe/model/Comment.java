@@ -2,9 +2,11 @@ package codesquad.springcafe.model;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class Comment {
     private final String writer;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private final String content;
     private final Long articleId;
     private final LocalDateTime writeDate;
