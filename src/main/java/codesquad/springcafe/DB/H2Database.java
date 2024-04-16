@@ -1,11 +1,9 @@
 package codesquad.springcafe.DB;
 
 import codesquad.springcafe.domain.Article;
-import codesquad.springcafe.dto.ArticleDto;
 import codesquad.springcafe.domain.User;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -49,9 +47,19 @@ public class H2Database {
         return jdbcTemplate.query("SELECT * FROM USERS", userRowMapper);
     }
 
-    public void addArticle(ArticleDto articleDto) {
+    public User getUser(String id) {
+        final String SELECT_USER = "SELECT * FROM USERS WHERE userId= ?";
+        return jdbcTemplate.queryForObject(SELECT_USER, userRowMapper, id);
+    }
+
+    public void updateUser(String password, String name, String email, String userId) {
+        final String UPDATE_USER = "UPDATE Users SET password=?, name=?, email=? WHERE userId=?";
+        jdbcTemplate.update(UPDATE_USER, password, name, email, userId);
+    }
+
+    public void addArticle(Article article) {
         jdbcTemplate.update("INSERT INTO Articles (writer, title, contents, time) VALUES (?,?,?,?)",
-                articleDto.getWriter(), articleDto.getTitle(), articleDto.getContents(), LocalDateTime.now());
+                article.getWriter(), article.getTitle(), article.getContents(), LocalDateTime.now());
     }
 
     public List<Article> getAllArticles() {
