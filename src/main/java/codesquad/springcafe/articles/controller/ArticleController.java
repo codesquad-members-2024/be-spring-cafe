@@ -2,8 +2,8 @@ package codesquad.springcafe.articles.controller;
 
 
 import codesquad.springcafe.articles.service.ArticleService;
+import model.article.Article;
 import model.article.dto.ArticleCreateDto;
-import model.article.dto.ArticleContentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,9 +31,9 @@ public class ArticleController {
 
     @GetMapping("/{articleId}")
     public String getUserProfile(@PathVariable int articleId, Model model) {
-        ArticleContentDto articleContent = articleService.findArticleById(articleId);
+        Article article = articleService.findArticleById(articleId);
 
-        model.addAttribute("articleContent", articleContent);
+        model.addAttribute("article", article);
 
         return "article/show";
     }

@@ -13,9 +13,6 @@ public interface UserRepository {
 
     Optional<ArrayList<UserPreviewDto>> getAllUsers();
 
-    /*
-     * userId, name, email, creationDate
-     * */
     Optional<UserPreviewDto> findUserById(String userId);
 
     Optional<UserCredentialDto> getUserCredential(String userId);

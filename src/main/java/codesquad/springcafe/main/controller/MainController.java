@@ -2,7 +2,7 @@ package codesquad.springcafe.main.controller;
 
 
 import codesquad.springcafe.articles.service.ArticleService;
-import model.article.dto.ArticlePreviewDto;
+import model.article.Article;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,10 +23,10 @@ public class MainController {
 
     @GetMapping
     public String showMain(Model model) {
-        ArrayList<ArticlePreviewDto> articlePreviews = articleService.getAllArticles();
+        ArrayList<Article> articles = articleService.getAllArticles();
 
-        model.addAttribute("articlePreviews", articlePreviews);
-        model.addAttribute("totalArticles", articlePreviews.size());
+        model.addAttribute("articles", articles);
+        model.addAttribute("totalArticles", articles.size());
 
         return "main/index";
     }

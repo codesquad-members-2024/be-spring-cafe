@@ -1,8 +1,6 @@
 package codesquad.springcafe.articles.repository;
 
 import model.article.Article;
-import model.article.dto.ArticleContentDto;
-import model.article.dto.ArticlePreviewDto;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -10,7 +8,7 @@ import java.util.Optional;
 public interface ArticleRepository {
     void createArticle(Article article);
 
-    Optional<ArrayList<ArticlePreviewDto>> getAllArticles();
+    Optional<ArrayList<Article>> getAllArticles();
 
-    Optional<ArticleContentDto> findArticleById(int articleId);
+    Optional<Article> findArticleById(int articleId);
 }
