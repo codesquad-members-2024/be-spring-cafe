@@ -1,7 +1,6 @@
-package codesquad.springcafe.service;
+package codesquad.springcafe.user;
 
-import codesquad.springcafe.database.UserRepository;
-import codesquad.springcafe.model.User;
+import codesquad.springcafe.user.database.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
-package codesquad.springcafe.controller;
+package codesquad.springcafe.main;
 
-import codesquad.springcafe.service.PostService;
+import codesquad.springcafe.post.PostService;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
