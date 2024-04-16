@@ -21,6 +21,6 @@ public class AppConfig implements WebMvcConfigurer {
         registry.addInterceptor(new NavbarSetInterceptor())
                 .addPathPatterns("/*")
                 .addPathPatterns("/*/*")
-                .excludePathPatterns("/*/*/*");
+                .addPathPatterns("/*/*/*");
     }
 }

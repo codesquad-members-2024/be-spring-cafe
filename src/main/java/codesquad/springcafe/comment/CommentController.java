@@ -45,7 +45,7 @@ public class CommentController {
     @PutMapping("/{id}")
     public String modifyComment(@PathVariable int id, @ModelAttribute CommentPostReq commentPostReq, RedirectAttributes ra) {
         commentService.modify(id, commentPostReq);
-
+        
         ra.addAttribute("id", commentService.getArticleId(id));
         return "redirect:/article/{id}";
     }

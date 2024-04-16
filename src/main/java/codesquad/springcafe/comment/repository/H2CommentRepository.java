@@ -43,8 +43,7 @@ public class H2CommentRepository implements CommentRepository {
 
     @Override
     public void modify(int id, CommentPostReq commentPostReq) {
-        String sql = "UPDATE ARTICLE SET CONTENT = ?,  CREATEDAT = ?  WHERE ID = ?;";
-
+        String sql = "UPDATE COMMENT SET CONTENT = ?,  CREATEDAT = ?  WHERE ID = ?;";
         Object[] args = new Object[]{commentPostReq.content(), Timestamp.valueOf(LocalDateTime.now()), id};
         jdbcTemplate.update(sql, args);
     }
