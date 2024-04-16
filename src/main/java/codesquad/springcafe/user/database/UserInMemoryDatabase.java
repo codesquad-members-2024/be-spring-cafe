@@ -1,7 +1,7 @@
 package codesquad.springcafe.user.database;
 
 import codesquad.springcafe.user.User;
-import codesquad.springcafe.user.UserRequestDto;
+import codesquad.springcafe.user.dto.UserRequestDto;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Repository;
@@ -39,7 +39,7 @@ public class UserInMemoryDatabase implements UserDatabase {
         return userDatabase.stream()
             .filter(user -> user.getUserId().equals(userId))
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("해당하는 userId가 없습니다"));
+            .orElse(null);
     }
 
     @Override
