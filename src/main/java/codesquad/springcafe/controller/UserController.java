@@ -4,6 +4,7 @@ import codesquad.springcafe.dto.UserProfileDto;
 import codesquad.springcafe.dto.UserUpdateDto;
 import codesquad.springcafe.model.User;
 import codesquad.springcafe.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -51,8 +52,18 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String getLoginForm() {
         return "user/login";
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestParam String userId, @RequestParam String password, HttpSession httpSession) {
+        if (userService.isValidUser(userId, password)) {
+            httpSession.setAttribute("loginUser", userId);
+            log.debug("로그인 성공: {}", userId);
+            return "redirect:/";
+        }
+        return "redirect:/users/login";
     }
 
     @GetMapping("/join")
@@ -69,6 +80,8 @@ public class UserController {
     @PutMapping("/{userId}")
     public String updateUser(@PathVariable String userId, @RequestParam("password") String password, @RequestParam("newPassword") String newPassword, @RequestParam("name") String name, @RequestParam("email") String email) {
         UserUpdateDto userUpdateDto = new UserUpdateDto(userId, password, newPassword, name, email);
+
+
         try {
             userService.update(userUpdateDto);
         } catch (IllegalArgumentException e) {

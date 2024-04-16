@@ -34,4 +34,10 @@ public class UserService {
         user.update(userUpdateDto);
         userRepository.update(user);
     }
+
+    public boolean isValidUser(String userId, String password) {
+        User user = userRepository.findUserById(userId);
+        return user.validatePassword(password);
+    }
+
 }
