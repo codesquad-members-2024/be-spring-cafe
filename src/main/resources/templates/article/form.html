@@ -19,7 +19,7 @@
         <header class="post-header">
             <p class="title">글쓰기</p>
         </header>
-        <form class="submit-write" method="post" action th:object="${articleAddForm}">
+        <form class="submit-write" method="post" action th:object="${articleWriteForm}">
             <div th:if="${#fields.hasGlobalErrors()}">
                 <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
             </div>

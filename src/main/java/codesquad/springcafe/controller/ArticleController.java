@@ -1,7 +1,7 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.database.article.ArticleDatabase;
-import codesquad.springcafe.form.article.ArticleAddForm;
+import codesquad.springcafe.form.article.ArticleWriteForm;
 import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.User;
 import codesquad.springcafe.util.LoginUserProvider;
@@ -35,8 +35,8 @@ public class ArticleController {
      */
     @GetMapping("/add")
     public String articleForm(Model model) {
-        ArticleAddForm articleAddForm = new ArticleAddForm("", "");
-        model.addAttribute("articleAddForm", articleAddForm);
+        ArticleWriteForm articleWriteForm = new ArticleWriteForm("", "");
+        model.addAttribute("articleWriteForm", articleWriteForm);
         return "article/form";
     }
 
@@ -44,14 +44,15 @@ public class ArticleController {
      * 사용자가 작성한 아티클을 생성하고 데이터베이스에 저장합니다.
      */
     @PostMapping("/add")
-    public String addForm(@Validated @ModelAttribute ArticleAddForm articleAddForm, BindingResult bindingResult,
+    public String addForm(@Validated @ModelAttribute ArticleWriteForm articleWriteForm, BindingResult bindingResult,
                           HttpSession session) {
         if (bindingResult.hasErrors()) {
             logger.error("errors ={}", bindingResult);
             return "article/form";
         }
         User loginUser = LoginUserProvider.provide(session);
-        Article article = new Article(loginUser.getNickname(), articleAddForm.getTitle(), articleAddForm.getContent());
+        Article article = new Article(loginUser.getNickname(), articleWriteForm.getTitle(),
+                articleWriteForm.getContent());
         articleDatabase.add(article);
         logger.info("새로운 게시물이 추가되었습니다. {}", article);
         return "redirect:/";
