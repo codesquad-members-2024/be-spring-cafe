@@ -5,10 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
@@ -32,11 +35,22 @@ public class ArticleController {
         return "redirect:/articles";
     }
 
+
     @GetMapping("/articles")
     public String showArticleList(Model model){
         List<Article> articles = articleDatabase.findAllArticles();
         model.addAttribute("articles", articles);
         model.addAttribute("totalArticleNumber", articleDatabase.getTotalArticleNumber());
         return "post/list";
+    }
+
+    @GetMapping("/articles/{sequence}")
+    public String loadArticleContent(@PathVariable long sequence, Model model){
+        Optional<Article> article = articleDatabase.findArticleBySequence(sequence);
+        if(article.isEmpty()){
+            throw new NoSuchElementException();
+        }
+        model.addAttribute("article", article.get());
+        return "post/show";
     }
 }
