@@ -14,7 +14,6 @@ public class MvcConfig implements WebMvcConfigurer {
 
         /* User */
         registry.addViewController("/users/join").setViewName("user/form"); // 유저 회원가입
-        registry.addViewController("/users/login").setViewName("user/login");   // 유저 로그인
 
         /* Article */
         registry.addViewController("/articles/write").setViewName("article/form");  // 게시글 작성
