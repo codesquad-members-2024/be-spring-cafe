@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정보 수정</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex; /* 가운데 정렬을 위한 flexbox 사용 */
+            justify-content: center; /* 가로 가운데 정렬 */
+        }
+
+        .container {
+            width: 800px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        form input {
+            margin-bottom: 20px;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .submit-btn {
+            width: auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>회원 정보 수정</h2>
+    <form th:action="@{/users/{userId}/update(userId=${userId})}" method="post"> <!-- HTML 폼은 POST 메서드를 사용 -->
+        <input type="hidden" name="_method" value="put"> <!-- _method hidden 필드를 추가하여 PUT 메서드를 지정 -->
+
+        <label for="password">현재 비밀번호: </label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="newPassword">새로운 비밀번호: </label>
+        <input type="password" id="newPassword" name="newPassword">
+
+        <label for="newNickname">새로운 닉네임:</label>
+        <input type="text" id="newNickname" name="newNickname">
+
+        <label for="newEmail">새로운 이메일:</label>
+        <input type="email" id="newEmail" name="newEmail">
+
+        <button type="submit" class="submit-btn">수정</button>
+    </form>
+</div>
+</body>
+</html>

@@ -3,62 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>회원 정보</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
             margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            padding: 20px;
+            display: flex; /* 가운데 정렬을 위한 flexbox 사용 */
+            justify-content: center; /* 가로 가운데 정렬 */
         }
 
-        .profile-container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .container {
+            width: 800px;
             padding: 20px;
-            max-width: 1000px;
-            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
 
         .profile-picture {
+            text-align: center;
+        }
+
+        .profile-picture img {
+            max-width: 200px;
             border-radius: 50%;
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            margin-bottom: 20px;
         }
 
         .profile-info {
+            margin-top: 20px;
             margin-bottom: 20px;
         }
 
-        .profile-info label {
-            font-weight: bold;
+        .profile-info p {
+            margin-bottom: 20px;
+        }
+
+        .edit-profile-link {
+            text-align: center; /* 링크를 가운데 정렬 */
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-<div class="profile-container">
-    <img class="profile-picture" th:src="@{/images/profile_image.png}" alt="Profile Picture">
-
-    <div class="profile-info">
-        <label for="userId">ID:</label>
-        <span id="userId" th:text="${user.getUserId()}">user123</span>
+<div class="container">
+    <h2>회원 정보</h2>
+    <div class="profile-picture">
+        <img th:src="@{/images/profile_image.png}" alt="Profile Picture">
     </div>
-
     <div class="profile-info">
-        <label for="nickname">Nickname:</label>
-        <span id="nickname" th:text="${user.getNickname()}">CoolUser</span>
+        <p><strong>아이디:</strong> <span th:text="${user.getUserId()}"></span></p>
+        <p><strong>닉네임:</strong> <span th:text="${user.getNickname()}"></span></p>
+        <p><strong>이메일:</strong> <span th:text="${user.getEmail()}"></span></p>
     </div>
-
-    <div class="profile-info">
-        <label for="email">Email:</label>
-        <span id="email" th:text="${user.getEmail()}">user@example.com</span>
+    <div class="edit-profile-link">
+        <a th:href="@{'/users/' + ${userId} + '/update'}">정보 수정</a>
     </div>
 </div>
 </body>
