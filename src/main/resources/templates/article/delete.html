@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>kakao Java Web Programming</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link th:href="@{/css/reset.css}" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link th:href="@{/css/user/form.css}" rel="stylesheet">
+
+</head>
+<body>
+<div class="background">
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <div class="container" id="main">
+        <header class="post-header">
+            <p class="title">글 삭제</p>
+        </header>
+
+        <form name="question" class="info-container" method="post" th:action th:object="${articleDeleteForm}">
+            <input type="hidden" name="_method" value="DELETE"/>
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('password')} ? 'field-error'">
+                <label for="password">현재 비밀번호</label>
+                <input type="password" class="form-control" id="password" th:field="*{password}"
+                       placeholder="비밀번호를 입력하세요">
+            </div>
+            <div class="field-error" th:errors="*{password}">비밀번호 오류</div>
+
+            <button type="submit" class="btn btn-success clearfix pull-right">완료</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

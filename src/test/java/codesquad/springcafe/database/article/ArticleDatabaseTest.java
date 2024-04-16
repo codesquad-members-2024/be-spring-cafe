@@ -58,4 +58,15 @@ class ArticleDatabaseTest {
 
         assertThat(result.getViews()).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("특정 id를 가진 아티클을 제거할 수 있다.")
+    void delete() {
+        Article article = new Article("상추", "제목1", "본문1");
+        Long id = articleDatabase.add(article).getId();
+        assertThat(articleDatabase.findAll().size()).isEqualTo(1);
+
+        articleDatabase.delete(id);
+        assertThat(articleDatabase.findAll().size()).isEqualTo(0);
+    }
 }

@@ -29,12 +29,17 @@ public class ArticleMemoryDatabase implements ArticleDatabase {
     }
 
     @Override
-    public void clear() {
-        store.clear();
+    public void update(Article article) {
+        store.put(article.getId(), article);
     }
 
     @Override
-    public void update(Article article) {
-        store.put(article.getId(), article);
+    public void delete(Long id) {
+        store.remove(id);
+    }
+
+    @Override
+    public void clear() {
+        store.clear();
     }
 }
