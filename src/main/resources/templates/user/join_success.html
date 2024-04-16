@@ -3,16 +3,13 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>kakao Java Web Programming</title>
+    <title>회원가입 성공</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link th:href="@{/css/reset.css}" rel="stylesheet">
     <!--[if lt IE 9]>
     <script th:src="@{//html5shim.googlecode.com/svn/trunk/html5.js}"></script>
     <![endif]-->
     <link th:href="@{/css/user/join.css}" rel="stylesheet">
-
-    <meta charset="UTF-8">
-    <title>404 - 페이지를 찾을 수 없습니다</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,28 +18,28 @@
             padding: 0;
         }
 
-        .error-container {
+        .success-container {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 70vh;
         }
 
-        .error-message {
+        .success-message {
             font-size: 36px;
             color: #333;
             margin-bottom: 20px;
         }
 
-        .error-description {
+        .success-description {
             font-size: 18px;
             color: #666;
             text-align: center;
             margin-bottom: 40px;
         }
 
-        .error-link {
+        .success-link {
             display: inline-block;
             padding: 10px 20px;
             background-color: black;
@@ -52,17 +49,20 @@
             transition: background-color 0.3s ease;
         }
 
-        .error-link:hover {
+        .success-link:hover {
             background-color: #ffcd00;
             color: black;
         }
     </style>
 </head>
 <body>
-<div class="error-container">
-    <h1 class="error-message">404 - 페이지를 찾을 수 없습니다</h1>
-    <p class="error-description">죄송합니다, 요청하신 페이지를 찾을 수 없습니다.</p>
-    <a href="/" class="error-link">홈페이지로 돌아가기</a>
+<div class="background">
+    <div th:replace="~{fragments/navigation :: main_nav}"></div>
+    <div class="success-container">
+        <h1 class="success-message">회원가입 성공!</h1>
+        <p class="success-description">회원가입이 성공적으로 완료되었습니다.</p>
+        <a href="/" class="success-link">홈페이지로 돌아가기</a>
+    </div>
 </div>
 </body>
 </html>
