@@ -13,7 +13,7 @@ public class Article {
     private String title;
     private String content;
     private Long articleId;
-    private final LocalDateTime createdTime;
+    private LocalDateTime createdTime;
 
     public Article(String writer, String title, String content) {
         this.writer = writer;
@@ -62,6 +62,10 @@ public class Article {
     public String getFormattedTime() {
         String formattedTime = this.createdTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
         return formattedTime;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
     }
 
     @Override

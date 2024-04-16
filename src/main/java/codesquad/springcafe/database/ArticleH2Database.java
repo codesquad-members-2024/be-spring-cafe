@@ -32,6 +32,7 @@ public class ArticleH2Database implements ArticleDatabase {
                                     rs.getString("title"),
                                     rs.getString("content"));
         article.setArticleId(rs.getLong("articleId"));
+        article.setCreatedTime(rs.getTimestamp("createdTime").toLocalDateTime());
         return article;
     };
 
