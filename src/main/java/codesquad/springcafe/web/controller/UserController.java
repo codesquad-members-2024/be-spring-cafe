@@ -26,7 +26,7 @@ public class UserController {
         this.userUpdateValidator = userUpdateValidator;
     }
 
-    @InitBinder("user")
+    @InitBinder("create")
     public void initTargetCreate(WebDataBinder dataBinder) {
         dataBinder.addValidators(userCreateValidator);
     }
@@ -38,12 +38,12 @@ public class UserController {
 
     @GetMapping("/create")
     public String join(Model model) {
-        model.addAttribute("user", new UserCreateDto());
+        model.addAttribute("create", new UserCreateDto());
         return "/user/form";
     }
 
     @PostMapping("/create")
-    public String join(@Validated @ModelAttribute("user") UserCreateDto userCreateDto, BindingResult bindingResult) {
+    public String join(@Validated @ModelAttribute("create") UserCreateDto userCreateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "/user/form";
         }
