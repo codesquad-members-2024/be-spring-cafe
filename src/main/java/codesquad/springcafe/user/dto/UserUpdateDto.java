@@ -1,4 +1,7 @@
-package codesquad.springcafe.user;
+package codesquad.springcafe.user.dto;
+
+import codesquad.springcafe.user.User;
+import codesquad.springcafe.user.UserBuilder;
 
 public class UserUpdateDto {
 

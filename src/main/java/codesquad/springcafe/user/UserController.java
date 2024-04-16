@@ -1,5 +1,10 @@
 package codesquad.springcafe.user;
 
+import codesquad.springcafe.user.dto.UserSigninDto;
+import codesquad.springcafe.user.dto.UserSignupDto;
+import codesquad.springcafe.user.dto.UserUpdateDto;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +32,7 @@ public class UserController {
     // 유저 등록 메서드
     @PostMapping("/create")
     public String register(UserSignupDto userSignupDto) {
-        userService.save(userSignupDto.toEntity());
+        userService.save(userSignupDto);
         return "redirect:/";
     }
 
@@ -60,4 +65,39 @@ public class UserController {
         return "redirect:/user";
     }
 
+    //유저 로그인 페이지
+    @GetMapping("/login")
+    public String userLoginForm() {
+        return "user/login";
+    }
+
+    //유저 로그인
+    @PostMapping("/login")
+    public String userLogin(UserSigninDto userSigninDto, HttpServletRequest httpServletRequest) {
+        User signInUser = userService.userLogin(userSigninDto);
+
+        if (signInUser == null) {
+            return "redirect:/user/login_failed";
+        }
+
+        HttpSession httpSession = httpServletRequest.getSession();
+        httpSession.setAttribute("userId", signInUser.getUserId());
+        httpSession.setAttribute("nickname", signInUser.getNickname());
+
+        return "redirect:/";
+    }
+
+    //유저 로그아웃
+    @GetMapping("/logout")
+    public String userLogout(HttpServletRequest httpServletRequest) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        httpSession.invalidate();
+        return "redirect:/";
+    }
+
+    //로그인 실패 페이지
+    @GetMapping("/login_failed")
+    public String loginFailed() {
+        return "user/login_failed";
+    }
 }

@@ -1,7 +1,7 @@
 package codesquad.springcafe.user.database;
 
 import codesquad.springcafe.user.User;
-import codesquad.springcafe.user.UserRequestDto;
+import codesquad.springcafe.user.dto.UserRequestDto;
 import java.util.List;
 
 public interface UserDatabase {

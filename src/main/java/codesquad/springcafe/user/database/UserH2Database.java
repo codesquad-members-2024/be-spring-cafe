@@ -1,8 +1,8 @@
 package codesquad.springcafe.user.database;
 
 import codesquad.springcafe.user.User;
-import codesquad.springcafe.user.UserRequestDto;
 import codesquad.springcafe.user.UserRowMapper;
+import codesquad.springcafe.user.dto.UserRequestDto;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.context.annotation.Primary;
@@ -35,6 +35,9 @@ public class UserH2Database implements UserDatabase {
     @Override
     public User findByUserId(String userId) {
         String sql = "SELECT * FROM users WHERE userid = ?";
+        if (jdbcTemplate.query(sql, new UserRowMapper(), userId).isEmpty()) {
+            return null;
+        }
         return jdbcTemplate.queryForObject(sql, new UserRowMapper(), userId);
     }
 

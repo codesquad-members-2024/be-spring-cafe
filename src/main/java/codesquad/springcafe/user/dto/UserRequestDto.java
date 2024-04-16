@@ -1,4 +1,4 @@
-package codesquad.springcafe.user;
+package codesquad.springcafe.user.dto;
 
 public class UserRequestDto {
 

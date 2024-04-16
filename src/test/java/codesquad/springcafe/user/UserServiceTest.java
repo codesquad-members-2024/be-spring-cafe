@@ -2,11 +2,12 @@ package codesquad.springcafe.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import codesquad.springcafe.security.PasswordEncryptor;
 import codesquad.springcafe.user.database.UserDatabase;
+import codesquad.springcafe.user.dto.UserRequestDto;
+import codesquad.springcafe.user.dto.UserUpdateDto;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,12 +37,6 @@ class UserServiceTest {
             PasswordEncryptor.encrypt("password2"));
     }
 
-    @Test
-    @DisplayName("유저 정보를 DB에 딱 한 번씩 저장되는지 확인")
-    void testSaveUser() {
-        userService.save(user1);
-        verify(userDatabase).save(user1);
-    }
 
     @Test
     @DisplayName("유저 ")
