@@ -1,4 +1,4 @@
-package codesquad.springcafe.dto;
+package codesquad.springcafe.model;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -16,8 +16,10 @@ public class Article {
     private LocalDateTime creationTime;
     private long viewCount;
 
-    public Article() {
-        this.writer = "익명 사용자";
+    public Article(String writer, String title, String content) {
+        this.writer = writer;
+        this.title = title;
+        this.content = content;
         this.creationTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         this.viewCount = 0;
     }

@@ -1,24 +1,35 @@
-package codesquad.springcafe.dto;
+package codesquad.springcafe.model;
 
 public class User {
     private static final String TO_STRING_FORMAT = "[사용자] %s, %s, %s, %s";
 
     private long id;
     private String userId;
-    private String userPw;
+    private String userPassword;
     private String userName;
     private String userEmail;
 
-    public User() {
+    public User(String userId, String userPassword, String userName, String userEmail) {
+        this.userId = userId;
+        this.userPassword = userPassword;
+        this.userName = userName;
+        this.userEmail = userEmail;
+    }
 
+    public User(long id, String userId, String userPassword, String userName, String userEmail) {
+        this.id = id;
+        this.userId = userId;
+        this.userPassword = userPassword;
+        this.userName = userName;
+        this.userEmail = userEmail;
     }
 
     public long getId() {
         return id;
     }
 
-    public String getUserPw() {
-        return userPw;
+    public String getUserPassword() {
+        return userPassword;
     }
 
     public String getUserId() {
@@ -41,8 +52,8 @@ public class User {
         this.userId = userId;
     }
 
-    public void setUserPw(String userPw) {
-        this.userPw = userPw;
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
     }
 
     public void setUserName(String userName) {
@@ -54,17 +65,21 @@ public class User {
     }
 
     public boolean matchPassword(String userPw) {
-        return this.userPw.equals(userPw);
+        return this.userPassword.equals(userPw);
+    }
+
+    public boolean matchUser(LoginUser loginUser) {
+        return this.userId.equals(loginUser.getUserId()) && this.userPassword.equals(loginUser.getUserPassword());
     }
 
     public void updateUser(UpdatedUser updatedUser) {
-        this.userPw = updatedUser.getUserPw();
+        this.userPassword = updatedUser.getUserPw();
         this.userName = updatedUser.getUserName();
         this.userEmail = updatedUser.getUserEmail();
     }
 
     @Override
     public String toString() {
-        return String.format(TO_STRING_FORMAT, userId, userPw, userName, userEmail);
+        return String.format(TO_STRING_FORMAT, userId, userPassword, userName, userEmail);
     }
 }

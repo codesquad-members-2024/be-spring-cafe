@@ -1,18 +1,18 @@
 package codesquad.springcafe.model;
 
-public class UpdatedUser {
-    private final String userPassword;
+public class SessionUser {
+    private final String userId;
     private final String userName;
     private final String userEmail;
 
-    public UpdatedUser(String userPassword, String userName, String userEmail) {
-        this.userPassword = userPassword;
+    public SessionUser(String userId, String userName, String userEmail) {
+        this.userId = userId;
         this.userName = userName;
         this.userEmail = userEmail;
     }
 
-    public String getUserPw() {
-        return userPassword;
+    public String getUserId() {
+        return userId;
     }
 
     public String getUserName() {

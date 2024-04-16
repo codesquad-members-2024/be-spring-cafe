@@ -1,4 +1,4 @@
-package codesquad.springcafe.dto;
+package codesquad.springcafe.model;
 
 public class UpdatedArticle {
     private String title;
