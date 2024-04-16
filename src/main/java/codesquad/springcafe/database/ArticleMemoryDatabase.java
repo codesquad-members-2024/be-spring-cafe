@@ -3,10 +3,8 @@ package codesquad.springcafe.database;
 import codesquad.springcafe.Article;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.Collections;
 
 @Repository
 public class ArticleMemoryDatabase implements ArticleDatabase{
@@ -25,7 +23,9 @@ public class ArticleMemoryDatabase implements ArticleDatabase{
 
     @Override
     public List<Article> getReversedArticleList() {
-        return new ArrayList<>(articleMap.values()).reversed();
+        List<Article> articleList = getArticleList();
+        Collections.reverse(articleList);
+        return articleList;
     }
 
     @Override

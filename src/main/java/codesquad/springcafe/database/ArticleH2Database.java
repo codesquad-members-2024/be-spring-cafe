@@ -51,8 +51,8 @@ public class ArticleH2Database implements ArticleDatabase {
 
     @Override
     public List<Article> getReversedArticleList() {
-        String sql = "SELECT * FROM MAIN.ARTICLES";
-        return jdbcTemplate.query(sql, articleRowMapper).reversed();
+        String sql = "SELECT * FROM MAIN.ARTICLES ORDER BY CREATEDTIME DESC";
+        return jdbcTemplate.query(sql, articleRowMapper);
     }
 
     @Override
