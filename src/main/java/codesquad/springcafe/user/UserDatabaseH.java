@@ -44,4 +44,9 @@ public class UserDatabaseH implements UserDatabase {
         List<User> userList = jdbcTemplate.query(sql, userRowMapper, userId);
         return userList.isEmpty() ? null : userList.get(0);
     }
+
+    @Override
+    public boolean isExistUser(String userId) {
+        return getUser(userId) != null;
+    }
 }

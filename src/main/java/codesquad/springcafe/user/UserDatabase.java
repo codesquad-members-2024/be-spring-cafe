@@ -9,4 +9,6 @@ public interface UserDatabase {
      List<User> getUserList();
 
      User getUser(String userId);
+
+     boolean isExistUser(String userId);
 }

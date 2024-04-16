@@ -21,6 +21,7 @@ public class ArticleH2Database implements ArticleDatabase {
         this.sequence = getMaxArticleId();
     }
 
+    // 저장되어 있는 Article 중 가장 큰 articleId를 찾아 sequence로 사용하기 위함입니다.
     private Long getMaxArticleId() {
         Long numOfArticle = jdbcTemplate.queryForObject("SELECT MAX(articleId) FROM MAIN.ARTICLES", Long.class);
         return numOfArticle == null ? 0L : numOfArticle;
