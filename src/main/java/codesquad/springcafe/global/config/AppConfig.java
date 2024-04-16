@@ -1,8 +1,10 @@
 package codesquad.springcafe.global.config;
 
+import codesquad.springcafe.global.filter.CacheControlFilter;
 import codesquad.springcafe.global.interceptor.AuthenticationInterceptor;
 import codesquad.springcafe.global.interceptor.CsrfTokenIntercetor;
 import codesquad.springcafe.global.security.PasswordEncoder;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -45,5 +47,14 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new PasswordEncoder();
+    }
+
+    @Bean
+    public FilterRegistrationBean<CacheControlFilter> customFilterRegistration() {
+        FilterRegistrationBean<CacheControlFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new CacheControlFilter());
+        registrationBean.addUrlPatterns("/*"); // 필터가 적용될 URL 패턴 설정
+        registrationBean.setOrder(1); // 필터 순서 설정
+        return registrationBean;
     }
 }
