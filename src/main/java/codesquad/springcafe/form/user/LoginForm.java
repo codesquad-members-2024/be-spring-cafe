@@ -4,9 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 
 public class LoginForm {
     @NotBlank
-    private String email;
+    private final String email;
     @NotBlank
-    private String password;
+    private final String password;
 
     public LoginForm(String email, String password) {
         this.email = email;
