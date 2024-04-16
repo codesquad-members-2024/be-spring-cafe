@@ -44,4 +44,12 @@ public class UserController {
         model.addAttribute("user", user);
         return "/user/profile";
     }
+
+    @GetMapping("/{userId}/form")
+    public String showUserUpdateForm(@PathVariable String userId,
+        Model model) {
+        User user = userService.findUserById(userId);
+        model.addAttribute("user", user);
+        return "/user/updateForm";
+    }
 }
