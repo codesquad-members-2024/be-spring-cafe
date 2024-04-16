@@ -14,5 +14,9 @@ public interface CommentRepository {
     List<Comment> findByArticleId(int id);
 
     List<Comment> findByUserId(String id);
+    void modify(int id, CommentPostReq commentPostReq);
+    void delete(int id);
+
+    Comment findById(int id);
 }
 

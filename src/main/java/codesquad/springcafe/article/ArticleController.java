@@ -49,10 +49,9 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteArticle(@PathVariable int id, RedirectAttributes ra) {
+    public String deleteArticle(@PathVariable int id) {
         articleService.delete(id);
         log.info("Article " + id + "deleted");
-        ra.addAttribute("id", id);
 
         return "redirect:/";
     }
@@ -111,6 +110,7 @@ public class ArticleController {
 
         if (articleService.canModify(id, loginUser)) {
             model.addAttribute("articleId", id);
+            System.out.println(id);
             return "article/delete";
         }
 

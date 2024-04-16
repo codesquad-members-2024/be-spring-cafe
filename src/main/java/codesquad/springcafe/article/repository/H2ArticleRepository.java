@@ -91,7 +91,6 @@ public class H2ArticleRepository implements ArticleRepository {
     @Override
     public void update(int id, ArticlePostReq articlePostReq) {
         Object[] args = new Object[]{articlePostReq.title(), articlePostReq.content(), Timestamp.valueOf(LocalDateTime.now()), id};
-//        int[] pramTypes = new int[]{Types.VARCHAR, Types.VARCHAR, Types.TIMESTAMP, Types.INTEGER};
         jdbcTemplate.update(UPDATE_ARTICLE, args);
     }
 

@@ -9,7 +9,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,8 +18,8 @@ import java.util.List;
 public class H2CommentRepository implements CommentRepository {
 
     private final String ADD_COMMENT = "INSERT INTO comment (ARTICLEID, CREATEDAT, AUTHORID, CONTENT) VALUES (?, ?, ?, ?);";
-    private final String FIND_BY_ARTICLE_ID = "SELECT * FROM comment WHERE ArticleId = ? ORDER BY createdAt DESC;";
-    private final String FIND_BY_USER_ID = "SELECT * FROM comment WHERE AuthorId = ? ORDER BY createdAt DESC;";
+    private final String FIND_BY_ARTICLE_ID = "SELECT * FROM comment WHERE ArticleId = ? AND STATUS = 'OPEN' ORDER BY createdAt DESC;";
+    private final String FIND_BY_USER_ID = "SELECT * FROM comment WHERE AuthorId = ? AND STATUS = 'OPEN' ORDER BY createdAt DESC;";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -41,6 +42,22 @@ public class H2CommentRepository implements CommentRepository {
     }
 
     @Override
+    public void modify(int id, CommentPostReq commentPostReq) {
+        String sql = "UPDATE ARTICLE SET CONTENT = ?,  CREATEDAT = ?  WHERE ID = ?;";
+
+        Object[] args = new Object[]{commentPostReq.content(), Timestamp.valueOf(LocalDateTime.now()), id};
+        jdbcTemplate.update(sql, args);
+    }
+
+    @Override
+    public void delete(int id) {
+        String sql = "UPDATE COMMENT SET STATUS = 'CLOSE' WHERE ID = ? ;";
+        Object[] args = new Object[]{id};
+
+        jdbcTemplate.update(sql, args);
+    }
+
+    @Override
     public List<Comment> findByArticleId(int articleId) {
         Object[] args = new Object[]{articleId};
         int[] pramTypes = new int[]{Types.VARCHAR};
@@ -52,6 +69,18 @@ public class H2CommentRepository implements CommentRepository {
         Object[] args = new Object[]{userId};
         int[] pramTypes = new int[]{Types.VARCHAR};
         return jdbcTemplate.query(FIND_BY_USER_ID, args, pramTypes, commentRowMapper());
+    }
+
+    @Override
+    public Comment findById(int id) {
+        String sql = "SELECT * FROM COMMENT WHERE ID = ?";
+        Object[] args = new Object[]{id};
+        int[] pramTypes = new int[]{Types.VARCHAR};
+        try {
+            return jdbcTemplate.query(sql, args, pramTypes, commentRowMapper()).get(0);
+        }catch (IndexOutOfBoundsException commentNotFound){
+            return null;
+        }
     }
 
     private RowMapper<Comment> commentRowMapper() {

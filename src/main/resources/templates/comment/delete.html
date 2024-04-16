@@ -13,7 +13,7 @@
         }
 
         .error-page {
-            background-image: url('/images/삭제확인.jpg');
+            background-image: url('/images/댓글삭제확인.jpg');
             background-size: 50%; /* 이미지 크기를 50%로 줄임 */
             /*background-size: cover;*/
             background-position: center;
@@ -49,12 +49,13 @@
 <body>
 <div class="error-page">
     <div class="error-message">
-        <h1>글을 정말 삭제하시겠습니까?</h1>
+        <h1>댓글을 정말 삭제하시겠습니까?</h1>
         {{#alert}}
         <p>{{alert}}</p>
         {{/alert}}
     </div>
-    <form class="form-delete" action="/article/{{articleId}}" method="post">
+<!--    <a href="/" class="back-to-home">삭제하기</a>-->
+    <form class="form-delete" action="/comment/{{commentId}}" method="POST">
         <input type="hidden" name="_method" value="DELETE">
         <button class="back-to-home" type="submit">삭제하기</button>
     </form>
