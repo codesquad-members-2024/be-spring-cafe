@@ -5,7 +5,7 @@
     </li>
     <li th:if="${session.userId}">
         <form action="/user/logout" method="post">
-            <input type="hidden" name="userId" th:value="${session.userId}">
+            <input type="hidden" name="CSRF_TOKEN" th:value="${session.CSRF_TOKEN}">
             <button style="display: flex; align-items: center; justify-content: center;" class="black-component" type="submit">로그아웃</button>
         </form>
     </li>

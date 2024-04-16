@@ -119,15 +119,13 @@ salt를 생성하고, 내부적으로 구현된 encode 메서드로 인코딩한
 - CSRF 토큰을 사용하는 방식으로 공격 방지 가능
 
 ### 어떤 걸 선택할까
-- POST를 사용! CSRF 공격은 아래 설명과 같이 구현해 임시로 해결한다
-- 로그인, 회원가입 시 HttpSession에 userId를 설정하면, 브라우저의 쿠키에 JSessionID라는 값이 생긴다
-- 해당 값 자체로는 세션에 저장된 데이터를 확인할 수 없다
-- 서버 구현 상으로는 userId만 알면 로그아웃을 할 수 있는데, 그렇다면 외부에 userId를 노출시키지 않으면 된다
-- 문서를 작성하는 시점 기준 사용자 조회 로직은 /profile/{userId}와 같은 형식으로 되어 있는데, 유저 정보에 loginID (사용자가 지정한 아이디) 값을 추가해 해당 값으로 프로필을 조회하게 변경하자
-- logout POST 요청을 보낼 때 hidden으로 session의 userId를 함께 보낸다.
-- 세션의 userId와 브라우저가 전송한 userId가 같으면 로그아웃시킨다.
-
-=> 근데 세션 탈취 시 이 방법 소용없지 않나...? 다시 생각하기
+- POST를 사용! CSRF 공격은 아래 설명과 같이 구현해 해결한다
+- CSRF 토큰을 사용하자
+  - 서버는 CSRF 토큰을 생성하고 세션에 저장한다
+  - 생성된 CSRF 토큰은 HTML 형식의 숨겨진 태그를 사용해 클라이언트와 연결된다
+  - 클라이언트가 HTML 양식의 버튼을 클릭해 서버에 요청을 보낸다. CSRF 토큰 값이 요청 매개 변수로 전송된다
+  - 서버는 POST 액세스 시 세션에 유지된 CSRF 토큰 값이 동일한지 확인한다
+  - 토큰 값이 일치하지 않으면 잘못된 요청으로 오류가 발생한다
 
 ---
 ## 참고 링크
@@ -135,3 +133,5 @@ salt를 생성하고, 내부적으로 구현된 encode 메서드로 인코딩한
 - https://hyunseo-fullstackdiary.tistory.com/127
 - https://blog.jiniworld.me/172
 - https://velog.io/@bagt/HTTP-method-for-loginlogout
+- https://devscb.tistory.com/123#google_vignette
+- https://www.xn--hy1b43d247a.com/critical-info-infrastructure/01-account-management/csrf-token

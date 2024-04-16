@@ -17,6 +17,7 @@
             <p class="title">글쓰기</p>
         </header>
         <form class="submit-write" method="post" action="/post">
+            <input type="hidden" name="CSRF_TOKEN" th:value="${session.CSRF_TOKEN}">
             <div class="text-box">
                 <div class="comment-writer-container">
                     <p class="post-title">제목</p>

@@ -20,6 +20,7 @@
             <img src="/images/user-default.png" alt="프로필 사진">
             <div class="user-info">
                 <form class="info-container" method="post" action="/profile/my/edit">
+                    <input type="hidden" name="CSRF_TOKEN" th:value="${session.CSRF_TOKEN}">
                     <input type="hidden" name="_method" value="PUT"/>
                     <table>
                         <tr>

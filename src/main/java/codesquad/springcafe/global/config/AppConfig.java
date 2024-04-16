@@ -1,6 +1,7 @@
 package codesquad.springcafe.global.config;
 
 import codesquad.springcafe.global.interceptor.AuthenticationInterceptor;
+import codesquad.springcafe.global.interceptor.CsrfTokenIntercetor;
 import codesquad.springcafe.global.security.PasswordEncoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,10 +31,15 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        // 인증 인터셉터
         registry.addInterceptor(new AuthenticationInterceptor())
                 // TODO: 인증이 필요한 경로 추가
                 .addPathPatterns("/profile/**", "/users/**", "/question/**") // 등록한 경로에 대해 인터셉트
                 .excludePathPatterns("/static/**");    // 제외할 경로 설정
+
+        // CSRF 토큰 인터셉터
+        registry.addInterceptor(new CsrfTokenIntercetor())
+                .excludePathPatterns("/user", "/user/login");
     }
 
     @Bean

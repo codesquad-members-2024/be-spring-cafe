@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @Controller
 public class UserController {
 
@@ -27,6 +29,7 @@ public class UserController {
         Long userId = userService.join(userJoinRequest);
 
         httpSession.setAttribute("userId", userId);
+        httpSession.setAttribute("CSRF_TOKEN", UUID.randomUUID());
         httpSession.setMaxInactiveInterval(3600);
 
         model.addAttribute("user", userJoinRequest);
@@ -40,6 +43,7 @@ public class UserController {
                         HttpSession httpSession) {
         Long userId = userService.login(userLoginRequest);
         httpSession.setAttribute("userId", userId);
+        httpSession.setAttribute("CSRF_TOKEN", UUID.randomUUID());
         httpSession.setMaxInactiveInterval(3600);
 
         return "redirect:/";
