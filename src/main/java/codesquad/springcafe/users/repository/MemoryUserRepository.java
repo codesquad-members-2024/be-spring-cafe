@@ -47,7 +47,7 @@ public class MemoryUserRepository implements UserRepository {
     public Optional<UserCredentialDto> getUserCredential(String userId) {
         User user = UserDatabase.findUserById(userId).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다"));
 
-        UserCredentialDto userCredentialDto = new UserCredentialDto(user.getPassword());
+        UserCredentialDto userCredentialDto = new UserCredentialDto(user.getSalt(), user.getHashedPassword());
 
         return Optional.of(userCredentialDto);
     }

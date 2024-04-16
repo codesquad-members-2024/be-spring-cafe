@@ -38,5 +38,47 @@ CREATE TABLE ARTICLES (
 ```
 
 ## 5) 비밀번호 확인 기능 개선
-- [ ] User 객체를 생성할 때, 비밀번호에 대해 hash 값을 가지도록 설정
-- [ ] User 비밀번호를 비교할 때, String 값으로 비교하도록 설정
+- [x] User 객체를 생성할 때, 비밀번호에 대해 salt, hash 값을 가지도록 설정
+```java
+public User(String userId, String email, String name, String password) {
+      this.userId = userId;
+      this.email = email;
+      this.name = name;
+      byte[] saltBytes = generateSalt();
+      this.salt = Base64.getEncoder().encodeToString(saltBytes);
+      this.hashedPassword = hashPassword(password, saltBytes);
+      this.creationDate = LocalDate.now(); // 현재 날짜를 사용하여 초기화
+}
+```
+- [x] USERS table 구조 수정
+```
+CREATE TABLE USERS (
+       userId VARCHAR(255) PRIMARY KEY,
+       email VARCHAR(255),
+       name VARCHAR(255),
+       salt VARCHAR(255),
+       hashedPassword VARCHAR(255),
+       creationDate VARCHAR(255)
+);
+```
+- [x] User 비밀번호를 비교할 때, Salt 값을 가지고 hashing 하도록 설정
+```java
+public boolean verifyPassword(String inputPassword) {
+    String hashedInputPassword = hashPassword(inputPassword, Base64.getDecoder().decode(salt));
+    return hashedInputPassword.equals(hashedPassword);
+}
+
+private String hashPassword(String password, byte[] salt) {
+    try {
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+        messageDigest.reset();
+        messageDigest.update(salt);
+        byte[] hashedBytes = messageDigest.digest(password.getBytes());
+        return Base64.getEncoder().encodeToString(hashedBytes);
+    } catch (NoSuchAlgorithmException e) {
+        throw new RuntimeException("SHA-256 알고리즘을 찾을 수 없습니다.", e);
+    }
+}
+```
+
+
