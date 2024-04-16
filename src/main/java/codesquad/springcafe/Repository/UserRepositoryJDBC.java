@@ -30,7 +30,7 @@ public class UserRepositoryJDBC implements UserRepository{
 
     @Override
     public User create(User user) {
-        String sql = "INSERT INTO user (email, userId, password, signUpDate) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO users (email, userId, password, signUpDate) VALUES (?, ?, ?, ?)";
         try {
             conn = DataSourceUtils.getConnection(dataSource);
             pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -53,7 +53,7 @@ public class UserRepositoryJDBC implements UserRepository{
 
     @Override
     public User update(User user) {
-        String sql = "UPDATE user email=?,password=? where userid=?";
+        String sql = "UPDATE users email=?,password=? where userid=?";
         try {
             conn = DataSourceUtils.getConnection(dataSource);
             pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -75,13 +75,13 @@ public class UserRepositoryJDBC implements UserRepository{
 
     @Override
     public Optional<User> findById(String id) {
-        String sql = "select * from user where userid = ?";
+        String sql = "select * from users where userid = ?";
         return getUser(id, sql);
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        String sql = "select * from user where email = ?";
+        String sql = "select * from users where email = ?";
         return getUser(email, sql);
     }
 
@@ -111,7 +111,7 @@ public class UserRepositoryJDBC implements UserRepository{
 
     @Override
     public List<User> findAll() {
-        String sql = "select * from user";
+        String sql = "select * from users";
         try {
             conn = DataSourceUtils.getConnection(dataSource);
             pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);

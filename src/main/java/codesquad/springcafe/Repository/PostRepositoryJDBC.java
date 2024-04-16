@@ -27,7 +27,7 @@ public class PostRepositoryJDBC implements PostRepository {
 
     @Override
     public void save(Post post) {
-        String sql = "INSERT INTO post (title, content, createdAt) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO posts (title, content, createdAt) VALUES (?, ?, ?)";
         try{
             conn = DataSourceUtils.getConnection(dataSource);
             pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -47,7 +47,7 @@ public class PostRepositoryJDBC implements PostRepository {
 
     @Override
     public Optional<Post> findById(Long postId) {
-        String sql = "select * from post where id = ?";
+        String sql = "select * from posts where id = ?";
 
         try {
             conn = DataSourceUtils.getConnection(dataSource);
@@ -76,7 +76,7 @@ public class PostRepositoryJDBC implements PostRepository {
 
     @Override
     public List<Post> findAll() {
-        String sql = "select * from post";
+        String sql = "select * from posts";
         try {
             conn = DataSourceUtils.getConnection(dataSource);
             pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
