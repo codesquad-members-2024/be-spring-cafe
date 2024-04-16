@@ -42,7 +42,7 @@ public class QuestionService {
     // 질문 목록 조회
     public QuestionListResponse getQuestions() {
         List<QuestionResponse> questions = questionRepository.findAll().stream()
-                .map(q -> new QuestionResponse(q.getId(), q.getUser().getLoginId(), q.getTitle(),
+                .map(q -> new QuestionResponse(q.getId(), q.getUser().getName(), q.getUser().getLoginId(), q.getTitle(),
                         q.getContent(), DateUtils.convertCreatedAt(q.getCreatedAt()), q.getViewCnt()))
                 .toList();
 
@@ -60,7 +60,7 @@ public class QuestionService {
         // 게시글 조회 수 up
         question.viewCntUp();
         
-        return new QuestionResponse(question.getId(), question.getUser().getLoginId(), question.getTitle(), question.getContent(),
+        return new QuestionResponse(question.getId(), question.getUser().getName(), question.getUser().getLoginId(), question.getTitle(), question.getContent(),
                 DateUtils.convertCreatedAt(question.getCreatedAt()), question.getViewCnt());
     }
 }
