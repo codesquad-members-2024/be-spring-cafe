@@ -1,5 +1,7 @@
 package codesquad.springcafe.users.model.dto;
 
+import java.util.Objects;
+
 public class UserCredentialDto {
     private final String password;
 
@@ -7,7 +9,11 @@ public class UserCredentialDto {
         this.password = password;
     }
 
-    public boolean validatePassword(String inputPassword) {
-        return inputPassword.equals(password);
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        UserCredentialDto that = (UserCredentialDto) obj;
+        return Objects.equals(password, that.password);
     }
 }
