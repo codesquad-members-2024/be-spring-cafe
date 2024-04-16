@@ -95,4 +95,11 @@ public class UserController {
         }
         return "redirect:/";
     }
+
+    @PostMapping("/logout")
+    public String logoutUser(HttpServletRequest request) {
+        request.getSession().invalidate();
+        return "redirect:/";
+    }
+
 }
