@@ -1,5 +1,8 @@
 package codesquad.springcafe.database;
 
+import codesquad.springcafe.article.domain.Article;
+import codesquad.springcafe.database.firstcollection.Articles;
+import codesquad.springcafe.exceptions.NoSuchArticleException;
 import codesquad.springcafe.exceptions.NoSuchUserException;
 import codesquad.springcafe.user.domain.User;
 import codesquad.springcafe.database.firstcollection.Users;
@@ -12,6 +15,7 @@ import java.util.Optional;
 public class MemoryDatabase implements Database{
 
     private static final Users userDatabase = new Users();
+    private static final Articles articleDatabase = new Articles();
 
     @Override
     public void addUser(User user) {
@@ -32,4 +36,25 @@ public class MemoryDatabase implements Database{
 
         return user.get();
     }
+
+    @Override
+    public void addArticle(Article article) {
+        articleDatabase.add(article);
+    }
+
+    @Override
+    public List<Article> getArticlesAsList() {
+        return articleDatabase.getArticles();
+    }
+
+    @Override
+    public Article findArticleByIdentifier(String identifier) throws NoSuchArticleException {
+        Optional<Article> article = articleDatabase.findArticle(identifier);
+        if (article.isEmpty()){
+            throw new NoSuchArticleException();
+        }
+        return article.get();
+    }
+
+
 }

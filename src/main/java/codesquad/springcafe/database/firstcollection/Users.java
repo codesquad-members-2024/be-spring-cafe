@@ -2,14 +2,18 @@ package codesquad.springcafe.database.firstcollection;
 
 import codesquad.springcafe.user.domain.User;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Users {
 
-    private final Map<String, User> users = new HashMap<>();
+    private final Map<String, User> users = new ConcurrentHashMap<>();
 
     public void put(User user) {
-        users.put(user.getUserId(), user);
+        String name = URLDecoder.decode(user.getName(), StandardCharsets.UTF_8);
+        users.put(name, user);
     }
 
     public List<User> getUsers() {
@@ -17,6 +21,7 @@ public class Users {
     }
 
     public Optional<User> getUser(String name) {
-        return Optional.ofNullable(users.get(name));
+        String decodeName = URLDecoder.decode(name, StandardCharsets.UTF_8);
+        return Optional.ofNullable(users.get(decodeName));
     }
 }
