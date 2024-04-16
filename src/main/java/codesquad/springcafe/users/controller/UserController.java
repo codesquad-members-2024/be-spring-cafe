@@ -84,14 +84,15 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String loginUser(HttpServletRequest request, UserLoginDto userLoginDto) {
+    public String loginUser(HttpServletRequest request, UserLoginDto userLoginDto, Model model) {
         HttpSession session = request.getSession();
         try {
             UserPreviewDto userPreviewDto = userService.loginUser(userLoginDto);
             session.setAttribute("sessionedUser", userPreviewDto);
         } catch (UserNotFoundException | PasswordMismatchException e) {
+            model.addAttribute("errorMsg", e.getMessage());
             logger.error(e.getMessage());
-            return "redirect:/users/login";
+            return "user/login";
         }
         return "redirect:/";
     }
