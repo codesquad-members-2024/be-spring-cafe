@@ -19,11 +19,11 @@ public class CsrfTokenIntercetor implements HandlerInterceptor {
         String csrfToken = request.getParameter("CSRF_TOKEN");
         Object csrfTokenSession = httpSession.getAttribute("CSRF_TOKEN");
 
-        if (csrfToken == null || !csrfToken.equals(csrfTokenSession.toString())) {
-            response.sendRedirect("/");
-            return false;
+        if (csrfToken != null && csrfTokenSession != null && csrfToken.equals(csrfTokenSession.toString())) {
+            return true;
         }
 
-        return true;
+        response.sendRedirect("/");
+        return false;
     }
 }
