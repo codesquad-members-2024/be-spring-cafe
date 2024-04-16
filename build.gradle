@@ -19,7 +19,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-web:3.2.4' // 추가
-	implementation 'org.springframework.boot:spring-boot-starter-mustache' // Mustache 추가
+
+	// Mustache 추가
+	implementation 'org.springframework.boot:spring-boot-starter-mustache'
+
+	// H2
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'com.h2database:h2'
 }
 
 tasks.named('test') {
