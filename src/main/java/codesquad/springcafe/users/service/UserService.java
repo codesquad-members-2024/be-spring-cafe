@@ -31,10 +31,6 @@ public class UserService {
         userRepository.createUser(user);
     }
 
-    /*
-     * 필요한 값
-     * userId, name, email, creationDate
-     * */
     public ArrayList<UserPreviewDto> getAllUsers() {
         Optional<ArrayList<UserPreviewDto>> articles = userRepository.getAllUsers();
         return articles.orElseThrow(() -> new UserNotFoundException("유저를 찾을 수 없습니다."));
@@ -45,22 +41,27 @@ public class UserService {
     }
 
     public void updateUser(String userId, UserUpdateData updateData) {
-        // Repository에서 User 객체를 가지고 와야 한다..?
+        UserCredentialDto inputCredentialDto = new UserCredentialDto(updateData.getCurrentPassword());
         UserCredentialDto userCredentialDto = userRepository.getUserCredential(userId).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
 
-        validatePassword(updateData.getCurrentPassword(), userCredentialDto);
+        validatePassword(inputCredentialDto, userCredentialDto);
+
         userRepository.updateUser(userId, updateData);
+
         logger.debug("User Updated : {}", userId);
     }
 
     public UserPreviewDto loginUser(UserLoginDto userLoginDto) {
+        UserCredentialDto inputCredentialDto = new UserCredentialDto(userLoginDto.getPassword());
         UserCredentialDto userCredentialDto = userRepository.getUserCredential(userLoginDto.getUserId()).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
-        validatePassword(userLoginDto.getPassword(), userCredentialDto);
+
+        validatePassword(inputCredentialDto, userCredentialDto);
+
         return userRepository.findUserById(userLoginDto.getUserId()).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
     }
 
-    private void validatePassword(String userPassword, UserCredentialDto userCredentialDto) {
-        if (!userCredentialDto.validatePassword(userPassword)) {
+    private void validatePassword(UserCredentialDto inputCredentialDto, UserCredentialDto userCredentialDto) {
+        if (!inputCredentialDto.equals(userCredentialDto)) {
             throw new PasswordMismatchException("입력한 비밀번호가 일치하지 않습니다.");
         }
     }
