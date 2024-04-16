@@ -1,7 +1,7 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.DB.H2Database;
-import codesquad.springcafe.dto.ArticleDto;
+import codesquad.springcafe.domain.Article;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +27,8 @@ public class ArticleController {
     }
 
     @PostMapping("/qna")
-    public String register(ArticleDto articleDto) {
-        h2Database.addArticle(articleDto);
+    public String register(Article article) {
+        h2Database.addArticle(article);
         return "redirect:/";
     }
 
