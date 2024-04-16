@@ -44,5 +44,4 @@ public class Article {
     public LocalDateTime getCreateDate() {
         return createDate;
     }
-    //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 }
