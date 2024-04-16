@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -62,7 +63,7 @@ public class ArticleController {
      * 사용자가 요청한 id의 아티클을 조회수를 올리고 렌더링하여 보여줍니다. 일치하는 id가 데이터베이스에 존재하지 않는다면 홈으로 리다이렉트합니다.
      */
     @GetMapping("/detail/{id}")
-    public String viewArticle(@PathVariable Long id, Model model) {
+    public String viewArticle(@PathVariable Long id, Model model, HttpSession session) {
         Optional<Article> optionalArticle = articleDatabase.findBy(id);
         if (optionalArticle.isEmpty()) {
             return "redirect:/";
@@ -73,6 +74,39 @@ public class ArticleController {
 
         model.addAttribute("article", article);
 
+        User loginUser = LoginUserProvider.provide(session);
+        if (loginUser.hasSameNickname(article.getWriter())) {
+            model.addAttribute("isLoginUser", true);
+        }
+
         return "article/show";
     }
+
+    @GetMapping("/edit/{id}")
+    public String updateForm(@PathVariable Long id, Model model) {
+        Optional<Article> optionalArticle = articleDatabase.findBy(id);
+        if (optionalArticle.isEmpty()) {
+            return "redirect:/";
+        }
+        Article article = optionalArticle.get();
+        ArticleWriteForm articleWriteForm = new ArticleWriteForm(article.getTitle(), article.getContent());
+
+        model.addAttribute("articleWriteForm", articleWriteForm);
+        return "article/update";
+    }
+
+    @PutMapping("/edit/{id}")
+    public String updateArticle(@PathVariable Long id, @ModelAttribute ArticleWriteForm articleWriteForm) {
+        Optional<Article> optionalArticle = articleDatabase.findBy(id);
+        if (optionalArticle.isEmpty()) {
+            return "redirect:/";
+        }
+        Article targetArticle = optionalArticle.get();
+        Article updateArticle = targetArticle.update(articleWriteForm.getTitle(), articleWriteForm.getContent());
+        articleDatabase.update(updateArticle);
+
+        logger.info("게시글 정보가 업데이트 되었습니다. {}", updateArticle);
+        return "redirect:/articles/detail/" + id;
+    }
+
 }

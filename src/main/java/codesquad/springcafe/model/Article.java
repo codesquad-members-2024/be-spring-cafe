@@ -28,6 +28,14 @@ public class Article {
         views++;
     }
 
+    public Article update(String title, String content) {
+        Article article = new Article(writer, title, content);
+        article.setId(id);
+        article.setViews(views);
+        article.setWriteDate(writeDate);
+        return article;
+    }
+
     public String getWriter() {
         return writer;
     }

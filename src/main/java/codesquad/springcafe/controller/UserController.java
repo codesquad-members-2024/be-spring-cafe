@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -113,7 +114,7 @@ public class UserController {
      * @param userEditForm 수정 정보가 담긴 폼 정보입니다.
      * @return 유저가 존재하지 않으면 유저 리스트로 이동합니다. 현재 비밀번호가 일치하지 않으면 유저 수정 폼을 다시 보여줍니다. 수정이 정상적으로 완료되면 프로필을 보여줍니다.
      */
-    @PostMapping("/edit/{nickname}")
+    @PutMapping("/edit/{nickname}")
     public String updateUser(@PathVariable String nickname, @Validated @ModelAttribute UserEditForm userEditForm,
                              BindingResult bindingResult, HttpSession session) {
         Optional<User> optionalUser = userDatabase.findByNickname(nickname);

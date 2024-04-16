@@ -76,6 +76,12 @@
                                       </div>
                                       <input class="post-write-btn" type="submit" value="등록"/>
                                   </form>
+                                  <ul th:if="${isLoginUser}" class="actions">
+                                      <li><a th:href="@{/articles/edit/{id}(id=*{id})}" class="black-component" role="button">수정하기</a></li>
+                                      <li><a th:href="@{/articles/delete/{id}(id=*{id})}"
+                                             class="black-component" role="button">삭제하기</a></li>
+                                  </ul>
+
                               </div>
                           </div>
                       </div>
