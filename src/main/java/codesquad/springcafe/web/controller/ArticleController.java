@@ -21,19 +21,19 @@ public class ArticleController {
         this.articleCreateValidator = articleCreateValidator;
     }
 
-    @InitBinder("article")
+    @InitBinder("create")
     public void initTargetCreate(WebDataBinder dataBinder) {
         dataBinder.addValidators(articleCreateValidator);
     }
 
     @GetMapping("/articles/create")
     public String quest(Model model) {
-        model.addAttribute("article", new ArticleCreateDto());
+        model.addAttribute("create", new ArticleCreateDto());
         return "/qna/form";
     }
 
     @PostMapping("/articles/create")
-    public String quest(@Validated @ModelAttribute("article") ArticleCreateDto articleCreateDto, BindingResult bindingResult) {
+    public String quest(@Validated @ModelAttribute("create") ArticleCreateDto articleCreateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "/qna/form";
         }
