@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="kr">
+{{>layout/non_login_header}}
+<link href="/css/user/list.css" rel="stylesheet">
+<body>
+<div class="background">
+    {{>layout/non_login_navbar}}
+    <div class="description">
+        <div class="desc-container">
+            <p class="desc-small">안녕하세요</p>
+            <p class="desc-big">카카오 게시글 페이지 입니다.</p>
+        </div>
+    </div>
+
+    <p class="total_num">전체 게시물 수: {{totalArticleNumber}}</p>
+
+    <div class="container" id="main">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-default">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>게시물 번호</th> <th>제목</th> <th>작성자</th> <th>작성일자</th><th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#articles}}
+                    <tr onclick="location.href='/articles/{{sequence}}';" style="cursor:pointer">
+                        <td>{{sequence}}</td>
+                        <td>{{title}}</td>
+                        <td>{{writer}}</td>
+                        <td>{{formattedPublishTime}}</td>
+                    </tr>
+                    {{/articles}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="post-btn-container">
+        <a class="post-write-btn" href="post/form.html" class="btn btn-primary pull-right" role="button">글쓰기</a>
+    </div>
+</div>
+</body>
+</html>
