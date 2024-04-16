@@ -1,7 +1,6 @@
-package codesquad.springcafe.controller;
+package codesquad.springcafe.user;
 
-import codesquad.springcafe.service.UserService;
-import codesquad.springcafe.model.User;
+import codesquad.springcafe.post.PostController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

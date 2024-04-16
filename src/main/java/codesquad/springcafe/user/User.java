@@ -1,4 +1,4 @@
-package codesquad.springcafe.model;
+package codesquad.springcafe.user;
 
 public class User {
     private Long id;

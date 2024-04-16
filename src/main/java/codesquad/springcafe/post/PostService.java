@@ -1,7 +1,6 @@
-package codesquad.springcafe.service;
+package codesquad.springcafe.post;
 
-import codesquad.springcafe.database.PostRepository;
-import codesquad.springcafe.model.Post;
+import codesquad.springcafe.post.database.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
