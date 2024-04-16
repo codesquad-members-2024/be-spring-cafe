@@ -25,6 +25,7 @@ public class H2ArticleRepository implements ArticleRepository {
     private static final String TITLE = "TITLE";
     private static final String CONTENT = "CONTENT";
     private static final String CREATIONDATE = "CREATIONDATE";
+    private static final String PAGEVIEWS = "PAGEVIEWS";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -35,33 +36,40 @@ public class H2ArticleRepository implements ArticleRepository {
 
     @Override
     public void createArticle(Article article) {
-        String sql = "INSERT INTO ARTICLES (USERID, TITLE, CONTENT, CREATIONDATE) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, article.getUserId(), article.getTitle(), article.getContent(), article.getCreationDate().toString());
+        String sql = "INSERT INTO ARTICLES (USERID, TITLE, CONTENT, CREATIONDATE, PAGEVIEWS) VALUES (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, article.getUserId(), article.getTitle(), article.getContent(), article.getCreationDate().toString(), article.getPageViews());
         logger.debug("Article Title : '{}' Updated At H2 Database", article.getTitle());
     }
 
     @Override
     public Optional<ArrayList<Article>> getAllArticles() {
-        String sql = "SELECT ARTICLEID, USERID, TITLE, CONTENT, CREATIONDATE FROM ARTICLES";
-        ArrayList<Article> articlePreviews = (ArrayList<Article>) jdbcTemplate.query(sql, new ArticleRowMapper());
-        Collections.reverse(articlePreviews);
-        return Optional.of(articlePreviews);
+        String sql = "SELECT ARTICLEID, USERID, TITLE, CONTENT, CREATIONDATE, PAGEVIEWS FROM ARTICLES";
+        ArrayList<Article> articles = (ArrayList<Article>) jdbcTemplate.query(sql, new ArticleRowMapper());
+        Collections.reverse(articles);
+        return Optional.of(articles);
     }
 
     @Override
-    public Optional<Article> findArticleById(int articleId) {
-        String sql = "SELECT USERID, TITLE, CONTENT, CREATIONDATE FROM ARTICLES WHERE ARTICLEID = ?";
+    public Optional<Article> findArticleById(long articleId) {
+        String sql = "SELECT USERID, TITLE, CONTENT, CREATIONDATE, PAGEVIEWS FROM ARTICLES WHERE ARTICLEID = ?";
         return jdbcTemplate.query(sql, new Object[]{articleId}, rs -> {
             if (rs.next()) {
                 String userId = rs.getString(USERID);
                 String title = rs.getString(TITLE);
                 String content = rs.getString(CONTENT);
                 String creationDate = rs.getString(CREATIONDATE);
-                return Optional.of(new Article((long) articleId, userId, title, content, LocalDate.parse(creationDate)));
+                long pageViews = rs.getLong(PAGEVIEWS);
+
+                Article article = new Article(userId, title, content);
+                article.setArticleId(articleId);
+                article.setCreationDate(LocalDate.parse(creationDate));
+                article.setPageViews(pageViews);
+                return Optional.of(article);
             }
             return Optional.empty();
         });
     }
+
 
     private static class ArticleRowMapper implements RowMapper<Article> {
         @Override
@@ -71,7 +79,21 @@ public class H2ArticleRepository implements ArticleRepository {
             String title = rs.getString(TITLE);
             String content = rs.getString(CONTENT);
             String creationDate = rs.getString(CREATIONDATE);
-            return new Article(articleId, userId, title, content, LocalDate.parse(creationDate));
+            long pageViews = rs.getLong(PAGEVIEWS);
+
+            Article article = new Article(userId, title, content);
+            article.setArticleId(articleId);
+            article.setCreationDate(LocalDate.parse(creationDate));
+            article.setPageViews(pageViews);
+            return article;
         }
+    }
+
+
+    @Override
+    public void incrementPageView(long articleId) {
+        String sql = "UPDATE ARTICLES SET PAGEVIEWS = PAGEVIEWS + 1 WHERE ARTICLEID = ?";
+        jdbcTemplate.update(sql, articleId);
+        logger.debug("Article with ID: '{}' has its page views incremented", articleId);
     }
 }

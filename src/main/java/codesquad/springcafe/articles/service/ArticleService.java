@@ -34,9 +34,13 @@ public class ArticleService {
         return articles.orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
     }
 
-    public Article findArticleById(int articleId) {
+    public Article findArticleById(long articleId) {
         Optional<Article> articleContent = articleRepository.findArticleById(articleId);
         return articleContent.orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
+    }
+
+    public void incrementPageViews(long articleId){
+        articleRepository.incrementPageView(articleId);
     }
 
 }

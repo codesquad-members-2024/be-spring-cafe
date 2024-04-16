@@ -21,10 +21,21 @@
   - ```/users/{userId}/form``` : 유저 수정 불가
 
 ## 4) 게시글 조회수 기능 구현
-- [ ] Article 객체 수정
+- [x] Article 객체 수정
     - 조회수를 가지도록 수정
-- [ ] Article Table 수정
+- [x] Article Table 수정
   - 조회수를 가지도록 수정
+```
+CREATE TABLE ARTICLES (
+      articleId LONG AUTO_INCREMENT PRIMARY KEY,
+      userId VARCHAR(255),
+      title VARCHAR(255),
+      content VARCHAR(255),
+      creationDate VARCHAR(255), -- creationDate를 DATE 타입으로 변경
+      pageViews LONG,
+      FOREIGN KEY (userId) REFERENCES USERS(userId)
+);
+```
 
 ## 5) 비밀번호 확인 기능 개선
 - [ ] User 객체를 생성할 때, 비밀번호에 대해 hash 값을 가지도록 설정
