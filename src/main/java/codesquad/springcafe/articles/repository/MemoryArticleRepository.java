@@ -5,6 +5,7 @@ import codesquad.springcafe.articles.model.Article;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -38,6 +39,6 @@ public class MemoryArticleRepository implements ArticleRepository {
 
     @Override
     public void incrementPageView(long articleId) {
-
+        articleDatabase.updatePageView(articleId);
     }
 }

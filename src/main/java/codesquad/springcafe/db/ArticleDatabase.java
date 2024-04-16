@@ -32,10 +32,15 @@ public class ArticleDatabase {
     }
 
     public Article findArticleById(long articleId) {
-        logger.debug("articleId  :{}", articleId);
         if (articleId >= 0 && articleId <= articles.size()) {
             return articles.get(articleId);
         }
         return null;
+    }
+
+    public void updatePageView(long articleId) {
+        Article article = articles.get(articleId);
+        article.setPageViews(article.getPageViews() + 1);
+        logger.debug("Article with ID: '{}' has its page views incremented", articleId);
     }
 }
