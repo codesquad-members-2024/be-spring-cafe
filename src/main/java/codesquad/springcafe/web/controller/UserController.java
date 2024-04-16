@@ -1,5 +1,6 @@
 package codesquad.springcafe.web.controller;
 
+import codesquad.springcafe.web.domain.Article;
 import codesquad.springcafe.web.domain.User;
 import codesquad.springcafe.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,13 +40,34 @@ public class UserController {
         return "user/list";
     }
 
-    @GetMapping("/user/profile/{userName}")
-    public String userProfile(@PathVariable String userName, Model model) {
-        System.out.println("userName = " + userName);
-        Optional<User> user = userService.findUser(userName);
+    @GetMapping("/user/profile/{userId}")
+    public String userProfileForm(@PathVariable String userId, Model model) {
+        Optional<User> user = userService.findUser(userId);
         user.ifPresent(u -> model.addAttribute("user", u));
 
         return "user/profile";
     }
 
+    @GetMapping("/user/update/{userId}")
+    public String articleUpdateForm(@PathVariable String userId, Model model) {
+
+        Optional<User> optionalUser = userService.findUser(userId);
+
+        optionalUser.ifPresent(user -> model.addAttribute("user", user));
+        return "user/updateForm";
+    }
+
+    @PutMapping("/user/update/{userId}")
+    public String userUpdate(@PathVariable String userId, @ModelAttribute User updatedUser, Model model) {
+        Optional<User> optionalUser = userService.findUser(userId);
+        optionalUser.ifPresent(user -> {
+            user.setName(updatedUser.getName());
+            user.setPassword(updatedUser.getPassword());
+            user.setEmail(updatedUser.getEmail());
+
+            userService.userUpdate(user);
+                }
+        );
+        return "redirect:/user/list";
+    }
 }
