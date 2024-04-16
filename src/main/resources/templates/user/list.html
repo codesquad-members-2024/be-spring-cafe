@@ -49,7 +49,7 @@
         <div class="navbar-header">
             <a href="#" style="margin-left:15px;" class="navbar-btn btn btn-default btn-plus dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-home" style="color:#dd1111;"></i> Home <small><i class="glyphicon glyphicon-chevron-down"></i></small></a>
             <ul class="nav dropdown-menu">
-                <li><a th:href="@{/user/profile.html}"  href="../../static/user/profile.html"><i class="glyphicon glyphicon-user" style="color:#1111dd;"></i> Profile</a></li>
+                <li><a th:href="@{/templates/user/profile.html}" href="profile.html"><i class="glyphicon glyphicon-user" style="color:#1111dd;"></i> Profile</a></li>
                 <li class="nav-divider"></li>
                 <li><a href="#"><i class="glyphicon glyphicon-cog" style="color:#dd1111;"></i> Settings</a></li>
             </ul>
@@ -86,7 +86,7 @@
               <tr th:each="user, stat:${users}">
                   <td th:text="${stat.count}">1</td>
                   <td th:text="${user.userId}">test</td>
-                  <td><a th:href="@{/users/profile/{nickname}(nickname=${user.name})}"
+                  <td><a th:href="@{/user/profile/{name}(name=${user.name})}"
                          th:text="${user.name}">테스터 1</a></td>
                   <td th:text="${user.email}">test1@gmail.com</td>
                   <td th:text="${user.crateTime}">2021-12-14</td>

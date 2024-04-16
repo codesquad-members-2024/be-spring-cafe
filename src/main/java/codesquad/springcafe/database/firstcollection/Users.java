@@ -2,10 +2,7 @@ package codesquad.springcafe.database.firstcollection;
 
 import codesquad.springcafe.user.domain.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Users {
 
@@ -17,5 +14,9 @@ public class Users {
 
     public List<User> getUsers() {
         return new ArrayList<>(users.values());
+    }
+
+    public Optional<User> getUser(String name) {
+        return Optional.ofNullable(users.get(name));
     }
 }
