@@ -18,10 +18,6 @@ public class Article {
         this.id = id;
     }
 
-    public Article() {
-        this.time = LocalDateTime.now();
-    }
-
     public String getWriter() {
         return writer;
     }
