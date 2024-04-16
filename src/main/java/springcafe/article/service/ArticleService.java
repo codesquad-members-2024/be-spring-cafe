@@ -6,7 +6,6 @@ import springcafe.article.model.Article;
 import springcafe.article.repository.ArticleRepository;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -25,9 +24,7 @@ public class ArticleService {
 
         Article article = new Article(writer, title, contents, LocalDateTime.now(), sequence);
         sequence = sequence+1;
-        articleRepository.save(article);
-        this.articleRepository.save(article);
-
+        this.articleRepository.insert(article);
     }
 
     public Article findById(Long id){
