@@ -1,3 +1,5 @@
+@import "../component/post_btn.css";
+
 .col-md-12 {
     display: flex;
     width: 100%;
@@ -114,32 +116,6 @@ li {
     margin-top: 20px;
     margin-left: 3%;
     font-weight: bold;
-}
-
-.post-write-btn {
-    margin-top: 20px;
-    align-items: center;
-    align-self: end;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    justify-content: center;
-    width: 100px;
-    height: 30px;
-    font-size: 14px;
-    background-color: black;
-    color: white;
-    margin: 20px;
-}
-
-.post-btn-container {
-    display: flex;
-    justify-content: end;
-}
-
-.post-write-btn:hover {
-    background-color: #ffcd00;
-    color: black;
 }
 
 .form-group {

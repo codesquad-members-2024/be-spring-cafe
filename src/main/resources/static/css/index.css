@@ -1,3 +1,5 @@
+@import "component/post_btn.css";
+
 .col-md-12 {
     display: flex;
     width: 100%;
@@ -102,27 +104,4 @@ td {
     height: 50px;
     vertical-align: middle;
     text-align: center;
-}
-
-.post-write-btn {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    justify-content: center;
-    width: 60px;
-    height: 30px;
-    font-size: 14px;
-    background-color: black;
-    color: white;
-}
-
-.post-btn-container {
-    display: flex;
-    justify-content: end;
-}
-
-.post-write-btn:hover {
-    background-color: #ffcd00;
-    color: black;
 }
