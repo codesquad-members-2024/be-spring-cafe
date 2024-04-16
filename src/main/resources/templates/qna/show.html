@@ -81,7 +81,7 @@
     <div class="col-md-12 col-sm-12 col-lg-12">
         <div class="panel panel-default">
             <header class="qna-header">
-                <h2 class="qna-title" th:text="${article.title}"></h2>
+                <h2 class="qna-title" th:text="${article.getTitle()}"></h2>
             </header>
             <div class="content-main">
                 <article class="article">
@@ -91,15 +91,15 @@
                                  class="article-author-thumb" alt="">
                         </div>
                         <div class="article-header-text">
-                            <a th:href="@{'/user/' + ${article.writer}}" class="article-author-name"
-                               th:text="${article.writer}"></a>
+                            <a th:href="@{'/user/' + ${article.getWriter()}}" class="article-author-name"
+                               th:text="${article.getWriter()}"></a>
                             <a href="/questions/413" class="article-header-time" title="퍼머링크"
-                               th:text="${#temporals.format(article.time,'yyyy-MM-dd HH-mm')}">
+                               th:text="${article.getTime()}">
                                 <i class="icon-link"></i>
                             </a>
                         </div>
                     </div>
-                    <div class="article-doc" th:text="${article.contents}"></div>
+                    <div class="article-doc" th:text="${article.getContents()}"></div>
                     <div class="article-util">
                         <ul class="article-util-list">
                             <li>
