@@ -4,8 +4,6 @@ import codesquad.springcafe.articles.repository.ArticleRepository;
 import codesquad.springcafe.exception.ArticleNotFoundException;
 import model.article.Article;
 import model.article.dto.ArticleCreateDto;
-import model.article.dto.ArticleContentDto;
-import model.article.dto.ArticlePreviewDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +29,13 @@ public class ArticleService {
         articleRepository.createArticle(article);
     }
 
-    public ArrayList<ArticlePreviewDto> getAllArticles() {
-        Optional<ArrayList<ArticlePreviewDto>> articles = articleRepository.getAllArticles();
+    public ArrayList<Article> getAllArticles() {
+        Optional<ArrayList<Article>> articles = articleRepository.getAllArticles();
         return articles.orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
     }
 
-    public ArticleContentDto findArticleById(int articleId) {
-        Optional<ArticleContentDto> articleContent = articleRepository.findArticleById(articleId);
+    public Article findArticleById(int articleId) {
+        Optional<Article> articleContent = articleRepository.findArticleById(articleId);
         return articleContent.orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
     }
 

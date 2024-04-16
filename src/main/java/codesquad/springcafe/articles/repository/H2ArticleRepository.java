@@ -1,8 +1,6 @@
 package codesquad.springcafe.articles.repository;
 
 import model.article.Article;
-import model.article.dto.ArticleContentDto;
-import model.article.dto.ArticlePreviewDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
@@ -42,15 +41,15 @@ public class H2ArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Optional<ArrayList<ArticlePreviewDto>> getAllArticles() {
-        String sql = "SELECT ARTICLEID, USERID, TITLE, CREATIONDATE FROM ARTICLES";
-        ArrayList<ArticlePreviewDto> articlePreviews = (ArrayList<ArticlePreviewDto>) jdbcTemplate.query(sql, new ArticlePreviewRowMapper());
+    public Optional<ArrayList<Article>> getAllArticles() {
+        String sql = "SELECT ARTICLEID, USERID, TITLE, CONTENT, CREATIONDATE FROM ARTICLES";
+        ArrayList<Article> articlePreviews = (ArrayList<Article>) jdbcTemplate.query(sql, new ArticleRowMapper());
         Collections.reverse(articlePreviews);
         return Optional.of(articlePreviews);
     }
 
     @Override
-    public Optional<ArticleContentDto> findArticleById(int articleId) {
+    public Optional<Article> findArticleById(int articleId) {
         String sql = "SELECT USERID, TITLE, CONTENT, CREATIONDATE FROM ARTICLES WHERE ARTICLEID = ?";
         return jdbcTemplate.query(sql, new Object[]{articleId}, rs -> {
             if (rs.next()) {
@@ -58,20 +57,21 @@ public class H2ArticleRepository implements ArticleRepository {
                 String title = rs.getString(TITLE);
                 String content = rs.getString(CONTENT);
                 String creationDate = rs.getString(CREATIONDATE);
-                return Optional.of(new ArticleContentDto(userId, title, content, creationDate));
+                return Optional.of(new Article((long) articleId, userId, title, content, LocalDate.parse(creationDate)));
             }
             return Optional.empty();
         });
     }
 
-    private static class ArticlePreviewRowMapper implements RowMapper<ArticlePreviewDto> {
+    private static class ArticleRowMapper implements RowMapper<Article> {
         @Override
-        public ArticlePreviewDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+        public Article mapRow(ResultSet rs, int rowNum) throws SQLException {
             long articleId = rs.getLong(ARTICLEID);
             String userId = rs.getString(USERID);
             String title = rs.getString(TITLE);
+            String content = rs.getString(CONTENT);
             String creationDate = rs.getString(CREATIONDATE);
-            return new ArticlePreviewDto(articleId, userId, title, creationDate);
+            return new Article(articleId, userId, title, content, LocalDate.parse(creationDate));
         }
     }
 }

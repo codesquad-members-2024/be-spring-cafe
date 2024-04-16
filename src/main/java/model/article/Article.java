@@ -5,6 +5,7 @@ import db.ArticleDatabase;
 import java.time.LocalDate;
 
 public class Article {
+    private long articleId;
     private String userId;
     private String title;
     private String content;
@@ -17,9 +18,21 @@ public class Article {
         this.creationDate = LocalDate.now();
     }
 
+    public Article(long articleId, String userId, String title, String content, LocalDate creationDate) {
+        this.articleId = articleId;
+        this.userId = userId;
+        this.title = title;
+        this.content = content;
+        this.creationDate = creationDate;
+    }
+
     @Override
     public String toString() {
         return "userId : " + userId + ", title : " + title + ", content : " + content + ", creatinDate : " + creationDate;
+    }
+
+    public long getArticleId() {
+        return articleId;
     }
 
     public String getUserId() {

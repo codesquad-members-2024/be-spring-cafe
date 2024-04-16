@@ -2,11 +2,8 @@ package codesquad.springcafe.articles.repository;
 
 import db.ArticleDatabase;
 import model.article.Article;
-import model.article.dto.ArticleContentDto;
-import model.article.dto.ArticlePreviewDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -22,24 +19,12 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Optional<ArrayList<ArticlePreviewDto>> getAllArticles() {
-        ArrayList<Article> articles = ArticleDatabase.getAllArticles();
-        ArrayList<ArticlePreviewDto> articlePreviews = new ArrayList<>();
-        for (int i = 0; i < articles.size(); i++) {
-            Article article = articles.get(i);
-            ArticlePreviewDto articlePreviewDto = new ArticlePreviewDto((long) (i + 1), article.getUserId(), article.getTitle(), article.getContent());
-            articlePreviews.add(articlePreviewDto);
-        }
-        return Optional.of(articlePreviews);
+    public Optional<ArrayList<Article>> getAllArticles() {
+        return Optional.of(ArticleDatabase.getAllArticles());
     }
 
     @Override
-    public Optional<ArticleContentDto> findArticleById(int articleId) {
-        Article article = ArticleDatabase.findArticleById(articleId);
-        if (article == null) {
-            return Optional.empty();
-        }
-        ArticleContentDto articleContent = new ArticleContentDto(article.getUserId(), article.getTitle(), article.getContent(), article.getCreationDate().toString());
-        return Optional.of(articleContent);
+    public Optional<Article> findArticleById(int articleId) {
+        return Optional.ofNullable(ArticleDatabase.findArticleById(articleId));
     }
 }
