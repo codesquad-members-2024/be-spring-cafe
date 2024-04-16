@@ -138,6 +138,10 @@ public class UserController {
         if (isPresentNickname(userAddForm.getNickname())) {
             bindingResult.rejectValue("nickname", "Duplicate");
         }
+
+        if (isPresentEmail(userAddForm.getEmail())) {
+            bindingResult.rejectValue("email", "Duplicate");
+        }
     }
 
     private void validateUpdateForm(UserEditForm userEditForm, BindingResult bindingResult, User user) {
@@ -152,5 +156,9 @@ public class UserController {
 
     private boolean isPresentNickname(String nickname) {
         return userDatabase.findByNickname(nickname).isPresent();
+    }
+
+    private boolean isPresentEmail(String email) {
+        return userDatabase.findByEmail(email).isPresent();
     }
 }
