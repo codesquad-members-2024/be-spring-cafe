@@ -2,10 +2,12 @@ package codesquad.springcafe.web.service;
 
 import codesquad.springcafe.web.repository.UserRepository;
 import codesquad.springcafe.web.domain.User;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class UserService {
 
     private final UserRepository userRepository;

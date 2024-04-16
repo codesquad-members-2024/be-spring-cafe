@@ -2,6 +2,7 @@ package codesquad.springcafe.web.controller;
 
 import codesquad.springcafe.web.domain.User;
 import codesquad.springcafe.web.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ public class UserController {
 
     private UserService userService;
 
+    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -22,19 +24,6 @@ public class UserController {
     public String createForm() {
         return "user/form";
     }
-
-//    @PostMapping("/user/new")
-//    public String createUser(UserForm form) {
-//        User user = new User();
-//        user.setUserId(form.getUserId());
-//        user.setName(form.getName());
-//        user.setPassword(form.getPassword());
-//        user.setEmail(form.getEmail());
-//
-//        userService.join(user);
-//
-//        return "redirect:/user/list";
-//    }
 
     @PostMapping("/user/new")
     public String createUser(@ModelAttribute User user) {
