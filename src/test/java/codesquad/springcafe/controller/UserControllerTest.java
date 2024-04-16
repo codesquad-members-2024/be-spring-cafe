@@ -1,6 +1,6 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.db.MemoryUserDatabase;
+import codesquad.springcafe.db.UserDatabase;
 import codesquad.springcafe.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +29,7 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private MemoryUserDatabase memoryUserDatabase;
+    private UserDatabase userDatabase;
 
     @BeforeEach
     void setUp(){
@@ -37,11 +37,11 @@ class UserControllerTest {
         User user2 = new User("test2@email.com", "test2", "password2");
         List<User> users = Arrays.asList(user1, user2);
 
-        willDoNothing().given(memoryUserDatabase).addUser(any(User.class));
-        given(memoryUserDatabase.findAllUsers()).willReturn(users);
-        given(memoryUserDatabase.getTotalUserNumber()).willReturn(users.size());
-        given(memoryUserDatabase.findUserByUserId("test1")).willReturn(Optional.of(user1));
-        given(memoryUserDatabase.findUserByUserId("test2")).willReturn(Optional.of(user2));
+        willDoNothing().given(userDatabase).addUser(any(User.class));
+        given(userDatabase.findAllUsers()).willReturn(users);
+        given(userDatabase.getTotalUserNumber()).willReturn(users.size());
+        given(userDatabase.findUserByUserId("test1")).willReturn(Optional.of(user1));
+        given(userDatabase.findUserByUserId("test2")).willReturn(Optional.of(user2));
     }
 
 
