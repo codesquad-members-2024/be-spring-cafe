@@ -30,7 +30,9 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}")
-    public String getUserProfile(@PathVariable int articleId, Model model) {
+    public String getUserProfile(@PathVariable long articleId, Model model) {
+        articleService.incrementPageViews(articleId);
+
         Article article = articleService.findArticleById(articleId);
 
         model.addAttribute("article", article);

@@ -32,7 +32,12 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Optional<Article> findArticleById(int articleId) {
+    public Optional<Article> findArticleById(long articleId) {
         return Optional.ofNullable(articleDatabase.findArticleById(articleId));
+    }
+
+    @Override
+    public void incrementPageView(long articleId) {
+
     }
 }

@@ -10,5 +10,7 @@ public interface ArticleRepository {
 
     Optional<ArrayList<Article>> getAllArticles();
 
-    Optional<Article> findArticleById(int articleId);
+    Optional<Article> findArticleById(long articleId);
+
+    void incrementPageView(long articleId);
 }
