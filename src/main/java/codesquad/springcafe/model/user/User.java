@@ -1,6 +1,6 @@
-package model.user;
+package codesquad.springcafe.model.user;
 
-import model.user.dto.UserUpdateData;
+import codesquad.springcafe.model.user.dto.UserUpdateData;
 
 import java.time.LocalDate;
 

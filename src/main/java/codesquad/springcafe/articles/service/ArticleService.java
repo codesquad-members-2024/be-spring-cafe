@@ -2,8 +2,8 @@ package codesquad.springcafe.articles.service;
 
 import codesquad.springcafe.articles.repository.ArticleRepository;
 import codesquad.springcafe.exception.ArticleNotFoundException;
-import model.article.Article;
-import model.article.dto.ArticleCreateDto;
+import codesquad.springcafe.model.article.Article;
+import codesquad.springcafe.model.article.dto.ArticleCreateDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

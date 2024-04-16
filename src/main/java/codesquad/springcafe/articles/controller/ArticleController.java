@@ -2,8 +2,8 @@ package codesquad.springcafe.articles.controller;
 
 
 import codesquad.springcafe.articles.service.ArticleService;
-import model.article.Article;
-import model.article.dto.ArticleCreateDto;
+import codesquad.springcafe.model.article.Article;
+import codesquad.springcafe.model.article.dto.ArticleCreateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
