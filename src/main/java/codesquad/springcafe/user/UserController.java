@@ -32,15 +32,14 @@ public class UserController {
             return userDTO;
         });
 
-        // userID 를 찾으면 유저 프로필 조회, 못 찾으면 로그인 페이지로 이동.
+        // userID 를 찾으면 유저 프로필 조회, 못 찾으면 white Lable 페이지 반환
         return optUserDTO.map(userDto -> {
             model.addAttribute("user", userDto);
             return "user/profile";
-        }).orElse("user/login");
+        }).orElse("error");
     }
 
     // 회원가입 기능
-
     @PostMapping("/user")
     public String create(@ModelAttribute UserCreationDto userDTO) {
         final String userId = userDTO.getUserId();
