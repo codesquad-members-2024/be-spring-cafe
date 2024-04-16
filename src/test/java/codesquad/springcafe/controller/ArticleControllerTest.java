@@ -1,6 +1,6 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.db.MemoryArticleDatabase;
+import codesquad.springcafe.db.ArticleDatabase;
 import codesquad.springcafe.model.Article;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +28,7 @@ class ArticleControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private MemoryArticleDatabase memoryArticleDatabase;
+    private ArticleDatabase articleDatabase;
 
     @BeforeEach
     void setUp(){
@@ -36,11 +36,11 @@ class ArticleControllerTest {
         Article article2 = new Article(2L, "title2", "content2");
         List<Article> articles = Arrays.asList(article1, article2);
 
-        willDoNothing().given(memoryArticleDatabase).addArticle(article1);
-        given(memoryArticleDatabase.findAllArticles()).willReturn(articles);
-        given(memoryArticleDatabase.getTotalArticleNumber()).willReturn(articles.size());
-        given(memoryArticleDatabase.findArticleBySequence(1L)).willReturn(Optional.of(article1));
-        given(memoryArticleDatabase.findArticleBySequence(2L)).willReturn(Optional.of(article2));
+        willDoNothing().given(articleDatabase).addArticle(article1);
+        given(articleDatabase.findAllArticles()).willReturn(articles);
+        given(articleDatabase.getTotalArticleNumber()).willReturn(articles.size());
+        given(articleDatabase.findArticleBySequence(1L)).willReturn(Optional.of(article1));
+        given(articleDatabase.findArticleBySequence(2L)).willReturn(Optional.of(article2));
     }
 
 
@@ -74,6 +74,6 @@ class ArticleControllerTest {
     void loadArticleContentSuccessTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/articles/1"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("post/show"));
+                .andExpect(view().name("article/show"));
     }
 }

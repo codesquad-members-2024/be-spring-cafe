@@ -1,7 +1,7 @@
 package codesquad.springcafe.controller;
 
+import codesquad.springcafe.db.ArticleDatabase;
 import codesquad.springcafe.model.Article;
-import codesquad.springcafe.db.MemoryArticleDatabase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,12 +16,12 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class ArticleController {
-    private final MemoryArticleDatabase memoryArticleDatabase;
+    private final ArticleDatabase articleDatabase;
     private final AtomicLong sequence = new AtomicLong();
 
     @Autowired
-    public ArticleController(MemoryArticleDatabase memoryArticleDatabase){
-        this.memoryArticleDatabase = memoryArticleDatabase;
+    public ArticleController(ArticleDatabase articleDatabase){
+        this.articleDatabase = articleDatabase;
     }
 
     @PostMapping("/articles")
@@ -31,14 +31,14 @@ public class ArticleController {
     ) {
         long seq = sequence.incrementAndGet();
         Article article = new Article(seq, title, content);
-        memoryArticleDatabase.addArticle(article);
+        articleDatabase.addArticle(article);
         return "redirect:/";
     }
 
 
     @GetMapping("/articles/{sequence}")
     public String loadArticleContent(@PathVariable long sequence, Model model){
-        Optional<Article> article = memoryArticleDatabase.findArticleBySequence(sequence);
+        Optional<Article> article = articleDatabase.findArticleBySequence(sequence);
         if(article.isEmpty()){
             throw new NoSuchElementException();
         }

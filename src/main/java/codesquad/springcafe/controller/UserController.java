@@ -1,7 +1,7 @@
 package codesquad.springcafe.controller;
 
+import codesquad.springcafe.db.UserDatabase;
 import codesquad.springcafe.model.User;
-import codesquad.springcafe.db.MemoryUserDatabase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,30 +13,30 @@ import java.util.Optional;
 @Controller
 public class UserController {
 
-    private final MemoryUserDatabase memoryUserDatabase;
+    private final UserDatabase userDatabase;
 
     @Autowired
-    public UserController(MemoryUserDatabase memoryUserDatabase){
-        this.memoryUserDatabase = memoryUserDatabase;
+    public UserController(UserDatabase userDatabase){
+        this.userDatabase = userDatabase;
     }
 
     @PostMapping("/users")
     public String createUser(@ModelAttribute User user) {
-        memoryUserDatabase.addUser(user);
+        userDatabase.addUser(user);
         return "redirect:/users";
     }
 
     @GetMapping("/users")
     public String userList(Model model){
-        List<User> users = memoryUserDatabase.findAllUsers();
+        List<User> users = userDatabase.findAllUsers();
         model.addAttribute("users", users);
-        model.addAttribute("totalUserNumber", memoryUserDatabase.getTotalUserNumber());
+        model.addAttribute("totalUserNumber", userDatabase.getTotalUserNumber());
         return "users/list";
     }
 
     @GetMapping("/users/{userId}")
     public String userProfile(@PathVariable String userId, Model model){
-        Optional<User> user = memoryUserDatabase.findUserByUserId(userId);
+        Optional<User> user = userDatabase.findUserByUserId(userId);
         if(user.isEmpty()){
             throw new IllegalArgumentException();
         }
@@ -70,7 +70,7 @@ public class UserController {
     }
 
     private User getUserOrFail(String userId){
-        return memoryUserDatabase.findUserByUserId(userId)
+        return userDatabase.findUserByUserId(userId)
                 .orElseThrow(IllegalArgumentException::new);
     }
 }
