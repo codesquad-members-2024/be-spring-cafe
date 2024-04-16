@@ -60,7 +60,7 @@ public class UserService {
 
     // 로그아웃
     public boolean logout(String requestUserId, Object sessionUserId) {
-        if(sessionUserId == null || requestUserId == null) return false;
+        if(sessionUserId == null || requestUserId == null) return true;
 
         Long ruid = Long.parseLong(requestUserId);
         Long suid = (Long) sessionUserId;

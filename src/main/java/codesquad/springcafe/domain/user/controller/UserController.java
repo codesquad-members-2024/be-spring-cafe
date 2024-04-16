@@ -27,10 +27,7 @@ public class UserController {
     public String join(@Valid @ModelAttribute UserJoinRequest userJoinRequest, Model model,
                        HttpSession httpSession) {
         Long userId = userService.join(userJoinRequest);
-
-        httpSession.setAttribute("userId", userId);
-        httpSession.setAttribute("CSRF_TOKEN", UUID.randomUUID());
-        httpSession.setMaxInactiveInterval(3600);
+        setSession(httpSession, userId);
 
         model.addAttribute("user", userJoinRequest);
 
@@ -42,9 +39,7 @@ public class UserController {
     public String login(@Valid @ModelAttribute UserLoginRequest userLoginRequest,
                         HttpSession httpSession) {
         Long userId = userService.login(userLoginRequest);
-        httpSession.setAttribute("userId", userId);
-        httpSession.setAttribute("CSRF_TOKEN", UUID.randomUUID());
-        httpSession.setMaxInactiveInterval(3600);
+        setSession(httpSession, userId);
 
         return "redirect:/";
     }
@@ -87,11 +82,8 @@ public class UserController {
     // 마이페이지 조회
     @GetMapping("/profile/my")
     public String getMyProfile(HttpSession httpSession, Model model) {
-        Object userId = httpSession.getAttribute("userId");
-        if (userId == null) {
-            throw new IllegalStateException("인증이 필요한 요청입니다.");
-        }
-        UserResponse userResponse = userService.getMyProfile((Long) userId);
+        Long userId = getSessionUserId(httpSession);
+        UserResponse userResponse = userService.getMyProfile(userId);
 
         model.addAttribute("user", userResponse);
         model.addAttribute("my", true); // 마이페이지에서만 버튼 보기 가능
@@ -102,12 +94,9 @@ public class UserController {
     @GetMapping("/profile/my/edit")
     public String getProfileEditForm(HttpSession httpSession,
                                      Model model) {
-        Object userId = httpSession.getAttribute("userId");
-        if (userId == null) {
-            throw new IllegalStateException("인증이 필요한 요청입니다.");
-        }
+        Long userId = getSessionUserId(httpSession);
 
-        UserResponse userInfo = userService.getMyProfile((Long) userId);
+        UserResponse userInfo = userService.getMyProfile(userId);
         model.addAttribute("user", userInfo);
 
         return "/user/edit_form";
@@ -116,15 +105,25 @@ public class UserController {
     // 내 프로필 수정 (이름, 이메일만 수정 가능)
     @PutMapping("/profile/my/edit")
     public String updateMyProfile(HttpSession httpSession,
-                                 @Valid @ModelAttribute UserUpdateRequest userUpdateRequest,
-                                 Model model) {
+                                 @Valid @ModelAttribute UserUpdateRequest userUpdateRequest) {
+        Long userId = getSessionUserId(httpSession);
+
+        userService.updateMyProfile(userId, userUpdateRequest);
+
+        return "redirect:/profile/my";
+    }
+
+    private void setSession(HttpSession httpSession, Long userId) {
+        httpSession.setAttribute("userId", userId);
+        httpSession.setAttribute("CSRF_TOKEN", UUID.randomUUID());
+        httpSession.setMaxInactiveInterval(3600);
+    }
+
+    private Long getSessionUserId(HttpSession httpSession) {
         Object userId = httpSession.getAttribute("userId");
         if (userId == null) {
             throw new IllegalStateException("인증이 필요한 요청입니다.");
         }
-
-        userService.updateMyProfile((Long) userId, userUpdateRequest);
-
-        return "redirect:/profile/my";
+        return (Long) userId;
     }
 }

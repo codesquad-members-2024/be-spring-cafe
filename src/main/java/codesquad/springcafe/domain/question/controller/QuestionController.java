@@ -24,10 +24,7 @@ public class QuestionController {
     // 게시글 작성
     @PostMapping("/post")
     public String postQuestion(HttpSession httpSession, @Valid @ModelAttribute QuestionPostRequest questionPostRequest) {
-        Object attr = httpSession.getAttribute("userId");
-        if(attr == null) throw new IllegalStateException("인증이 필요한 요청입니다."); // TODO : exception 추가
-
-        Long userId = (Long) attr;
+        Long userId = getSessionUserId(httpSession);
         questionService.postQuestion(userId, questionPostRequest);
 
         return "redirect:/questions";
@@ -48,15 +45,19 @@ public class QuestionController {
     @GetMapping("/question/{questionId}")
     public String getQuestion(HttpSession httpSession,
                               @PathVariable("questionId") Long questionId, Model model) {
-        Object userId = httpSession.getAttribute("userId");
-        // 세션에 userId 값이 없으면 권한 없음 예외
-        if (userId == null) {
-            throw new IllegalStateException("인증이 필요한 요청입니다.");
-        }
-        QuestionResponse questionResponse = questionService.getQuestion((Long) userId, questionId);
+        Long userId = getSessionUserId(httpSession);
+        QuestionResponse questionResponse = questionService.getQuestion(userId, questionId);
 
         model.addAttribute("question", questionResponse);
 
         return "/post/show";
+    }
+
+    private Long getSessionUserId(HttpSession httpSession) {
+        Object userId = httpSession.getAttribute("userId");
+        if (userId == null) {
+            throw new IllegalStateException("인증이 필요한 요청입니다.");
+        }
+        return (Long) userId;
     }
 }
