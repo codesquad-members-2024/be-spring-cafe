@@ -1,8 +1,9 @@
 package codesquad.springcafe.repository.user;
 
-import codesquad.springcafe.dto.UpdatedUser;
-import codesquad.springcafe.dto.User;
 import codesquad.springcafe.exception.db.UserNotFoundException;
+import codesquad.springcafe.model.SessionUser;
+import codesquad.springcafe.model.UpdatedUser;
+import codesquad.springcafe.model.User;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +34,7 @@ public class UserJdbcRepository implements UserRepository {
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("user_id", user.getUserId());
-        parameters.put("user_pw", user.getUserPw());
+        parameters.put("user_password", user.getUserPassword());
         parameters.put("user_name", user.getUserName());
         parameters.put("user_email", user.getUserEmail());
 
@@ -45,7 +46,7 @@ public class UserJdbcRepository implements UserRepository {
 
     @Override
     public Optional<User> findUserByUserId(String userId) throws UserNotFoundException {
-        String sql = "SELECT id, user_id, user_pw, user_name, user_email FROM users WHERE user_id = ?";
+        String sql = "SELECT id, user_id, user_password, user_name, user_email FROM users WHERE user_id = ?";
         String[] params = new String[]{userId};
         int[] paramTypes = new int[]{Types.VARCHAR};
 
@@ -58,7 +59,7 @@ public class UserJdbcRepository implements UserRepository {
 
     @Override
     public String updateUser(String userId, UpdatedUser updatedUser) throws UserNotFoundException {
-        String sql = "UPDATE users SET user_pw = ?, user_name = ?, user_email = ? WHERE user_id = ?";
+        String sql = "UPDATE users SET user_password = ?, user_name = ?, user_email = ? WHERE user_id = ?";
         int rowsUpdated = jdbcTemplate.update(sql, updatedUser.getUserPw(), updatedUser.getUserName(),
                 updatedUser.getUserEmail(), userId);
 
@@ -77,19 +78,38 @@ public class UserJdbcRepository implements UserRepository {
 
     @Override
     public List<User> findAllUser() {
-        String sql = "SELECT id, user_id, user_pw, user_name, user_email FROM users";
+        String sql = "SELECT id, user_id, user_password, user_name, user_email FROM users";
         return jdbcTemplate.query(sql, userRowMapper());
     }
 
+    @Override
+    public Optional<SessionUser> findSessionUserByUserId(String userId) throws UserNotFoundException {
+        String sql = "SELECT user_id, user_name, user_email FROM users WHERE user_id = ?";
+        String[] params = new String[]{userId};
+        int[] paramTypes = new int[]{Types.VARCHAR};
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, params, paramTypes, sessionUserRowMapper()));
+        } catch (EmptyResultDataAccessException e) {
+            throw new UserNotFoundException(userId);
+        }
+    }
+
     private RowMapper<User> userRowMapper() {
-        return (rs, rowNum) -> {
-            User user = new User();
-            user.setId(rs.getLong("id"));
-            user.setUserId(rs.getString("user_id"));
-            user.setUserPw(rs.getString("user_pw"));
-            user.setUserName(rs.getString("user_name"));
-            user.setUserEmail(rs.getString("user_email"));
-            return user;
-        };
+        return (rs, rowNum) -> new User(
+                rs.getLong("id"),
+                rs.getString("user_id"),
+                rs.getString("user_password"),
+                rs.getString("user_name"),
+                rs.getString("user_email")
+        );
+    }
+
+    private RowMapper<SessionUser> sessionUserRowMapper() {
+        return (rs, rowNum) -> new SessionUser(
+                rs.getString("user_id"),
+                rs.getString("user_name"),
+                rs.getString("user_email")
+        );
     }
 }

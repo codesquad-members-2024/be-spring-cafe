@@ -1,8 +1,9 @@
 package codesquad.springcafe.repository.user;
 
-import codesquad.springcafe.dto.UpdatedUser;
-import codesquad.springcafe.dto.User;
 import codesquad.springcafe.exception.db.UserNotFoundException;
+import codesquad.springcafe.model.SessionUser;
+import codesquad.springcafe.model.UpdatedUser;
+import codesquad.springcafe.model.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,5 +48,10 @@ public class UserMemoryRepository implements UserRepository {
     @Override
     public List<User> findAllUser() {
         return users;
+    }
+
+    @Override
+    public Optional<SessionUser> findSessionUserByUserId(String userId) throws UserNotFoundException {
+        return Optional.empty();
     }
 }
