@@ -1,10 +1,11 @@
 package codesquad.springcafe.users.controller;
 
 import codesquad.springcafe.exception.PasswordMismatchException;
+import codesquad.springcafe.exception.UserNotFoundException;
+import codesquad.springcafe.model.user.dto.*;
 import codesquad.springcafe.users.service.UserService;
-import codesquad.springcafe.model.user.dto.UserCreateDto;
-import codesquad.springcafe.model.user.dto.UserPreviewDto;
-import codesquad.springcafe.model.user.dto.UserUpdateData;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,4 +78,21 @@ public class UserController {
         return "redirect:/users";
     }
 
+    @GetMapping("/login")
+    public String showLoginPage() {
+        return "user/login";
+    }
+
+    @PostMapping("/login")
+    public String loginUser(HttpServletRequest request, UserLoginDto userLoginDto) {
+        HttpSession session = request.getSession();
+        try {
+            UserPreviewDto userPreviewDto = userService.loginUser(userLoginDto);
+            session.setAttribute("sessionedUser", userPreviewDto);
+        } catch (UserNotFoundException | PasswordMismatchException e) {
+            logger.error(e.getMessage());
+            return "redirect:/users/login";
+        }
+        return "redirect:/";
+    }
 }
