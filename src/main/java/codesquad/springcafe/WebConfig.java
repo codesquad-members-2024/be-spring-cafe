@@ -2,6 +2,8 @@ package codesquad.springcafe;
 
 import codesquad.springcafe.database.article.ArticleDatabase;
 import codesquad.springcafe.database.article.ArticleH2Database;
+import codesquad.springcafe.database.comment.CommentDatabase;
+import codesquad.springcafe.database.comment.CommentH2Database;
 import codesquad.springcafe.database.user.UserDatabase;
 import codesquad.springcafe.database.user.UserH2Database;
 import codesquad.springcafe.interceptor.ArticleAccessInterceptor;
@@ -58,5 +60,13 @@ public class WebConfig implements WebMvcConfigurer {
     public ArticleDatabase articleDatabase() {
 //        return new ArticleMemoryDatabase();
         return new ArticleH2Database(dataSource);
+    }
+
+    /**
+     * CommentDatabase의 구현체를 설정한다.
+     */
+    @Bean
+    public CommentDatabase commentDatabase() {
+        return new CommentH2Database(dataSource);
     }
 }

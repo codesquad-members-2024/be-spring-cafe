@@ -2,7 +2,9 @@ package codesquad.springcafe.database.article;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import codesquad.springcafe.database.user.UserDatabase;
 import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.User;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,13 +16,21 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 class ArticleDatabaseTest {
+    @Autowired
+    UserDatabase userDatabase;
 
     @Autowired
     ArticleDatabase articleDatabase;
 
     @BeforeEach
     void setUp() {
+        userDatabase.clear();
         articleDatabase.clear();
+
+        User user1 = new User("sangchu@gmail.com", "상추", "123");
+        User user2 = new User("baechu@gmail.com", "배추", "123");
+        userDatabase.add(user1);
+        userDatabase.add(user2);
     }
 
     @Test
