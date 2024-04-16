@@ -1,11 +1,11 @@
 package codesquad.springcafe.users.repository;
 
+import codesquad.springcafe.model.user.User;
 import codesquad.springcafe.exception.UserNotFoundException;
-import db.UserDatabase;
-import model.user.*;
-import model.user.dto.UserCredentialDto;
-import model.user.dto.UserPreviewDto;
-import model.user.dto.UserUpdateData;
+import codesquad.springcafe.db.UserDatabase;
+import codesquad.springcafe.model.user.dto.UserCredentialDto;
+import codesquad.springcafe.model.user.dto.UserPreviewDto;
+import codesquad.springcafe.model.user.dto.UserUpdateData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

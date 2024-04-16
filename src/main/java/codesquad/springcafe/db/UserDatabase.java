@@ -1,6 +1,6 @@
-package db;
+package codesquad.springcafe.db;
 
-import model.user.User;
+import codesquad.springcafe.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

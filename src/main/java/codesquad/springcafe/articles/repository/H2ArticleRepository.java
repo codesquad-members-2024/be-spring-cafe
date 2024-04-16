@@ -1,10 +1,9 @@
 package codesquad.springcafe.articles.repository;
 
-import model.article.Article;
+import codesquad.springcafe.model.article.Article;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 
-@Primary
 @Repository
 public class H2ArticleRepository implements ArticleRepository {
     private static final Logger logger = LoggerFactory.getLogger(H2ArticleRepository.class);

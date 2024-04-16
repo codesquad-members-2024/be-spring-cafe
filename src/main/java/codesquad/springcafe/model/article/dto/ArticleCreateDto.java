@@ -1,4 +1,4 @@
-package model.article.dto;
+package codesquad.springcafe.model.article.dto;
 
 public class ArticleCreateDto {
     private final String userId;

@@ -1,6 +1,4 @@
-package model.article;
-
-import db.ArticleDatabase;
+package codesquad.springcafe.model.article;
 
 import java.time.LocalDate;
 
@@ -29,6 +27,10 @@ public class Article {
     @Override
     public String toString() {
         return "userId : " + userId + ", title : " + title + ", content : " + content + ", creatinDate : " + creationDate;
+    }
+
+    public void setArticleId(int articleId) {
+        this.articleId = articleId;
     }
 
     public long getArticleId() {

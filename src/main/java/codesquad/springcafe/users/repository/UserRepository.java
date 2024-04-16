@@ -1,9 +1,9 @@
 package codesquad.springcafe.users.repository;
 
-import model.user.*;
-import model.user.dto.UserCredentialDto;
-import model.user.dto.UserPreviewDto;
-import model.user.dto.UserUpdateData;
+import codesquad.springcafe.model.user.User;
+import codesquad.springcafe.model.user.dto.UserCredentialDto;
+import codesquad.springcafe.model.user.dto.UserPreviewDto;
+import codesquad.springcafe.model.user.dto.UserUpdateData;
 
 import java.util.ArrayList;
 import java.util.Optional;
