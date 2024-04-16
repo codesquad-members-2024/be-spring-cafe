@@ -45,15 +45,15 @@ public class User {
     }
 
     public void update(UserUpdateDto userUpdateDto) {
-        validatePassword(userUpdateDto.getPassword());
+        if (!validatePassword(userUpdateDto.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
         this.name = userUpdateDto.getName();
         this.password = userUpdateDto.getNewPassword();
         this.email = userUpdateDto.getEmail();
     }
 
-    private void validatePassword(String password) {
-        if (!this.password.equals(password)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
+    public boolean validatePassword(String password) {
+        return this.password.equals(password);
     }
 }
