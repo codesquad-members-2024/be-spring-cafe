@@ -1,4 +1,4 @@
-package codesquad.springcafe.article.dao;
+package codesquad.springcafe.article;
 
 import codesquad.springcafe.article.Article;
 

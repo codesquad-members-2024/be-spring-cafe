@@ -1,6 +1,5 @@
 package codesquad.springcafe.article;
 
-import codesquad.springcafe.article.dao.IArticleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

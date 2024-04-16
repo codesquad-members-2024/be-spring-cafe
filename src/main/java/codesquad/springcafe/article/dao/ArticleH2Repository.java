@@ -1,6 +1,7 @@
 package codesquad.springcafe.article.dao;
 
 import codesquad.springcafe.article.Article;
+import codesquad.springcafe.article.IArticleRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -11,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 @Primary
-public class ArticleH2Repository implements IArticleRepository{
+public class ArticleH2Repository implements IArticleRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
