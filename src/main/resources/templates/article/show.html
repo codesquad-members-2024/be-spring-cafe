@@ -55,6 +55,13 @@
                                         <p class="comment-content comment-time" th:text="${{comment.writeDate}}">
                                             2016-01-12 14:06
                                         </p>
+                                        <div th:if="${comment.writer == loginUser.nickname}">
+                                            <form th:action="@{/articles/detail/{articleId}/comments/{id}(articleId=${article.id},id=${comment.id})}"
+                                                  method="post">
+                                                <input type="hidden" name="_method" value="DELETE"/>
+                                                <button type="submit" class="delete-button">삭제</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </article>
 

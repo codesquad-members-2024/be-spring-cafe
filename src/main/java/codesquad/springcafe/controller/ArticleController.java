@@ -9,7 +9,9 @@ import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.Comment;
 import codesquad.springcafe.model.User;
 import codesquad.springcafe.util.LoginUserProvider;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -178,6 +180,27 @@ public class ArticleController {
         commentDatabase.add(comment);
         logger.info("새로운 코멘트가 추가되었습니다. {}", comment);
 
+        return "redirect:/articles/detail/" + articleId;
+    }
+
+    @DeleteMapping("/detail/{articleId}/comments/{id}")
+    public String deleteComment(@PathVariable Long articleId, @PathVariable Long id, HttpSession session,
+                                HttpServletResponse response) throws IOException {
+        Optional<Article> optionalArticle = articleDatabase.findBy(articleId);
+        Optional<Comment> optionalComment = commentDatabase.findBy(id);
+        if (optionalArticle.isEmpty() || optionalComment.isEmpty()) {
+            return "redirect:/";
+        }
+
+        Comment comment = optionalComment.get();
+        User loginUser = LoginUserProvider.provide(session);
+        if (!loginUser.hasSameNickname(comment.getWriter())) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return null;
+        }
+
+        commentDatabase.delete(id);
+        logger.info("코멘트가 삭제되었습니다. {}", comment);
         return "redirect:/articles/detail/" + articleId;
     }
 

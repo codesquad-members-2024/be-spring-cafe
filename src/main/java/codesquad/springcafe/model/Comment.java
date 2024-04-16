@@ -61,4 +61,15 @@ public class Comment {
     public int hashCode() {
         return Objects.hash(writer, content, articleId, writeDate, id);
     }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "writer='" + writer + '\'' +
+                ", content='" + content + '\'' +
+                ", articleId=" + articleId +
+                ", writeDate=" + writeDate +
+                ", id=" + id +
+                '}';
+    }
 }
