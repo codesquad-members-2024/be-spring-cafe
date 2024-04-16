@@ -1,7 +1,7 @@
 package codesquad.springcafe.service;
 
-import codesquad.springcafe.dto.Article;
-import codesquad.springcafe.dto.UpdatedArticle;
+import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.UpdatedArticle;
 import java.util.List;
 import java.util.Optional;
 

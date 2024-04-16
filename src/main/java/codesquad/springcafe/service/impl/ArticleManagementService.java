@@ -1,9 +1,9 @@
 package codesquad.springcafe.service.impl;
 
-import codesquad.springcafe.dto.Article;
-import codesquad.springcafe.dto.UpdatedArticle;
 import codesquad.springcafe.exception.db.ArticleNotFoundException;
 import codesquad.springcafe.exception.service.DuplicateArticleIdException;
+import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.UpdatedArticle;
 import codesquad.springcafe.repository.article.ArticleRepository;
 import codesquad.springcafe.service.ArticleService;
 import java.util.List;

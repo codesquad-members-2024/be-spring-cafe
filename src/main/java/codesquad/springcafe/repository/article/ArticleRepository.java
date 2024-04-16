@@ -1,8 +1,8 @@
 package codesquad.springcafe.repository.article;
 
-import codesquad.springcafe.dto.Article;
-import codesquad.springcafe.dto.UpdatedArticle;
 import codesquad.springcafe.exception.db.ArticleNotFoundException;
+import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.UpdatedArticle;
 import java.util.List;
 import java.util.Optional;
 

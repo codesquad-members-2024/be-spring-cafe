@@ -1,7 +1,10 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.dto.Article;
+import codesquad.springcafe.dto.ArticleWriteDto;
+import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.SessionUser;
 import codesquad.springcafe.service.ArticleService;
+import jakarta.servlet.http.HttpSession;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +35,10 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public String processWriteForm(@ModelAttribute Article article) {
+    public String processWriteForm(@ModelAttribute ArticleWriteDto articleWriteDto, HttpSession httpSession) {
+        SessionUser sessionUser = (SessionUser) httpSession.getAttribute("sessionUser"); // 로그인해야지 접근할 수 있으므로
+        String userId = sessionUser.getUserId();
+        Article article = articleWriteDto.createArticle(userId);
         articleService.addArticle(article);
         return "redirect:/";
     }
