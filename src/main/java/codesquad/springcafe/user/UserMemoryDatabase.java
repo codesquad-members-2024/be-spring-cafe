@@ -1,6 +1,5 @@
-package codesquad.springcafe.database;
+package codesquad.springcafe.user;
 
-import codesquad.springcafe.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

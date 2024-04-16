@@ -1,4 +1,4 @@
-package codesquad.springcafe;
+package codesquad.springcafe.article;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

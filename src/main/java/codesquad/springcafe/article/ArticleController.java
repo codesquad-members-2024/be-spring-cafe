@@ -1,6 +1,5 @@
-package codesquad.springcafe;
+package codesquad.springcafe.article;
 
-import codesquad.springcafe.database.ArticleDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
