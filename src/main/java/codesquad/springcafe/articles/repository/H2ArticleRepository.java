@@ -21,6 +21,11 @@ import java.util.Optional;
 @Repository
 public class H2ArticleRepository implements ArticleRepository {
     private static final Logger logger = LoggerFactory.getLogger(H2ArticleRepository.class);
+    private static final String ARTICLEID = "ARTICLEID";
+    private static final String USERID = "USERID";
+    private static final String TITLE = "TITLE";
+    private static final String CONTENT = "CONTENT";
+    private static final String CREATIONDATE = "CREATIONDATE";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -49,10 +54,10 @@ public class H2ArticleRepository implements ArticleRepository {
         String sql = "SELECT USERID, TITLE, CONTENT, CREATIONDATE FROM ARTICLES WHERE ARTICLEID = ?";
         return jdbcTemplate.query(sql, new Object[]{articleId}, rs -> {
             if (rs.next()) {
-                String userId = rs.getString("USERID");
-                String title = rs.getString("TITLE");
-                String content = rs.getString("CONTENT");
-                String creationDate = rs.getString("CREATIONDATE");
+                String userId = rs.getString(USERID);
+                String title = rs.getString(TITLE);
+                String content = rs.getString(CONTENT);
+                String creationDate = rs.getString(CREATIONDATE);
                 return Optional.of(new ArticleContentDto(userId, title, content, creationDate));
             }
             return Optional.empty();
@@ -62,10 +67,10 @@ public class H2ArticleRepository implements ArticleRepository {
     private static class ArticlePreviewRowMapper implements RowMapper<ArticlePreviewDto> {
         @Override
         public ArticlePreviewDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-            long articleId = rs.getLong("ARTICLEID");
-            String userId = rs.getString("USERID");
-            String title = rs.getString("TITLE");
-            String creationDate = rs.getString("CREATIONDATE");
+            long articleId = rs.getLong(ARTICLEID);
+            String userId = rs.getString(USERID);
+            String title = rs.getString(TITLE);
+            String creationDate = rs.getString(CREATIONDATE);
             return new ArticlePreviewDto(articleId, userId, title, creationDate);
         }
     }
