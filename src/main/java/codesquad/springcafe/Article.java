@@ -1,23 +1,33 @@
 package codesquad.springcafe;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Article {
 
     private final String writer;
     private String title;
     private String content;
-    private final Long articleId;
+    private Long articleId;
     private final LocalDateTime createdTime;
-    private static Long idCounter = 0L;
 
     public Article(String writer, String title, String content) {
         this.writer = writer;
         this.title = title;
         this.content = content;
-        this.articleId = ++idCounter;
         this.createdTime = LocalDateTime.now();
+    }
+
+    public Long getArticleId() {
+        return articleId;
+    }
+
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
     }
 
     public String getWriter() {
@@ -45,10 +55,10 @@ public class Article {
         this.content = content;
     }
 
-    public Long getArticleId() {
-        return articleId;
-    }
 
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
     public String getFormattedTime() {
         String formattedTime = this.createdTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
         return formattedTime;
