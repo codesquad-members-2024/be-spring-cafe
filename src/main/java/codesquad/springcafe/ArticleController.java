@@ -3,9 +3,12 @@ package codesquad.springcafe;
 import codesquad.springcafe.db.ArticleDatabase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
@@ -27,5 +30,13 @@ public class ArticleController {
         Article article = new Article(seq, title, content);
         articleDatabase.addArticle(article);
         return "redirect:/articles";
+    }
+
+    @GetMapping("/articles")
+    public String showArticleList(Model model){
+        List<Article> articles = articleDatabase.findAllArticles();
+        model.addAttribute("articles", articles);
+        model.addAttribute("totalArticleNumber", articleDatabase.getTotalArticleNumber());
+        return "post/list";
     }
 }
