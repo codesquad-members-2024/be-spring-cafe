@@ -1,6 +1,5 @@
 package codesquad.springcafe.user;
 
-import codesquad.springcafe.user.database.UserDatabase;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/user")
 public class UserController {
 
-    UserDatabase userDatabase;
+    UserService userService;
 
-    public UserController(UserDatabase userDatabase) {
-        this.userDatabase = userDatabase;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     // 유저 등록 페이지
@@ -28,28 +27,28 @@ public class UserController {
     // 유저 등록 메서드
     @PostMapping("/create")
     public String register(UserSignupDto userSignupDto) {
-        userDatabase.save(userSignupDto.toEntity());
+        userService.save(userSignupDto.toEntity());
         return "redirect:/";
     }
 
     // 유저 목록 페이지
     @GetMapping("")
     public String list(Model model) {
-        model.addAttribute("users", userDatabase.findAll());
+        model.addAttribute("users", userService.findAll());
         return "user/list";
     }
 
     // 유저 프로필 페이지
     @GetMapping("/{userId}")
     public String profile(@PathVariable String userId, Model model) {
-        model.addAttribute("user", userDatabase.findByUserId(userId));
+        model.addAttribute("user", userService.findByUserId(userId));
         return "user/profile";
     }
 
     // 유저 정보 수정 페이지
     @GetMapping("{userId}/form")
     public String updateProfilePage(@PathVariable String userId, Model model) {
-        model.addAttribute("user", userDatabase.findByUserId(userId));
+        model.addAttribute("user", userService.findByUserId(userId));
         return "user/update_form";
     }
 
@@ -57,14 +56,7 @@ public class UserController {
     //수정된 회원 정보 post
     @PutMapping("{userId}/form")
     public String putUpdateProfile(@PathVariable String userId, UserUpdateDto userUpdateDto) {
-        User foundUser = userDatabase.findByUserId(userId);
-        if (foundUser.checkPassword(userUpdateDto.getPassword())) {
-            User updatedUser = new User(userId, userUpdateDto.getEmail(),
-                userUpdateDto.getNickname(), userUpdateDto.getPassword());
-            userDatabase.update(updatedUser, userId);
-        } else {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
+        userService.updateUserProfile(userUpdateDto, userId);
         return "redirect:/user";
     }
 
