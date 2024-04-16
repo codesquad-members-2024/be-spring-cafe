@@ -1,8 +1,9 @@
 package codesquad.springcafe;
 
-import codesquad.springcafe.database.UserMemoryDatabase;
+import codesquad.springcafe.database.UserDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,12 @@ import java.util.List;
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-    UserMemoryDatabase userDB = new UserMemoryDatabase();
+    UserDatabase userDB;
+
+    @Autowired
+    UserController(UserDatabase userDatabaseH) {
+        this.userDB = userDatabaseH;
+    }
 
     @PostMapping("/users")
     public String createUser(@ModelAttribute User user) {

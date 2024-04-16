@@ -20,6 +20,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mustache'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// h2
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'com.h2database:h2'
 }
 
 tasks.named('test') {
