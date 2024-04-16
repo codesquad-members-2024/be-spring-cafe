@@ -4,6 +4,7 @@ import codesquad.springcafe.dto.ArticleRequestDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Article {
 
@@ -12,15 +13,15 @@ public class Article {
     private final String title;
     private final String contents;
     private final LocalDateTime localDateTime;
-    private int hits;
+    private AtomicLong hits;
 
-    public Article(Long articleId, String writer, String title, String contents, LocalDateTime localDateTime, int hits) {
+    public Article(Long articleId, String writer, String title, String contents, LocalDateTime localDateTime, long hits) {
         this.articleId = articleId;
         this.writer = writer;
         this.title = title;
         this.contents = contents;
         this.localDateTime = localDateTime;
-        this.hits = hits;
+        this.hits = new AtomicLong(hits);
     }
 
     public Article(Long articleId, String writer, String title, String contents) {
@@ -29,7 +30,7 @@ public class Article {
         this.title = title;
         this.contents = contents;
         this.localDateTime = LocalDateTime.now();
-        this.hits = 0;
+        this.hits = new AtomicLong();
     }
 
     public Article(long articleId, ArticleRequestDto articleRequestDto) {
@@ -41,7 +42,7 @@ public class Article {
         this.title = articleRequestDto.getTitle();
         this.contents = articleRequestDto.getContents();
         this.localDateTime = LocalDateTime.now();
-        this.hits = 0;
+        this.hits = new AtomicLong();
     }
 
     public Long getArticleId() {
@@ -64,15 +65,12 @@ public class Article {
         return localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
-    public int getHits() {
-        return hits;
+    public long getHits() {
+        return hits.get();
     }
 
     public void setArticleId(Long articleId) {
         this.articleId = articleId;
     }
 
-    public void increaseHits() {
-        hits++;
-    }
 }
