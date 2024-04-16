@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:insert="~{fragment/header :: header}"></div>
+</head>
+<body>
+<div th:insert="~{fragment/navbar :: mainNav}"></div>
+<div th:insert="~{fragment/navbar :: subNav}"></div>
+<div class="container" id="main">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="panel panel-default">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>#</th> <th>사용자 아이디</th> <th>이름</th> <th>이메일</th><th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user, iterStat : ${users}">
+                    <th scope="row" th:text="${iterStat.count}">sequence</th>
+                    <td>
+                        <a th:href="@{/users/{userId}(userId=${user.userId})}" th:text="${user.userId}">userId</a>
+                    </td>
+                    <td th:text="${user.name}">name</td>
+                    <td th:text="${user.email}">email</td>
+                    <td><a href="#" class="btn btn-success" role="button">수정</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- script references -->
+<div th:insert="~{fragment/script :: script}"></div>
+</body>
+</html>
