@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -32,17 +31,9 @@ public class ArticleController {
         long seq = sequence.incrementAndGet();
         Article article = new Article(seq, title, content);
         articleDatabase.addArticle(article);
-        return "redirect:/articles";
+        return "redirect:/";
     }
 
-
-    @GetMapping("/articles")
-    public String showArticleList(Model model){
-        List<Article> articles = articleDatabase.findAllArticles();
-        model.addAttribute("articles", articles);
-        model.addAttribute("totalArticleNumber", articleDatabase.getTotalArticleNumber());
-        return "post/list";
-    }
 
     @GetMapping("/articles/{sequence}")
     public String loadArticleContent(@PathVariable long sequence, Model model){
