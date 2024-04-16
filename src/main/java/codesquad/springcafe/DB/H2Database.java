@@ -2,6 +2,7 @@ package codesquad.springcafe.DB;
 
 import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.domain.User;
+import codesquad.springcafe.dto.RegisterArticle;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.sql.DataSource;
@@ -57,9 +58,9 @@ public class H2Database {
         jdbcTemplate.update(UPDATE_USER, password, name, email, userId);
     }
 
-    public void addArticle(Article article) {
+    public void addArticle(RegisterArticle registerArticle) {
         jdbcTemplate.update("INSERT INTO Articles (writer, title, contents, time) VALUES (?,?,?,?)",
-                article.getWriter(), article.getTitle(), article.getContents(), LocalDateTime.now());
+                registerArticle.getWriter(), registerArticle.getTitle(), registerArticle.getContents(), registerArticle.getTime());
     }
 
     public List<Article> getAllArticles() {
