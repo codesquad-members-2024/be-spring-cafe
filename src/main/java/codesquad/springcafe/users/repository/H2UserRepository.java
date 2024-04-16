@@ -21,6 +21,11 @@ import java.util.Optional;
 @Repository
 public class H2UserRepository implements UserRepository {
     private static final Logger logger = LoggerFactory.getLogger(H2UserRepository.class);
+    private static final String USERID = "USERID";
+    private static final String NAME = "NAME";
+    private static final String EMAIL = "EMAIL";
+    private static final String PASSWORD = "PASSWORD";
+    private static final String CREATIONDATE = "CREATIONDATE";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -47,9 +52,9 @@ public class H2UserRepository implements UserRepository {
         String sql = "SELECT NAME, EMAIL, CREATIONDATE FROM USERS WHERE USERID = ?";
         return jdbcTemplate.query(sql, new Object[]{userId}, rs -> {
             if (rs.next()) {
-                String name = rs.getString("NAME");
-                String email = rs.getString("EMAIL");
-                String creationDate = rs.getString("CREATIONDATE");
+                String name = rs.getString(NAME);
+                String email = rs.getString(EMAIL);
+                String creationDate = rs.getString(CREATIONDATE);
                 return Optional.of(new UserPreviewDto(userId, name, email, creationDate));
             }
             return Optional.empty();
@@ -61,7 +66,7 @@ public class H2UserRepository implements UserRepository {
         String sql = "SELECT PASSWORD FROM USERS WHERE USERID = ?";
         return jdbcTemplate.query(sql, new Object[]{userId}, rs -> {
             if (rs.next()) {
-                return Optional.of(new UserCredentialDto(rs.getString("PASSWORD")));
+                return Optional.of(new UserCredentialDto(rs.getString(PASSWORD)));
             }
             return Optional.empty();
         });
@@ -76,10 +81,10 @@ public class H2UserRepository implements UserRepository {
     private static class UserPreviewRowMapper implements org.springframework.jdbc.core.RowMapper<UserPreviewDto> {
         @Override
         public UserPreviewDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-            String userId = rs.getString("USERID");
-            String name = rs.getString("NAME");
-            String email = rs.getString("EMAIL");
-            String creationDate = rs.getString("CREATIONDATE");
+            String userId = rs.getString(USERID);
+            String name = rs.getString(NAME);
+            String email = rs.getString(EMAIL);
+            String creationDate = rs.getString(CREATIONDATE);
             return new UserPreviewDto(userId, name, email, creationDate);
         }
     }
