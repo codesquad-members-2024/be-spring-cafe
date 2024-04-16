@@ -2,6 +2,8 @@ package codesquad.springcafe.article;
 
 import codesquad.springcafe.article.DTO.ArticlePostReq;
 import codesquad.springcafe.article.DTO.ArticleWithComments;
+import codesquad.springcafe.exception.AuthorizationException;
+import codesquad.springcafe.exception.NotFoundException;
 import codesquad.springcafe.user.DTO.SimpleUserInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -58,14 +60,12 @@ public class ArticleController {
 
     // view
     @GetMapping("/{id}")
-    public String showArticle(@PathVariable("id") int id, Model model, HttpServletResponse response) {
+    public String showArticle(@PathVariable("id") int id, Model model) {
         ArticleWithComments article = articleService.getArticle(id);
 
         // 존재하지 않는 게시글
-        if (article == null) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            model.addAttribute("alert", "요청하신 페이지를 찾을 수 없습니다."); // 이게 작동 안함
-            return "error";
+        if (article.article() == null) {
+            throw new NotFoundException();
         }
 
         // 정상 흐름
@@ -100,8 +100,7 @@ public class ArticleController {
             return "article/update_form";
         }
 
-        model.addAttribute("alert", "다른 사람의 게시글을 수정할 수 없습니다!");
-        return "error";
+        throw new AuthorizationException("다른 사람의 게시글을 수정할 수 없습니다!");
     }
 
     @GetMapping("/{id}/delete")
@@ -114,7 +113,6 @@ public class ArticleController {
             return "article/delete";
         }
 
-        model.addAttribute("alert", "다른 사람의 게시글을 삭제할 수 없습니다!");
-        return "error";
+        throw new AuthorizationException("다른 사람의 게시글을 삭제할 수 없습니다!");
     }
 }
