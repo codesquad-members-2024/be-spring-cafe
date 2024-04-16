@@ -2,6 +2,7 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.DB.UserDatabase;
+import codesquad.springcafe.domain.UserUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -49,12 +50,40 @@ public class UserController {
     @GetMapping("/users/{userId}")
     public String showProfile(@PathVariable String userId, Model model) {
         Optional<User> userOptional = UserDatabase.getUser(userId);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            model.addAttribute("user", user); // profile.html에 user 객체 넘겨주기
+        if(userOptional.isEmpty()){
+            return "redirect:/main";
         }
 
+        User user = userOptional.get();
+        model.addAttribute("user", user); // profile.html에 user 객체 넘겨주기
         return "/user/profile";
+    }
+
+    @GetMapping("/users/update/{userId}")
+    // 프로필 수정 폼 보여주기
+    public String showUpdateForm(@PathVariable String userId, Model model) {
+        model.addAttribute("userId", userId);
+
+        return "/user/update_form";
+    }
+
+    @PutMapping("/users/update/{userId}")
+    // 사용자가 입력한 수정 폼을 받아 프로필 수정하기
+    public String updateProfile(@PathVariable String userId, @ModelAttribute UserUpdate userUpdate, Model model) {
+        Optional<User> userOptional = UserDatabase.getUser(userId); // 해당 userId의 데이터를 가져온다
+        if(userOptional.isEmpty()){
+            return "redirect:/main";
+        }
+        User user = userOptional.get();
+
+        if(!user.comparePassword(userUpdate.getPassword())){ // 비밀번호가 일치한다면
+            model.addAttribute("isIncorrectPassword", true); // 올바르지 않는 pw
+            model.addAttribute("userId", userId);
+            return "/user/update_form";
+        }
+
+        user.update(userUpdate);
+        return "redirect:/users/list";
     }
 
 }
