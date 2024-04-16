@@ -20,6 +20,10 @@ public class UserUpdate {
         return newEmail;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public String getNewPassword() {
         return newPassword;
     }

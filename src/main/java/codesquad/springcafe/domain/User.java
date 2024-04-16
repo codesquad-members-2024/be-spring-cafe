@@ -1,10 +1,12 @@
 package codesquad.springcafe.domain;
 
+import java.util.Objects;
+
 public class User {
-    private final String userId;
-    private final String nickname;
-    private final String email;
-    private final String password;
+    private String userId;
+    private String nickname;
+    private String email;
+    private String password;
 
     public User(String userId, String nickname, String email, String password) {
         this.userId = userId;
@@ -21,7 +23,6 @@ public class User {
     public String getEmail() {
         return email;
     }
-
     public String getPassword() {
         return password;
     }
@@ -30,10 +31,20 @@ public class User {
         return password.equals(inputPassword);
     }
 
+    public void update(UserUpdate userUpdate){
+        if(!userUpdate.getNewNickname().isEmpty()){
+            this.nickname = userUpdate.getNewNickname();
+        }
+        if(!userUpdate.getNewEmail().isEmpty()){
+            this.email = userUpdate.getNewEmail();
+        }
+        if(!userUpdate.getNewPassword().isEmpty()){
+            this.password = userUpdate.getNewPassword();
+        }
+    }
+
     @Override
     public String toString() {
         return "userId: " + userId + ", nickname: " + nickname + ", email: " + email;
     }
-
-
 }
