@@ -10,14 +10,12 @@ public class Article {
     private String content;
     private Timestamp timestamp;
 
-//    @ConstructorProperties({"writer", "title", "content"})
+    @ConstructorProperties({"writer", "title", "content"})
     public Article(String writer, String title, String content) {
         this.writer = writer;
         this.title = title;
         this.content = content;
-    }
-
-    public Article() {
+        this.timestamp = new Timestamp(System.currentTimeMillis()); // 생성자에서 현재 시간으로 초기화하기
     }
 
     public Long getId() {

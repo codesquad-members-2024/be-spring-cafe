@@ -43,6 +43,7 @@ public class ArticleController {
     // qna/create 경로로 POST 요청을 받으면 호출
     // 입력받은 Article 객체를 저장하고
     // 저장된 게시글의 ID를 RedirectAttributes 에 추가해 상세 페이지로 리다이렉트
+        // RedirectAttribute : 저장된 아티클의 아이디를 리다이렉트 주소로 넘겨!
     @PostMapping("/create") // @ModelAttribute : 폼 => 객체 바인딩
     public String createArticle(@ModelAttribute Article article, RedirectAttributes redirectAttributes) {
         Article savedArticle = articleService.createArticle(article);
