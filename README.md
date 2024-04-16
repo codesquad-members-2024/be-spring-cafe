@@ -25,6 +25,8 @@
 
 - [ ] 회원id로 검색 시, 실패하는 경우에 대한 처리가 필요하다.
   - User 대신 `null`이 반환되게 되는데, 이걸 어떻게 할 수 있지?
+
+- [ ] Article의 작성시간을 유지시켜야한다. 
 ---
 
 http://repository.transtep.com/repository/thirdparty/H2/1.0.63/docs/html/datatypes.html#sql141

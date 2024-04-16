@@ -24,7 +24,7 @@ public class UserController {
     @PostMapping("/users")
     public String createUser(@ModelAttribute User user) {
         userDB.addUser(user);
-        logger.debug("add user : {}", user);
+        logger.debug("add user : {}", user.getUserId());
         return "redirect:/users";
     }
 
