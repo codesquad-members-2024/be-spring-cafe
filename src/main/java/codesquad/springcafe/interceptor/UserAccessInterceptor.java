@@ -9,7 +9,7 @@ import java.util.Map;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.HandlerMapping;
 
-public class UserProfileInterceptor implements HandlerInterceptor {
+public class UserAccessInterceptor implements HandlerInterceptor {
     /**
      * 다른 사용자의 프로필을 조회하거나 정보를 수정하려고 한다면 403에러를 보내고 false를 리턴합니다.
      */

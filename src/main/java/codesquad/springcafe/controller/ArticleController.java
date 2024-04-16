@@ -89,11 +89,7 @@ public class ArticleController {
      */
     @GetMapping("/edit/{id}")
     public String updateForm(@PathVariable Long id, Model model) {
-        Optional<Article> optionalArticle = articleDatabase.findBy(id);
-        if (optionalArticle.isEmpty()) {
-            return "redirect:/";
-        }
-        Article article = optionalArticle.get();
+        Article article = articleDatabase.findBy(id).get();
         ArticleWriteForm articleWriteForm = new ArticleWriteForm(article.getTitle(), article.getContent());
 
         model.addAttribute("articleWriteForm", articleWriteForm);
@@ -106,15 +102,10 @@ public class ArticleController {
     @PutMapping("/edit/{id}")
     public String updateArticle(@PathVariable Long id, @Validated @ModelAttribute ArticleWriteForm articleWriteForm,
                                 BindingResult bindingResult) {
-        Optional<Article> optionalArticle = articleDatabase.findBy(id);
-        if (optionalArticle.isEmpty()) {
-            return "redirect:/";
-        }
-
         if (bindingResult.hasErrors()) {
             return "article/update";
         }
-        Article targetArticle = optionalArticle.get();
+        Article targetArticle = articleDatabase.findBy(id).get();
         Article updateArticle = targetArticle.update(articleWriteForm.getTitle(), articleWriteForm.getContent());
         articleDatabase.update(updateArticle);
 
@@ -127,10 +118,6 @@ public class ArticleController {
      */
     @GetMapping("/delete/{id}")
     public String deleteForm(@PathVariable Long id, Model model) {
-        Optional<Article> optionalArticle = articleDatabase.findBy(id);
-        if (optionalArticle.isEmpty()) {
-            return "redirect:/";
-        }
         ArticleDeleteForm articleDeleteForm = new ArticleDeleteForm("");
         model.addAttribute(articleDeleteForm);
         return "article/delete";
@@ -142,11 +129,7 @@ public class ArticleController {
     @DeleteMapping("/delete/{id}")
     public String deleteArticle(@PathVariable Long id, @Validated @ModelAttribute ArticleDeleteForm articleDeleteForm,
                                 BindingResult bindingResult, HttpSession session) {
-        Optional<Article> optionalArticle = articleDatabase.findBy(id);
-        if (optionalArticle.isEmpty()) {
-            return "redirect:/";
-        }
-        Article targetArticle = optionalArticle.get();
+        Article targetArticle = articleDatabase.findBy(id).get();
         validatePassword(articleDeleteForm, bindingResult, session);
 
         if (bindingResult.hasErrors()) {
