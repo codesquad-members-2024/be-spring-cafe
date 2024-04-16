@@ -1,7 +1,7 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.domain.Article;
-import codesquad.springcafe.repository.article.ArticleRepositoryInterface;
+import codesquad.springcafe.repository.article.ArticleRepository;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-    private final ArticleRepositoryInterface articleRepository;
+    private final ArticleRepository articleRepository;
 
     @Autowired
-    public HomeController(ArticleRepositoryInterface articleRepository) {
+    public HomeController(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
 

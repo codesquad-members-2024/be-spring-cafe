@@ -2,7 +2,7 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.dto.ArticleDto;
-import codesquad.springcafe.repository.article.ArticleRepositoryInterface;
+import codesquad.springcafe.repository.article.ArticleRepository;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +21,10 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/articles")
 public class ArticleController {
     private static final Logger logger = LoggerFactory.getLogger(ArticleController.class);
-    private final ArticleRepositoryInterface articleRepository;
+    private final ArticleRepository articleRepository;
 
     @Autowired
-    public ArticleController(ArticleRepositoryInterface articleRepository) {
+    public ArticleController(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
 

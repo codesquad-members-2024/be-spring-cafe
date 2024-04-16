@@ -3,7 +3,7 @@ package codesquad.springcafe.controller;
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.dto.UserDto;
 import codesquad.springcafe.dto.UserUpdateDto;
-import codesquad.springcafe.repository.user.UserRepositoryInterface;
+import codesquad.springcafe.repository.user.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -25,10 +25,10 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/users")
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-    private final UserRepositoryInterface userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserController(UserRepositoryInterface userRepository) {
+    public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
