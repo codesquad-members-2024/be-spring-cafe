@@ -76,7 +76,7 @@ public class UserController {
         }
         User user = userOptional.get();
 
-        if(!user.comparePassword(userUpdate.getPassword())){ // 비밀번호가 일치한다면
+        if(!user.comparePassword(userUpdate.getPassword())){ // 비밀번호가 일치하지 않는다면
             model.addAttribute("isIncorrectPassword", true); // 올바르지 않는 pw
             model.addAttribute("userId", userId);
             return "/user/update_form";
