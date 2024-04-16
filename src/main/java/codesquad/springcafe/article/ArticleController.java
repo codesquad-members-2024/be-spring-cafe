@@ -22,6 +22,7 @@ public class ArticleController {
         articleRepository = repository;
     }
 
+    // 아티클 id를 가지고 해당 아티클 보여주기 없으면 기본 홈페이지 보여주기
     @GetMapping("/article/{id}")
     public String showArticle(@PathVariable int id, Model model) {
         Optional<Article> optArticle = articleRepository.findBy(id);
@@ -32,6 +33,7 @@ public class ArticleController {
     }
 
 
+    // 아티클 등록
     @PostMapping("/article")
     public String storeArticle(@ModelAttribute ArticleDto articleDto) {
         final String writer = articleDto.getWriter();
@@ -46,6 +48,7 @@ public class ArticleController {
         return "redirect:/articles";
     }
 
+    // 모든 아티클 보여주기
     @GetMapping("/articles")
     public String showArticle(Model model) {
         Collection<Article> allArticles = articleRepository.findAll();
