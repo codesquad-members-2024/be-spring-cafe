@@ -83,6 +83,7 @@ public class UserController {
         }
 
         user.update(userUpdate);
+        logger.debug("user update: " + user.toString());
         return "redirect:/users/list";
     }
 
