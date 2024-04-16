@@ -27,12 +27,16 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> findUser(String userName) {
-        return userRepository.findByName(userName);
+    public Optional<User> findUser(String userId) {
+        return userRepository.findByUserId(userId);
+    }
+
+    public void userUpdate(User user) {
+        userRepository.userUpdate(user);
     }
 
     private void validateDuplicateUser(User user) {
-        userRepository.findByName(user.getName())
+        userRepository.findByUserId(user.getUserId())
                         .ifPresent(u -> {
                             throw new IllegalArgumentException("이미 존재하는 유저입니다.");
                         });
