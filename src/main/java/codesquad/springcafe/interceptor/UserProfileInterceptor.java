@@ -1,7 +1,7 @@
 package codesquad.springcafe.interceptor;
 
-import codesquad.springcafe.controller.LoginController;
 import codesquad.springcafe.model.User;
+import codesquad.springcafe.util.LoginUserProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -17,7 +17,7 @@ public class UserProfileInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         HttpSession session = request.getSession(false);
-        User loginUser = (User) session.getAttribute(LoginController.LOGIN_SESSION_NAME);
+        User loginUser = LoginUserProvider.provide(session);
 
         String nickname = getPathVariable(request);
         if (loginUser == null || !loginUser.hasSameNickname(nickname)) {

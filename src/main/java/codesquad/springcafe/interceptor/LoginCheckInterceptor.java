@@ -1,6 +1,6 @@
 package codesquad.springcafe.interceptor;
 
-import codesquad.springcafe.controller.LoginController;
+import codesquad.springcafe.util.LoginUserProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -14,7 +14,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute(LoginController.LOGIN_SESSION_NAME) == null) {
+        if (session == null || LoginUserProvider.provide(session) == null) {
             response.sendRedirect("/login?redirectUrl=" + request.getRequestURI());
             return false;
         }

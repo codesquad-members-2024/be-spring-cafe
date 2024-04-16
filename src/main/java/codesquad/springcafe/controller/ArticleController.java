@@ -4,6 +4,7 @@ import codesquad.springcafe.database.article.ArticleDatabase;
 import codesquad.springcafe.form.article.ArticleAddForm;
 import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.User;
+import codesquad.springcafe.util.LoginUserProvider;
 import jakarta.servlet.http.HttpSession;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -49,7 +50,7 @@ public class ArticleController {
             logger.error("errors ={}", bindingResult);
             return "article/form";
         }
-        User loginUser = (User) session.getAttribute(LoginController.LOGIN_SESSION_NAME);
+        User loginUser = LoginUserProvider.provide(session);
         Article article = new Article(loginUser.getNickname(), articleAddForm.getTitle(), articleAddForm.getContent());
         articleDatabase.add(article);
         logger.info("새로운 게시물이 추가되었습니다. {}", article);
