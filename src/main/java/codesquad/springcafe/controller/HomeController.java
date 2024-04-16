@@ -24,6 +24,6 @@ public class HomeController {
         List<Article> articles = articleDatabase.findAllArticles();
         model.addAttribute("articles", articles);
         model.addAttribute("totalArticleNumber", articleDatabase.getTotalArticleNumber());
-        return "post/list";
+        return "article/list";
     }
 }

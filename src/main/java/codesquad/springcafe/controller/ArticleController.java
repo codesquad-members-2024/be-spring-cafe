@@ -43,6 +43,6 @@ public class ArticleController {
             throw new NoSuchElementException();
         }
         model.addAttribute("article", article.get());
-        return "post/show";
+        return "article/show";
     }
 }
