@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 public class LoggedInInterceptor implements HandlerInterceptor {
-    private static final Logger logger = LoggerFactory.getLogger(LoggedInInterceptor.class);
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();

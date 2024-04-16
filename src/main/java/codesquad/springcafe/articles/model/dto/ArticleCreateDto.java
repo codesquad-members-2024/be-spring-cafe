@@ -1,12 +1,12 @@
-package codesquad.springcafe.model.article.dto;
+package codesquad.springcafe.articles.model.dto;
 
 public class ArticleCreateDto {
     private final String userId;
     private final String title;
     private final String content;
 
-    public ArticleCreateDto(String title, String content) {
-        this.userId = "작성자";    // login 된 사용자를 리턴하도록 리팩토링 필요
+    public ArticleCreateDto(String userId, String title, String content) {
+        this.userId = userId;
         this.title = title;
         this.content = content;
     }

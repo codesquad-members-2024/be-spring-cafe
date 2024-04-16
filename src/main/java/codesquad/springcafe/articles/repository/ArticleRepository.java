@@ -1,6 +1,6 @@
 package codesquad.springcafe.articles.repository;
 
-import codesquad.springcafe.model.article.Article;
+import codesquad.springcafe.articles.model.Article;
 
 import java.util.ArrayList;
 import java.util.Optional;

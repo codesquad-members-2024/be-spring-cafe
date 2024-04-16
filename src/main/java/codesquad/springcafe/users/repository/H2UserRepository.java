@@ -1,9 +1,9 @@
 package codesquad.springcafe.users.repository;
 
-import codesquad.springcafe.model.user.User;
-import codesquad.springcafe.model.user.dto.UserCredentialDto;
-import codesquad.springcafe.model.user.dto.UserPreviewDto;
-import codesquad.springcafe.model.user.dto.UserUpdateData;
+import codesquad.springcafe.users.model.User;
+import codesquad.springcafe.users.model.dto.UserCredentialDto;
+import codesquad.springcafe.users.model.dto.UserPreviewDto;
+import codesquad.springcafe.users.model.dto.UserUpdateData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

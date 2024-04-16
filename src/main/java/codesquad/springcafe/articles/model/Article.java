@@ -1,4 +1,4 @@
-package codesquad.springcafe.model.article;
+package codesquad.springcafe.articles.model;
 
 import java.time.LocalDate;
 

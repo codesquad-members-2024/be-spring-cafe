@@ -25,6 +25,7 @@
             <p class="title">글쓰기</p>
         </header>
         <form class="submit-write" method="post" action="/articles">
+            <input id="userId" name="userId" type="hidden" value="{{ sessionedUser.getUserId}}">
             <div class="text-box">
                 <div class="comment-writer-container">
                     <p class="post-title">제목</p>

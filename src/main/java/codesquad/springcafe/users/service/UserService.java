@@ -1,9 +1,9 @@
 package codesquad.springcafe.users.service;
 
-import codesquad.springcafe.model.user.User;
+import codesquad.springcafe.users.model.User;
 import codesquad.springcafe.exception.PasswordMismatchException;
 import codesquad.springcafe.exception.UserNotFoundException;
-import codesquad.springcafe.model.user.dto.*;
+import codesquad.springcafe.users.model.dto.*;
 import codesquad.springcafe.users.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

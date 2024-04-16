@@ -1,6 +1,6 @@
 package codesquad.springcafe.db;
 
-import codesquad.springcafe.model.article.Article;
+import codesquad.springcafe.articles.model.Article;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
