@@ -1,6 +1,6 @@
 {{ ^sessionedUser }}
-    {{ > base/navBarLoggedIn}}
+    {{ > base/navBarShowLogin}}
 {{/sessionedUser}}
 {{#sessionedUser}}
-    {{ > base/navBarLoggedOut}}
+    {{ > base/navBarShowLogout}}
 {{/sessionedUser}}

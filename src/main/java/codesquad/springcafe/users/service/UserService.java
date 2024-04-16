@@ -47,13 +47,13 @@ public class UserService {
     public void updateUser(String userId, UserUpdateData updateData) {
         // Repository에서 User 객체를 가지고 와야 한다..?
         UserCredentialDto userCredentialDto = userRepository.getUserCredential(userId).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+
         validatePassword(updateData.getCurrentPassword(), userCredentialDto);
         userRepository.updateUser(userId, updateData);
         logger.debug("User Updated : {}", userId);
     }
 
     public UserPreviewDto loginUser(UserLoginDto userLoginDto) {
-        System.out.println("here : " + userLoginDto.getUserId());
         UserCredentialDto userCredentialDto = userRepository.getUserCredential(userLoginDto.getUserId()).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
         validatePassword(userLoginDto.getPassword(), userCredentialDto);
         return userRepository.findUserById(userLoginDto.getUserId()).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));

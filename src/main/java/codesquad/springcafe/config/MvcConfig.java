@@ -1,7 +1,10 @@
 package codesquad.springcafe.config;
 
+import codesquad.springcafe.config.interceptor.LoggedInInterceptor;
+import codesquad.springcafe.config.interceptor.LoggedOutInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -20,5 +23,21 @@ public class MvcConfig implements WebMvcConfigurer {
 
         /* 우선순위를 가장 높게 설정 */
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+
+        // 로그인 된 상태에서 접속하지 못하는 경로 설정
+        registry.addInterceptor(new LoggedInInterceptor())
+                .addPathPatterns("/users/login")
+                .addPathPatterns("/users/join"); // 적용할 경로
+
+        // 로그인 하지 않은 상태에서 접속하지 못하는 경로 설정
+        registry.addInterceptor(new LoggedOutInterceptor())
+                .addPathPatterns("/users")
+                .addPathPatterns("/users/{userId}/form")
+                .addPathPatterns("/articles/write");
+
     }
 }
