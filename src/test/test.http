@@ -1,0 +1,5 @@
+### 게시글 작성 테스트
+POST http://localhost:8080/qna/create
+Content-Type: application/x-www-form-urlencoded
+
+writer=데이&title=졸리다&contents=졸려
