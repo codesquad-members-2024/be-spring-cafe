@@ -43,7 +43,12 @@ public class ArticleService {
         articleRepository.update(id, articlePostReq);
     }
 
+    public void delete(int id){
+        articleRepository.delete(id);
+    }
+
     public boolean canModify(int id, SimpleUserInfo loginUser) {
+        if(loginUser == null) return false;
         return articleRepository.findById(id).getAuthor().id().equals(loginUser.id());
     }
 }

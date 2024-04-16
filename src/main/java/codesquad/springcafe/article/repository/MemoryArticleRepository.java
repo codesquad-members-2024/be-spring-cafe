@@ -65,6 +65,11 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
+    public void delete(int id) {
+        articles.remove(id);
+    }
+
+    @Override
     public void deleteAll() {
         articles.clear();
     }

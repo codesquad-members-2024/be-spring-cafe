@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDateTime;
@@ -23,9 +22,9 @@ import static codesquad.springcafe.article.repository.ArticleConsts.DEFAULT_POIN
 public class H2ArticleRepository implements ArticleRepository {
 
     private final String ADD_SQL = "INSERT INTO ARTICLE (TITLE, CONTENT, CREATEDAT, AUTHORID, POINT) VALUES ( ?, ?, ?, ?, ?);";
-    private final String FIND_BY_ID_SQL = "SELECT * FROM ARTICLE WHERE Id = ?";
-    private final String FIND_BY_USER_SQL = "SELECT * FROM ARTICLE WHERE authorId = ?";
-    private final String FIND_ALL_SQL = "SELECT * FROM article ORDER BY createdAt DESC;";
+    private final String FIND_BY_ID_SQL = "SELECT * FROM ARTICLE WHERE Id = ? AND STATUS = 'OPEN';";
+    private final String FIND_BY_USER_SQL = "SELECT * FROM ARTICLE WHERE authorId = ? AND STATUS = 'OPEN'; ";
+    private final String FIND_ALL_SQL = "SELECT * FROM article WHERE STATUS = 'OPEN' ORDER BY createdAt DESC;";
     private final String ADD_POINT_SQL = "UPDATE ARTICLE SET point = point + 1 WHERE id = ?;";
     private final String UPDATE_ARTICLE = "UPDATE ARTICLE SET TITLE = ?, CONTENT = ?,  CREATEDAT = ?  WHERE ID = ?;";
 
@@ -50,6 +49,14 @@ public class H2ArticleRepository implements ArticleRepository {
                 DEFAULT_POINT};
 
         jdbcTemplate.update(ADD_SQL, args);
+    }
+
+    @Override
+    public void delete(int id) {
+        String sql = "UPDATE ARTICLE SET STATUS = 'CLOSE' WHERE ID = ? ;";
+        Object[] args = new Object[]{id};
+
+        jdbcTemplate.update(sql, args);
     }
 
     @Override

@@ -19,7 +19,8 @@ CREATE TABLE article(
     content TEXT,
     createdAt TIMESTAMP,
     authorId VARCHAR(255),
-    POINT INT
+    POINT INT,
+    STATUS VARCHAR(10) DEFAULT 'OPEN' CHECK (STATUS IN ('OPEN', 'CLOSE'))
 );
 
 -- comment 테이블 생성
@@ -29,7 +30,8 @@ CREATE TABLE comment(
     title VARCHAR(255),
     content TEXT,
     createdAt TIMESTAMP,
-    authorId VARCHAR(255)
+    authorId VARCHAR(255),
+    STATUS VARCHAR(10) DEFAULT 'OPEN' CHECK (STATUS IN ('OPEN', 'CLOSE'))
 );
 
 
