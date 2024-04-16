@@ -26,7 +26,7 @@
                           <div class="article-header">
                               <div class="article-header-text">
                                   <p class="article-content" th:text="*{writer}">멋진삼</p>
-                                  <p class="article-content" th:text="|작성일자:*{#temporals.format(writeDate, 'yyyy-MM-dd HH:mm')}|">
+                                  <p class="article-content" th:text="|작성일자:*{{writeDate}}|">
                                       작성일자:2015-12-30 01:47
                                   </p>
                                   <p class="article-content" th:text="|조회 *{views}|">조회 4</p>

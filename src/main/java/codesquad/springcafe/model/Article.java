@@ -2,12 +2,14 @@ package codesquad.springcafe.model;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class Article {
     private String writer;
     private String title;
     private String content;
     private Long id;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:MM:ss")
     private LocalDateTime writeDate;
     private long views;
 
