@@ -1,7 +1,7 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.model.Article;
-import codesquad.springcafe.db.ArticleDatabase;
+import codesquad.springcafe.db.MemoryArticleDatabase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,18 +12,18 @@ import java.util.List;
 @Controller
 public class HomeController {
 
-    private final ArticleDatabase articleDatabase;
+    private final MemoryArticleDatabase memoryArticleDatabase;
 
     @Autowired
-    public HomeController(ArticleDatabase articleDatabase){
-        this.articleDatabase = articleDatabase;
+    public HomeController(MemoryArticleDatabase memoryArticleDatabase){
+        this.memoryArticleDatabase = memoryArticleDatabase;
     }
 
     @GetMapping(value = {"/", "/index.html"})
     public String showArticleList(Model model){
-        List<Article> articles = articleDatabase.findAllArticles();
+        List<Article> articles = memoryArticleDatabase.findAllArticles();
         model.addAttribute("articles", articles);
-        model.addAttribute("totalArticleNumber", articleDatabase.getTotalArticleNumber());
+        model.addAttribute("totalArticleNumber", memoryArticleDatabase.getTotalArticleNumber());
         return "article/list";
     }
 }
