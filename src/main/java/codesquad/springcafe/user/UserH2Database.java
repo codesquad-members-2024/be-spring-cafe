@@ -9,12 +9,12 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
-public class UserDatabaseH implements UserDatabase {
+public class UserH2Database implements UserDatabase {
 
     JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public UserDatabaseH(DataSource dataSource) {
+    public UserH2Database(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

@@ -16,8 +16,8 @@ public class UserController {
     UserDatabase userDB;
 
     @Autowired
-    UserController(UserDatabase userDatabaseH) {
-        this.userDB = userDatabaseH;
+    UserController(UserDatabase userH2Database) {
+        this.userDB = userH2Database;
     }
 
     @PostMapping("/users")
@@ -33,7 +33,7 @@ public class UserController {
     @GetMapping("/users/form/{userid}")
     public String failCreateUser(@PathVariable String userid, Model model) {
         model.addAttribute("outputMessage", "이미 존재하는 회원입니다." + userid);
-        return "user/failed";
+        return "user/failedCreate";
     }
 
     @GetMapping("/users")
