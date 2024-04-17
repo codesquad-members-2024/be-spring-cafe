@@ -1,8 +1,7 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.repository.ArticleRepository;
-import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.dto.RegisterArticle;
+import codesquad.springcafe.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,11 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class ArticleController {
-    private final ArticleRepository h2ArticleRepository;
+    private final ArticleService articleService;
 
     @Autowired
-    public ArticleController(ArticleRepository h2ArticleRepository) {
-        this.h2ArticleRepository = h2ArticleRepository;
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
     @GetMapping("/qna")
@@ -26,17 +25,13 @@ public class ArticleController {
 
     @PostMapping("/qna")
     public String register(RegisterArticle registerArticle) {
-        Article article = new Article(
-                registerArticle.getWriter(), registerArticle.getTitle(),
-                registerArticle.getContents(), registerArticle.getTime()
-        );
-        h2ArticleRepository.add(article);
+        articleService.registerArticle(registerArticle);
         return "redirect:/";
     }
 
     @GetMapping("/article/{articleId}")
     public String showArticle(Model model, @PathVariable("articleId") String articleId) {
-        model.addAttribute("article", h2ArticleRepository.getById(Long.parseLong(articleId)));
+        model.addAttribute("article", articleService.getArticleDetail(articleId));
         return "qna/show";
     }
 }
