@@ -65,6 +65,7 @@ public class H2UserDatabase implements UserDatabase{
     private RowMapper<User> userRowMapper() {
         return (rs, rowNum) -> {
             String userId = rs.getString("userId");
+            String nickname = rs.getString("nickname");
             String password = rs.getString("password");
             String email = rs.getString("email");
             LocalDateTime registerTime = rs.getTimestamp("registerTime").toLocalDateTime();
@@ -72,6 +73,7 @@ public class H2UserDatabase implements UserDatabase{
             User user = new User();
             user.setUserId(userId);
             user.setEmail(email);
+            user.setNickname(nickname);
             user.setPassword(password);
             user.setRegisterTime(registerTime);
             return user;

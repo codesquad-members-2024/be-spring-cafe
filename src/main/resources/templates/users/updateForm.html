@@ -13,7 +13,7 @@
         <div class="panel panel-default text-center">
             <div class="panel-body">
                 <img src="/images/ryan_profile.png" class="img-circle" alt="User Image" style="width: 120px; height: 120px; margin-bottom: 20px;">
-                <p><strong>닉네임:</strong> {{user.userId}}</p>
+                <p><strong>아이디:</strong> {{user.userId}}</p>
             </div>
         </div>
         {{#passwordError}}
@@ -24,6 +24,10 @@
             <div class="form-group">
                 <label for="email">이메일</label>
                 <input type="email" class="form-control" id="email" name="email" placeholder="이메일을 입력하세요">
+            </div>
+            <div class="form-group">
+                <label for="nickname">닉네임</label>
+                <input type="nickname" class="form-control" id="nickname" name="nickname" placeholder="닉네임을 입력하세요">
             </div>
             <div class="form-group">
                 <label for="password">비밀번호</label>
