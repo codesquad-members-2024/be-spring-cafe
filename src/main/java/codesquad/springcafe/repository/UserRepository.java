@@ -31,4 +31,16 @@ public class UserRepository {
     public List<User> findAll() {
         return users;
     }
+
+    public void updateUser(User updatedUser) {
+        // 업데이트할 사용자 정보를 가져옴
+        Optional<User> optionalUser = findUserById(updatedUser.getUserId());
+        optionalUser.ifPresent(user -> {
+            // 업데이트할 사용자 정보를 입력받은 정보로 갱신
+            user.setName(updatedUser.getName());
+            user.setPassword(updatedUser.getPassword());
+            user.setEmail(updatedUser.getEmail());
+        });
+    }
+
 }
