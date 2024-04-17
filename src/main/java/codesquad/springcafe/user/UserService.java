@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    UserDatabase userDatabase;
+    private final UserDatabase userDatabase;
 
     public UserService(UserDatabase userDatabase) {
         this.userDatabase = userDatabase;

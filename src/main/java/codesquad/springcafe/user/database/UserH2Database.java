@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Primary
 public class UserH2Database implements UserDatabase {
 
-    JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public UserH2Database(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
