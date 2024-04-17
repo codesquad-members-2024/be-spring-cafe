@@ -2,11 +2,13 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.db.UserDatabase;
 import codesquad.springcafe.model.User;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,18 +37,29 @@ public class UserController {
     }
 
     @GetMapping("/users/{userId}")
-    public String userProfile(@PathVariable String userId, Model model){
+    public String userProfile(
+            @PathVariable String userId,
+            HttpServletResponse response,
+            Model model) throws IOException {
         Optional<User> user = userDatabase.findUserByUserId(userId);
         if(user.isEmpty()){
-            throw new IllegalArgumentException();
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return null;
         }
         model.addAttribute("user", user.get());
         return "users/profile";
     }
 
     @GetMapping("/users/{userId}/update")
-    public String getProfileEditPage(@PathVariable String userId, Model model){
-        User user = getUserOrFail(userId);
+    public String getProfileEditPage(
+            @PathVariable String userId,
+            Model model,
+            HttpServletResponse response) throws IOException {
+        Optional<User> user = userDatabase.findUserByUserId(userId);
+        if(user.isEmpty()){
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return null;
+        }
         model.addAttribute("user", user);
         return "users/updateForm";
     }
@@ -57,9 +70,14 @@ public class UserController {
             @RequestParam String nickname,
             @RequestParam String email,
             @RequestParam String password,
-            Model model) {
-
-        User user = getUserOrFail(userId);
+            Model model,
+            HttpServletResponse response) throws IOException {
+        Optional<User> tmpUser = userDatabase.findUserByUserId(userId);
+        if(tmpUser.isEmpty()){
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return null;
+        }
+        User user = tmpUser.get();
         if(!user.isPasswordInputCorrect(password)){
             model.addAttribute("user", user);
             model.addAttribute("passwordError", true);
@@ -71,8 +89,4 @@ public class UserController {
         return "redirect:/users";
     }
 
-    private User getUserOrFail(String userId){
-        return userDatabase.findUserByUserId(userId)
-                .orElseThrow(IllegalArgumentException::new);
-    }
 }

@@ -2,6 +2,7 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.db.ArticleDatabase;
 import codesquad.springcafe.model.Article;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -37,10 +39,13 @@ public class ArticleController {
 
 
     @GetMapping("/articles/{sequence}")
-    public String loadArticleContent(@PathVariable long sequence, Model model){
+    public String loadArticleContent(@PathVariable long sequence,
+                                     Model model,
+                                     HttpServletResponse response) throws IOException {
         Optional<Article> article = articleDatabase.findArticleBySequence(sequence);
         if(article.isEmpty()){
-            throw new NoSuchElementException();
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return null;
         }
         model.addAttribute("article", article.get());
         return "article/show";
