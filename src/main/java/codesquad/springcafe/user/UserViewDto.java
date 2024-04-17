@@ -3,24 +3,19 @@ package codesquad.springcafe.user;
 public class UserViewDto {
     private long index;
     private String userId;
-    private String name;
+    private String nickName;
     private String email;
 
-
-
-    public void setIndex(long index) {
+    public UserViewDto(long index, String userId, String nickName, String email) {
         this.index = index;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEmail(String email) {
+        this.userId = userId;
+        this.nickName = nickName;
         this.email = email;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public UserViewDto(String nickName, String email) {
+        this.nickName = nickName;
+        this.email = email;
     }
+
 }
