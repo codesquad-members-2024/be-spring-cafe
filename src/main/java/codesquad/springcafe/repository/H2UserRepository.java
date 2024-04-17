@@ -3,6 +3,8 @@ package codesquad.springcafe.repository;
 import codesquad.springcafe.domain.User;
 import java.util.List;
 import javax.sql.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Repository;
 @Primary
 @Repository
 public class H2UserRepository implements UserRepository {
+    private final Logger logger = LoggerFactory.getLogger(H2ArticleRepository.class);
     private JdbcTemplate jdbcTemplate;
     private final RowMapper<User> userRowMapper = (resultSet, rowNum) -> {
         User user = new User(
@@ -29,6 +32,7 @@ public class H2UserRepository implements UserRepository {
     public void add(User user) {
         jdbcTemplate.update("INSERT INTO USERS (userId, name, email, password) VALUES (?, ?, ?, ?)",
                 user.getUserId(), user.getName(), user.getEmail(), user.getPassword());
+        logger.debug("{} 유저 회원가입 완료", user);
     }
 
     @Override
@@ -46,5 +50,6 @@ public class H2UserRepository implements UserRepository {
     public void update(User user) {
         final String UPDATE_USER = "UPDATE Users SET password=?, name=?, email=? WHERE userid=?";
         jdbcTemplate.update(UPDATE_USER, user.getPassword(), user.getName(), user.getEmail(), user.getUserId());
+        logger.debug("{} 유저정보 수정 완료", user);
     }
 }

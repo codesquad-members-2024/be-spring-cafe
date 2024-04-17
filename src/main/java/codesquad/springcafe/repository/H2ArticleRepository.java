@@ -4,6 +4,8 @@ import codesquad.springcafe.domain.Article;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class H2ArticleRepository implements ArticleRepository {
 
+    private final Logger logger = LoggerFactory.getLogger(H2ArticleRepository.class);
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Article> articleRowMapper = (resultSet, rowNum) -> {
         Article article = new Article(
@@ -45,6 +48,7 @@ public class H2ArticleRepository implements ArticleRepository {
 
         Long key = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
         article.setId(key);
+        logger.debug("게시글 {} 저장 완료", article.getContents());
     }
 
     @Override
