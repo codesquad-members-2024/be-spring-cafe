@@ -13,7 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcTemplateArticleRepository implements ArticleRepository{
+public class JdbcTemplateArticleRepository implements ArticleRepository {
 
     private final NamedParameterJdbcTemplate template;
 
@@ -37,7 +37,16 @@ public class JdbcTemplateArticleRepository implements ArticleRepository{
 
     @Override
     public List<Article> findAll() {
-        return null;
+        String sql = "SELECT * FROM Article";
+
+        return template.query(sql, (rs, rowNum) -> {
+            Article article = new Article();
+            article.setId(rs.getLong("id"));
+            article.setWriter(rs.getString("writer"));
+            article.setTitle(rs.getString("title"));
+            article.setContents(rs.getString("contents"));
+            return article;
+        });
     }
 
     @Override
