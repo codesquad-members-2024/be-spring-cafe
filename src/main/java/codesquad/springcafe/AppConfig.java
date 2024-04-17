@@ -1,7 +1,7 @@
 package codesquad.springcafe;
 
-import codesquad.springcafe.user.interceptor.LoginCheckInterceptor;
-import codesquad.springcafe.user.interceptor.NavbarSetInterceptor;
+import codesquad.springcafe.domain.user.interceptor.LoginCheckInterceptor;
+import codesquad.springcafe.domain.user.interceptor.NavbarSetInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

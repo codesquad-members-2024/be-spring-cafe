@@ -1,8 +1,9 @@
 package codesquad.springcafe.article;
 
-import codesquad.springcafe.article.DTO.ArticlePostReq;
-import codesquad.springcafe.article.repository.ArticleRepository;
-import codesquad.springcafe.user.DTO.SimpleUserInfo;
+import codesquad.springcafe.domain.article.Article;
+import codesquad.springcafe.domain.article.DTO.ArticlePostReq;
+import codesquad.springcafe.domain.article.repository.ArticleRepository;
+import codesquad.springcafe.domain.user.DTO.SimpleUserInfo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
