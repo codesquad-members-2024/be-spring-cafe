@@ -1,15 +1,11 @@
 package codesquad.springcafe.model;
 
-import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.Objects;
 
 public class User {
-    @NotBlank
     private final String email;
-    @NotBlank
     private String nickname;
-    @NotBlank
     private String password;
     private LocalDate joinDate;
     private Long id;
@@ -25,13 +21,20 @@ public class User {
         return this.nickname.equals(nickname);
     }
 
+    public boolean hasSameEmail(String email) {
+        return this.email.equals(email);
+    }
+
+
     public boolean hasSamePassword(String password) {
         return this.password.equals(password);
     }
 
-    public void update(String nickname, String password) {
-        this.nickname = nickname;
-        this.password = password;
+    public User update(String nickname, String password) {
+        User updateUser = new User(email, nickname, password);
+        updateUser.setJoinDate(joinDate);
+        updateUser.setId(id);
+        return updateUser;
     }
 
     public String getEmail() {

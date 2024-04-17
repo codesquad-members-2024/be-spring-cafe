@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Page Not Found</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link th:href="@{/css/reset.css}" rel="stylesheet">
+    <link th:href="@{/css/user/form.css}" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .error-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 100vh;
+            background-color: #fafafa;
+        }
+
+        .error-container h1 {
+            font-size: 50px;
+            color: #333;
+        }
+
+        .error-container p {
+            font-size: 20px;
+            color: #666;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="error-container">
+    <h1>403</h1>
+    <p>죄송합니다, 요청하신 페이지의 접근 권한이 없습니다.</p>
+    <a th:href="@{/}">홈으로 돌아가기</a>
+</div>
+</body>
+</html>

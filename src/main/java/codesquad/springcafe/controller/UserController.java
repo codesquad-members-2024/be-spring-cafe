@@ -1,6 +1,7 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.database.user.UserDatabase;
+import codesquad.springcafe.form.user.UserAddForm;
 import codesquad.springcafe.form.user.UserEditForm;
 import codesquad.springcafe.model.User;
 import java.net.URLEncoder;
@@ -44,8 +45,8 @@ public class UserController {
      */
     @GetMapping("/add")
     public String userForm(Model model) {
-        User user = new User("", "", "");
-        model.addAttribute("user", user);
+        UserAddForm userAddForm = new UserAddForm("", "", "");
+        model.addAttribute("userAddForm", userAddForm);
         return "user/form";
     }
 
@@ -53,12 +54,15 @@ public class UserController {
      * 사용자가 작성한 내용을 바탕으로 유저를 생성하고 데이터베이스에 저장합니다.
      */
     @PostMapping("/add")
-    public String addUser(@Validated @ModelAttribute User user, BindingResult bindingResult) {
+    public String addUser(@Validated @ModelAttribute UserAddForm userAddForm, BindingResult bindingResult) {
+        validateAddForm(userAddForm, bindingResult);
+
         if (bindingResult.hasErrors()) {
             logger.error("errors={}", bindingResult);
             return "user/form";
         }
 
+        User user = new User(userAddForm.getEmail(), userAddForm.getNickname(), userAddForm.getPassword());
         userDatabase.add(user);
         logger.info("새로운 유저가 생성되었습니다. {}", user);
         return "redirect:/users";
@@ -72,7 +76,7 @@ public class UserController {
      */
     @GetMapping("/profile/{nickname}")
     public String userProfile(@PathVariable String nickname, Model model) {
-        Optional<User> optionalUser = userDatabase.findBy(nickname);
+        Optional<User> optionalUser = userDatabase.findByNickname(nickname);
         if (optionalUser.isEmpty()) {
             return "redirect:/users";
         }
@@ -89,7 +93,7 @@ public class UserController {
      */
     @GetMapping("/edit/{nickname}")
     public String updateForm(@PathVariable String nickname, Model model) {
-        Optional<User> optionalUser = userDatabase.findBy(nickname);
+        Optional<User> optionalUser = userDatabase.findByNickname(nickname);
         if (optionalUser.isEmpty()) {
             return "redirect:/users";
         }
@@ -108,24 +112,45 @@ public class UserController {
      * @return 유저가 존재하지 않으면 유저 리스트로 이동합니다. 현재 비밀번호가 일치하지 않으면 유저 수정 폼을 다시 보여줍니다. 수정이 정상적으로 완료되면 프로필을 보여줍니다.
      */
     @PostMapping("/edit/{nickname}")
-    public String updateUser(@PathVariable String nickname, @ModelAttribute UserEditForm userEditForm, Model model,
+    public String updateUser(@PathVariable String nickname, @Validated @ModelAttribute UserEditForm userEditForm,
                              BindingResult bindingResult) {
-        System.out.println(userEditForm);
-        Optional<User> optionalUser = userDatabase.findBy(nickname);
+        Optional<User> optionalUser = userDatabase.findByNickname(nickname);
         if (optionalUser.isEmpty()) {
             return "redirect:/users";
         }
-        User user = optionalUser.get();
-        if (!user.hasSamePassword(userEditForm.getCurrentPassword())) {
-            model.addAttribute("userEditForm", userEditForm);
-            bindingResult.reject("invalidCurrentPassword");
+        User targetUser = optionalUser.get();
+
+        validateUpdateForm(userEditForm, bindingResult, targetUser);
+        if (bindingResult.hasErrors()) {
+            logger.error("errors={}", bindingResult);
             return "user/update";
         }
-        user.update(userEditForm.getNickname(), userEditForm.getNewPassword());
-        userDatabase.update(user);
 
-        logger.info("유저정보가 업데이트 되었습니다. {}", user);
-        String newNickname = user.getNickname(); // 유저 닉네임이 수정될 경우를 반영
+        User updateUser = targetUser.update(userEditForm.getNickname(), userEditForm.getNewPassword());
+        userDatabase.update(updateUser);
+
+        logger.info("유저정보가 업데이트 되었습니다. {}", updateUser);
+        String newNickname = updateUser.getNickname(); // 유저 닉네임이 수정될 경우를 반영
         return "redirect:/users/profile/" + URLEncoder.encode(newNickname, StandardCharsets.UTF_8);
+    }
+
+    private void validateAddForm(UserAddForm userAddForm, BindingResult bindingResult) {
+        if (isPresentNickname(userAddForm.getNickname())) {
+            bindingResult.rejectValue("nickname", "Duplicate");
+        }
+    }
+
+    private void validateUpdateForm(UserEditForm userEditForm, BindingResult bindingResult, User user) {
+        if (isPresentNickname(userEditForm.getNickname()) && !user.hasSameNickname(userEditForm.getNickname())) {
+            bindingResult.rejectValue("nickname", "Duplicate");
+        }
+
+        if (!user.hasSamePassword(userEditForm.getCurrentPassword())) {
+            bindingResult.rejectValue("currentPassword", "Wrong");
+        }
+    }
+
+    private boolean isPresentNickname(String nickname) {
+        return userDatabase.findByNickname(nickname).isPresent();
     }
 }

@@ -19,18 +19,17 @@
         <header class="post-header">
             <p class="title">글쓰기</p>
         </header>
-        <form class="submit-write" method="post" action th:object="${article}">
+        <form class="submit-write" method="post" action th:object="${articleAddForm}">
             <div th:if="${#fields.hasGlobalErrors()}">
                 <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
             </div>
 
-            <div class="text-box">
+            <div class="text-box" th:classappend="${#fields.hasErrors('title')} ? 'field-error'">
                 <div class="comment-writer-container">
                     <p class="post-title">제목</p>
                 </div>
                 <div class="form-group">
                     <textarea class="form-control"
-                              th:errorclass="field-error"
                               th:field="*{title}"
                               placeholder="제목을 입력하세요"></textarea>
                 </div>
@@ -39,7 +38,7 @@
                 제목 오류
             </div>
 
-            <div class="text-box">
+            <div class="text-box" th:classappend="${#fields.hasErrors('content')} ? 'field-error'">
                 <div class="comment-writer-container">
                     <p class="post-content">내용</p>
                 </div>

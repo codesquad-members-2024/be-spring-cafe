@@ -26,25 +26,33 @@
                 <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" th:classappend="${#fields.hasErrors('email')} ? 'field-error'">
                 <label for="email">이메일</label>
                 <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="이메일을 입력하세요"
                        readonly>
             </div>
-            <div class="form-group">
+            <div th:errors="*{email}">이메일 오류</div>
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('nickname')} ? 'field-error'">
                 <label for="nickname">닉네임</label>
                 <input class="form-control" id="nickname" th:field="*{nickname}" placeholder="닉네입을 입력하세요">
             </div>
-            <div class="form-group">
+            <div class="field-error" th:errors="*{nickname}">닉네임 오류</div>
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('currentPassword')} ? 'field-error'">
                 <label for="currentPassword">현재 비밀번호</label>
-                <input type="password" class="form-control" id="currentPassword" name="currentPassword"
+                <input type="password" class="form-control" id="currentPassword" th:field="*{currentPassword}"
                        placeholder="비밀번호를 입력하세요">
             </div>
-            <div class="form-group">
+            <div class="field-error" th:errors="*{currentPassword}">현재 비밀번호 오류</div>
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('newPassword')} ? 'field-error'">
                 <label for="newPassword">새 비밀번호</label>
-                <input type="password" class="form-control" id="newPassword" name="newPassword"
+                <input type="password" class="form-control" id="newPassword" th:field="*{newPassword}"
                        placeholder="비밀번호를 입력하세요">
             </div>
+            <div class="field-error" th:errors="*{newPassword}">새 비밀번호 오류</div>
+
             <button type="submit" class="btn btn-success clearfix pull-right">완료</button>
         </form>
     </div>

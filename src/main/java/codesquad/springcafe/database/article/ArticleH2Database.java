@@ -31,7 +31,7 @@ public class ArticleH2Database implements ArticleDatabase {
 
         Number key = jdbcInsert.executeAndReturnKey(parameters);
         article.setId((key.longValue()));
-        
+
         return article;
     }
 

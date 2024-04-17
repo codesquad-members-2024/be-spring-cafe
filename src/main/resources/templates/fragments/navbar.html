@@ -13,10 +13,21 @@
                 </a>
             </div>
             <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="/users">멤버 리스트</a></li>
-                <li><a class="black-component" href="login.html" role="button">로그인</a></li>
-                <li><a class="black-component" href="/users/add" role="button">회원가입</a></li>
+                <!-- 로그인한 사용자에 대한 환영 메시지 및 로그아웃 링크 -->
+                <th:block th:if="${loginUser != null}">
+                    <li class="active"><a href="/users">멤버 리스트</a></li>
+                    <li class="active" th:text="|${loginUser.nickname}님|"></li>
+                    <li><a href="/logout" class="black-component" role="button">로그아웃</a></li>
+                    <li><a th:href="@{/users/profile/{nickname}(nickname=${loginUser.nickname})}"
+                           class="black-component" role="button">회원정보</a></li>
+                </th:block>
+                <th:block th:if="${loginUser == null}">
+                    <li><a href="/login" class="black-component" role="button">로그인</a></li>
+                    <li><a href="/users/add" class="black-component" role="button">회원가입</a></li>
+                </th:block>
             </ul>
+
+
         </div>
     </nav>
 </div>

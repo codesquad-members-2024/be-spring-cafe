@@ -11,9 +11,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-//@Transactional
+@Transactional
 class UserDatabaseTest {
     @Autowired
     UserDatabase userDatabase;
@@ -36,7 +37,7 @@ class UserDatabaseTest {
     void findByNickname() {
         User user = new User("sangchu@gmail.com", "상추", "123");
         userDatabase.add(user);
-        User find = userDatabase.findBy("상추").get();
+        User find = userDatabase.findByNickname("상추").get();
         assertThat(find).isEqualTo(user);
     }
 
@@ -45,7 +46,7 @@ class UserDatabaseTest {
     void findByNicknameFailed() {
         User user = new User("sangchu@gmail.com", "상추", "123");
         userDatabase.add(user);
-        Optional<User> optionalUser = userDatabase.findBy("배추");
+        Optional<User> optionalUser = userDatabase.findByNickname("배추");
         assertThat(optionalUser).isEmpty();
     }
 
@@ -62,14 +63,15 @@ class UserDatabaseTest {
     }
 
     @Test
+    @DisplayName("데이터베이스의 유저를 업데이트할 수 있다.")
     void update() {
         User user = new User("sangchu@gmail.com", "상추", "123");
         Long id = userDatabase.add(user).getId();
 
         UserEditForm form = new UserEditForm("sangchu@gmail.com", "배추", "123", "1234");
-        user.update(form.getNickname(), form.getNewPassword());
+        User updated = user.update(form.getNickname(), form.getNewPassword());
 
-        userDatabase.update(user);
+        userDatabase.update(updated);
 
         User result = userDatabase.findAll().stream()
                 .filter(u -> u.getId().equals(id))

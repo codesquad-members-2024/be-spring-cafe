@@ -157,7 +157,7 @@ li {
 }
 
 .form-control {
-    border:none;
+    border: none;
 }
 
 .form-control:focus {
@@ -182,4 +182,9 @@ li {
 
 label {
     width: 25%;
+}
+
+.field-error {
+    border-color: #dc3545;
+    color: #dc3545;
 }
