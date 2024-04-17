@@ -16,10 +16,10 @@ public class HomeController {
         this.articleRepository = articleRepository;
     }
 
-    @GetMapping("/")
+    @GetMapping("/index.html")
     public String home(Model model) {
         List<Article> articles = articleRepository.findAll();
-        model.addAttribute(articles);
+        model.addAttribute(articles.reversed());
         return "/index";
     }
 }
