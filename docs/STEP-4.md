@@ -81,4 +81,11 @@ private String hashPassword(String password, byte[] salt) {
 }
 ```
 
+## 6) Exception 처리 개선
+- 현재 Exceptions
+  - ```UserNotFoundException``` : 유저 정보를 찾지 못했을 때
+  - ```PasswordMismatchException``` : 유저 비밀번호가 일치하지 않을 때
+  - ```ArticleNotFoundException``` : 게시글 정보를 찾지 못할 때
+- [ ] 예외 처리 응답이 모두 200이다. 이것을 404로 바꾼다
+
 
