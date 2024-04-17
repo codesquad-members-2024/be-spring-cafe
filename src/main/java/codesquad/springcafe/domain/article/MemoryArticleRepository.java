@@ -3,6 +3,7 @@ package codesquad.springcafe.domain.article;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class MemoryArticleRepository implements ArticleRepository {
 
@@ -18,8 +19,8 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Article findById(Long id) {
-        return articles.get((int) (id - 1));
+    public Optional<Article> findById(Long id) {
+        return Optional.ofNullable(articles.get((int) (id - 1)));
     }
 
     @Override
