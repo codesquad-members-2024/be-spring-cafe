@@ -2,6 +2,8 @@ package codesquad.springcafe.model;
 
 public class User {
 
+    private Long id;
+
     private String userId;
 
     private String password;
@@ -31,6 +33,10 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
