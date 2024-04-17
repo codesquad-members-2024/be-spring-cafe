@@ -10,18 +10,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 
 @JdbcTest
 @Import(ArticleRepositoryH2.class)
-@AutoConfigureTestDatabase(replace = Replace.NONE)
 class ArticleRepositoryH2Test {
 
     @Autowired
-    private ArticleRepository repository;
+    private ArticleRepositoryH2 repository;
 
     @AfterEach
     void reset_pk() {
@@ -82,7 +79,7 @@ class ArticleRepositoryH2Test {
             article.setTitle("test");
             article.setContents("test body");
             article.setCreatedBy("yelly");
-            article.setCreatedAt(LocalDateTime.parse("2024-04-12T00:00:00"));
+            article.setCreatedAt(LocalDateTime.now());
 
             repository.save(article);
         }

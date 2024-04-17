@@ -17,6 +17,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class ArticleServiceTest {
 
+    public static final LocalDateTime NOW = LocalDateTime.now();
+    public static final LocalDateTime MINUS_DAYS = NOW.minusDays(2);
+
     @Autowired
     private ArticleService articleService;
 
@@ -25,8 +28,8 @@ class ArticleServiceTest {
 
     @BeforeEach
     void setUp() {
-        Article article1 = makeArticle("test1", "tester1", "body1", LocalDateTime.parse("2024-04-10T00:00:00"));
-        Article article2 = makeArticle("test2", "tester2", "body2", LocalDateTime.parse("2024-12-31T00:00:00"));
+        Article article1 = makeArticle("test1", "tester1", "body1", NOW);
+        Article article2 = makeArticle("test2", "tester2", "body2", MINUS_DAYS);
         articleRepository.save(article1);
         articleRepository.save(article2);
     }
@@ -43,9 +46,8 @@ class ArticleServiceTest {
         String title = "test";
         String createdBy = "guest";
         String contents = "test body";
-        LocalDateTime createdAt = LocalDateTime.parse("2024-04-10T00:00:00");
 
-        Article article = makeArticle(title, createdBy, contents, createdAt);
+        Article article = makeArticle(title, createdBy, contents, NOW);
 
         // when
         Article publishedArticle = articleService.publish(article);
@@ -55,10 +57,10 @@ class ArticleServiceTest {
         assertThat(publishedArticle.getTitle()).isEqualTo("test");
         assertThat(publishedArticle.getCreatedBy()).isEqualTo("guest");
         assertThat(publishedArticle.getContents()).isEqualTo("test body");
-        assertThat(publishedArticle.getCreatedAt()).isEqualTo(LocalDateTime.parse("2024-04-10T00:00:00"));
+        assertThat(publishedArticle.getCreatedAt()).isEqualTo(NOW);
     }
 
-    @DisplayName("2024-12-31 00:00:00에 2번째로 발행된 게시물을 찾을 수 있다")
+    @DisplayName("현재 시각으로부터 2일 전 게시물로서 2번째로 발행된 게시물을 찾을 수 있다")
     @Test
     void findArticle() {
         // given & when
@@ -69,7 +71,7 @@ class ArticleServiceTest {
         assertThat(optionalArticle.get()).extracting("title").isEqualTo("test2");
         assertThat(optionalArticle.get()).extracting("createdBy").isEqualTo("tester2");
         assertThat(optionalArticle.get()).extracting("contents").isEqualTo("body2");
-        assertThat(optionalArticle.get()).extracting("createdAt").isEqualTo(LocalDateTime.parse("2024-12-31T00:00:00"));
+        assertThat(optionalArticle.get()).extracting("createdAt").isEqualTo(MINUS_DAYS);
     }
 
     @DisplayName("발행된 모든 게시물 2개를 발행 시각 기준으로 역순으로 찾을 수 있다")
@@ -83,10 +85,7 @@ class ArticleServiceTest {
         assertThat(articles).extracting("title").contains("test1", "test2");
         assertThat(articles).extracting("createdBy").contains("tester1", "tester2");
         assertThat(articles).extracting("contents").contains("body1", "body2");
-        assertThat(articles).extracting("createdAt").contains(
-                LocalDateTime.parse("2024-04-10T00:00:00"),
-                LocalDateTime.parse("2024-12-31T00:00:00")
-        );
+        assertThat(articles).extracting("createdAt").contains(MINUS_DAYS, NOW);
     }
 
     private Article makeArticle(String title, String createdBy, String contents, LocalDateTime createdAt) {
