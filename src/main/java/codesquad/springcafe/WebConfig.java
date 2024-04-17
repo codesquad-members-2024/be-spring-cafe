@@ -20,6 +20,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+    public static final int LOGIN_CHECK_ORDER = 1;
+    public static final int USER_ACCESS_ORDER = 2;
+    public static final int ARTICLE_ACCESS_ORDER = 3;
     private final DataSource dataSource;
 
     public WebConfig(DataSource dataSource) {
@@ -29,18 +32,18 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginCheckInterceptor())
-                .order(1)
+                .order(LOGIN_CHECK_ORDER)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/", "/users/add", "/login", "/logout", "/images/**",
                         "/css/**", "/*.ico",
                         "/error");
 
         registry.addInterceptor(new UserAccessInterceptor())
-                .order(2)
+                .order(USER_ACCESS_ORDER)
                 .addPathPatterns("/users/edit/*", "/users/profile/*");
 
         registry.addInterceptor(new ArticleAccessInterceptor(articleDatabase()))
-                .order(3)
+                .order(ARTICLE_ACCESS_ORDER)
                 .addPathPatterns("/articles/edit/*", "/articles/delete/*");
     }
 
