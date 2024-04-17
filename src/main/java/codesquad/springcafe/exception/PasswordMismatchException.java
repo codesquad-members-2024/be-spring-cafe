@@ -1,6 +1,6 @@
 package codesquad.springcafe.exception;
 
-public class PasswordMismatchException extends IllegalArgumentException {
+public class PasswordMismatchException extends RuntimeException {
     public PasswordMismatchException(String message) {
         super(message);
     }
