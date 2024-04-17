@@ -10,6 +10,7 @@ public class Comment {
     private final String content;
     private final Long articleId;
     private final LocalDateTime writeDate;
+    private boolean isDeleted;
     private Long id;
 
     public Comment(String writer, String content, Long articleId, LocalDateTime writeDate) {
@@ -17,6 +18,10 @@ public class Comment {
         this.content = content;
         this.articleId = articleId;
         this.writeDate = writeDate;
+    }
+
+    public void delete() {
+        isDeleted = true;
     }
 
     public String getWriter() {
@@ -41,6 +46,10 @@ public class Comment {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
     }
 
     @Override
@@ -69,6 +78,7 @@ public class Comment {
                 ", content='" + content + '\'' +
                 ", articleId=" + articleId +
                 ", writeDate=" + writeDate +
+                ", isDeleted=" + isDeleted +
                 ", id=" + id +
                 '}';
     }

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import codesquad.springcafe.database.user.UserDatabase;
 import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.User;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -36,7 +37,7 @@ class ArticleDatabaseTest {
     @Test
     @DisplayName("사용자가 작성한 article을 데이터베이스에 저장할 수 있다.")
     void add() {
-        Article article = new Article("상추", "제목", "본문");
+        Article article = new Article("상추", "제목", "본문", LocalDateTime.now());
         Long id = articleDatabase.add(article).getId();
 
         Article result = articleDatabase.findBy(id).get();
@@ -46,8 +47,8 @@ class ArticleDatabaseTest {
     @Test
     @DisplayName("데이터베이스에 존재하는 모든 article을 조회할 수 있다.")
     void findAll() {
-        Article article1 = new Article("상추", "제목1", "본문1");
-        Article article2 = new Article("배추", "제목2", "본문2");
+        Article article1 = new Article("상추", "제목1", "본문1", LocalDateTime.now());
+        Article article2 = new Article("배추", "제목2", "본문2", LocalDateTime.now());
         articleDatabase.add(article1);
         articleDatabase.add(article2);
 
@@ -58,7 +59,7 @@ class ArticleDatabaseTest {
     @Test
     @DisplayName("아티클의 정보를 수정하고 저장할 수 있다.")
     void update() {
-        Article article = new Article("상추", "제목1", "본문1");
+        Article article = new Article("상추", "제목1", "본문1", LocalDateTime.now());
         Long id = articleDatabase.add(article).getId();
 
         article.increaseViews();
@@ -67,16 +68,5 @@ class ArticleDatabaseTest {
         Article result = articleDatabase.findBy(id).get();
 
         assertThat(result.getViews()).isEqualTo(1);
-    }
-
-    @Test
-    @DisplayName("특정 id를 가진 아티클을 제거할 수 있다.")
-    void delete() {
-        Article article = new Article("상추", "제목1", "본문1");
-        Long id = articleDatabase.add(article).getId();
-        assertThat(articleDatabase.findAll().size()).isEqualTo(1);
-
-        articleDatabase.delete(id);
-        assertThat(articleDatabase.findAll().size()).isEqualTo(0);
     }
 }

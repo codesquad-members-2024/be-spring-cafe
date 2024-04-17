@@ -8,17 +8,17 @@ public class Article {
     private final String writer;
     private final String title;
     private final String content;
-    private Long id;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:MM:ss")
-    private LocalDateTime writeDate;
+    private final LocalDateTime writeDate;
+    private boolean isDeleted;
     private long views;
+    private Long id;
 
-    public Article(String writer, String title, String content) {
+    public Article(String writer, String title, String content, LocalDateTime writeDate) {
         this.writer = writer;
         this.title = title;
         this.content = content;
-        this.writeDate = LocalDateTime.now();
-        this.views = 0;
+        this.writeDate = writeDate;
     }
 
     /**
@@ -29,11 +29,14 @@ public class Article {
     }
 
     public Article update(String title, String content) {
-        Article article = new Article(writer, title, content);
+        Article article = new Article(writer, title, content, writeDate);
         article.setId(id);
         article.setViews(views);
-        article.setWriteDate(writeDate);
         return article;
+    }
+
+    public void delete() {
+        isDeleted = true;
     }
 
     public String getWriter() {
@@ -60,16 +63,16 @@ public class Article {
         return writeDate;
     }
 
-    public void setWriteDate(LocalDateTime writeDate) {
-        this.writeDate = writeDate;
-    }
-
     public long getViews() {
         return views;
     }
 
     public void setViews(long views) {
         this.views = views;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
     }
 
     @Override
@@ -96,9 +99,10 @@ public class Article {
                 "writer='" + writer + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
-                ", id=" + id +
                 ", writeDate=" + writeDate +
+                ", isDeleted=" + isDeleted +
                 ", views=" + views +
+                ", id=" + id +
                 '}';
     }
 }

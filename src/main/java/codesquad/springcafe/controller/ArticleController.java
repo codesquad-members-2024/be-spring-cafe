@@ -63,7 +63,7 @@ public class ArticleController {
         }
         User loginUser = LoginUserProvider.provide(session);
         Article article = new Article(loginUser.getNickname(), articleWriteForm.getTitle(),
-                articleWriteForm.getContent());
+                articleWriteForm.getContent(), LocalDateTime.now());
         articleDatabase.add(article);
         logger.info("새로운 게시물이 추가되었습니다. {}", article);
         return "redirect:/";
@@ -144,7 +144,8 @@ public class ArticleController {
             return "article/delete";
         }
 
-        articleDatabase.delete(id);
+        targetArticle.delete();
+        articleDatabase.update(targetArticle);
 
         logger.info("게시글이 삭제 되었습니다. {}", targetArticle);
         return "redirect:/articles/detail/" + id;
@@ -198,7 +199,8 @@ public class ArticleController {
             return null;
         }
 
-        commentDatabase.delete(id);
+        comment.delete();
+        commentDatabase.update(comment);
         logger.info("코멘트가 삭제되었습니다. {}", comment);
         return "redirect:/articles/detail/" + articleId;
     }

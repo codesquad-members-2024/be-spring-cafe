@@ -38,7 +38,7 @@ class CommentDatabaseTest {
         userDatabase.add(user1);
         userDatabase.add(user2);
 
-        Article article = new Article("상추", "제목", "내용");
+        Article article = new Article("상추", "제목", "내용", LocalDateTime.now());
         articleId = articleDatabase.add(article).getId();
     }
 
@@ -64,17 +64,5 @@ class CommentDatabaseTest {
 
         List<Comment> result = commentDatabase.findAll(articleId);
         assertThat(result).containsExactly(comment1, comment2);
-    }
-
-    @Test
-    @DisplayName("특정 id를 가진 코멘트를 제거할 수 있다.")
-    void delete() {
-        Comment comment = new Comment("상추", "내용1", articleId, LocalDateTime.now());
-        Long id = commentDatabase.add(comment).getId();
-
-        assertThat(commentDatabase.findBy(id).get()).isEqualTo(comment);
-
-        commentDatabase.delete(id);
-        assertThat(commentDatabase.findBy(id)).isEmpty();
     }
 }

@@ -11,7 +11,8 @@ public interface CommentDatabase {
 
     List<Comment> findAll(Long articleId);
 
-    void delete(Long id);
+    void update(Comment comment);
+//    void delete(Long id);
 
     void clear();
 }

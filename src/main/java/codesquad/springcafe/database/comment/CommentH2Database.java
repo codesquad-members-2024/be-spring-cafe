@@ -28,6 +28,7 @@ public class CommentH2Database implements CommentDatabase {
         params.put("content", comment.getContent());
         params.put("writeDate", comment.getWriteDate());
         params.put("articleId", comment.getArticleId());
+        params.put("isDeleted", comment.isDeleted());
 
         Number key = simpleJdbcInsert.executeAndReturnKey(params);
         comment.setId(key.longValue());
@@ -37,7 +38,7 @@ public class CommentH2Database implements CommentDatabase {
 
     @Override
     public Optional<Comment> findBy(Long id) {
-        String sql = "SELECT id, writer, content, writeDate, articleId FROM comments WHERE id = ?";
+        String sql = "SELECT id, writer, content, writeDate, articleId, isDeleted FROM comments WHERE id = ? and isDeleted=false";
         return jdbcTemplate.query(sql, commentRowMapper(), id)
                 .stream()
                 .findAny();
@@ -45,15 +46,22 @@ public class CommentH2Database implements CommentDatabase {
 
     @Override
     public List<Comment> findAll(Long articleId) {
-        String sql = "SELECT id, writer, content, writeDate, articleId FROM comments WHERE articleId = ?";
+        String sql = "SELECT id, writer, content, writeDate, articleId, isDeleted FROM comments WHERE articleId = ? and isDeleted=false";
         return jdbcTemplate.query(sql, commentRowMapper(), articleId);
     }
 
     @Override
-    public void delete(Long id) {
-        String sql = "DELETE FROM comments WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+    public void update(Comment comment) {
+        String sql = "UPDATE comments SET writer = ?, content = ?, writeDate = ?, articleId = ?, isDeleted = ? WHERE id = ?";
+        jdbcTemplate.update(sql, comment.getWriter(), comment.getContent(), comment.getWriteDate(),
+                comment.getArticleId(), comment.isDeleted(), comment.getId());
     }
+//
+//    @Override
+//    public void delete(Long id) {
+//        String sql = "DELETE FROM comments WHERE id = ?";
+//        jdbcTemplate.update(sql, id);
+//    }
 
     @Override
     public void clear() {
