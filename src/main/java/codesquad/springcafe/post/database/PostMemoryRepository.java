@@ -1,21 +1,22 @@
-package codesquad.springcafe.database;
+package codesquad.springcafe.post.database;
 
-import codesquad.springcafe.model.Post;
-import org.springframework.stereotype.Repository;
+import codesquad.springcafe.post.Post;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
-public class PostRepository {
+public class PostMemoryRepository implements PostRepository {
+
     private final List<Post> posts = new ArrayList<>();
     private long nextId = 1;
 
+    @Override
     public List<Post> findAll() {
         return new ArrayList<>(posts);
     }
 
+    @Override
     public void save(Post post) {
         if (post.getId() == null) {
             post.setId(nextId++);
@@ -26,10 +27,11 @@ public class PostRepository {
         posts.add(post);
     }
 
+    @Override
     public Post findById(Long id) {
         return posts.stream()
                 .filter(post -> post.getId().equals(id))
-                .findFirst()
+                .findAny()
                 .orElse(null);
     }
 }
