@@ -32,7 +32,7 @@ public class UserRepository {
         return users;
     }
 
-    public void updateUser(User updatedUser) {
+    public void userUpdate(User updatedUser) {
         // 업데이트할 사용자 정보를 가져옴
         Optional<User> optionalUser = findUserById(updatedUser.getUserId());
         optionalUser.ifPresent(user -> {
@@ -42,5 +42,4 @@ public class UserRepository {
             user.setEmail(updatedUser.getEmail());
         });
     }
-
 }
