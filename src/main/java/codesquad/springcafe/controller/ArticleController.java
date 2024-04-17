@@ -147,6 +147,8 @@ public class ArticleController {
         targetArticle.delete();
         articleDatabase.update(targetArticle);
 
+        deleteComments(id);
+
         logger.info("게시글이 삭제 되었습니다. {}", targetArticle);
         return "redirect:/articles/detail/" + id;
     }
@@ -225,5 +227,12 @@ public class ArticleController {
         return commentDatabase.findAll(targetArticle.getId())
                 .stream()
                 .anyMatch(comment -> !comment.getWriter().equals(articleWriter)); // 게시물의 작성자가 아닌 다른 유저가 쓴 댓글이 존재하는지 확인
+    }
+
+    private void deleteComments(Long id) {
+        commentDatabase.findAll(id)
+                .stream()
+                .peek(Comment::delete)
+                .forEach(commentDatabase::update);
     }
 }
