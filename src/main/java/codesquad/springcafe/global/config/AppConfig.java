@@ -1,6 +1,7 @@
 package codesquad.springcafe.global.config;
 
 import codesquad.springcafe.global.filter.CacheControlFilter;
+import codesquad.springcafe.global.interceptor.AfterAuthorizeInterceptor;
 import codesquad.springcafe.global.interceptor.AuthenticationInterceptor;
 import codesquad.springcafe.global.interceptor.CsrfTokenIntercetor;
 import codesquad.springcafe.global.security.PasswordEncoder;
@@ -42,6 +43,11 @@ public class AppConfig implements WebMvcConfigurer {
         // CSRF 토큰 인터셉터
         registry.addInterceptor(new CsrfTokenIntercetor())
                 .excludePathPatterns("/user", "/user/login");
+
+        // 인가 이후 인터셉터
+        registry.addInterceptor(new AfterAuthorizeInterceptor())
+                .addPathPatterns("/login", "/join")
+                .excludePathPatterns("/static/**");
     }
 
     @Bean
