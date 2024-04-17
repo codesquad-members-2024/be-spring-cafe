@@ -22,6 +22,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public ArticleDatabase articleDatabase() {
-        return new MemoryArticleDatabase();
+        return new H2ArticleDatabase(dataSource);
     }
 }
