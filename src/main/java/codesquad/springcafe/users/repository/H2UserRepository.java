@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 
-@Primary
+
 @Repository
 public class H2UserRepository implements UserRepository {
     private static final Logger logger = LoggerFactory.getLogger(H2UserRepository.class);
