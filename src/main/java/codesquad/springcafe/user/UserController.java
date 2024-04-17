@@ -70,15 +70,15 @@ public class UserController {
 
         // 현재 비밀번호 확인
         User currentUser = userService.findByUserId(userId);
-        if (!userService.checkCurrentPassword(currentUser, currentPassword)) {
+        if (currentUser.validateCurrentPassword (currentPassword)) {
+            userService.updateUser(userId, user);
+            logger.info("User updated {}", user);
+            return "redirect:/users/list";
+        }else{
             model.addAttribute("error", true);
             model.addAttribute("user", currentUser);
             logger.info("CurrentPassword is different");
             return "/users/updateform";
-        }else{
-            userService.updateUser(userId, user);
-            logger.info("User updated {}", user);
-            return "redirect:/users/list";
         }
     }
 }

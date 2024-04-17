@@ -59,6 +59,10 @@ public class User {
         this.email = email;
     }
 
+    public boolean validateCurrentPassword (String currentPassword) {
+        return currentPassword.equals(this.password);
+    }
+
     @Override
     public String toString() {
         return "User [id=" + id + ", userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
