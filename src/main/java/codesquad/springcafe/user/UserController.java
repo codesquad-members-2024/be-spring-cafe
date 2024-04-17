@@ -25,27 +25,27 @@ public class UserController {
         // 저장소에서 유저 찾기
         Optional<User> optUser = userDao.findUser(userId);
         // 유저를 View에 넘기기 전 필요한 정보만 DTO에 담기
-        Optional<UserDto> optUserDTO = optUser.map(user -> {
-            UserDto userDTO = new UserDto();
-            userDTO.setName(user.getNickName());
-            userDTO.setEmail(user.getEmail());
-            return userDTO;
+        Optional<UserViewDto> optViewDto = optUser.map(user -> {
+            UserViewDto viewDto = new UserViewDto();
+            viewDto.setName(user.getNickName());
+            viewDto.setEmail(user.getEmail());
+            return viewDto;
         });
 
         // userID 를 찾으면 유저 프로필 조회, 못 찾으면 white Lable 페이지 반환
-        return optUserDTO.map(userDto -> {
-            model.addAttribute("user", userDto);
+        return optViewDto.map(viewDto -> {
+            model.addAttribute("user", viewDto);
             return "user/profile";
         }).orElse("error");
     }
 
     // 회원가입 기능
     @PostMapping("/user")
-    public String create(@ModelAttribute UserCreationDto userDTO) {
-        final String userId = userDTO.getUserId();
-        final String password = userDTO.getPassword();
-        final String name = userDTO.getName();
-        final String email = userDTO.getEmail();
+    public String create(@ModelAttribute UserCreationDto userCreationDto) {
+        final String userId = userCreationDto.getUserId();
+        final String password = userCreationDto.getPassword();
+        final String name = userCreationDto.getName();
+        final String email = userCreationDto.getEmail();
 
         User user = new User(userId, password, name, email);
         userDao.save(user);
@@ -58,17 +58,17 @@ public class UserController {
         Collection<User> users = userDao.getAllUsers();
         // 인덱스 번호를 유저마다 붙여 View 에게 전달하는 DTO생성
         AtomicLong atomicLong = new AtomicLong(0L);
-        List<UserDto> userDtos = users.stream()
+        List<UserViewDto> userViewDtos = users.stream()
                 .map(user -> {
-                    UserDto userDTO = new UserDto();
-                    userDTO.setIndex(atomicLong.incrementAndGet());
-                    userDTO.setUserId(user.getUserId());
-                    userDTO.setName(user.getNickName());
-                    userDTO.setEmail(user.getEmail());
-                    return userDTO;
+                    UserViewDto userViewDTO = new UserViewDto();
+                    userViewDTO.setIndex(atomicLong.incrementAndGet());
+                    userViewDTO.setUserId(user.getUserId());
+                    userViewDTO.setName(user.getNickName());
+                    userViewDTO.setEmail(user.getEmail());
+                    return userViewDTO;
                 }).toList();
 
-        model.addAttribute("users", userDtos);
+        model.addAttribute("users", userViewDtos);
         return "user/list";
     }
 

@@ -1,10 +1,12 @@
 package codesquad.springcafe.user;
 
-public class UserDto {
+public class UserViewDto {
     private long index;
     private String userId;
     private String name;
     private String email;
+
+
 
     public void setIndex(long index) {
         this.index = index;
