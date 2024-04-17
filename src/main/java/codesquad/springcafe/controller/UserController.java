@@ -1,8 +1,8 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.repository.UserRepository;
 import codesquad.springcafe.dto.UpdateUser;
 import codesquad.springcafe.domain.User;
+import codesquad.springcafe.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @Controller
 public class UserController {
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/user/register")
@@ -25,20 +25,19 @@ public class UserController {
 
     @PostMapping("/user/register")
     public String register(User user) {
-        // todo 유저 중복 체크 필요
-        userRepository.add(user);
+        userService.addNewUser(user);
         return "redirect:/user/list";
     }
 
     @GetMapping("/user/list")
     public String showList(Model model) {
-        model.addAttribute("users", userRepository.getAll());
+        model.addAttribute("users", userService.getAllUsers());
         return "user/list";
     }
 
     @GetMapping("/user/profile/{userId}")
     public String showProfile(Model model, @PathVariable("userId") String userId) {
-        model.addAttribute("user", userRepository.getById(userId));
+        model.addAttribute("user", userService.getUserById(userId));
         return "user/profile";
     }
 
@@ -50,14 +49,7 @@ public class UserController {
 
     @PutMapping("/user/profile/{userId}/update")
     public String editProfile(UpdateUser updateUser, @PathVariable("userId") String userId, Model model) {
-        User target = userRepository.getById(userId);
-        String password = updateUser.getPassword();
-
-        if (target.checkPassword(password)) {
-            target.setPassword(updateUser.getNewPassword());
-            target.setName(updateUser.getName());
-            target.setEmail(updateUser.getEmail());
-            userRepository.update(target);
+        if (userService.editUserProfile(updateUser, userId)) {
             return "redirect:/user/list";
         } else {
             model.addAttribute("error", true);
