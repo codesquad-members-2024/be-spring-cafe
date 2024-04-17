@@ -1,4 +1,4 @@
-package codesquad.springcafe.repository;
+package codesquad.springcafe.repository.article;
 
 import codesquad.springcafe.model.Article;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 //@Repository
-public class MemoryArticleRepository implements ArticleRepository{
+public class MemoryArticleRepository implements ArticleRepository {
 
     private static final List<Article> articles = new ArrayList<>();
 

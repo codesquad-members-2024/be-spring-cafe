@@ -1,7 +1,7 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.model.Article;
-import codesquad.springcafe.repository.ArticleRepository;
+import codesquad.springcafe.repository.article.ArticleRepository;
 import java.util.Optional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

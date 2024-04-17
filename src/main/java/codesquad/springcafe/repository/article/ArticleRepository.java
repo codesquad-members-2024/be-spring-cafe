@@ -1,4 +1,4 @@
-package codesquad.springcafe.repository;
+package codesquad.springcafe.repository.article;
 
 import codesquad.springcafe.model.Article;
 import java.util.List;

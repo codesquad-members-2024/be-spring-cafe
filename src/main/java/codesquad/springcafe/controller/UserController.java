@@ -2,7 +2,7 @@ package codesquad.springcafe.controller;
 
 
 import codesquad.springcafe.model.User;
-import codesquad.springcafe.repository.UserRepository;
+import codesquad.springcafe.repository.user.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Controller;

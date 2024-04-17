@@ -1,4 +1,4 @@
-package codesquad.springcafe.repository;
+package codesquad.springcafe.repository.user;
 
 import codesquad.springcafe.model.User;
 import java.util.List;
@@ -13,7 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcTemplateUserRepository implements UserRepository{
+public class JdbcTemplateUserRepository implements UserRepository {
 
     private final NamedParameterJdbcTemplate template;
 
