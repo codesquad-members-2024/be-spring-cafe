@@ -29,13 +29,13 @@ public class ArticleController {
     @GetMapping("/articles/create")
     public String quest(Model model) {
         model.addAttribute("create", new ArticleCreateDto());
-        return "/qna/form";
+        return "qna/form";
     }
 
     @PostMapping("/articles/create")
     public String quest(@Validated @ModelAttribute("create") ArticleCreateDto articleCreateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "/qna/form";
+            return "qna/form";
         }
         articleService.saveArticle(articleCreateDto);
         return "redirect:/";
@@ -45,12 +45,12 @@ public class ArticleController {
     public String articleDetails(@PathVariable int sequence, Model model) {
         model.addAttribute("nlString", System.lineSeparator());
         model.addAttribute("article", articleService.findBySequence(sequence));
-        return "/qna/show";
+        return "qna/show";
     }
 
     @GetMapping("/")
     public String questionList(Model model) {
         model.addAttribute("articles", articleService.getArticles());
-        return "/index";
+        return "index";
     }
 }

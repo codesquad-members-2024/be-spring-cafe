@@ -39,13 +39,13 @@ public class UserController {
     @GetMapping("/create")
     public String join(Model model) {
         model.addAttribute("create", new UserCreateDto());
-        return "/user/form";
+        return "user/form";
     }
 
     @PostMapping("/create")
     public String join(@Validated @ModelAttribute("create") UserCreateDto userCreateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "/user/form";
+            return "user/form";
         }
         userService.join(userCreateDto);
         return "redirect:/users";
@@ -54,20 +54,20 @@ public class UserController {
     @GetMapping
     public String userList(Model model) {
         model.addAttribute("users", userService.getUsers());
-        return "/user/list";
+        return "user/list";
     }
 
     @GetMapping("/{userId}")
     public String userDetails(@PathVariable String userId, Model model) {
         model.addAttribute("user", userService.findOne(userId));
-        return "/user/profile";
+        return "user/profile";
     }
 
     @GetMapping("/{userId}/update")
     public String userUpdate(@PathVariable String userId, Model model) {
         model.addAttribute("userId", userId);
         model.addAttribute("update", new UserUpdateDto());
-        return "/user/updateForm";
+        return "user/updateForm";
     }
 
     @PutMapping("/{userId}/update")
@@ -77,7 +77,7 @@ public class UserController {
         }
         if (bindingResult.hasErrors()) {
             model.addAttribute("userId", userId);
-            return "/user/updateForm";
+            return "user/updateForm";
         }
         userService.updateUser(userId, userUpdateDto);
         return "redirect:/users";
