@@ -11,8 +11,10 @@
 | GET / , GET /main            | 등록된 모든 게시글들을 보여준다              |  ⭕️   |
 | GET /users                   | 회원가입된 유저들을 보여준다.               |  ⭕️   |
 | POST /users                  | 입력된 폼을 가지고, 회원 가입을 수행한다        |  ⭕️   |
-| GET /users/login             | 로그인 페이지를 보여준다                  |  ⭕️   |
 | GET /users/join              | 유저 회원가입 폼을 보여준다                |  ⭕️   |
+| GET /users/login             | 로그인 페이지를 보여준다                  |  ⭕️   |
+| POST /users/login            | 사용자 로그인 기능을 수행한다               |  ⭕️   |
+| POST /users/logout           | 로그인 된 사용자를 로그아웃                |  ⭕️   |
 | GET /users/{{userId}}        | userId에 해당하는 profile을 보여준다     |  ⭕️   |
 | GET /users/{{userId}}/form   | userId에 해당하는 수정 페이지를 보여준다      |  ⭕️   | 
 | PUT /users/{{userId}}/update | 사용자의 정보를 업데이트                  |  ⭕️   |
@@ -99,15 +101,32 @@
 ![img_2.png](readme/article/img7.png)
 
 ---
+
 # EC2 인스턴스에서 서버 동작
+
 > http://3.34.194.184:8080/
 >   - 인스턴스 종료 [04.15]
 
 ![img.png](readme/img.png)
 
+## 에러 페이지
+
+### 1) 없는 게시물을 조회하려고 할 때
+
+> 3000번째 게시물은 없는 상태
+
+![img.png](img.png)
+
+### 2) 없는 사용자를 조회하려고 할 때
+
+> whoami 라는 사용자는 없는 상태
+
+![img_1.png](img_1.png)
+
 
 
 ---
+
 # 구현한 기능
 
 ## Mustache를 사용하여 중복 html 제거
@@ -215,13 +234,21 @@ public class MvcConfig implements WebMvcConfigurer {
 
 - Article 객체의 userId는 FK로, User 객체의 userId를 참조합니다.
 - 위와 같이 구성을 하여서, Article을 작성하려면 **무조건** userId가 있어야 합니다.
-  - 따라서, USER 테이블에 User row를 하나 추가하여 구현하였습니다.
+    - 따라서, USER 테이블에 User row를 하나 추가하여 구현하였습니다.
 
 > 위와 같이 구현한 이유는, 로그인을 해야만 게시글을 쓸 수 있는 기능을 구현하고 싶어서 FK를 가지도록 구현하였습니다.
-> 
+>
 > 그러다보니, User가 없는 경우에는 Article이 생성되지 않는 문제가 있어 User 를 하나 추가하여 구현하였습니다.
 
-
 ---
+
+## Password Salt & Hash
+- 유저를 생성하거나, 업데이트, 비밀번호 검증을 할 때 ```String password```값을 가지고 비교롤 한다.
+- 하지만, 이러한 raw password는 탈취 위험성과 보안적인 측면에서, 보호하고 싶었다.
+  - 따라서, ```UserCredentialDto```를 사용하였으나, 결과적으로 ```String inputPassword```값으로 비교하는 것은 별 효과가 없다고 생각하였다.
+### Salt, Hash 기능 추가
+- ```User```객체가 생성될 때, Salt를 랜덤으로 생성하고, 생성된 값과 함께 ```HashedPassword```를 만들어 저장하였다.
+- 이를 통해 보안적인 측면에서 서버측에서도 사용자의 비밀번호를 알 수 없게 구현하였다.
+
 
 
