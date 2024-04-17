@@ -1,11 +1,10 @@
 package codesquad.springcafe.controller.member;
 
+import codesquad.springcafe.controller.SessionConst;
 import codesquad.springcafe.domain.member.Member;
 import codesquad.springcafe.service.member.MemberService;
 import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Controller
 @RequestMapping("/members")
@@ -31,7 +31,7 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @GetMapping("")
+    @GetMapping
     public String members(Model model) {
         List<Member> members = memberService.findAllMember();
         model.addAttribute("members", members);
@@ -72,7 +72,14 @@ public class MemberController {
     }
 
     @GetMapping("/{loginId}/update")
-    public String updateForm(@PathVariable("loginId") String loginId, @ModelAttribute("form") UpdateMember form) {
+    public String updateForm(@SessionAttribute(name = SessionConst.SESSION_ID, required = false) String loginMemberId,
+                             @PathVariable("loginId") String loginId, @ModelAttribute("form") UpdateMember form) {
+
+        /* 로그인 된 상태가 아니거나, 로그인 유저 본인이 아니면 401 에러 */
+        if (loginMemberId == null || !loginMemberId.equals(loginId)) {
+            return "error/403";
+        }
+
         Optional<Member> findMember = memberService.findMember(loginId);
 
         if (findMember.isEmpty()) {
