@@ -4,25 +4,40 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class User {
-    private final String userId;
+    private int id;
+    private String userId;
     private String password;
     private String email;
-    private final LocalDateTime registerTime;
+    private LocalDateTime registerTime;
 
     private final String TIME_FORMATTING_PATTERN = "yyyy년 MM월 dd일";
 
-    public User(String email, String userId, String password) {
-        this.userId = userId;
-        this.password = password;
-        this.email = email;
+    public User(){
         this.registerTime = LocalDateTime.now();
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getUserId() {
         return userId;
     }
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public boolean isPasswordInputCorrect(String passwordInput){
@@ -33,15 +48,20 @@ public class User {
         return email;
     }
 
-    public String getFormattedRegisterTime(){
-        return registerTime.format(DateTimeFormatter.ofPattern(TIME_FORMATTING_PATTERN));
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public String getFormattedRegisterTime(){
+        return registerTime.format(DateTimeFormatter.ofPattern(TIME_FORMATTING_PATTERN));
     }
+
+    public LocalDateTime getRegisterTime(){
+        return registerTime;
+    }
+
+    public void setRegisterTime(LocalDateTime registerTime){
+        this.registerTime = registerTime;
+    }
+
 }
