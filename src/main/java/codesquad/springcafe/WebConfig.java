@@ -1,9 +1,6 @@
 package codesquad.springcafe;
 
-import codesquad.springcafe.db.ArticleDatabase;
-import codesquad.springcafe.db.MemoryArticleDatabase;
-import codesquad.springcafe.db.MemoryUserDatabase;
-import codesquad.springcafe.db.UserDatabase;
+import codesquad.springcafe.db.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -20,7 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public UserDatabase userDatabase() {
-        return new MemoryUserDatabase();
+        return new H2UserDatabase(dataSource);
     }
 
     @Bean
