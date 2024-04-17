@@ -21,7 +21,7 @@ public class PostController {
     public String showPostForm(Model model) {
         model.addAttribute("post", new Post());
         logger.info("Showing post form");
-        return "/qna/form";
+        return "qna/form";
     }
 
     @PostMapping("/new")
@@ -38,7 +38,7 @@ public class PostController {
             logger.info("Showing post details for {}", post);
             model.addAttribute("nlString", System.lineSeparator());
             model.addAttribute("post", post);
-            return "/qna/show";
+            return "qna/show";
         }
         return "redirect:/";
     }

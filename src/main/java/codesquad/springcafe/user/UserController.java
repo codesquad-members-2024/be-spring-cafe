@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Controller
-@RequestMapping("/users")
+@RequestMapping("users")
 public class UserController {
     private final UserService userService;
     private static final Logger logger = LoggerFactory.getLogger(PostController.class);
@@ -22,14 +22,14 @@ public class UserController {
     public String showRegistrationForm(Model model){
         model.addAttribute("user", new User());
         logger.info("Showing registration form");
-        return "/users/form";
+        return "users/form";
     }
 
     @GetMapping("/list")
     public String showUserListForm(Model model){
         model.addAttribute("users",userService.findAll());
         logger.info("Showing user list");
-        return "/users/list";
+        return "users/list";
     }
 
     @PostMapping("/create")
@@ -46,7 +46,7 @@ public class UserController {
         if (user != null) {
             logger.info("User found {}", user);
             model.addAttribute("user", user);
-            return "/users/profile";
+            return "users/profile";
         }
         return "redirect:/users/list";
     }
@@ -57,7 +57,7 @@ public class UserController {
         if (user != null) {
             logger.info("Update User found {}", user);
             model.addAttribute("user", user);
-            return "/users/updateform";
+            return "users/updateform";
         }
         return "redirect:/users/list";
     }
@@ -78,7 +78,7 @@ public class UserController {
             model.addAttribute("error", true);
             model.addAttribute("user", currentUser);
             logger.info("CurrentPassword is different");
-            return "/users/updateform";
+            return "users/updateform";
         }
     }
 }
