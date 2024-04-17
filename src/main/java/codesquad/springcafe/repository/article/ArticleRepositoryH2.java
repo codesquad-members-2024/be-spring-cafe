@@ -69,7 +69,7 @@ public class ArticleRepositoryH2 implements ArticleRepository {
 
     @Override
     public void clear() {
-        String sql = "ALTER TABLE ARTICLE ALTER COLUMN ARTICLE_ID RESTART WITH 1";
+        String sql = "TRUNCATE TABLE ARTICLE; ALTER TABLE ARTICLE ALTER COLUMN ARTICLE_ID RESTART WITH 1";
         template.update(sql);
     }
 

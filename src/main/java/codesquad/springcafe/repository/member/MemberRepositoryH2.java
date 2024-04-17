@@ -76,7 +76,7 @@ public class MemberRepositoryH2 implements MemberRepository {
 
     @Override
     public void clear() {
-        String sql = "ALTER TABLE MEMBER ALTER COLUMN MEMBER_ID RESTART WITH 1";
+        String sql = "TRUNCATE TABLE MEMBER; ALTER TABLE MEMBER ALTER COLUMN MEMBER_ID RESTART WITH 1";
         template.update(sql);
     }
 
