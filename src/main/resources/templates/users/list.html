@@ -23,7 +23,7 @@
                     </td>
                     <td th:text="${user.name}">name</td>
                     <td th:text="${user.email}">email</td>
-                    <td><a href="#" class="btn btn-success" role="button">수정</a></td>
+                    <td><a th:href="@{/users/{id}(id=${user.userId})/form}" class="btn btn-success" role="button">수정</a></td>
                 </tr>
                 </tbody>
             </table>
@@ -34,3 +34,4 @@
 <div th:insert="~{fragment/script :: script}"></div>
 </body>
 </html>
+
