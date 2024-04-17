@@ -1,4 +1,4 @@
-package codesquad.springcafe.db;
+package codesquad.springcafe.db.user;
 
 import codesquad.springcafe.model.User;
 

@@ -1,7 +1,7 @@
-package codesquad.springcafe.db;
+package codesquad.springcafe.db.user;
 
+import codesquad.springcafe.db.user.UserDatabase;
 import codesquad.springcafe.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class H2UserDatabase implements UserDatabase{
+public class H2UserDatabase implements UserDatabase {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;

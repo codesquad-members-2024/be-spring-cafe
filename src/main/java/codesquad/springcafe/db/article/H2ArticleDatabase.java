@@ -1,4 +1,4 @@
-package codesquad.springcafe.db;
+package codesquad.springcafe.db.article;
 
 import codesquad.springcafe.model.Article;
 import org.springframework.jdbc.core.JdbcTemplate;

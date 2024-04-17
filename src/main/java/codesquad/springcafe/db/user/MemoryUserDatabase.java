@@ -1,5 +1,6 @@
-package codesquad.springcafe.db;
+package codesquad.springcafe.db.user;
 
+import codesquad.springcafe.db.user.UserDatabase;
 import codesquad.springcafe.model.User;
 
 import java.util.ArrayList;

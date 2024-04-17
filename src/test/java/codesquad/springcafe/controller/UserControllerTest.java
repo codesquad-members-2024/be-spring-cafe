@@ -1,7 +1,7 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.WebConfig;
-import codesquad.springcafe.db.UserDatabase;
+import codesquad.springcafe.db.user.UserDatabase;
 import codesquad.springcafe.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
