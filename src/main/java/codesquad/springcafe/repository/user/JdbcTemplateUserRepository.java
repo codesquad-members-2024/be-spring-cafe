@@ -2,9 +2,13 @@ package codesquad.springcafe.repository.user;
 
 import codesquad.springcafe.model.User;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -37,7 +41,18 @@ public class JdbcTemplateUserRepository implements UserRepository {
 
     @Override
     public List<User> findAll() {
-        return null;
+        String sql = "SELECT * FROM users";
+
+        return template.query(sql, (rs, rowNum) -> {
+            User user = new User(
+                    rs.getString("userId"),
+                    rs.getString("password"),
+                    rs.getString("name"),
+                    rs.getString("email")
+            );
+            user.setId(rs.getLong("id"));
+            return user;
+        });
     }
 
     @Override
