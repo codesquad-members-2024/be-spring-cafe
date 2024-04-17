@@ -23,7 +23,7 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public void save(User user) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-        jdbcInsert.withTableName("user").usingGeneratedKeyColumns("id");
+        jdbcInsert.withTableName("users").usingGeneratedKeyColumns("id");
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("userId", user.getUserId());
@@ -37,20 +37,20 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public void update(User user) {
-        jdbcTemplate.update("update user set password = ?, name = ?, email = ?",
+        jdbcTemplate.update("update users set password = ?, name = ?, email = ?",
                 user.getPassword(), user.getName(), user.getEmail());
     }
 
     @Override
     public Optional<User> findByUserId(String userId) {
-        return jdbcTemplate.query("select * from user where userId = ?", userRowMapper(), userId)
+        return jdbcTemplate.query("select * from users where userId = ?", userRowMapper(), userId)
                 .stream()
                 .findAny();
     }
 
     @Override
     public List<User> findAll() {
-        return jdbcTemplate.query("select * from user", userRowMapper());
+        return jdbcTemplate.query("select * from users", userRowMapper());
     }
 
     private RowMapper<User> userRowMapper() {
