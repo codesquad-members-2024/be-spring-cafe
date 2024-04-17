@@ -23,7 +23,7 @@
                     </td>
                     <td th:text="${user.name}">name</td>
                     <td th:text="${user.email}">email</td>
-                    <td><a th:href="@{/users/{id}(id=${user.userId})/form}" class="btn btn-success" role="button">수정</a></td>
+                    <td><a th:href="@{/users/{id}/form(id=${user.userId})}" class="btn btn-success" role="button">수정</a></td>
                 </tr>
                 </tbody>
             </table>
