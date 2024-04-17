@@ -1,0 +1,55 @@
+/* 메인 컨테이너 스타일 */
+.container {
+    margin-left: 10%;
+    width: 80%;
+    text-align: center; /* 가운데 정렬 */
+}
+
+/* 패널 스타일 */
+.panel {
+    border-radius: 6px; /* 모서리 둥글게 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 그림자 효과 */
+    margin-top: 20px; /* 상단 여백 */
+    background-color: #ffffff; /* 백색 배경 */
+    border: 1px solid lightgray;
+}
+
+.panel-heading {
+    background-color: black; /* 검은색 배경 */
+    color: white; /* 흰색 텍스트 */
+    padding: 10px 15px;
+    border-bottom: 1px solid black; /* 하단 경계선 */
+}
+
+.panel-body {
+    padding: 20px;
+}
+
+.panel-body p {
+    margin-bottom: 10px;
+}
+
+.desc-container {
+    text-align: center; /* 가운데 정렬 */
+    margin-bottom: 20px;
+}
+
+.desc-small {
+    color: gray; /* 회색 텍스트 */
+    font-size: 14px;
+}
+
+.desc-big {
+    color: black; /* 검은색 텍스트 */
+    font-size: 24px;
+    font-weight: 500; /* 글자 무게 */
+}
+
+/* 반응형 그리드 수정 */
+@media (max-width: 767px) {
+    .col-md-6, .container {
+        float: none;
+        width: 100%;
+        margin: 0 auto;
+    }
+}
