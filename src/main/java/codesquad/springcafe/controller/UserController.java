@@ -1,7 +1,7 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.domain.User;
-import codesquad.springcafe.DB.UserDatabase;
+import codesquad.springcafe.DB.MemoryUserDatabase;
 import codesquad.springcafe.domain.UserUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public class UserController {
     // @RequestParam을 통해 쿼리문의 userId를 받아온다.
     // userId를 통해 DB에서 해당 사용자의 email, nickname을 받아온다.
     public String showLoginSuccess(@RequestParam String userId, Model model) {
-        Optional<User> userOptional = UserDatabase.getUser(userId);
+        Optional<User> userOptional = MemoryUserDatabase.getUser(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             model.addAttribute("email", user.getEmail());
@@ -32,7 +32,7 @@ public class UserController {
     @PostMapping("/user/create")
     // @ModelAttribute 어노테이션 을 통해 Post body를 파싱해 user객체로 반환한다.
     public String saveUser(@ModelAttribute User user) {
-        UserDatabase.saveUser(user);
+        MemoryUserDatabase.saveUser(user);
         logger.debug("new user: " + user.toString());
 
         // login success 페이지를 위해 쿼리로 userId 전달
@@ -41,15 +41,15 @@ public class UserController {
 
     @GetMapping("/users/list")
     public String showUsers(Model model) {
-        model.addAttribute("users", UserDatabase.getAllUsers()); // 전체 user 반환
-        model.addAttribute("totalNumber", Integer.toString(UserDatabase.getUserSize())); //user 개수 반환
+        model.addAttribute("users", MemoryUserDatabase.getAllUsers()); // 전체 user 반환
+        model.addAttribute("totalNumber", Integer.toString(MemoryUserDatabase.getUserSize())); //user 개수 반환
 
         return "/user/list";
     }
 
     @GetMapping("/users/{userId}")
     public String showProfile(@PathVariable String userId, Model model) {
-        Optional<User> userOptional = UserDatabase.getUser(userId);
+        Optional<User> userOptional = MemoryUserDatabase.getUser(userId);
         if(userOptional.isEmpty()){
             return "redirect:/main";
         }
@@ -70,7 +70,7 @@ public class UserController {
     @PutMapping("/users/update/{userId}")
     // 사용자가 입력한 수정 폼을 받아 프로필 수정하기
     public String updateProfile(@PathVariable String userId, @ModelAttribute UserUpdate userUpdate, Model model) {
-        Optional<User> userOptional = UserDatabase.getUser(userId); // 해당 userId의 데이터를 가져온다
+        Optional<User> userOptional = MemoryUserDatabase.getUser(userId); // 해당 userId의 데이터를 가져온다
         if(userOptional.isEmpty()){
             return "redirect:/main";
         }
