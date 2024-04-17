@@ -41,4 +41,10 @@ public class MemberManager implements MemberService {
     public void update(String loginId, UpdateMember updateParam) {
         repository.update(loginId, updateParam);
     }
+
+    @Override
+    public Optional<Member> login(String loginId, String password) {
+        return repository.findById(loginId)
+                .filter(member -> member.getPassword().equals(password));
+    }
 }
