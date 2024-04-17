@@ -3,8 +3,6 @@ package codesquad.springcafe.controller;
 import codesquad.springcafe.repository.ArticleRepository;
 import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.dto.RegisterArticle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class ArticleController {
-    private final Logger logger = LoggerFactory.getLogger(ArticleController.class);
     private final ArticleRepository h2ArticleRepository;
 
     @Autowired
@@ -29,7 +26,6 @@ public class ArticleController {
 
     @PostMapping("/qna")
     public String register(RegisterArticle registerArticle) {
-        logger.debug(registerArticle.getContents());
         Article article = new Article(
                 registerArticle.getWriter(), registerArticle.getTitle(),
                 registerArticle.getContents(), registerArticle.getTime()

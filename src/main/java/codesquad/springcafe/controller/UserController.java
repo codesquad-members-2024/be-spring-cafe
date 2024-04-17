@@ -3,8 +3,6 @@ package codesquad.springcafe.controller;
 import codesquad.springcafe.repository.UserRepository;
 import codesquad.springcafe.dto.UpdateUser;
 import codesquad.springcafe.domain.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @Controller
 public class UserController {
-    private final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserRepository userRepository;
 
     public UserController(UserRepository userRepository) {
@@ -30,7 +27,6 @@ public class UserController {
     public String register(User user) {
         // todo 유저 중복 체크 필요
         userRepository.add(user);
-        logger.debug("new user: " + user.toString());
         return "redirect:/user/list";
     }
 
