@@ -2,9 +2,13 @@ package codesquad.springcafe.repository;
 
 import codesquad.springcafe.model.Article;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -51,6 +55,17 @@ public class JdbcTemplateArticleRepository implements ArticleRepository {
 
     @Override
     public Optional<Article> findById(Long id) {
-        return Optional.empty();
+        String sql = "select id, writer, title, contents from article where id = :id";
+        try {
+            Map<String, Object> param = Map.of("id", id);
+            Article article = template.queryForObject(sql, param, articleRowMapper());
+            return Optional.of(article);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    private RowMapper<Article> articleRowMapper() {
+        return BeanPropertyRowMapper.newInstance(Article.class);
     }
 }
