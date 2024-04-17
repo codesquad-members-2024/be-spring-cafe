@@ -10,12 +10,11 @@ public class Article {
     private LocalDateTime time;
     private Long id;
 
-    public Article(String writer, String title, String contents, LocalDateTime time, Long id) {
+    public Article(String writer, String title, String contents, LocalDateTime time) {
         this.writer = writer;
         this.title = title;
         this.contents = contents;
         this.time = time;
-        this.id = id;
     }
 
     public String getWriter() {
@@ -52,6 +51,10 @@ public class Article {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override

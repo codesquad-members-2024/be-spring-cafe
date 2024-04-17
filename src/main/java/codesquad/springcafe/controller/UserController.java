@@ -1,11 +1,10 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.DB.H2Database;
+import codesquad.springcafe.repository.UserRepository;
 import codesquad.springcafe.dto.UpdateUser;
 import codesquad.springcafe.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +15,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 @Controller
 public class UserController {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
-    private final H2Database h2Database;
+    private final UserRepository userRepository;
 
-    @Autowired
-    public UserController(H2Database h2Database) {
-        this.h2Database = h2Database;
+    public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/user/register")
@@ -30,20 +28,21 @@ public class UserController {
 
     @PostMapping("/user/register")
     public String register(User user) {
-        h2Database.addUser(user);
+        // todo 유저 중복 체크 필요
+        userRepository.add(user);
         logger.debug("new user: " + user.toString());
         return "redirect:/user/list";
     }
 
     @GetMapping("/user/list")
     public String showList(Model model) {
-        model.addAttribute("users", h2Database.getAllUsers());
+        model.addAttribute("users", userRepository.getAll());
         return "user/list";
     }
 
     @GetMapping("/user/profile/{userId}")
     public String showProfile(Model model, @PathVariable("userId") String userId) {
-        model.addAttribute("user", h2Database.getUser(userId));
+        model.addAttribute("user", userRepository.getById(userId));
         return "user/profile";
     }
 
@@ -55,14 +54,14 @@ public class UserController {
 
     @PutMapping("/user/profile/{userId}/update")
     public String editProfile(UpdateUser updateUser, @PathVariable("userId") String userId, Model model) {
-        User target = h2Database.getUser(userId);
+        User target = userRepository.getById(userId);
         String password = updateUser.getPassword();
 
         if (target.checkPassword(password)) {
-            String newPassword = updateUser.getNewPassword();
-            String newName = updateUser.getName();
-            String newEmail = updateUser.getEmail();
-            h2Database.updateUser(newPassword, newName, newEmail, userId);
+            target.setPassword(updateUser.getNewPassword());
+            target.setName(updateUser.getName());
+            target.setEmail(updateUser.getEmail());
+            userRepository.update(target);
             return "redirect:/user/list";
         } else {
             model.addAttribute("error", true);

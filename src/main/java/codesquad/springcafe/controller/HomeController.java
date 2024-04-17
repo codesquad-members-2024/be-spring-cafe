@@ -1,6 +1,6 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.DB.H2Database;
+import codesquad.springcafe.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,16 +8,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class HomeController {
-    private final H2Database h2Database;
+    private final ArticleRepository h2ArticleRepository;
 
     @Autowired
-    public HomeController(H2Database h2Database) {
-        this.h2Database = h2Database;
+    public HomeController(ArticleRepository h2ArticleRepository) {
+        this.h2ArticleRepository = h2ArticleRepository;
     }
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("articles", h2Database.getAllArticles());
+        model.addAttribute("articles", h2ArticleRepository.getAll());
         return "index";
     }
 }

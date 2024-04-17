@@ -1,6 +1,7 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.DB.H2Database;
+import codesquad.springcafe.repository.ArticleRepository;
+import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.dto.RegisterArticle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class ArticleController {
     private final Logger logger = LoggerFactory.getLogger(ArticleController.class);
-    private final H2Database h2Database;
+    private final ArticleRepository h2ArticleRepository;
 
     @Autowired
-    public ArticleController(H2Database h2Database) {
-        this.h2Database = h2Database;
+    public ArticleController(ArticleRepository h2ArticleRepository) {
+        this.h2ArticleRepository = h2ArticleRepository;
     }
 
     @GetMapping("/qna")
@@ -28,13 +29,18 @@ public class ArticleController {
 
     @PostMapping("/qna")
     public String register(RegisterArticle registerArticle) {
-        h2Database.addArticle(registerArticle);
+        logger.debug(registerArticle.getContents());
+        Article article = new Article(
+                registerArticle.getWriter(), registerArticle.getTitle(),
+                registerArticle.getContents(), registerArticle.getTime()
+        );
+        h2ArticleRepository.add(article);
         return "redirect:/";
     }
 
     @GetMapping("/article/{articleId}")
     public String showArticle(Model model, @PathVariable("articleId") String articleId) {
-        model.addAttribute("article", h2Database.getArticle(Long.parseLong(articleId)));
+        model.addAttribute("article", h2ArticleRepository.getById(Long.parseLong(articleId)));
         return "qna/show";
     }
 }
