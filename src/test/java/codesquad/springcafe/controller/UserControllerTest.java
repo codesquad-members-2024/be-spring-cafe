@@ -1,5 +1,6 @@
 package codesquad.springcafe.controller;
 
+import codesquad.springcafe.WebConfig;
 import codesquad.springcafe.db.UserDatabase;
 import codesquad.springcafe.model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -19,10 +22,10 @@ import java.util.Optional;
 
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
 
-@WebMvcTest(controllers = UserController.class)
+@WebMvcTest(controllers = UserController.class,
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,classes = WebConfig.class))
 class UserControllerTest {
 
     @Autowired
@@ -37,11 +40,13 @@ class UserControllerTest {
         user1.setUserId("test1");
         user1.setEmail("test1@email.com");
         user1.setPassword("password1");
+        user1.setNickname("nickname1");
 
         User user2 = new User();
         user2.setUserId("test2");
         user2.setEmail("test2@email.com");
         user2.setPassword("password2");
+        user2.setNickname("nickname2");
 
         List<User> users = Arrays.asList(user1, user2);
 
@@ -59,10 +64,12 @@ class UserControllerTest {
         String userId = "userId";
         String email = "email@email.com";
         String password = "password";
+        String nickname = "nickname";
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/users")
                 .param("userId", userId)
                 .param("email", email)
+                .param("nickname", nickname)
                 .param("password", password);
 
         mockMvc.perform(request)
@@ -86,8 +93,7 @@ class UserControllerTest {
     @Test
     void profileExceptionRequestTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/users/testUser"))
-                .andExpect(result -> assertThat(result.getResolvedException())
-                        .isInstanceOf(IllegalArgumentException.class));
+                .andExpect(status().is4xxClientError());
     }
 
 
