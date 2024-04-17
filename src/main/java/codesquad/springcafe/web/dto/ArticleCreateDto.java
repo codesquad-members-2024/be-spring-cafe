@@ -40,4 +40,8 @@ public class ArticleCreateDto {
     public LocalDateTime getCurrentTime() {
         return currentTime;
     }
+
+    public void setCurrentTime(LocalDateTime currentTime) {
+        this.currentTime = currentTime;
+    }
 }
