@@ -33,7 +33,7 @@ public class UserController {
     @GetMapping("/users/form/{userid}")
     public String failCreateUser(@PathVariable String userid, Model model) {
         model.addAttribute("outputMessage", "이미 존재하는 회원입니다." + userid);
-        return "user/failedCreate";
+        return "user/create_failed";
     }
 
     @GetMapping("/users")
