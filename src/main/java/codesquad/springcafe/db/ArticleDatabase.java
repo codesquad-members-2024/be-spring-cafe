@@ -1,6 +1,7 @@
 package codesquad.springcafe.db;
 
 import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +9,8 @@ import java.util.Optional;
 public interface ArticleDatabase {
 
     public void addArticle(Article article);
+
+    public void update(long sequence, Article updatedArticle);
 
     public List<Article> findAllArticles();
 
