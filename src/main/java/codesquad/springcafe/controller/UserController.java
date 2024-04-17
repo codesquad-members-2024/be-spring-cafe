@@ -66,6 +66,7 @@ public class UserController {
         }
 
         user.setEmail(email);
+        userDatabase.update(user.getUserId(), user);
         return "redirect:/users";
     }
 
