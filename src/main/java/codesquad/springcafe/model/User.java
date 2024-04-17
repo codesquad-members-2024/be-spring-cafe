@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class User {
-    private int id;
     private String userId;
     private String password;
     private String email;
@@ -14,14 +13,6 @@ public class User {
 
     public User(){
         this.registerTime = LocalDateTime.now();
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getUserId() {
