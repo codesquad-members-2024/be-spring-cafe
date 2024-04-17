@@ -9,7 +9,5 @@ public interface ArticleDao {
 
     Collection<Article> findAll();
 
-    int size();
-
     Optional<Article> findBy(int id);
 }

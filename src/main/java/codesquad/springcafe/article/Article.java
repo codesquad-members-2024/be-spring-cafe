@@ -3,6 +3,7 @@ package codesquad.springcafe.article;
 import java.time.LocalDateTime;
 
 public class Article {
+    private Long id;
     private final String writer;
     private final String title;
     private final String contents;
@@ -31,9 +32,15 @@ public class Article {
         return createAt;
     }
 
+    // DB에서 꺼내올때만 사용
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "Article{" +
+                "id=" + id +
                 ", writer='" + writer + '\'' +
                 ", title='" + title + '\'' +
                 ", contents='" + contents + '\'' +

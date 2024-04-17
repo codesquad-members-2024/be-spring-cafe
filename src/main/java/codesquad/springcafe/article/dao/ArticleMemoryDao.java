@@ -18,19 +18,19 @@ public class ArticleMemoryDao implements ArticleDao {
     private final Map<Integer, Article> articles = new HashMap<>();
     private final AtomicInteger atomicInteger = new AtomicInteger(0);
 
+    @Override
     public void save(Article article) {
         articles.put(atomicInteger.incrementAndGet(), article);
         log.debug("게시글 갯수 : {}", articles.size());
     }
 
+    @Override
     public Collection<Article> findAll() {
         return articles.values();
     }
 
-    public int size() {
-        return articles.size();
-    }
 
+    @Override
     public Optional<Article> findBy(int id) {
         return Optional.ofNullable(articles.get(id));
     }
