@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Optional;
 
-@Primary
 @Repository
 public class MemoryUserRepository implements UserRepository {
     private static final Logger logger = LoggerFactory.getLogger(MemoryUserRepository.class);

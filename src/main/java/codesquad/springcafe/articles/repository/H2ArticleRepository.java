@@ -94,6 +94,5 @@ public class H2ArticleRepository implements ArticleRepository {
     public void incrementPageView(long articleId) {
         String sql = "UPDATE ARTICLES SET PAGEVIEWS = PAGEVIEWS + 1 WHERE ARTICLEID = ?";
         jdbcTemplate.update(sql, articleId);
-        logger.debug("Article with ID: '{}' has its page views incremented", articleId);
     }
 }

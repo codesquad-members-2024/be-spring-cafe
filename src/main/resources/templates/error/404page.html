@@ -1,10 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kr">
 <head>
-    <meta charset="UTF-8">
-    <title>404 Error</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>kakao Java Web Programming</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="/css/reset.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="/css/index.css" rel="stylesheet">
 </head>
 <body>
-    <h1>404 Page Error</h1>
+<div class="background">
+    <nav class="navbar navbar-fixed-top header">
+        <div class="col-md-12">
+            {{> base/navBarHeader}}
+            {{> base/navBarNav}}
+        </div>
+    </nav>
+
+    <div class="description">
+        <div class="desc-container">
+            <p class="desc-big"> {{ errorMsg }} </p>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
