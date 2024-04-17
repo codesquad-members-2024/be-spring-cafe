@@ -1,7 +1,7 @@
 package codesquad.springcafe.article.dao;
 
 import codesquad.springcafe.article.Article;
-import codesquad.springcafe.article.IArticleRepository;
+import codesquad.springcafe.article.ArticleDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
-public class ArticleMemoryRepository implements IArticleRepository {
+public class ArticleMemoryDao implements ArticleDao {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final Map<Integer, Article> articles = new HashMap<>();
     private final AtomicInteger atomicInteger = new AtomicInteger(0);

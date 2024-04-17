@@ -1,11 +1,9 @@
 package codesquad.springcafe.article;
 
-import codesquad.springcafe.article.Article;
-
 import java.util.Collection;
 import java.util.Optional;
 
-public interface IArticleRepository {
+public interface ArticleDao {
 
     void save(Article article);
 

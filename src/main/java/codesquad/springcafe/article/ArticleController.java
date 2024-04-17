@@ -16,16 +16,16 @@ import java.util.Optional;
 @Controller
 public class ArticleController {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final IArticleRepository iArticleRepository;
+    private final ArticleDao articleDao;
 
-    public ArticleController(IArticleRepository iArticleRepository) {
-        this.iArticleRepository = iArticleRepository;
+    public ArticleController(ArticleDao articleDao) {
+        this.articleDao = articleDao;
     }
 
     // 아티클 id를 가지고 해당 아티클 보여주기 없으면 기본 홈페이지 보여주기
     @GetMapping("/article/{id}")
     public String showArticle(@PathVariable int id, Model model) {
-        Optional<Article> optArticle = iArticleRepository.findBy(id);
+        Optional<Article> optArticle = articleDao.findBy(id);
         return optArticle.map(article -> {
             model.addAttribute("article", article);
             return "qna/show";
@@ -43,14 +43,14 @@ public class ArticleController {
         Article article = new Article(writer, title, contents, createAt);
 
         log.debug("들어온 게시글 : {}", article);
-        iArticleRepository.save(article);
+        articleDao.save(article);
         return "redirect:/articles";
     }
 
     // 모든 아티클 보여주기
     @GetMapping("/articles")
     public String showArticle(Model model) {
-        Collection<Article> allArticles = iArticleRepository.findAll();
+        Collection<Article> allArticles = articleDao.findAll();
         model.addAttribute("articles", allArticles);
         return "index";
     }
