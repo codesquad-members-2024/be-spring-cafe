@@ -1,6 +1,6 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.db.UserDatabase;
+import codesquad.springcafe.db.user.UserDatabase;
 import codesquad.springcafe.model.User;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;

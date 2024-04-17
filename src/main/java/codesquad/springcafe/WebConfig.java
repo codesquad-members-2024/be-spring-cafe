@@ -1,6 +1,9 @@
 package codesquad.springcafe;
 
-import codesquad.springcafe.db.*;
+import codesquad.springcafe.db.article.ArticleDatabase;
+import codesquad.springcafe.db.article.H2ArticleDatabase;
+import codesquad.springcafe.db.user.H2UserDatabase;
+import codesquad.springcafe.db.user.UserDatabase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
