@@ -32,8 +32,15 @@ class ArticleControllerTest {
 
     @BeforeEach
     void setUp(){
-        Article article1 = new Article(1L, "title1", "content1");
-        Article article2 = new Article(2L, "title2", "content2");
+        Article article1 = new Article();
+        article1.setSequence(1L);
+        article1.setTitle("title1");
+        article1.setContent("content1");
+
+        Article article2 = new Article();
+        article2.setSequence(2L);
+        article2.setTitle("title2");
+        article2.setContent("content2");
         List<Article> articles = Arrays.asList(article1, article2);
 
         willDoNothing().given(articleDatabase).addArticle(article1);

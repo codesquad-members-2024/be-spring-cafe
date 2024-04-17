@@ -6,10 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
@@ -28,11 +25,10 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String createPost(
-            @RequestParam String title,
-            @RequestParam String content
+            @ModelAttribute Article article
     ) {
         long seq = sequence.incrementAndGet();
-        Article article = new Article(seq, title, content);
+        article.setSequence(seq);
         articleDatabase.addArticle(article);
         return "redirect:/";
     }
