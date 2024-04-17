@@ -1,5 +1,6 @@
 package codesquad.springcafe.controller;
 
+import codesquad.springcafe.WebConfig;
 import codesquad.springcafe.db.ArticleDatabase;
 import codesquad.springcafe.model.Article;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,20 +9,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
-@WebMvcTest(controllers = ArticleController.class)
+@WebMvcTest(controllers = ArticleController.class,
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,classes = WebConfig.class))
 class ArticleControllerTest {
 
     @Autowired
@@ -71,8 +73,7 @@ class ArticleControllerTest {
     @Test
     void loadArticleContentExceptionTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/articles/3"))
-                .andExpect(result -> assertThat(result.getResolvedException())
-                        .isInstanceOf(NoSuchElementException.class));
+                .andExpect(status().is4xxClientError());
     }
 
 
