@@ -46,7 +46,7 @@ public class CommentController {
     @PutMapping("/{id}")
     public String modifyComment(@PathVariable int id, @ModelAttribute CommentPostReq commentPostReq, RedirectAttributes ra) {
         commentService.modify(id, commentPostReq);
-        
+
         ra.addAttribute("id", commentService.getArticleId(id));
         return "redirect:/article/{id}";
     }
@@ -77,25 +77,25 @@ public class CommentController {
     public String getModifyForm(@PathVariable int id, HttpServletRequest request, Model model) {
         SimpleUserInfo loginUser = (SimpleUserInfo) request.getSession().getAttribute("loginUser");
 
-        if (commentService.canModify(id, loginUser)) {
-            model.addAttribute("commentId", id);
-            model.addAttribute("articleId", commentService.getArticleId(id));
-            return "comment/form";
+        if (!commentService.canModify(id, loginUser)) {
+            throw new AuthorizationException("다른 사람의 댓글을 수정할 수 없습니다!");
         }
-
-        throw new AuthorizationException("다른 사람의 댓글을 수정할 수 없습니다!");
+        
+        model.addAttribute("commentId", id);
+        model.addAttribute("articleId", commentService.getArticleId(id));
+        return "comment/form";
     }
 
     @GetMapping("/{id}/delete")
     public String getDeletePage(@PathVariable int id, HttpServletRequest request, Model model) {
         SimpleUserInfo loginUser = (SimpleUserInfo) request.getSession().getAttribute("loginUser");
 
-        if (commentService.canModify(id, loginUser)) {
-            model.addAttribute("commentId", id);
-            model.addAttribute("articleId", commentService.getArticleId(id));
-            return "comment/delete";
+        if (!commentService.canModify(id, loginUser)) {
+            throw new AuthorizationException("다른 사람의 댓글을 삭제할 수 없습니다!");
         }
 
-        throw new AuthorizationException("다른 사람의 댓글을 삭제할 수 없습니다!");
+        model.addAttribute("commentId", id);
+        model.addAttribute("articleId", commentService.getArticleId(id));
+        return "comment/delete";
     }
 }

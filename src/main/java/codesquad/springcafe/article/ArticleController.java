@@ -6,10 +6,8 @@ import codesquad.springcafe.exception.AuthorizationException;
 import codesquad.springcafe.exception.NotFoundException;
 import codesquad.springcafe.user.DTO.SimpleUserInfo;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -95,24 +93,23 @@ public class ArticleController {
     public String getModifyForm(@PathVariable int id, HttpServletRequest request, Model model) {
         SimpleUserInfo loginUser = (SimpleUserInfo) request.getSession().getAttribute("loginUser");
 
-        if (articleService.canModify(id, loginUser)) {
-            model.addAttribute("articleId", id);
-            return "article/update_form";
+        if (!articleService.canModify(id, loginUser)) {
+            throw new AuthorizationException("다른 사람의 게시글을 수정할 수 없습니다!");
         }
 
-        throw new AuthorizationException("다른 사람의 게시글을 수정할 수 없습니다!");
+        model.addAttribute("articleId", id);
+        return "article/update_form";
     }
 
     @GetMapping("/{id}/delete")
     public String getDeletePage(@PathVariable int id, HttpServletRequest request, Model model) {
         SimpleUserInfo loginUser = (SimpleUserInfo) request.getSession().getAttribute("loginUser");
 
-        if (articleService.canModify(id, loginUser)) {
-            model.addAttribute("articleId", id);
-            System.out.println(id);
-            return "article/delete";
+        if (!articleService.canModify(id, loginUser)) {
+            throw new AuthorizationException("다른 사람의 게시글을 삭제할 수 없습니다!");
         }
 
-        throw new AuthorizationException("다른 사람의 게시글을 삭제할 수 없습니다!");
+        model.addAttribute("articleId", id);
+        return "article/delete";
     }
 }
