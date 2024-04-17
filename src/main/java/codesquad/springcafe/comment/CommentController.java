@@ -80,7 +80,7 @@ public class CommentController {
         if (!commentService.canModify(id, loginUser)) {
             throw new AuthorizationException("다른 사람의 댓글을 수정할 수 없습니다!");
         }
-        
+
         model.addAttribute("commentId", id);
         model.addAttribute("articleId", commentService.getArticleId(id));
         return "comment/form";
