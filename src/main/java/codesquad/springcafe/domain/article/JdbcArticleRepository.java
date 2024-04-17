@@ -28,7 +28,7 @@ public class JdbcArticleRepository implements ArticleRepository {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("writer", article.getWriter());
         parameters.put("title", article.getTitle());
-        parameters.put("content", article.getContents());
+        parameters.put("contents", article.getContents());
         parameters.put("currentTime", article.getContents());
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
