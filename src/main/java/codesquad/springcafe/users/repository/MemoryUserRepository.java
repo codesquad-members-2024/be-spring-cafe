@@ -8,23 +8,33 @@ import codesquad.springcafe.users.model.dto.UserPreviewDto;
 import codesquad.springcafe.users.model.dto.UserUpdateData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
+@Primary
 @Repository
 public class MemoryUserRepository implements UserRepository {
     private static final Logger logger = LoggerFactory.getLogger(MemoryUserRepository.class);
 
+    private final UserDatabase userDatabase;
+
+    @Autowired
+    public MemoryUserRepository(UserDatabase userDatabase) {
+        this.userDatabase = userDatabase;
+    }
+
     @Override
     public void createUser(User user) {
-        UserDatabase.addUser(user);
+        userDatabase.addUser(user);
     }
 
     @Override
     public Optional<ArrayList<UserPreviewDto>> getAllUsers() {
-        ArrayList<User> users = UserDatabase.getAllUsers();
+        ArrayList<User> users = userDatabase.getAllUsers();
         ArrayList<UserPreviewDto> userPreviews = new ArrayList<>();
         for (int i = 0; i < users.size(); i++) {
             User user = users.get(i);
@@ -36,7 +46,7 @@ public class MemoryUserRepository implements UserRepository {
 
     @Override
     public Optional<UserPreviewDto> findUserById(String userId) {
-        User user = UserDatabase.findUserById(userId).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+        User user = userDatabase.findUserById(userId).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
 
         UserPreviewDto userPreviewDto = new UserPreviewDto(user.getUserId(), user.getName(), user.getEmail(), user.getCreationDate().toString());
 
@@ -45,7 +55,7 @@ public class MemoryUserRepository implements UserRepository {
 
     @Override
     public Optional<UserCredentialDto> getUserCredential(String userId) {
-        User user = UserDatabase.findUserById(userId).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다"));
+        User user = userDatabase.findUserById(userId).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다"));
 
         UserCredentialDto userCredentialDto = new UserCredentialDto(user.getSalt(), user.getHashedPassword());
 
@@ -55,7 +65,7 @@ public class MemoryUserRepository implements UserRepository {
 
     @Override
     public void updateUser(String userId, UserUpdateData updateData) {
-        User user = UserDatabase.findUserById(userId).orElseThrow(() -> new UserNotFoundException("유저를 찾을 수 없습니다."));
+        User user = userDatabase.findUserById(userId).orElseThrow(() -> new UserNotFoundException("유저를 찾을 수 없습니다."));
 
         user.updateUser(updateData);
 
