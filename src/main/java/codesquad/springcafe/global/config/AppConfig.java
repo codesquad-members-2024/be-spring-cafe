@@ -1,11 +1,9 @@
 package codesquad.springcafe.global.config;
 
-import codesquad.springcafe.global.filter.CacheControlFilter;
 import codesquad.springcafe.global.interceptor.AfterAuthorizeInterceptor;
 import codesquad.springcafe.global.interceptor.AuthenticationInterceptor;
 import codesquad.springcafe.global.interceptor.CsrfTokenIntercetor;
 import codesquad.springcafe.global.security.PasswordEncoder;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -36,9 +34,7 @@ public class AppConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         // 인증 인터셉터
         registry.addInterceptor(new AuthenticationInterceptor())
-                // TODO: 인증이 필요한 경로 추가
-                .addPathPatterns("/profile/**", "/users/**", "/question/**") // 등록한 경로에 대해 인터셉트
-                .excludePathPatterns("/static/**");    // 제외할 경로 설정
+                .addPathPatterns("/profile/**", "/users/**", "/question/**"); // 등록한 경로에 대해 인터셉트
 
         // CSRF 토큰 인터셉터
         registry.addInterceptor(new CsrfTokenIntercetor())
@@ -46,21 +42,11 @@ public class AppConfig implements WebMvcConfigurer {
 
         // 인가 이후 인터셉터
         registry.addInterceptor(new AfterAuthorizeInterceptor())
-                .addPathPatterns("/login", "/join")
-                .excludePathPatterns("/static/**");
+                .addPathPatterns("/login", "/join");
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new PasswordEncoder();
-    }
-
-    @Bean
-    public FilterRegistrationBean<CacheControlFilter> customFilterRegistration() {
-        FilterRegistrationBean<CacheControlFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new CacheControlFilter());
-        registrationBean.addUrlPatterns("/*"); // 필터가 적용될 URL 패턴 설정
-        registrationBean.setOrder(1); // 필터 순서 설정
-        return registrationBean;
     }
 }

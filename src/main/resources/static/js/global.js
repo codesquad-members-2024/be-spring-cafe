@@ -1,6 +1,5 @@
-window.onload = function() {
-    const forms = document.getElementsByTagName('form');
-    for (let i = 0; i < forms.length; i++) {
-        forms[i].reset();
+window.addEventListener('pageshow', function (event) {
+    if (event.persisted || (window.performance && performance.getEntriesByType("navigation")[0].entryType === 'back_forward')) {
+        location.reload();
     }
-}
+});

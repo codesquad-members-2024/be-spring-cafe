@@ -24,12 +24,21 @@ public class UserController {
 
     // 회원 가입
     @PostMapping("/user")
-    public String join(@Valid @ModelAttribute UserJoinRequest userJoinRequest, Model model,
+    public String join(@Valid @ModelAttribute UserJoinRequest userJoinRequest,
                        HttpSession httpSession) {
         Long userId = userService.join(userJoinRequest);
         setSession(httpSession, userId);
 
-        model.addAttribute("user", userJoinRequest);
+        return "redirect:/welcome";
+    }
+
+    // 환영 페이지 (현재 로그인한 유저에 대한 정보 표시)
+    @GetMapping("/welcome")
+    public String welcome(HttpSession session, Model model) {
+        Long userId = getSessionUserId(session);
+        UserResponse myProfile = userService.getMyProfile(userId);
+
+        model.addAttribute("user", myProfile);
 
         return "/user/registration_success";
     }
