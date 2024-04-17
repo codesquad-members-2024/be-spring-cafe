@@ -1,5 +1,6 @@
 package codesquad.springcafe.user;
 
+import codesquad.springcafe.exception.NotFoundException;
 import codesquad.springcafe.user.DTO.Alert;
 import codesquad.springcafe.user.DTO.SimpleUserInfo;
 import codesquad.springcafe.user.DTO.UserListRes;
@@ -103,7 +104,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String profile(@PathVariable("id") String id, Model model) {
+    public String profile(@PathVariable("id") String id, Model model) throws NotFoundException {
         model.addAttribute("user", userService.getUser(id));
         return "user/profile";
     }

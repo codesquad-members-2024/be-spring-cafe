@@ -1,5 +1,6 @@
 package codesquad.springcafe.user;
 
+import codesquad.springcafe.exception.NotFoundException;
 import codesquad.springcafe.user.DTO.SimpleUserInfo;
 import codesquad.springcafe.user.DTO.UserListRes;
 import codesquad.springcafe.user.repository.UserRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -80,6 +82,8 @@ public class UserService {
      * @return 유저 정보
      */
     public User getUser(String id){
-        return userRepository.findUserById(id);
+        User user = userRepository.findUserById(id);
+        if (user == null) throw new NotFoundException("존재하지 않는 유저입니다!");
+        return user;
     }
 }
