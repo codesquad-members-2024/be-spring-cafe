@@ -35,11 +35,12 @@ public class ArticleController {
 
     // 아티클 등록
     @PostMapping("/article")
-    public String storeArticle(@ModelAttribute ArticleDto articleDto) {
-        final String writer = articleDto.getWriter();
-        final String title = articleDto.getTitle();
-        final String contents = articleDto.getContents();
+    public String storeArticle(@ModelAttribute ArticleFormDto articleFormDto) {
+        final String writer = articleFormDto.getWriter();
+        final String title = articleFormDto.getTitle();
+        final String contents = articleFormDto.getContents();
         final LocalDateTime createAt = LocalDateTime.now();
+
         Article article = new Article(writer, title, contents, createAt);
 
         log.debug("들어온 게시글 : {}", article);
