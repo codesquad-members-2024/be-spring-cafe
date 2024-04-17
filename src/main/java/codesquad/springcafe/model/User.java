@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 public class User {
     private String userId;
+    private String nickname;
     private String password;
     private String email;
     private LocalDateTime registerTime;
@@ -21,6 +22,14 @@ public class User {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getPassword() {

@@ -54,6 +54,7 @@ public class UserController {
     @PutMapping("/users/{userId}/update")
     public String updateProfile(
             @PathVariable String userId,
+            @RequestParam String nickname,
             @RequestParam String email,
             @RequestParam String password,
             Model model) {
@@ -64,7 +65,7 @@ public class UserController {
             model.addAttribute("passwordError", true);
             return "users/updateForm";
         }
-
+        user.setNickname(nickname);
         user.setEmail(email);
         userDatabase.update(user.getUserId(), user);
         return "redirect:/users";
