@@ -16,6 +16,6 @@ public class MainController {
     @GetMapping({"/", "/index.html"})
     public String showRegistrationForm(Model model) {
         model.addAttribute("posts", postService.findAll());
-        return "/index";
+        return "index";
     }
 }
