@@ -26,7 +26,7 @@ public class ArticleController {
 
     @PostMapping("/qna/questions")
     public String qnaCreate(@ModelAttribute Article article) {
-        articleRepository.add(article);
+        articleRepository.save(article);
         return "redirect:/";
     }
 
