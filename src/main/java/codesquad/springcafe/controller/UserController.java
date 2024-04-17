@@ -52,10 +52,11 @@ public class UserController {
 
     @GetMapping("/{userId}/form")
     public String updateForm(@PathVariable String userId, Model model) {
-        model.addAttribute("id", userService.findOne(userId));
+        Optional<User> optionalUser = userService.findOne(userId);
+        optionalUser.ifPresent(user -> model.addAttribute("user", user));
+        model.addAttribute("userId", userId); // userId도 함께 모델에 추가
         return "users/updateForm";
     }
-
 
     @PutMapping("/{userId}/form")
     public String userUpdate(@PathVariable String userId, @ModelAttribute User updatedUser, Model model) {
