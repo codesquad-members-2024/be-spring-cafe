@@ -2,113 +2,131 @@
 
 2024 마스터즈 백엔드 스프링 카페
 
-## step-2 글쓰기 기능 구현
+## step-3 DB에 저장하기
 
 ### ⚒ 기능 구현 목록
 
-- [x] 게시글 작성 기능
-- [x] 작성한 게시글을 조회하는 기능
-- [x] 회원 정보 수정하는 기능
+- [x] H2 DB 연결
+- [x] DB 테이블 생성
+- [x] DB를 통해 게시글 저장, 조회하기
+- [x] DB를 통해 사용자 정보 저장, 조회하기
+- [x] EC2 인스턴스를 사용하여 배포하기
 
-### ✍️ 메소드 convention
-
-| url                               | 기능                              |
-|-----------------------------------|---------------------------------|
-| GET /user/register                | 회원가입 화면 제공                      |
-| POST /user/register               | 새로운 유저 회원가입 진행                  |
-| GET /user/list                    | 전체 회원 리스트 화면 제공                 |
-| GET /user/profile/:userId         | userId에 해당되는 유저의 프로필 화면 제공      |
-| GET /qna                          | 질문을 작성할 수 있는 작성 폼 화면 제공         |
-| POST /qna                         | 새로운 질문 등록                       |
-| GET /article/:articleId           | articleId에 해당되는 질문의 상세 내용 화면 제공 |
-| GET /user/profile/:userId/update  | 회원정보 수정 폼 화면 제공                 |
-| POST /user/profile/:userId/update | 회원정보 수정 요청                      |
+### 🐶 배포 주소 : [🔗](http://54.180.125.197:8080/) (0417~)
 
 ### 🤔 설계 및 고민
 
-#### - 타입이 String이 아닌 시간 객체를 화면에 표시하도록 하려면?
+#### - DB 테이블 설계는 어떻게 할까?
 
-- Dates, temporals를 사용해서 자바의 날짜/시간 관련된 객체를 다룰 수 있다.
-- 기존 Date 클래스는 Dates, 자바8 이후에 도입된 java.time 패키지를 사용하기 위해서는 temporlas를 사용하면 된다.
+- article은 pk의 기능을 할 수 있는 값이 필요하니까 auto increment를 이용해서 id를 따로 만듦
+- user는 userId가 존재하고, 변경할 수 없는 값이기 때문에, pk의 역할을 충분히 할 수 있을 것 같아서 따로 id를 지정하지 않았다.
 
-#### - 에러 핸들러 구현
+#### - article를 DB에 어떻게 저장하고 가져와야 하나?
 
-- 존재하지 않는 질문 목록에 접근하려고 하는 경우 에러 응답을 하도록 구현하고 싶었다.
+- 기존에는 Article 타입을 다루는 임시 DB 역할을 하는 자료구조가 있었고, 거기에 저장을 하고 있었음
+- 글을 저장할 때 기존에는 생성자에 `LocalDateTime.now`를 이용해서 시간을 세팅하도록 했다 &rarr;
+  이때는 Article 객체로 바로 저장되고 또 Article 객체로 바로 꺼내서 사용했기 때문에 별 문제가 없었다.
+- DB를 연결하게 되면서 DB의 내용과 자바 객체를 연결할 필요성이 생겨남. DB에 있는 값은 Article이 아님! 값들을 가져와서 객체로 만들어 주어야만 비로소 Article이 됨
+- 그런데 가져온 정보로 Article을 만들면 time이 또 다시 현재 시간으로 세팅되는 상황이 발생
+- 처음에는 기본 생성자와 setter를 사용해서 Article 내에서 다 처리하도록 했으나..  
+  &rarr; request 요청으로 들어오는 정보는 제목, 글쓴이, 본문 3가지. 따라서 이 3개를 받아와서 저장을 위한 객체를 따로 만들자. 굳이 Article로 만든 다음에 저장할 필요가 없을 것 같다. (
+  DTO)
 
-```java
-
-@ControllerAdvice
-public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(value = {IndexOutOfBoundsException.class, NoSuchElementException.class})
-    private ResponseEntity<Object> handleException(RuntimeException e, WebRequest request) {
-        String bodyOfResponse = "error while register article";
-        return handleExceptionInternal(e, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+```
+// 게시글 db에 저장
+    public void addArticle(RegisterArticle registerArticle) {
+        jdbcTemplate.update("INSERT INTO Articles (writer, title, contents, time) VALUES (?,?,?,?)",
+                registerArticle.getWriter(), registerArticle.getTitle(), registerArticle.getContents(), registerArticle.getTime());
     }
 }
 ```
 
-- 전역에서 예외를 관리할 수 있도록 @ControllerAdvice를 사용했고, ResponseEntityExceptionHandler과 handleExceptionInternal를 통해 우선 구현했는데
-  찾아보니 이는 ResponseEntity을 활용해서 세밀하게 지정해서 응답을 줄 수 있는 것에 장점이 있는 것으로 이해했다. (@ResponseBody로 직접 body 내용을 주는 느낌으로)
-- 하지만 내가 지금 원하는 것은 단순히 특정 페이지로 리다이렉트하도록 응답을 보내는 것. 따라서 이 방법과는 다른 방법을 찾아보게 되었다.
+#### - 로그를 찍고 싶다..! [🔗](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jdbc/core/simple/SimpleJdbcInsert.html)
 
-```java
+- 저장하면서 로그로 저장되었다는 정보를 표시하고 싶은데, 위와 같이 구현할 경우 방금 저장된 Article을 다시 가져오기가 어려웠다.
+- SimpleJdbcInsert라는 클래스를 알게 되어 해당 클래스를 사용하도록 코드를 수정해보았다.
+- SimpleJdbcInsert
+    - DB 테이블에 INSERT하는 간단한 기능을 제공하는 클래스
+    - INSERT문의 작성에 필요한 정보 메타데이터를 처리해준다.
+    - 테이블 이름, 컬럼 이름, 컬럼 값이 저장되어 있는 Map으로 사용할 수 있음
+  ```
+      public void add(Article article) {
+        // SimpleJdbcInsert를 생성하고, insert할 테이블명과 자동으로 키가 생성되는 컬럼의 이름을 지정
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("Articles")
+                .usingGeneratedKeyColumns("id");
+        
+        // map에 insert할 값들을 세팅
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("writer", article.getWriter());
+        parameters.put("title", article.getTitle());
+        parameters.put("contents", article.getContents());
+        parameters.put("time", article.getTime());
 
-@ControllerAdvice
-public class ResponseExceptionHandler {
-    @ExceptionHandler(value = {IndexOutOfBoundsException.class, NoSuchElementException.class})
-    private ModelAndView handleException() {
-        ModelAndView modelAndView = new ModelAndView("exception/badrequest");
-        modelAndView.setStatus(HttpStatus.BAD_REQUEST);
-        return modelAndView;
+        // executeAndReturnKey 메서드를 통해, 실행 후 아까 지정한 id 컬럼을 가져온다
+        Long key = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+        article.setId(key);
     }
-}
-```
+  ```
+- 이제 저장된 Article이 무엇인지 알 수 있게 되었다.
+- 추가로 Map 자료구조 대신 SqlParameterSource 인터페이스 구현체를 이용해서 값을 넘겨줄 수도 있다.
+    - MapSqlParameterSource &rarr; addValue 메서드 체이닝으로 Map의 put처럼 값을 추가한다.
+    - BeanPropertySqlParameterSource &rarr; bean 객체로부터 파라미터 값을 바로 가져온다.
 
-- ModelAndView 객체를 이용해서 View로 응답할 수 있도록 했다. 이를 통해서 특정 예외가 들어왔을 때, 내가 원하는 페이지를 보여줄 수 있게 되었다.
-- 사실 기본적으로 스프링부트에서 예외 처리를 해주는 부분이 있는데, 그래서 Whitelabel Error Page가 뜨는
-  것! [링크](https://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/mvc.html#mvc-ann-rest-spring-mvc-exceptions)
-- 이를 error/404.html 파일을 만들어서 해당 페이지를 보여주도록 임시로 설정해 두었다.
+#### - 기존 DB 역할 클래스와 H2를 바꿔서 연결해도 정상적으로 바로 동작하도록 하고 싶다.
 
-#### - 회원 정보의 수정을 위해 비밀번호를 비교하는 부분을 어디서 처리하는게 좋을까?
-
-1. User객체에서 get으로 Password를 가져와서 처리한다  
-&rarr; 비밀번호 내용을 외부에서 가져와서 처리하는 것이 안전하지 않다는 생각이 든다.
-그치만 User는 데이터를 담는 구조 클래스라는 느낌이 강해서 안에 비교 로직을 넣는 것이 괜찮을까 하는 생각
-2. User에게 검증할 password를 넘겨주고 기존 password와 비교하라고 시킨다  
-&rarr; 하지만 그래도 해당 멤버변수를 가진 객체가 비교하는 것이 더 좋을 것 같아서 이렇게 구현하였다.
-
-#### - 회원 정보를 수정할 때 어떤 식으로 User 객체의 값을 수정할 것인가?
-- User에서 name, email, password 변수를 변경해야 함
-- 이를 위해 멤버변수를 변경하기 위한 setter를 개별로 만들까를 고민했으나 로직 상 3개의 멤버변수가 항상 한꺼번에 변경되기 때문에 굳이 개별이 필요하지 않을 것이라고 생각하였다.  
-&rarr; 하나의 메서드만으로 한꺼번에 변경하도록 구현
-- but 기존 객체에서 수정 말고 아예 새롭게 User를 만들게 할 수도 있을 것 같다.
-
-### 메서드 컨벤션 변경
-
-- 메서드 url이 좀 더 구체적으로 기능을 나타낼 수 있도록 컨벤션을 변경해 보았다.
-- API가 없는 단순 html으로 응답하는 경우 뒤에 파일명.html 이렇게 표기하도록 해야 할까 고민이 있었으나 일단 보류..!  
-&rarr; 호눅스 리뷰 질문 관련
+- Repository 어노테이션이 여러 개 존재하는 상황에서 Primary 어노테이션을 이용해서 원한다면 바로바로 DB를 갈아끼우고 싶다..
+- 인터페이스를 활용해서 각 도메인에 해당하는 Repository를 만들었고, 또 각각 H2 데이터베이스와 기존 DB 클래스와 연결되는 Repository 구현체를 만들었다.
+- Primary 어노테이션을 이용하면 spring이 해당 Repository를 찾아 데이터를 저장해 줄 것이다.
 
 ### 📚 학습 중
 
-#### thymeleaf 문법
+#### - thmyleaf
 
-- 시간 포맷을 원하는 대로 표기하고 싶다  
-  &rarr; `th:text="${#temporals.format(article.time, 'yyyy-MM-dd HH:mm')}"` temporals 이용해서 구현
-- 사용자 정보를 바꿀 때, 비밀번호를 틀리는 경우 나머지 입력한 값은 유지하고 싶다  
-  &rarr; `th:value="${userEdit != null ? userEdit.email : ''}"` 삼항연산자 이용해서 구현
+- 타임리프에서 객체의 프로퍼티에 접근할 때 메서드호출 방법, 프로퍼티 바로접근이 있는데 바로접근 방식 권장
 
-#### 스프링 에러 처리 대략적 개요 [🔗](https://www.baeldung.com/exception-handling-for-rest-with-spring)
+#### - JdbcTemplate [🔗](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jdbc/core/JdbcTemplate.html)
 
-- @ExceptionHandler만을 사용하는 경우 문제 &rarr; 컨트롤러 내부에 어노테이션을 붙여서 에러 처리하는 메서드를 구현하게 되는데, 이는 해당 컨트롤러에서 발생하는 예외만 처리 가능함. 즉 전체
-  어플리케이션 수준에서 관리가 불가능..
-- 더불어 에러를 처리하는 코드와, 컨트롤러 코드가 함께 관리된다는 점도 단점
-- 이 다음으로 HandlerExceptionResolver과 여러 구현체가 등장해서, 전역적으로 예외를 관리 가능하도록 했다.
-- ModelAndView 객체를 이용하여 본문을 만들어 응답하게 되는데 이는 낮은 수준의 HttpServletResponse와 상호 작용한다고 한다. (전통적인 MVC 방식..?)
-- 이는 만약 body 응답을 다양하게 주고 싶은 경우(예를 들어 JSON, XML)에는 대처가 어렵기 때문에, 이에 대응하기 위해 ResponseEntityExceptionHandler이 사용된다.
-- 또한 @ControllerAdvice 이 사용되면서 이제 기존 컨트롤러와 에러를 처리하는 부분이 분리되어 관리될 수 있게 되었다!
+- jdbc는 자바와 데이터베이스를 연결할 수 있도록 하는 api
+    - 이를 통해 어떤 종류의 DB와 연결을 하더라도 DB별로 api를 작성하지 않아도 되며, jdbc 하나의 표준을 이용해서 사용할 수 있게 되었다.
+- 그리고 jdbcTemplate는 말 그대로 이런 jdbc를 잘 사용할 수 있도록 하는 템플릿 역할을 하는 클래스이다.
 
-#### ResponseEntity [🔗](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/ResponseEntity.html)
-- 헤더와 바디 내용을 포함하는 http 요청을 다루는 HttpEntity<T> 클래스의 확장
-- ResponseEntity는 HttpStatusCode 정보를 포함한다. 그렇기 때문에 http 응답을 처리하는 데 좀 더 특화되어 있음
-#### DispatcherServlet [🔗](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html)
+#### - queryForObject
+
+- 단일 결과 행을 반환하는 sql 쿼리를 실행한 결과를 자바 객체로 매핑하는 메서드
+
+```
+// 전체 게시글의 수를 가져와서 Integer 객체로 매핑하는 메서드
+public Integer getCountOfArticle() {
+    String sql = "SELECT COUNT(*) FROM Articles";
+    return jdbcTemplate.queryForObject(sql, Integer.class);
+}
+```
+
+- 단일 컬럼일 경우에는 위와 같이 바로 매핑이 가능하지만, 컬럼이 여러개일 경우에는 RowMapper를 이용하여 매핑을 진행해야 한다.
+
+```
+    public User getUser(String id) {
+        final String SELECT_USER = "SELECT * FROM USERS WHERE userId= ?";
+        return jdbcTemplate.queryForObject(SELECT_USER, userRowMapper, id);
+    }
+```
+
+#### - RowMapper [🔗](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jdbc/core/RowMapper.html)
+
+- DB의 레코드 값들을 자바 객체로 매핑하도록 하는 역할을 하는 인터페이스
+
+```
+    private final RowMapper<User> userRowMapper = (resultSet, rowNum) -> {
+        User user = new User(
+                resultSet.getString("userId"),
+                resultSet.getString("name"),
+                resultSet.getString("email"),
+                resultSet.getString("password")
+        );
+        return user;
+    };
+```
+
+- resultSet을 이용해 컬럼의 값을 가져와서 User를 만드는 것을 확인할 수 있다.
+- 람다를 이용해 RowMapper를 구현하여 사용해 보았다.
