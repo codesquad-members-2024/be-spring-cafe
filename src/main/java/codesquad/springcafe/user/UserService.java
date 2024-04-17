@@ -28,12 +28,6 @@ public class UserService {
     }
 
     public void updateUser(String userId, User user) {
-        User findUser = findByUserId(userId);
-        findUser.setPassword(user.getPassword());
-        findUser.setName(user.getName());
-        findUser.setEmail(user.getEmail());
-    }
-    public boolean checkCurrentPassword(User user, String currentPassword) {
-        return currentPassword.equals(user.getPassword());
+        userRepository.updateUser(user,userId);
     }
 }
