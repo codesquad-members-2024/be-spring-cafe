@@ -33,8 +33,16 @@ class UserControllerTest {
 
     @BeforeEach
     void setUp(){
-        User user1 = new User("test1@email.com", "test1", "password1");
-        User user2 = new User("test2@email.com", "test2", "password2");
+        User user1 = new User();
+        user1.setUserId("test1");
+        user1.setEmail("test1@email.com");
+        user1.setPassword("password1");
+
+        User user2 = new User();
+        user2.setUserId("test2");
+        user2.setEmail("test2@email.com");
+        user2.setPassword("password2");
+
         List<User> users = Arrays.asList(user1, user2);
 
         willDoNothing().given(userDatabase).addUser(any(User.class));
