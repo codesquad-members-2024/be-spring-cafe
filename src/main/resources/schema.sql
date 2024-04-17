@@ -1,0 +1,19 @@
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS articles;
+
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    userId VARCHAR(50) NOT NULL,
+    password VARCHAR(50) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    registerTime TIMESTAMP NOT NULL
+);
+
+
+CREATE TABLE articles (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    writer VARCHAR(50) NOT NULL,
+    title VARCHAR(50) NOT NULL,
+    publishTime TIMESTAMP NOT NULL,
+    content VARCHAR(255) NOT NULL
+);
