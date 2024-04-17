@@ -73,7 +73,7 @@ public class ArticleController {
      * 사용자가 요청한 id의 아티클을 조회수를 올리고 렌더링하여 보여줍니다. 일치하는 id가 데이터베이스에 존재하지 않는다면 홈으로 리다이렉트합니다.
      */
     @GetMapping("/detail/{id}")
-    public String viewArticle(@PathVariable Long id, Model model, HttpSession session) {
+    public String viewArticle(@PathVariable Long id, Model model) {
         Optional<Article> optionalArticle = articleDatabase.findBy(id);
         if (optionalArticle.isEmpty()) {
             return "redirect:/";
@@ -82,14 +82,9 @@ public class ArticleController {
         article.increaseViews();
         articleDatabase.update(article);
 
+        model.addAttribute("commentWriteForm", new CommentWriteForm(""));
         model.addAttribute("article", article);
         model.addAttribute("comments", commentDatabase.findAll(id));
-        model.addAttribute("commentWriteForm", new CommentWriteForm(""));
-
-        User loginUser = LoginUserProvider.provide(session);
-        if (loginUser.hasSameNickname(article.getWriter())) {
-            model.addAttribute("isLoginUser", true);
-        }
 
         return "article/show";
     }
@@ -134,13 +129,15 @@ public class ArticleController {
     }
 
     /**
-     * id와 일치하는 게시글을 찾고 로그인한 유저의 비밀번호와 사용자가 입력한 비밀번호가 동일하면 게시글을 삭제합니다.
+     * id와 일치하는 게시글을 찾고 로그인한 유저의 비밀번호와 사용자가 입력한 비밀번호가 동일하면 게시글을 삭제합니다. 게시물의 작성자와 다른 유저가 작성한 코멘트가 존재할 경우 게시물을 삭제할 수
+     * 없습니다.
      */
     @DeleteMapping("/delete/{id}")
     public String deleteArticle(@PathVariable Long id, @Validated @ModelAttribute ArticleDeleteForm articleDeleteForm,
                                 BindingResult bindingResult, HttpSession session) {
         Article targetArticle = articleDatabase.findBy(id).get();
         validatePassword(articleDeleteForm, bindingResult, session);
+        validateHasComment(bindingResult, targetArticle);
 
         if (bindingResult.hasErrors()) {
             logger.error("errors={}", bindingResult);
@@ -153,36 +150,38 @@ public class ArticleController {
         return "redirect:/articles/detail/" + id;
     }
 
+    /**
+     * 코멘트를 작성합니다. 게시글이 존재하지 않으면 홈으로 리다이렉트하고 댓글 폼에서 에러가 발생하면 게시물 상세 조회 페이지로 리다이렉트합니다.
+     */
     @PostMapping("/detail/{articleId}/comments")
     public String writeComment(@PathVariable Long articleId,
                                @Validated @ModelAttribute CommentWriteForm commentWriteForm,
                                BindingResult bindingResult, Model model,
                                HttpSession session) {
         Optional<Article> optionalArticle = articleDatabase.findBy(articleId);
-        System.out.println("commentWriteForm = " + commentWriteForm.getContent());
         if (optionalArticle.isEmpty()) {
             return "redirect:/";
         }
         Article article = optionalArticle.get();
-        User loginUser = LoginUserProvider.provide(session);
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("article", article);
             model.addAttribute("comments", commentDatabase.findAll(articleId));
-            if (loginUser.hasSameNickname(article.getWriter())) {
-                model.addAttribute("isLoginUser", true);
-            }
             return "article/show";
         }
-
+        User loginUser = LoginUserProvider.provide(session);
         Comment comment = new Comment(loginUser.getNickname(), commentWriteForm.getContent(), articleId,
                 LocalDateTime.now());
+
         commentDatabase.add(comment);
         logger.info("새로운 코멘트가 추가되었습니다. {}", comment);
 
         return "redirect:/articles/detail/" + articleId;
     }
 
+    /**
+     * 코멘트를 삭제합니다. 아티클 id나 코멘트 id가 유효하지 않으면 홈으로 이동합니다. 로그인 유저가 아닌 사용자가 요청을 보낼 경우 403 응답을 내보냅니다.
+     */
     @DeleteMapping("/detail/{articleId}/comments/{id}")
     public String deleteComment(@PathVariable Long articleId, @PathVariable Long id, HttpSession session,
                                 HttpServletResponse response) throws IOException {
@@ -211,5 +210,18 @@ public class ArticleController {
         if (!user.hasSamePassword(articleDeleteForm.getPassword())) {
             bindingResult.rejectValue("password", "Wrong");
         }
+    }
+
+    private void validateHasComment(BindingResult bindingResult, Article targetArticle) {
+        if (hasComment(targetArticle)) {
+            bindingResult.reject("HasComment");
+        }
+    }
+
+    private boolean hasComment(Article targetArticle) {
+        String articleWriter = targetArticle.getWriter();
+        return commentDatabase.findAll(targetArticle.getId())
+                .stream()
+                .anyMatch(comment -> !comment.getWriter().equals(articleWriter)); // 게시물의 작성자가 아닌 다른 유저가 쓴 댓글이 존재하는지 확인
     }
 }

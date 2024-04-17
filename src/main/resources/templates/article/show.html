@@ -87,7 +87,7 @@
                             </div>
                         </div>
                     </div>
-                    <ul th:if="${isLoginUser}" class="actions">
+                    <ul th:if="${article.writer == loginUser.nickname}" class="actions">
                         <li><a th:href="@{/articles/edit/{id}(id=*{id})}" class="black-component"
                                role="button">수정하기</a></li>
                         <li><a th:href="@{/articles/delete/{id}(id=*{id})}"
