@@ -18,8 +18,8 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Article findBySequence(int sequence) {
-        return articles.get(sequence - 1);
+    public Article findById(Long id) {
+        return articles.get((int) (id - 1));
     }
 
     @Override

@@ -42,9 +42,9 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{sequence}")
-    public String articleDetails(@PathVariable int sequence, Model model) {
+    public String articleDetails(@PathVariable Long sequence, Model model) {
         model.addAttribute("nlString", System.lineSeparator());
-        model.addAttribute("article", articleService.findBySequence(sequence));
+        model.addAttribute("article", articleService.findById(sequence));
         return "qna/show";
     }
 

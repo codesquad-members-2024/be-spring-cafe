@@ -25,8 +25,8 @@ public class ArticleService {
         ));
     }
 
-    public Article findBySequence(int sequence) {
-        return articleRepository.findBySequence(sequence);
+    public Article findById(Long id) {
+        return articleRepository.findById(id);
     }
 
     public List<Article> getArticles() {

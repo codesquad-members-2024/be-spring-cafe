@@ -5,6 +5,6 @@ import java.util.List;
 public interface ArticleRepository {
 
     void save(Article article);
-    Article findBySequence(int sequence);
+    Article findById(Long id);
     List<Article> findAll();
 }
