@@ -1,0 +1,30 @@
+package codesquad.springcafe;
+
+import codesquad.springcafe.db.ArticleDatabase;
+import codesquad.springcafe.db.MemoryArticleDatabase;
+import codesquad.springcafe.db.MemoryUserDatabase;
+import codesquad.springcafe.db.UserDatabase;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import javax.sql.DataSource;
+
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+    private final DataSource dataSource;
+
+    public WebConfig(DataSource dataSource){
+        this.dataSource = dataSource;
+    }
+
+    @Bean
+    public UserDatabase userDatabase() {
+        return new MemoryUserDatabase();
+    }
+
+    @Bean
+    public ArticleDatabase articleDatabase() {
+        return new MemoryArticleDatabase();
+    }
+}
