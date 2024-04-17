@@ -73,6 +73,3 @@ public class ArticleController {
         return "qna/show";
     }
 }
-
-// @ModelAttribute, Model 인터페이스, @PathVariable 정리
-// 각각 어떤 역할을 하고, view 랑 어떤 연관이 있는지.
