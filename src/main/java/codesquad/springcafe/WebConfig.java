@@ -11,7 +11,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor())
-            .addPathPatterns("/user/**")
-            .excludePathPatterns("/user/login", "/user/form", "/user/create");
+            .addPathPatterns("/**")
+            .excludePathPatterns("/", "/user/login", "/user/form", "user/create", "/css/**",
+                "/js/**", "/img/**", "/*.ico", "/fonts/**");
+
     }
+
+
 }
