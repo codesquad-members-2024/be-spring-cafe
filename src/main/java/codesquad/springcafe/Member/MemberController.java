@@ -17,7 +17,7 @@ public class MemberController {
         this.memberRepository = memberRepository;
     }
 
-    @PostMapping("/user")
+    @PostMapping("/user/add")
     public String register(Member member) {
         memberRepository.addMember(member);
         return "redirect:/users";
@@ -29,7 +29,7 @@ public class MemberController {
         model.addAttribute("users", members);
         return "user/list";
     }
-
+    
     @GetMapping("/users/{userId}")
     public String showProfile(Model model, @PathVariable("userId") String memberId) {
         Optional<Member> optionalMember = memberRepository.getMember(memberId);

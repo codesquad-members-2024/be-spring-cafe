@@ -14,21 +14,25 @@ public class ArticleRepository {
     private static final List<Article> articles = new ArrayList<>();
     private static final Logger logger = LoggerFactory.getLogger(ArticleRepository.class);
 
-    public void add(Article article) {
-        String sequence = String.valueOf(articles.size() + 1);
-        article.setId(sequence);
+    public Article add(Article article) {
         articles.add(article);
         logger.info("Added Article:{}", article);
+        return article;
     }
 
     public List<Article> findAll() {
-        return Collections.unmodifiableList(articles);
+        return articles;
     }
 
-    public Optional<Article> findById(String articleId) {
-        return articles.stream()
-                .filter(article -> article.getId().equals(articleId))
-                .findAny();
+    public Optional<Article> findByIndex(int number) {
+        int index = number - 1;
+        if(index >=0 && index < articles.size()){
+            return Optional.of(articles.get(index));
+        } else{
+            return Optional.empty();
+        }
     }
+
+    public int articleSize(){return articles.size();}
 
 }
