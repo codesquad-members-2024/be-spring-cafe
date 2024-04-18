@@ -31,9 +31,9 @@ public class H2UserDatabase implements UserDatabase{
                 rs.getString("user_password"));
     }
 
+    @Override
     public void saveUser(User user) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-//        jdbcInsert.withTableName("users").usingGeneratedKeyColumns("user_id");
         jdbcInsert.withTableName("users");
 
         Map<String, Object> parameters = new HashMap<>();
@@ -63,15 +63,18 @@ public class H2UserDatabase implements UserDatabase{
         }
     }
 
+    @Override
     public List<User> getAllUsers() {
         return jdbcTemplate.query("select * from users", userRowMapper());
     }
 
+    @Override
     public Optional<User> getUserById(String userId) { // userId로 회원 찾기
         List<User> userList = jdbcTemplate.query("select * from users where user_id = ?", userRowMapper(), userId);
         return Optional.ofNullable(userList.get(0));
     }
 
+    @Override
     public int getUsersSize() {
         Integer size = jdbcTemplate.queryForObject("select count(*) from users", Integer.class);
         return size != null ? size : 0;

@@ -1,15 +1,14 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.DB.ArticleDatabase;
-import codesquad.springcafe.DB.MemoryArticleDatabase;
-import codesquad.springcafe.DB.UserDatabase;
 import codesquad.springcafe.domain.Article;
+import codesquad.springcafe.dto.ArticleCreateDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +21,7 @@ public class ArticleController {
     private final ArticleDatabase articleDatabase;
 
     @Autowired
-    public ArticleController(@Qualifier("MemoryArticleDatabase") ArticleDatabase articleDatabase) {
+    public ArticleController(@Qualifier("H2ArticleDatabase") ArticleDatabase articleDatabase) {
         this.articleDatabase = articleDatabase;
     }
 
@@ -34,11 +33,11 @@ public class ArticleController {
     }
 
     @PostMapping("/article")
-    // @ModelAttribute 어노테이션 을 통해 Post body를 파싱해 article 객체로 반환한다.
-    public String saveArticle(@ModelAttribute Article article, Model model) {
-        article.setId(Integer.toString(articleDatabase.getArticleSize()+1)); // article id 설정
-        articleDatabase.saveArticle(article);
-        logger.debug("new article: " + article.toString());
+    // @ModelAttribute 어노테이션 을 통해 Post body를 파싱해 articleCreateDto 객체로 반환한다.
+    public String saveArticle(@ModelAttribute ArticleCreateDto articleCreateDto) {
+        Article newArticle = articleCreateDto.makeArticle(); // dto Article로 변환
+        articleDatabase.saveArticle(newArticle);
+        logger.debug("new article: " + newArticle.toString());
 
         // article를 저장 후 main 페이지로 redirect
         return "redirect:/main";
@@ -46,7 +45,7 @@ public class ArticleController {
 
     // 게시글 상세 페이지
     @GetMapping("/article/{id}")
-    public String showArticle(@PathVariable Integer id, Model model) {
+    public String showArticle(@PathVariable int id, Model model) {
         if (articleDatabase.isArticleEmpty()){
             return "redirect:/main";
         }

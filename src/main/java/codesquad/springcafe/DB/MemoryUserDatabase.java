@@ -14,10 +14,12 @@ import java.util.Optional;
 public class MemoryUserDatabase implements UserDatabase{
     private final List<User> users = new ArrayList<>();
 
+    @Override
     public void saveUser(User user) {
         users.add(user);
     }
 
+    @Override
     public void updateUser(String id, UpdatedUser updatedUser) {
         Optional<User> userOptional = getUserById(id);
         if (userOptional.isPresent()) {
@@ -28,16 +30,19 @@ public class MemoryUserDatabase implements UserDatabase{
         }
     }
 
+    @Override
     public List<User> getAllUsers() {
         return users;
     }
 
+    @Override
     public Optional<User> getUserById(String id) {
         return users.stream()
                 .filter(user -> user.getId().equals(id))
                 .findFirst();
     }
 
+    @Override
     public int getUsersSize(){
         return users.size();
     }
