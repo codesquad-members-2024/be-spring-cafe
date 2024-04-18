@@ -73,7 +73,12 @@ public class UserController {
 
         session.setAttribute(SESSION_LOGIN, loginUser);
 
-        return "redirect:/";
+        String go = (String) session.getAttribute(LOGIN_AFTER_REDIRECT);
+        if (go == null) return "redirect:/";
+
+        session.removeAttribute(LOGIN_AFTER_REDIRECT);
+
+        return "redirect:" + go;
     }
 
     @GetMapping("/logout")

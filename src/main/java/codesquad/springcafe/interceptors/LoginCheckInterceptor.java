@@ -1,6 +1,5 @@
 package codesquad.springcafe.interceptors;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -19,6 +18,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
         if (loginUser != null) return true;
 
+        session.setAttribute(LOGIN_AFTER_REDIRECT, request.getRequestURI());
         response.sendRedirect("/user/login.html");
         return false;
     }
