@@ -1,6 +1,8 @@
 package codesquad.springcafe.article;
 
 import codesquad.springcafe.article.database.ArticleDatabase;
+import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/article")
 public class ArticleController {
 
-    ArticleDatabase articleDatabase;
+    private final Logger log = org.slf4j.LoggerFactory.getLogger(ArticleController.class);
+    private final ArticleDatabase articleDatabase;
 
     public ArticleController(ArticleDatabase articleDatabase) {
         this.articleDatabase = articleDatabase;
@@ -23,9 +26,10 @@ public class ArticleController {
         return "article/form";
     }
 
-    @PostMapping("/create")
-    public String createArticle(ArticleCreateDto articleCreateDto) {
+    @PostMapping("/form")
+    public String createArticle(ArticleCreateDto articleCreateDto, HttpServletRequest request) {
         articleDatabase.save(articleCreateDto.toEntity());
+        log.info(request.getSession().getAttribute("nickname") + " created article");
         return "redirect:/";
     }
 
