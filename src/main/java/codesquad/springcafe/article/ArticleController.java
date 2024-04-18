@@ -1,5 +1,6 @@
 package codesquad.springcafe.article;
 
+import codesquad.springcafe.article.database.ArticleDatabase;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,6 @@ public class ArticleController {
         this.articleDatabase = articleDatabase;
     }
 
-
     @GetMapping("/form")
     public String articleForm() {
         return "article/form";
@@ -25,7 +25,7 @@ public class ArticleController {
 
     @PostMapping("/create")
     public String createArticle(ArticleCreateDto articleCreateDto) {
-        articleDatabase.saveArticle(articleCreateDto.toEntity());
+        articleDatabase.save(articleCreateDto.toEntity());
         return "redirect:/";
     }
 

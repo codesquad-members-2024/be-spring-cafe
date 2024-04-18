@@ -14,7 +14,7 @@ public class ArticleCreateDto {
 
     public Article toEntity() {
         return new ArticleBuilder().author(author).title(title)
-            .content(contents).build();
+            .contents(contents).build();
     }
 
     public String getTitle() {

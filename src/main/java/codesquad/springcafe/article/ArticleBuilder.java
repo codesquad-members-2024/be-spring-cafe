@@ -5,7 +5,7 @@ public class ArticleBuilder {
     private long articleId;
     private String author;
     private String title;
-    private String content;
+    private String contents;
 
     public ArticleBuilder articleId(long articleId) {
         this.articleId = articleId;
@@ -22,13 +22,13 @@ public class ArticleBuilder {
         return this;
     }
 
-    public ArticleBuilder content(String content) {
-        this.content = content;
+    public ArticleBuilder contents(String contents) {
+        this.contents = contents;
         return this;
     }
 
     public Article build() {
-        return new Article(title, author, content);
+        return new Article(articleId, title, author, contents);
     }
 
 }

@@ -2,20 +2,21 @@ package codesquad.springcafe.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import codesquad.springcafe.user.database.UserInMemoryDatabase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class UserDatabaseTest {
+class UserInMemoryDatabaseTest {
 
     @Autowired
-    UserDatabase userDatabase;
+    UserInMemoryDatabase userInMemoryDatabase;
 
     @AfterEach
     void resetDB() {
-        userDatabase.clear();
+        userInMemoryDatabase.clear();
     }
 
     @Test
@@ -27,8 +28,8 @@ class UserDatabaseTest {
             .password("password")
             .build();
 
-        userDatabase.save(user);
-        assertThat(userDatabase.findAll()).hasSize(1);
+        userInMemoryDatabase.save(user);
+        assertThat(userInMemoryDatabase.findAll()).hasSize(1);
     }
 
     @Test
@@ -46,8 +47,8 @@ class UserDatabaseTest {
             .password("password2")
             .build();
 
-        userDatabase.save(user1);
-        userDatabase.save(user2);
-        assertThat(userDatabase.findAll()).hasSize(2);
+        userInMemoryDatabase.save(user1);
+        userInMemoryDatabase.save(user2);
+        assertThat(userInMemoryDatabase.findAll()).hasSize(2);
     }
 }

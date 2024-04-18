@@ -1,5 +1,6 @@
 package codesquad.springcafe.user;
 
+import codesquad.springcafe.user.database.UserDatabase;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,7 +61,7 @@ public class UserController {
         if (foundUser.checkPassword(userUpdateDto.getPassword())) {
             User updatedUser = new User(userId, userUpdateDto.getEmail(),
                 userUpdateDto.getNickname(), userUpdateDto.getPassword());
-            userDatabase.updateUser(updatedUser, userId);
+            userDatabase.update(updatedUser, userId);
         } else {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }

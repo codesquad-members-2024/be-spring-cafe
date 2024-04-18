@@ -36,4 +36,10 @@ public class User {
         return PasswordEncryptor.match(password, this.password);
     }
 
+    public void update(User user) {
+        this.email = user.email;
+        this.nickname = user.nickname;
+        this.password = user.password;
+    }
+
 }

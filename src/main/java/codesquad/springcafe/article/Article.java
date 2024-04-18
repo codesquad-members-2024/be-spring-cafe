@@ -2,12 +2,13 @@ package codesquad.springcafe.article;
 
 public class Article {
 
-    private long articleId = -1;
+    private Long articleId;
     private String title;
     private String author;
     private String contents;
 
-    public Article(String title, String author, String contents) {
+    public Article(Long articleId, String title, String author, String contents) {
+        this.articleId = articleId;
         this.title = title;
         this.author = author;
         this.contents = contents;
@@ -31,5 +32,17 @@ public class Article {
 
     public void setArticleId(long articleId) {
         this.articleId = articleId;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setContents(String contents) {
+        this.contents = contents;
     }
 }
