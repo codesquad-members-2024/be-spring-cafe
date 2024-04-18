@@ -30,10 +30,6 @@ public class QuestionRepositoryLocal implements QuestionRepository{
         return questions.values();
     }
 
-    public Long countAll() {
-        return sequence.get();
-    }
-
     public void deleteAll() {
         questions.clear();
     }

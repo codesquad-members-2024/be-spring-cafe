@@ -10,7 +10,5 @@ public interface BasicRepository<T, ID> {
 
     Collection<T> findAll();
 
-    Long countAll();
-
     void deleteAll();
 }

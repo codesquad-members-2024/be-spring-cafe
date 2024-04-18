@@ -44,10 +44,6 @@ public class UserRepositoryLocal implements UserRepository{
         return users.values();
     }
 
-    public Long countAll() {
-        return sequence.get();
-    }
-
     public void deleteAll() {
         users.clear();
     }
