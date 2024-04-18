@@ -2,7 +2,7 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.domain.UpdatedUser;
-import codesquad.springcafe.DB.UserDatabase;
+import codesquad.springcafe.database.user.UserDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

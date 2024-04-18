@@ -1,4 +1,4 @@
-package codesquad.springcafe.DB;
+package codesquad.springcafe.database.user;
 
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.domain.UpdatedUser;

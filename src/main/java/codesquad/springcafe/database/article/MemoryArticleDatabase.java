@@ -1,5 +1,6 @@
-package codesquad.springcafe.DB;
+package codesquad.springcafe.database.article;
 
+import codesquad.springcafe.database.article.ArticleDatabase;
 import codesquad.springcafe.domain.Article;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 
 @Component
 @Qualifier("MemoryArticleDatabase")
-public class MemoryArticleDatabase implements ArticleDatabase{
+public class MemoryArticleDatabase implements ArticleDatabase {
     private final List<Article> articles = new ArrayList<>();
 
     @Override

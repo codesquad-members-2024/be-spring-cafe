@@ -1,5 +1,6 @@
-package codesquad.springcafe.DB;
+package codesquad.springcafe.database.article;
 
+import codesquad.springcafe.database.article.ArticleDatabase;
 import codesquad.springcafe.domain.Article;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 @Component
 @Qualifier("H2ArticleDatabase")
-public class H2ArticleDatabase implements ArticleDatabase{
+public class H2ArticleDatabase implements ArticleDatabase {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
