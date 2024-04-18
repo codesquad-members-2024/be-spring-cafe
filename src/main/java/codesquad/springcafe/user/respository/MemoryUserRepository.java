@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
@@ -30,5 +31,16 @@ public class MemoryUserRepository implements UserRepository{
         if (user == null) throw new NoSuchUserException();
 
         return user;
+    }
+
+    @Override
+    public User findById(String id) throws NoSuchUserException {
+        Optional<User> optionalUser =
+                userDB.values().stream()
+                        .filter(user -> user.getUserId().equals(id))
+                        .findFirst();
+        if (optionalUser.isEmpty()) throw new NoSuchUserException();
+
+        return optionalUser.get();
     }
 }

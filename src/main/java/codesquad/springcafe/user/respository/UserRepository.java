@@ -12,4 +12,6 @@ public interface UserRepository {
 
     User findByName(String name) throws NoSuchUserException;
 
+    User findById(String id) throws NoSuchUserException;
+
 }

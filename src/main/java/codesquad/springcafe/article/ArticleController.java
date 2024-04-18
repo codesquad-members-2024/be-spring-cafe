@@ -2,6 +2,7 @@ package codesquad.springcafe.article;
 
 import codesquad.springcafe.article.domain.Article;
 import codesquad.springcafe.article.repository.ArticleRepository;
+import codesquad.springcafe.article.service.ArticleService;
 import codesquad.springcafe.exceptions.NoSuchArticleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,28 +13,23 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/article")
 public class ArticleController {
 
-    private final ArticleRepository articleRepository;
+    private final ArticleService articleService;
 
     @Autowired
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
     @PostMapping("/create")
     public String createArticle(Model model, @ModelAttribute Article article) {
-        articleRepository.add(article);
+        articleService.addArticle(article);
 
         return "redirect:/";
     }
 
     @GetMapping("/show/{articleId}")
-    public String showArticle(Model model, @PathVariable String articleId) {
-        Article article;
-        try {
-            article = articleRepository.getArticle(articleId);
-        } catch (NoSuchArticleException noArticle) {
-            return "redirect:/article/no_article.html";
-        }
+    public String showArticle(Model model, @PathVariable String articleId) throws NoSuchArticleException{
+        Article article = articleService.getArticle(articleId);
 
         model.addAttribute("article", article);
 
