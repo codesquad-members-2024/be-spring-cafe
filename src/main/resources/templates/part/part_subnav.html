@@ -22,16 +22,17 @@
             <ul class="nav navbar-nav navbar-right">
                 {{#loginUserId}}
                     {{loginUserId}} 님, 환영합니다!!
+                    <li><a href="#" role="button">개인정보수정</a></li>
+                    <form action="/user/logout" method="post">
+                        <button type="submit" class="btn btn-success clearfix pull-right">로그아웃</button>
+                    </form>
                 {{/loginUserId}}
                 {{^loginUserId}}
                     로그인하지 않은 유저
+                    <li><a href="/login" role="button">로그인</a></li>
+                    <li><a href="/users/form" role="button">회원가입</a></li>
                 {{/loginUserId}}
-
                 <li class="active"><a href="/">Posts</a></li>
-                <li><a href="/login" role="button">로그인</a></li>
-                <li><a href="/users/form" role="button">회원가입</a></li>
-                <li><a href="#" role="button">로그아웃</a></li>
-                <li><a href="#" role="button">개인정보수정</a></li>
             </ul>
         </div>
     </div>
