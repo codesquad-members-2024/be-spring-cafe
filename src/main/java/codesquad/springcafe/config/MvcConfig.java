@@ -30,15 +30,14 @@ public class MvcConfig implements WebMvcConfigurer {
 
         // 로그인 된 상태에서 접속하지 못하는 경로 설정
         registry.addInterceptor(new LoggedInInterceptor())
-                .addPathPatterns("/users/login")
-                .addPathPatterns("/users/join"); // 적용할 경로
+                .addPathPatterns("/users/login")    // 로그인 페이지
+                .addPathPatterns("/users/join");    // 회원가입 페이지
 
         // 로그인 하지 않은 상태에서 접속하지 못하는 경로 설정
         registry.addInterceptor(new LoggedOutInterceptor())
-                .addPathPatterns("/users")
-                .addPathPatterns("/users/update/{userId}")
-                .addPathPatterns("/users/profile/{userId}")
-                .addPathPatterns("/articles/write");
+                .addPathPatterns("/users/profile/{userId}") // 유저 프로필 보기
+                .addPathPatterns("/articles/write")         // 게시글 작성
+                .addPathPatterns("/articles/{articleId}");   // 게시글 세부 내용
 
     }
 }

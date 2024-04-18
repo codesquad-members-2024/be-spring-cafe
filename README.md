@@ -6,23 +6,51 @@
 
 # 📜 URL Convention
 
-| URL                          | 기능                             | 구현 상태 |
-|:-----------------------------|:-------------------------------|:-----:|
-| GET / , GET /main            | 등록된 모든 게시글들을 보여준다              |  ⭕️   |
-| GET /users                   | 회원가입된 유저들을 보여준다.               |  ⭕️   |
-| POST /users                  | 입력된 폼을 가지고, 회원 가입을 수행한다        |  ⭕️   |
-| GET /users/join              | 유저 회원가입 폼을 보여준다                |  ⭕️   |
-| GET /users/login             | 로그인 페이지를 보여준다                  |  ⭕️   |
-| POST /users/login            | 사용자 로그인 기능을 수행한다               |  ⭕️   |
-| POST /users/logout           | 로그인 된 사용자를 로그아웃                |  ⭕️   |
-| GET /users/{{userId}}        | userId에 해당하는 profile을 보여준다     |  ⭕️   |
-| GET /users/{{userId}}/form   | userId에 해당하는 수정 페이지를 보여준다      |  ⭕️   | 
-| PUT /users/{{userId}}/update | 사용자의 정보를 업데이트                  |  ⭕️   |
-| GET /articles/write          | 게시물 입력하는 폼을 보여준다               |  ⭕️   |
-| POST /articles               | 입력한 폼을 POST 요청으로 보낸다           |  ⭕️   |
-| GET /articles/{{articleId}}  | articleId에 해당하는 게시물 상세정보를 보여준다 |  ⭕️   |
+| URL                           | 기능                             | 구현 상태 |
+|:------------------------------|:-------------------------------|:-----:|
+| GET / , GET /main             | 등록된 모든 게시글들을 보여준다              |  ⭕️   |
+| GET /users                    | 회원가입된 유저들을 보여준다.               |  ⭕️   |
+| POST /users                   | 입력된 폼을 가지고, 회원 가입을 수행한다        |  ⭕️   |
+| GET /users/join               | 유저 회원가입 폼을 보여준다                |  ⭕️   |
+| GET /users/login              | 로그인 페이지를 보여준다                  |  ⭕️   |
+| POST /users/login             | 사용자 로그인 기능을 수행한다               |  ⭕️   |
+| POST /users/logout            | 로그인 된 사용자를 로그아웃                |  ⭕️   |
+| GET /users/profile/{{userId}} | userId에 해당하는 profile을 보여준다     |  ⭕️   |
+| GET /users/update/{{userId}}  | userId에 해당하는 수정 페이지를 보여준다      |  ⭕️   | 
+| PUT /users/update/{{userId}}  | 사용자의 정보를 업데이트                  |  ⭕️   |
+| GET /articles/write           | 게시물 입력하는 폼을 보여준다               |  ⭕️   |
+| POST /articles                | 입력한 폼을 POST 요청으로 보낸다           |  ⭕️   |
+| GET /articles/{{articleId}}   | articleId에 해당하는 게시물 상세정보를 보여준다 |  ⭕️   |
 
 ---
+
+# URL 접근 권한
+
+## 로그인 하지 않은 상태
+
+| URL                           | 접근 권한 |
+|:------------------------------|:-----:|
+| GET / , GET /main             |  ⭕️   |
+| GET /users                    |  ⭕️   |
+| GET /users/join               |  ⭕️   |
+| GET /users/login              |  ⭕️   |
+| GET /users/profile/{{userId}} |   ❌   |
+| GET /users/update/{{userId}}  |   ❌   | 
+| GET /articles/write           |   ❌   |
+| GET /articles/{{articleId}}   |   ❌   |
+
+## 로그인 한 상태
+
+| URL                           | 접근 권한 |
+|:------------------------------|:-----:|
+| GET / , GET /main             |  ⭕️   |
+| GET /users                    |   ❌   |
+| GET /users/join               |   ❌   |
+| GET /users/login              |   ❌   |
+| GET /users/profile/{{userId}} |  ⭕️   |
+| GET /users/update/{{userId}}  |  ⭕️   | 
+| GET /articles/write           |  ⭕️   |
+| GET /articles/{{articleId}}   |  ⭕️   |
 
 # 프로그램 동작
 
@@ -243,10 +271,13 @@ public class MvcConfig implements WebMvcConfigurer {
 ---
 
 ## Password Salt & Hash
+
 - 유저를 생성하거나, 업데이트, 비밀번호 검증을 할 때 ```String password```값을 가지고 비교롤 한다.
 - 하지만, 이러한 raw password는 탈취 위험성과 보안적인 측면에서, 보호하고 싶었다.
-  - 따라서, ```UserCredentialDto```를 사용하였으나, 결과적으로 ```String inputPassword```값으로 비교하는 것은 별 효과가 없다고 생각하였다.
+    - 따라서, ```UserCredentialDto```를 사용하였으나, 결과적으로 ```String inputPassword```값으로 비교하는 것은 별 효과가 없다고 생각하였다.
+
 ### Salt, Hash 기능 추가
+
 - ```User```객체가 생성될 때, Salt를 랜덤으로 생성하고, 생성된 값과 함께 ```HashedPassword```를 만들어 저장하였다.
 - 이를 통해 보안적인 측면에서 서버측에서도 사용자의 비밀번호를 알 수 없게 구현하였다.
 
