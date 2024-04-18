@@ -41,4 +41,9 @@ public class ArticleInMemoryDatabase implements ArticleDatabase {
         Article foundArticle = findById(articleId);
         foundArticle.update(article);
     }
+
+    @Override
+    public void delete(Long articleId) {
+        articles.remove(findById(articleId));
+    }
 }

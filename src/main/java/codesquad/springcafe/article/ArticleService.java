@@ -1,6 +1,7 @@
 package codesquad.springcafe.article;
 
 import codesquad.springcafe.article.database.ArticleDatabase;
+import codesquad.springcafe.article.dto.ArticleUpdateDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,14 @@ public class ArticleService {
 
     public void update(ArticleUpdateDto articleUpdateDto, Long articledId) {
         articleDatabase.update(articleUpdateDto.toEntity(), articledId);
+    }
+
+    public void delete(Long articleId) {
+        articleDatabase.delete(articleId);
+    }
+
+    public boolean isAuthenticated(String userId, Long articleId) {
+        return findById(articleId).getUserId().equals(userId);
     }
 
 
