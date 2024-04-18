@@ -36,7 +36,8 @@ public class MvcConfig implements WebMvcConfigurer {
         // 로그인 하지 않은 상태에서 접속하지 못하는 경로 설정
         registry.addInterceptor(new LoggedOutInterceptor())
                 .addPathPatterns("/users")
-                .addPathPatterns("/users/{userId}/form")
+                .addPathPatterns("/users/update/{userId}")
+                .addPathPatterns("/users/profile/{userId}")
                 .addPathPatterns("/articles/write");
 
     }
