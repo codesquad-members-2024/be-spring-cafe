@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
-@Primary
 @Repository
 public class MemoryArticleRepository implements ArticleRepository {
     private static final Logger logger = LoggerFactory.getLogger(MemoryArticleRepository.class);
@@ -32,6 +31,6 @@ public class MemoryArticleRepository implements ArticleRepository {
 
     @Override
     public Optional<Article> findById(long id) {
-        return Optional.ofNullable(articles.get((int) id));
+        return findAllArticles().stream().filter(article -> article.getId()==id).findFirst();
     }
 }

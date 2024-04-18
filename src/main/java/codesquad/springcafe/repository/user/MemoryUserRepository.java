@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -26,7 +27,7 @@ public class MemoryUserRepository implements UserRepository {
     public void updateUser(String userId, UserUpdateDto userUpdateDto) {
         User user = findByUserId(userId).get();
         user.update(userUpdateDto);
-        logger.debug("정보 업데이트: {}", userUpdateDto);
+        logger.debug("정보 업데이트: {}", user.toDto());
     }
 
     @Override

@@ -39,9 +39,9 @@ public class ArticleController {
         return "redirect:/";
     }
 
-    @GetMapping("/{articleId}")
-    public String showArticle(@PathVariable Long articleId, Model model) {
-        Optional<Article> optionalArticle = articleRepository.findById(articleId);
+    @GetMapping("/{id}")
+    public String showArticle(@PathVariable long id, Model model) {
+        Optional<Article> optionalArticle = articleRepository.findById(id);
         if (optionalArticle.isPresent()) {
             Article article = optionalArticle.get();
             logger.debug("게시글 상세: {}", article.toDto());

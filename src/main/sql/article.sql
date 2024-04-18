@@ -4,6 +4,6 @@ create table article
     writer  VARCHAR(255) NOT NULL,
     title   VARCHAR(255) NOT NULL,
     content TEXT         NOT NULL,
-    created TIMESTAMP    NOT NULL,
-    views   BIGINT       NOT NULL
+    views   BIGINT       NOT NULL,
+    created TIMESTAMP    NOT NULL
 );

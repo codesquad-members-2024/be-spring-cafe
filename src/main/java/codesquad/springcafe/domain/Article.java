@@ -9,24 +9,24 @@ public class Article {
     private String writer;
     private String title;
     private String content;
-    private LocalDateTime created;
     private long views;
+    private LocalDateTime created;
 
-    public Article(long id, String writer, String title, String content, LocalDateTime created, long views) {
+    public Article(long id, String writer, String title, String content, long views, LocalDateTime created) {
         this.id = id;
         this.writer = writer;
         this.title = title;
         this.content = content;
-        this.created = created;
         this.views = views;
+        this.created = created;
     }
 
     public Article(String writer, String title, String content) {
         this.writer = writer;
         this.title = title;
         this.content = content;
+        this.views = 0;
         this.created = LocalDateTime.now();
-        this.views = 0L;
     }
 
     public ArticleDto toDto() {
