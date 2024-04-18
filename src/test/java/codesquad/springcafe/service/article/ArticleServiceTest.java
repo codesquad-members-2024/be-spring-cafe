@@ -7,11 +7,9 @@ import codesquad.springcafe.domain.article.Article;
 import codesquad.springcafe.domain.member.Member;
 import codesquad.springcafe.repository.article.ArticleRepository;
 import codesquad.springcafe.repository.member.MemberRepository;
-import codesquad.springcafe.service.exception.ResourceNotFoundException;
 import codesquad.springcafe.service.exception.UnauthorizedException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -81,14 +79,14 @@ class ArticleServiceTest {
     @Test
     void findArticle() {
         // given & when
-        Optional<Article> optionalArticle = articleService.findArticle(2L);
+        Article findArticle = articleService.findArticle(2L);
 
         // then
-        assertThat(optionalArticle).isPresent();
-        assertThat(optionalArticle.get()).extracting("title").isEqualTo("test2");
-        assertThat(optionalArticle.get()).extracting("createdBy").isEqualTo("tester2");
-        assertThat(optionalArticle.get()).extracting("contents").isEqualTo("body2");
-        assertThat(optionalArticle.get()).extracting("createdAt").isEqualTo(MINUS_DAYS);
+        assertThat(findArticle).isNotNull();
+        assertThat(findArticle.getTitle()).isEqualTo("test2");
+        assertThat(findArticle.getCreatedBy()).isEqualTo("tester2");
+        assertThat(findArticle.getContents()).isEqualTo("body2");
+        assertThat(findArticle.getCreatedAt()).isEqualTo(MINUS_DAYS);
     }
 
     @DisplayName("발행된 모든 게시물 2개를 발행 시각 기준으로 역순으로 찾을 수 있다")
@@ -115,14 +113,6 @@ class ArticleServiceTest {
         return article;
     }
 
-    @DisplayName("존재하지 않는 999번 게시물에 대해 ResourceNotFoundException 이 발생한다")
-    @Test
-    void validateExists() {
-        assertThatThrownBy(() -> articleService.validateExists(999L))
-                .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessageContaining("존재하지 않는 게시물입니다. 게시물 아이디: 999");
-    }
-
     @DisplayName("로그인 된 아이디와 작성자가 불일치하면 UnauthorizedException 이 발생한다")
     @Test
     void validateAuthor() {
@@ -142,7 +132,7 @@ class ArticleServiceTest {
 
         // when
         articleService.editArticle("tester1", updateParam);
-        Article findArticle = articleService.findArticle(1L).get();
+        Article findArticle = articleService.findArticle(1L);
 
         // then
         assertThat(findArticle.getTitle()).isEqualTo("success title");
@@ -169,23 +159,7 @@ class ArticleServiceTest {
     @DisplayName("tester1 멤버가 작성한 1번 게시글을 지울 수 있다")
     @Test
     void unpublish_success() {
-        // given
-        String loginId = "tester1";
-
-        // when & then
-        assertThatCode(() -> articleService.unpublish(loginId, 1L))
+        assertThatCode(() -> articleService.unpublish(1L))
                 .doesNotThrowAnyException();
-    }
-
-    @DisplayName("tester1 멤버가 작성한 1번 게시글을 tester2 멤버가 지우려 시도하면 UnauthorizedException 예외가 발생한다")
-    @Test
-    void unpublish_fail() {
-        // given
-        String loginId = "tester2";
-
-        // when & then
-        assertThatThrownBy(() -> articleService.unpublish(loginId, 1L))
-                .isInstanceOf(UnauthorizedException.class)
-                .hasMessageContaining("작성자와 일치하지 않습니다. 로그인 아이디: tester2");
     }
 }

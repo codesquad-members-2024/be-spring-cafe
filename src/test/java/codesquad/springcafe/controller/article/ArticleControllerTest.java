@@ -145,7 +145,7 @@ class ArticleControllerTest {
                 .sessionAttr("SID", "test-test-test-test"));
 
         // then
-        result.andExpect(status().isOk())
+        result.andExpect(status().is4xxClientError())
                 .andExpect(view().name("error/404"));
     }
 }

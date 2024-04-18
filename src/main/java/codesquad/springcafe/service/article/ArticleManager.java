@@ -6,7 +6,6 @@ import codesquad.springcafe.repository.article.ArticleRepository;
 import codesquad.springcafe.service.exception.ResourceNotFoundException;
 import codesquad.springcafe.service.exception.UnauthorizedException;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,18 +24,14 @@ public class ArticleManager implements ArticleService {
     }
 
     @Override
-    public Optional<Article> findArticle(long id) {
-        return articleRepository.findById(id);
+    public Article findArticle(long id) {
+        return articleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("게시물을 찾을 수 없습니다. 게시물 아이디: " + id));
     }
 
     @Override
     public List<Article> findAllArticle() {
         return articleRepository.findAll();
-    }
-
-    @Override
-    public void validateExists(long id) {
-        findArticle(id).orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 게시물입니다. 게시물 아이디: " + id));
     }
 
     @Override
@@ -48,9 +43,6 @@ public class ArticleManager implements ArticleService {
 
     @Override
     public void editArticle(String loginId, UpdateArticle updateParam) {
-        /* 게시물 부존재 검증: 404 에러 */
-        validateExists(updateParam.getId());
-
         /* 작성자 검증: 403 에러 */
         validateAuthor(loginId, updateParam.getCreatedBy());
 
@@ -58,14 +50,7 @@ public class ArticleManager implements ArticleService {
     }
 
     @Override
-    public void unpublish(String loginId, long id) {
-        /* 게시물 부존재 검증: 404 에러 */
-        validateExists(id);
-
-        /* 작성자 검증: 403 에러 */
-        Optional<Article> optionalArticle = findArticle(id);
-        validateAuthor(loginId, optionalArticle.get().getCreatedBy());
-
+    public void unpublish(long id) {
         articleRepository.delete(id);
     }
 }
