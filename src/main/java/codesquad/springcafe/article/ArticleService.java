@@ -29,8 +29,8 @@ public class ArticleService {
         articleDatabase.clear();
     }
 
-    public void update(ArticleUpdateDto articleUpdateDto, Long articldId) {
-        articleDatabase.update(articleUpdateDto.toEntity(), articldId);
+    public void update(ArticleUpdateDto articleUpdateDto, Long articledId) {
+        articleDatabase.update(articleUpdateDto.toEntity(), articledId);
     }
 
 

@@ -6,12 +6,14 @@ public class Article {
     private String title;
     private String author;
     private String contents;
+    private String userId;
 
-    public Article(Long articleId, String title, String author, String contents) {
+    public Article(Long articleId, String title, String author, String contents, String userId) {
         this.articleId = articleId;
         this.title = title;
         this.author = author;
         this.contents = contents;
+        this.userId = userId;
     }
 
     public long getArticleId() {
@@ -30,20 +32,12 @@ public class Article {
         return contents;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
     public void setArticleId(Long articleId) {
         this.articleId = articleId;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
     }
 
     public void update(Article article) {

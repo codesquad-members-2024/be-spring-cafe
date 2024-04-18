@@ -1,6 +1,7 @@
 package codesquad.springcafe.article;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,7 +42,13 @@ public class ArticleController {
 
     // 게시글 수정 페이지 form
     @GetMapping("/{articleId}/update_form")
-    public String updateArticleForm(@PathVariable Long articleId, Model model) {
+    public String updateArticleForm(@PathVariable Long articleId, Model model,
+        HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String userId = (String) session.getAttribute("userId");
+        if (!articleService.findById(articleId).getUserId().equals(userId)) {
+            return "redirect:/";
+        }
         model.addAttribute("article", articleService.findById(articleId));
         return "article/update_form";
     }
