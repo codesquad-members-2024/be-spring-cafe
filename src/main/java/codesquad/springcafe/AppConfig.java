@@ -1,6 +1,7 @@
 package codesquad.springcafe;
 
-import codesquad.springcafe.user.LoginCheckInterceptor;
+import codesquad.springcafe.domain.user.interceptor.LoginCheckInterceptor;
+import codesquad.springcafe.domain.user.interceptor.NavbarSetInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -11,8 +12,13 @@ public class AppConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginCheckInterceptor())
-                .addPathPatterns("/user/*")
+                .addPathPatterns("/user/**")
+                .addPathPatterns("/article/**")
+                .addPathPatterns("/comment/**")
                 .excludePathPatterns("/user/log*") // 로그인, 로그아웃 제외
-                .excludePathPatterns("/user/form*");
+                .excludePathPatterns("/user/form*"); // 회원가입 제외
+
+        registry.addInterceptor(new NavbarSetInterceptor())
+                .addPathPatterns("/**");
     }
 }

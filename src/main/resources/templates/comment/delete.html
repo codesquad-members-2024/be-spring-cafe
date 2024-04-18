@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Page</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        .error-page {
+            background-image: url('/images/댓글삭제확인.jpg');
+            background-size: 50%; /* 이미지 크기를 50%로 줄임 */
+            /*background-size: cover;*/
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .error-message {
+            color: white;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .back-to-home {
+            background-color: black;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-to-home:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+<div class="error-page">
+    <div class="error-message">
+        <h1>댓글을 정말 삭제하시겠습니까?</h1>
+        {{#alert}}
+        <p>{{alert}}</p>
+        {{/alert}}
+    </div>
+<!--    <a href="/" class="back-to-home">삭제하기</a>-->
+    <form class="form-delete" action="/comment/{{commentId}}" method="POST">
+        <input type="hidden" name="_method" value="DELETE">
+        <button class="back-to-home" type="submit">삭제하기</button>
+    </form>
+    <br>
+    <br>
+    <a href="/article/{{articleId}}" class="back-to-home">돌아가기</a>
+</div>
+</body>
+</html>

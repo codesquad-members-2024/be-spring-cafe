@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error Page</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        .error-page {
+            background-image: url('/images/루피.png');
+            background-size: 50%; /* 이미지 크기를 50%로 줄임 */
+            /*background-size: cover;*/
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .error-message {
+            color: white;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .back-to-home {
+            background-color: black;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-to-home:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-page">
+        <div class="error-message">
+            <h1>오류 발생!</h1>
+            {{#exception}}
+            <p>{{getMessage}}</p>
+            {{/exception}}
+        </div>
+        <a href="/" class="back-to-home">홈으로 가기</a>
+    </div>
+</body>
+</html>

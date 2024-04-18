@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="kr">
+{{> components/html/header.partial}}
+
+{{> components/navbar.partial}}
+
+<body>
+<div class="container" id="main">
+    <div class="col-md-12 col-sm-12 col-lg-10 col-lg-offset-1">
+        <div class="panel panel-default content-main">
+            <form class="submit-write" action="/comment/{{commentId}}" method="post">
+                <input type="hidden" name="_method" value="PUT"/>
+                <input type="hidden" name="articleId" value="{{articleId}}">
+                <div class="form-group" style="padding:14px;">
+                    <textarea class="form-control" name="content" placeholder="Update your status"></textarea>
+                </div>
+                <button class="btn btn-success pull-right" type="submit">수정하기
+                </button>
+                <div class="clearfix"/>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{> components/html/scripts.partial}}
+</body>
+</html>

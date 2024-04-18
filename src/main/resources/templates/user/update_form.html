@@ -11,6 +11,7 @@
             <div class="alert alert-danger">{{message}}</div>
             {{/ alerts}}
             <form name="question" method="post" action="/user/{{user.userId}}">
+                <input type="hidden" name="_method" value="PUT" />
                 <div class="form-group">
                     <label>사용자 아이디 : {{user.userId}} </label>
                 </div>

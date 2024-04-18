@@ -1,23 +1,60 @@
-spring:
-  application:
-    name: spring-cafe
-
-  mustache:
-    suffix: .html
-    servlet:
-      cache: false
-
-  datasource:
-    url: 'jdbc:h2:tcp://localhost/~/springcafe'
-    driver-class-name: 'org.h2.Driver'
-    username: 'sa'
-    password: ''
-
 server:
   servlet:
     encoding:
       charset: UTF-8
       enabled: true
       force: true
+
+    session:
+      tracking-modes: cookie
+
+spring:
+  application:
+    name: spring-cafe
+
+  mvc:
+    hidden-method:
+      filter:
+        enabled: true
+
+  mustache:
+    suffix: .html
+    servlet:
+      cache: false
+      expose-session-attributes: true
+
+  profiles:
+    default: dev
+
+  datasource:
+    url: 'jdbc:h2:tcp://localhost/~/springcafe'
+    driver-class-name: 'org.h2.Driver'
+    username: 'sa'
+    password: ''
+    hikari:
+      connection-timeout: 1000
+      connection-test-query: SELECT 1
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url: 'jdbc:h2:tcp://localhost/~/springcafe_test'
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:sql/schema.sql
+      data-locations: classpath:sql/data.sql
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+---
 
 
