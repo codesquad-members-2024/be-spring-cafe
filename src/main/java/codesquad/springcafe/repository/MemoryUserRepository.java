@@ -5,36 +5,32 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class MemoryUserRepository implements UserRepository{
     private static final Logger logger = LoggerFactory.getLogger(MemoryUserRepository.class);
-    private final Map<Long, User> store = new ConcurrentHashMap<>();
-    private static final AtomicLong sequence = new AtomicLong();
-
+    private final Map<String, User> store = new ConcurrentHashMap<>();
 
     @Override
     public User save(User user) {
-        Long createdId = sequence.incrementAndGet(); // 저장할 때 id 생성
-        user.setId(createdId);
-        store.put(createdId, user);
-        logger.info("saved user={}", user.toString());
+        store.put(user.getUserId(), user);
+        logger.info("saved user={}", user);
 
         return user;
     }
 
     @Override
-    public Optional<User> findById(Long id) {
-        return Optional.ofNullable(store.get(id));
+    public Optional<User> findByUserId(String userId) {
+        return Optional.ofNullable(store.get(userId));
     }
 
     @Override
     public List<User> findAll() {
-        return store.values().stream().toList();
+        return new ArrayList<>(store.values());
     }
 }

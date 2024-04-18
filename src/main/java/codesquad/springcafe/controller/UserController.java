@@ -43,14 +43,14 @@ public class UserController {
     public String createUser(@ModelAttribute User user, RedirectAttributes redirectAttributes) { // 서버에서 폼 데이터 처리
         User savedUser = userService.signup(user);
         logger.info("user.toString = {}", user.toString());
-        redirectAttributes.addAttribute("id", savedUser.getId());
+        redirectAttributes.addAttribute("id", savedUser.getUserId());
         return "redirect:/users/{id}";
     }
 
     // 회원 상세 조회
     @GetMapping("{id}")
-    public String showUserDetail(@PathVariable("id") Long id, Model model) {
-        Optional<User> userOptional = userService.findUserById(id);
+    public String showUserDetail(@PathVariable("id") String id, Model model) {
+        Optional<User> userOptional = userService.findUserByUserId(id);
 
         if (!userOptional.isPresent()) {
             logger.error("User with id {} not found", id);
@@ -64,8 +64,8 @@ public class UserController {
 
     // 회원정보 수정 화면
     @GetMapping("{id}/edit")
-    public String showEditForm(@PathVariable("id") Long id, Model model){
-        Optional<User> userOptional = userService.findUserById(id);
+    public String showEditForm(@PathVariable("id") String id, Model model){
+        Optional<User> userOptional = userService.findUserByUserId(id);
 
         if (!userOptional.isPresent()){
             logger.info("User with id {} not found", id);

@@ -29,7 +29,7 @@ public class ArticleController {
     @GetMapping("")
     public String showAllArticles(Model model){
         List<Article> articles = articleService.findAllArticles();
-        model.addAttribute("articles", articles);
+        model.addAttribute("articles", articles); // 뷰로 데이터 전달하기 위함
         return "qna/list";
     }
 
@@ -58,7 +58,7 @@ public class ArticleController {
     // qna/{id} 경로로 GET 요청을 받으면 호출
     // 해당 ID의 게시글이 존재하지 않을 경우 로그 기록 게시글 목록으로 리다이렉트
     // 존재하면 해당 게시글을 모델에 추가하고 qna/show 뷰 반환
-    @GetMapping("{id}")
+     @GetMapping("{id}")
     public String showArticleDetail(@PathVariable("id") Long id, Model model){
         Optional<Article> articleOptional = articleService.findArticleById(id);
 

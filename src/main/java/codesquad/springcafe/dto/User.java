@@ -3,8 +3,7 @@ package codesquad.springcafe.dto;
 import java.beans.ConstructorProperties;
 
 public class User {
-    private Long id; // 자동 생성
-    private String userId;
+    private String userId; //PK
     private String password;
     private String name;
     private String email;
@@ -33,18 +32,9 @@ public class User {
         return email;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
                 ", userId='" + userId + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
