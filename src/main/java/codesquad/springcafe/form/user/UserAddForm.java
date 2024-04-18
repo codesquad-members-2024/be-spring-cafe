@@ -5,11 +5,11 @@ import org.hibernate.validator.constraints.Length;
 
 public class UserAddForm {
     @NotBlank
-    private String email;
+    private final String email;
     @Length(min = 2, max = 10)
-    private String nickname;
+    private final String nickname;
     @Length(min = 3, max = 10)
-    private String password;
+    private final String password;
 
     public UserAddForm(String email, String nickname, String password) {
         this.email = email;

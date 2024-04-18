@@ -2,12 +2,14 @@ package codesquad.springcafe.model;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class Article {
-    private String writer;
-    private String title;
-    private String content;
+    private final String writer;
+    private final String title;
+    private final String content;
     private Long id;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:MM:ss")
     private LocalDateTime writeDate;
     private long views;
 
@@ -24,6 +26,14 @@ public class Article {
      */
     public void increaseViews() {
         views++;
+    }
+
+    public Article update(String title, String content) {
+        Article article = new Article(writer, title, content);
+        article.setId(id);
+        article.setViews(views);
+        article.setWriteDate(writeDate);
+        return article;
     }
 
     public String getWriter() {

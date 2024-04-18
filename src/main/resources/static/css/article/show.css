@@ -161,3 +161,21 @@ li {
     flex-direction: column;
 }
 
+.actions {
+    display: flex;
+    justify-content: flex-start; /* 모든 자식 요소를 컨테이너의 시작 부분에 정렬합니다. */
+}
+
+.actions a {
+    padding-right: 5px; /* 모든 링크에 패딩 적용, 내용과 내용 사이의 간격을 조정 */
+    margin-right: 0px; /* 마진 제거 */
+}
+
+.actions a:last-child {
+    padding-right: 0px; /* 마지막 링크에는 패딩을 제거 */
+}
+
+
+
+
+

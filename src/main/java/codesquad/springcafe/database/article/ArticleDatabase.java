@@ -13,5 +13,7 @@ public interface ArticleDatabase {
 
     void update(Article article);
 
+    void delete(Long id);
+
     void clear();
 }

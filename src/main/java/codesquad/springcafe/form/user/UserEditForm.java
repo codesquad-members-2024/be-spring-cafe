@@ -5,13 +5,13 @@ import org.hibernate.validator.constraints.Length;
 
 public class UserEditForm {
     @NotBlank
-    private String email;
+    private final String email;
     @Length(min = 2, max = 10)
-    private String nickname;
+    private final String nickname;
     @Length(min = 3, max = 10)
-    private String currentPassword;
+    private final String currentPassword;
     @Length(min = 3, max = 10)
-    private String newPassword;
+    private final String newPassword;
 
     public UserEditForm(String email, String nickname, String currentPassword, String newPassword) {
         this.email = email;
@@ -31,7 +31,7 @@ public class UserEditForm {
     public String getCurrentPassword() {
         return currentPassword;
     }
-    
+
     public String getNewPassword() {
         return newPassword;
     }

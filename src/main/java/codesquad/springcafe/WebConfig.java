@@ -4,8 +4,9 @@ import codesquad.springcafe.database.article.ArticleDatabase;
 import codesquad.springcafe.database.article.ArticleH2Database;
 import codesquad.springcafe.database.user.UserDatabase;
 import codesquad.springcafe.database.user.UserH2Database;
+import codesquad.springcafe.interceptor.ArticleAccessInterceptor;
 import codesquad.springcafe.interceptor.LoginCheckInterceptor;
-import codesquad.springcafe.interceptor.UserProfileInterceptor;
+import codesquad.springcafe.interceptor.UserAccessInterceptor;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,13 +29,17 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginCheckInterceptor())
                 .order(1)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/", "/articles/detail/*", "/users/add", "/login", "/logout", "/images/**",
+                .excludePathPatterns("/", "/users/add", "/login", "/logout", "/images/**",
                         "/css/**", "/*.ico",
                         "/error");
 
-        registry.addInterceptor(new UserProfileInterceptor())
+        registry.addInterceptor(new UserAccessInterceptor())
                 .order(2)
                 .addPathPatterns("/users/edit/*", "/users/profile/*");
+
+        registry.addInterceptor(new ArticleAccessInterceptor(articleDatabase()))
+                .order(3)
+                .addPathPatterns("/articles/edit/*", "/articles/delete/*");
     }
 
     /**

@@ -1,7 +1,7 @@
 package codesquad.springcafe.advice;
 
-import codesquad.springcafe.controller.LoginController;
 import codesquad.springcafe.model.User;
+import codesquad.springcafe.util.LoginUserProvider;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,6 +13,6 @@ public class UserAdvice {
      */
     @ModelAttribute("loginUser")
     public User populateUser(HttpSession session) {
-        return (User) session.getAttribute(LoginController.LOGIN_SESSION_NAME);
+        return LoginUserProvider.provide(session);
     }
 }

@@ -4,6 +4,8 @@ import codesquad.springcafe.database.user.UserDatabase;
 import codesquad.springcafe.form.user.UserAddForm;
 import codesquad.springcafe.form.user.UserEditForm;
 import codesquad.springcafe.model.User;
+import codesquad.springcafe.util.LoginUserProvider;
+import jakarta.servlet.http.HttpSession;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -111,9 +114,9 @@ public class UserController {
      * @param userEditForm 수정 정보가 담긴 폼 정보입니다.
      * @return 유저가 존재하지 않으면 유저 리스트로 이동합니다. 현재 비밀번호가 일치하지 않으면 유저 수정 폼을 다시 보여줍니다. 수정이 정상적으로 완료되면 프로필을 보여줍니다.
      */
-    @PostMapping("/edit/{nickname}")
+    @PutMapping("/edit/{nickname}")
     public String updateUser(@PathVariable String nickname, @Validated @ModelAttribute UserEditForm userEditForm,
-                             BindingResult bindingResult) {
+                             BindingResult bindingResult, HttpSession session) {
         Optional<User> optionalUser = userDatabase.findByNickname(nickname);
         if (optionalUser.isEmpty()) {
             return "redirect:/users";
@@ -129,6 +132,8 @@ public class UserController {
         User updateUser = targetUser.update(userEditForm.getNickname(), userEditForm.getNewPassword());
         userDatabase.update(updateUser);
 
+        session.setAttribute(LoginUserProvider.LOGIN_SESSION_NAME, updateUser);
+
         logger.info("유저정보가 업데이트 되었습니다. {}", updateUser);
         String newNickname = updateUser.getNickname(); // 유저 닉네임이 수정될 경우를 반영
         return "redirect:/users/profile/" + URLEncoder.encode(newNickname, StandardCharsets.UTF_8);
@@ -137,6 +142,10 @@ public class UserController {
     private void validateAddForm(UserAddForm userAddForm, BindingResult bindingResult) {
         if (isPresentNickname(userAddForm.getNickname())) {
             bindingResult.rejectValue("nickname", "Duplicate");
+        }
+
+        if (isPresentEmail(userAddForm.getEmail())) {
+            bindingResult.rejectValue("email", "Duplicate");
         }
     }
 
@@ -152,5 +161,9 @@ public class UserController {
 
     private boolean isPresentNickname(String nickname) {
         return userDatabase.findByNickname(nickname).isPresent();
+    }
+
+    private boolean isPresentEmail(String email) {
+        return userDatabase.findByEmail(email).isPresent();
     }
 }

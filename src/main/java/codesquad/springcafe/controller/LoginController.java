@@ -56,6 +56,9 @@ public class LoginController {
         return "redirect:" + redirectUrl;
     }
 
+    /**
+     * 사용자가 로그아웃을 시도하면 세션정보를 만료시킵니다.
+     */
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
