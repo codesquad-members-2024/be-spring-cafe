@@ -45,4 +45,10 @@ public class UserService {
         }
         return targetUser.get().toDTO();
     }
+
+    public UserInfoDTO updateInfo(String userId, UserUpdateDTO updateInfo) {
+        User modifiedUser = updateInfo.toUser(userId, passwordEncoder);
+        userRepository.modify(modifiedUser);
+        return modifiedUser.toDTO();
+    }
 }

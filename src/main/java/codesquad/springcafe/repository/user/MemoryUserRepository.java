@@ -31,4 +31,9 @@ public class MemoryUserRepository implements UserRepository {
     public List<User> getAll() {
         return new ArrayList<>(users.values());
     }
+
+    @Override
+    public void modify(User modifiedUser) {
+        users.put(modifiedUser.getUserId(), modifiedUser);
+    }
 }

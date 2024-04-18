@@ -54,4 +54,12 @@ public class UserController {
         model.addAttribute("user", targetUser);
         return "/user/updateForm";
     }
+
+    @PutMapping("/{userId}/update")
+    public String updateInfo(@PathVariable String userId,
+        @ModelAttribute("user") UserUpdateDTO updateInfo, Model model) {
+        UserInfoDTO updatedUser = userService.updateInfo(userId, updateInfo);
+        model.addAttribute("user", updatedUser);
+        return "redirect:/users";
+    }
 }

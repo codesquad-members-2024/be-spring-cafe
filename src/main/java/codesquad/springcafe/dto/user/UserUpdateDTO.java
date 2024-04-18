@@ -1,4 +1,4 @@
-package codesquad.springcafe.dto;
+package codesquad.springcafe.dto.user;
 
 import codesquad.springcafe.model.User;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -18,7 +18,7 @@ public class SignUpDTO {
     }
 
     public User toUser(PasswordEncoder passwordEncoder) {
-        String hashedPassword = passwordEncoder.encode(password);
-        return new User(userId, hashedPassword, name, email);
+        String encodedPassword = passwordEncoder.encode(password);
+        return new User(userId, encodedPassword, name, email);
     }
 }
