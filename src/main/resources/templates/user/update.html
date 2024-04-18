@@ -22,17 +22,18 @@
 
     <div class="container" id="main">
         <header class="post-header">
-            <p class="title">{{user.userId}}님의 회원정보 수정</p>
+            <p class="title">{{userId}}님의 회원정보 수정</p>
         </header>
-        <form name="question" class="info-container" method="post" action="/users/{{user.userId}}/update">
+        <form name="question" class="info-container" method="post" action="/users/update">
             <input type="hidden" name="_method" value="PUT" />
+            <input type="hidden" name="userId" value="{{userId}}"/>
             <div class="form-group">
                 <label for="email">이메일</label>
-                <input type="email" class="form-control" id="email" name="email" value="{{user.email}}" />
+                <input type="email" class="form-control" id="email" name="email" value="{{email}}" />
             </div>
             <div class="form-group">
                 <label for="password">비밀번호</label>
-                <input type="password" class="form-control" id="password" name="password" value="{{user.password}}">
+                <input type="password" class="form-control" id="password" name="password">
             </div>
             <button type="submit" class="btn btn-success clearfix pull-right">완료</button>
         </form>

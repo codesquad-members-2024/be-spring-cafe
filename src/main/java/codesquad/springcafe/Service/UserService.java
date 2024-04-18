@@ -1,9 +1,11 @@
 package codesquad.springcafe.Service;
 
 import codesquad.springcafe.Domain.User;
+import codesquad.springcafe.Domain.UserCredential;
 import codesquad.springcafe.Repository.UserRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service; //스프링 컨테이너에 등록
 
@@ -21,15 +23,18 @@ public class UserService {
         //중복 회원 체크
         userRepository.findById(user.getUserId())
             .ifPresent(result -> {
-                throw new IllegalStateException("이미 유저가 존재함");});
+                throw new IllegalStateException("이미 유저가 존재함");
+            });
 
         userRepository.create(user);
         return user;
     }
 
-    public User update(User user) {
-        userRepository.findById(user.getUserId()).orElseThrow(() -> new NoSuchElementException());
-        return userRepository.update(user);
+    public User update(User updatedUser) {
+        return userRepository.findById(updatedUser.getUserId())
+            .filter(user -> user.getPassword().equals(updatedUser.getPassword()))
+            .map(user -> userRepository.update(updatedUser))
+            .orElseThrow(() -> new NoSuchElementException("User not found or passwords do not match"));
     }
 
     public User findUserById(String userId) {
@@ -39,5 +44,15 @@ public class UserService {
 
     public List<User> findAllUser() {
         return userRepository.findAll();
+    }
+
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+            .orElseThrow(() -> new NoSuchElementException("User not found with email: " + email));
+    }
+
+    public String login(String email, String password) {
+        return userRepository.findByEmail(email).filter(user -> user.getPassword().equals(password))
+            .orElseThrow(() -> new NoSuchElementException("User not found with email: " + email)).getUserId();
     }
 }

@@ -95,3 +95,14 @@ spring.sql.init.schema-locations=classpath:sql/ddl.sql
 - resources/sql/ddl.sql 작성 : users, posts 두개의 테이블 생성
 
 13. PostRepositoryJDBC와 UserRepositoryJDBC 를 인터페이스를 상속받아 구현하고 @Repository 어노테이션을 통해 빈 등록
+14. MUSTACHE IF문
+```mustache
+{{#isTrue}}
+This will be shown if isTrue is true.
+{{/isTrue}}
+{{^isTrue}}
+This will be shown if isTrue is false.
+{{/isTrue}}
+```
+14. Spring JDBC 를 사용하여 리팩토링
+- 

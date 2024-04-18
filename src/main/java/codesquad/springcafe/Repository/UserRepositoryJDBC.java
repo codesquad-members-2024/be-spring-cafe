@@ -53,14 +53,13 @@ public class UserRepositoryJDBC implements UserRepository{
 
     @Override
     public User update(User user) {
-        String sql = "UPDATE users email=?,password=? where userid=?";
+        String sql = "UPDATE users SET email=? WHERE userid=?";
         try {
             conn = DataSourceUtils.getConnection(dataSource);
             pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             pstmt.setString(1, user.getEmail());
-            pstmt.setString(2, user.getPassword());
-            pstmt.setString(3, user.getUserId());
+            pstmt.setString(2, user.getUserId());
 
             pstmt.executeUpdate();
             rs = pstmt.getGeneratedKeys();
