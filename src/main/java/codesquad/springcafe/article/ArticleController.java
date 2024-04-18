@@ -28,7 +28,7 @@ public class ArticleController {
                 .map(article -> {
                     model.addAttribute("article", article);
                     return "qna/show";
-                }).orElse("index");
+                }).orElseThrow(() -> new IllegalArgumentException(id + "는 찾을 수 없습니다"));
     }
 
 
