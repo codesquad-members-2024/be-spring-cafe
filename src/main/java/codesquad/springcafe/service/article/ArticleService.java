@@ -17,4 +17,6 @@ public interface ArticleService {
     void validateAuthor(String loginId, String author);
 
     void editArticle(String loginId, UpdateArticle updateParam);
+
+    void unpublish(String loginId, long id);
 }

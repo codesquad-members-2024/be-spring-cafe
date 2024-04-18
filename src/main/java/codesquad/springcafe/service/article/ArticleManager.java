@@ -56,4 +56,16 @@ public class ArticleManager implements ArticleService {
 
         articleRepository.update(updateParam);
     }
+
+    @Override
+    public void unpublish(String loginId, long id) {
+        /* 게시물 부존재 검증: 404 에러 */
+        validateExists(id);
+
+        /* 작성자 검증: 403 에러 */
+        Optional<Article> optionalArticle = findArticle(id);
+        validateAuthor(loginId, optionalArticle.get().getCreatedBy());
+
+        articleRepository.delete(id);
+    }
 }
