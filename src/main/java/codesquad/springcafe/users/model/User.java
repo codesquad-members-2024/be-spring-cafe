@@ -42,7 +42,6 @@ public class User {
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
             // 지정된 알고리즘이 없는 경우 예외 처리
-            e.printStackTrace();
             return null;
         }
     }
