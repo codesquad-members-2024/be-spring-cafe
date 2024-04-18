@@ -29,7 +29,7 @@ public class JdbcArticleRepository implements ArticleRepository {
         parameters.put("writer", article.getWriter());
         parameters.put("title", article.getTitle());
         parameters.put("contents", article.getContents());
-        parameters.put("currentTime", article.getContents());
+        parameters.put("currentTime", article.getCurrentTime());
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         article.setId(key.longValue());
