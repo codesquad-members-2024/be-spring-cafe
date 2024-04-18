@@ -12,7 +12,7 @@ public abstract class ArticleConsts {
     public static final String POINT = "POINT";
     public static final String STATUS = "STATUS";
 
-
+    // Check
     public static final String OPEN = "'OPEN'";
     public static final String CLOSE = "'CLOSE'";
 

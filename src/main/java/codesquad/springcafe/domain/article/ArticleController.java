@@ -58,15 +58,9 @@ public class ArticleController {
 
     // view
     @GetMapping("/{id}")
-    public String showArticle(@PathVariable("id") int id, Model model) {
+    public String showArticle(@PathVariable("id") int id, Model model) throws NotFoundException{
         ArticleWithComments article = articleService.getArticle(id);
 
-        // 존재하지 않는 게시글
-        if (article.article() == null) {
-            throw new NotFoundException();
-        }
-
-        // 정상 흐름
         model.addAttribute("article", article.article());
         model.addAttribute("comments", article.comments());
         model.addAttribute("numberOfComments", article.comments().size());

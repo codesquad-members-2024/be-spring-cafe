@@ -5,6 +5,7 @@ import codesquad.springcafe.domain.article.DTO.ArticleWithComments;
 import codesquad.springcafe.domain.article.repository.ArticleRepository;
 import codesquad.springcafe.domain.comment.repository.CommentRepository;
 import codesquad.springcafe.domain.user.DTO.SimpleUserInfo;
+import codesquad.springcafe.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,10 +30,14 @@ public class ArticleService {
     }
 
     public ArticleWithComments getArticle(int articleId){
+        Article article = articleRepository.findById(articleId);
+
+        if (article == null) {
+            throw new NotFoundException();
+        }
+
         articleRepository.addPoint(articleId);
-        return new ArticleWithComments(
-                articleRepository.findById(articleId),
-                commentRepository.findByArticleId(articleId));
+        return new ArticleWithComments(article, commentRepository.findByArticleId(articleId));
     }
 
     public List<Article> findByUserId(String id) {
@@ -42,6 +47,7 @@ public class ArticleService {
     public List<Article> findAll(){
         return articleRepository.findAll();
     }
+
     public void modify(int id, ArticlePostReq articlePostReq) {
         articleRepository.update(id, articlePostReq);
     }
