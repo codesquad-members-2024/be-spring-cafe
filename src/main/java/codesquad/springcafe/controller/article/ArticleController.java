@@ -1,5 +1,6 @@
 package codesquad.springcafe.controller.article;
 
+import codesquad.springcafe.controller.SessionConst;
 import codesquad.springcafe.domain.article.Article;
 import codesquad.springcafe.service.article.ArticleManager;
 import java.time.LocalDateTime;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Controller
 @RequestMapping("/questions")
@@ -26,7 +29,10 @@ public class ArticleController {
     }
 
     @GetMapping
-    public String publish(@ModelAttribute("article") ArticleForm form) {
+    public String publish(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
+                          @ModelAttribute("article") ArticleForm form) {
+        form.setCreatedBy(loginId);
+
         return "qna/form";
     }
 
@@ -69,5 +75,41 @@ public class ArticleController {
         article.setCreatedAt(LocalDateTime.now());
 
         return article;
+    }
+
+    @GetMapping("/{articleId}/edit")
+    public String editForm(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
+                           @PathVariable("articleId") long articleId, @ModelAttribute("form") UpdateArticle form) {
+        /* 게시물 존재 검증 */
+        articleManager.validateExists(articleId);
+
+        /* 작성자 검증 */
+        articleManager.validateAuthor(loginId, form.getCreatedBy());
+
+        /* 정상 로직 */
+        Optional<Article> optionalArticle = articleManager.findArticle(articleId);
+        fillForm(form, optionalArticle.get());
+
+        return "qna/updateForm";
+    }
+
+    private void fillForm(UpdateArticle form, Article findArticle) {
+        form.setId(findArticle.getId());
+        form.setCreatedBy(findArticle.getCreatedBy());
+        form.setTitle(findArticle.getTitle());
+        form.setContents(findArticle.getContents());
+    }
+
+    @PutMapping("/{articleId}")
+    public String edit(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
+                       @PathVariable("articleId") long articleId, @Validated @ModelAttribute("form") UpdateArticle form,
+                       BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "qna/updateForm";
+        }
+
+        articleManager.editArticle(loginId, form);
+
+        return "redirect:/questions/{articleId}";
     }
 }

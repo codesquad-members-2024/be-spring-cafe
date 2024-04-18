@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="kr">
 <head th:replace="~{fragment/layout/header :: header(~{::title})}">
-    <title>Publish Your Article</title>
+    <title>Update Your Article</title>
 </head>
 
 <body th:replace="~{fragment/layout/content :: content(~{::contentBody})}">
 <div th:fragment="contentBody" class="container" id="main">
     <div class="col-md-12 col-sm-12 col-lg-10 col-lg-offset-1">
         <div class="panel panel-default content-main">
-            <form th:action action="" th:object="${article}" method="post">
+            <form th:action="@{|/questions/*{id}|}" action="" th:object="${form}" method="post" th:method="put">
                 <div th:if="${#fields.hasGlobalErrors()}">
                     <p class="field-error" th:each="err : ${#fields.globalErrors()}"
                        th:text="${err}">오류 메시지</p>
+                </div>
+                <div class="form-group">
+                    <label for="article-id">게시물 번호</label>
+                    <input class="form-control" id="article-id" name="article-id" th:field="*{id}" placeholder="게시물 번호" readonly/>
                 </div>
                 <div class="form-group">
                     <label for="writer">글쓴이</label>
@@ -32,7 +36,7 @@
                 </div>
                 <button type="submit" class="btn btn-success clearfix pull-right"
                         onclick="location.href='../qna/detail.html'"
-                        th:onclick="|location.href='@{/article/add}'|">질문하기
+                        th:onclick="|location.href='@{/article/*{id}}'|">게시물 수정
                 </button>
                 <div class="clearfix"/>
             </form>
