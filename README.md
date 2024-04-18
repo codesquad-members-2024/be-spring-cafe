@@ -2,11 +2,13 @@
 2024 마스터즈 백엔드 스프링 카페
 ##### eddy
 
+배포 URL :<a href="3.35.21.0:8080"> 실행하기 </a>
+
 과정
 1. implementation 'org.springframework.boot:spring-boot-starter-web' 추가
 2. build 설정 변경
 3. build.gradle 추가
-```
+```groovy
 implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mustache', version: '3.2.4'
 ```
 4. 패키지 구조 생성
@@ -70,3 +72,26 @@ spring.mvc.hiddenmethod.filter.enabled=true
 - PUT : 멱등 O
   - PUT은 리소스의 생성과 수정을 담당한다.
   - PUT은 요청 시 마다, 같은 리소스를 반환한다
+
+12. JDBC 적용 후 H2데이터 베이스와 연동
+- build.gradle 추가
+```groovy
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'com.h2database:h2'
+```
+- application.properties추가
+```properties
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+
+spring.datasource.url=jdbc:h2:~/springcafe
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+
+spring.sql.init.mode=always
+spring.sql.init.schema-locations=classpath:sql/ddl.sql
+```
+- resources/sql/ddl.sql 작성 : users, posts 두개의 테이블 생성
+
+13. PostRepositoryJDBC와 UserRepositoryJDBC 를 인터페이스를 상속받아 구현하고 @Repository 어노테이션을 통해 빈 등록

@@ -6,15 +6,14 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
-@Repository
 public class PostRepositoryImpl implements PostRepository {
 
     List<Post> postDB = new ArrayList<>();
 
     @Override
-    public void save(Post article) {
-        article.setId((long) (postDB.size() + 1));
-        postDB.add(article);
+    public void save(Post post) {
+        post.setId((long) (postDB.size() + 1));
+        postDB.add(post);
     }
 
     @Override

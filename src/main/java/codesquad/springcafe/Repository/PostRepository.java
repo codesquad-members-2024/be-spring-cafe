@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface PostRepository {
 
-    public void save(Post article);
+    public void save(Post post);
 
     public Optional<Post> findById(Long postId);
 
