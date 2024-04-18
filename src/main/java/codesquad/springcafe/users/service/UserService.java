@@ -3,6 +3,7 @@ package codesquad.springcafe.users.service;
 import codesquad.springcafe.users.model.User;
 import codesquad.springcafe.exception.PasswordMismatchException;
 import codesquad.springcafe.exception.UserNotFoundException;
+import codesquad.springcafe.users.model.data.UserCredentialData;
 import codesquad.springcafe.users.model.dto.*;
 import codesquad.springcafe.users.repository.UserRepository;
 import org.slf4j.Logger;
@@ -24,8 +25,8 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void createUser(UserCreateDto userCreateDto) {
-        User user = new User(userCreateDto.getUserId(), userCreateDto.getEmail(), userCreateDto.getName(), userCreateDto.getPassword());
+    public void createUser(UserCreationRequest userCreationRequest) {
+        User user = new User(userCreationRequest.getUserId(), userCreationRequest.getEmail(), userCreationRequest.getName(), userCreationRequest.getPassword());
         logger.debug("User Created : {}", user);
 
         userRepository.createUser(user);
@@ -40,26 +41,26 @@ public class UserService {
         return userRepository.findUserById(userId).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다"));
     }
 
-    public void updateUser(String userId, UserUpdateData updateData) {
-        UserCredentialDto userCredentialDto = userRepository.getUserCredential(userId).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+    public void updateUser(String userId, UserUpdateRequest updateData) {
+        UserCredentialData userCredentialData = userRepository.getUserCredential(userId).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
 
-        validatePassword(updateData.getCurrentPassword(), userCredentialDto);
+        validatePassword(updateData.getCurrentPassword(), userCredentialData);
 
         userRepository.updateUser(userId, updateData);
 
         logger.debug("User Updated : {}", userId);
     }
 
-    public UserPreviewDto loginUser(UserLoginDto userLoginDto) {
-        UserCredentialDto userCredentialDto = userRepository.getUserCredential(userLoginDto.getUserId()).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+    public UserPreviewDto loginUser(UserLoginRequest userLoginRequest) {
+        UserCredentialData userCredentialData = userRepository.getUserCredential(userLoginRequest.getUserId()).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
 
-        validatePassword(userLoginDto.getPassword(), userCredentialDto);
+        validatePassword(userLoginRequest.getPassword(), userCredentialData);
 
-        return userRepository.findUserById(userLoginDto.getUserId()).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+        return userRepository.findUserById(userLoginRequest.getUserId()).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
     }
 
-    private void validatePassword(String inputPassword, UserCredentialDto userCredentialDto) {
-        if (!userCredentialDto.verifyPassword(inputPassword)) {
+    private void validatePassword(String inputPassword, UserCredentialData userCredentialData) {
+        if (!userCredentialData.verifyPassword(inputPassword)) {
             throw new PasswordMismatchException("입력한 비밀번호가 일치하지 않습니다.");
         }
     }

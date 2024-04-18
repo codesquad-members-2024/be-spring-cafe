@@ -3,7 +3,7 @@ package codesquad.springcafe.articles.service;
 import codesquad.springcafe.articles.repository.ArticleRepository;
 import codesquad.springcafe.exception.ArticleNotFoundException;
 import codesquad.springcafe.articles.model.Article;
-import codesquad.springcafe.articles.model.dto.ArticleCreateDto;
+import codesquad.springcafe.articles.model.dto.ArticleCreationRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,8 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public void createArticle(ArticleCreateDto articleCreateDto) {
-        Article article = new Article(articleCreateDto.getUserId(), articleCreateDto.getTitle(), articleCreateDto.getContent());
+    public void createArticle(ArticleCreationRequest articleCreationRequest) {
+        Article article = new Article(articleCreationRequest.getUserId(), articleCreationRequest.getTitle(), articleCreationRequest.getContent());
         logger.debug("Article Created : {}", article);
         articleRepository.createArticle(article);
     }
