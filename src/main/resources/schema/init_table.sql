@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS USERS
+(
+    userId   VARCHAR(100) PRIMARY KEY,
+    password VARCHAR(100) NOT NULL,
+    name     VARCHAR(100) NOT NULL,
+    email    VARCHAR(100) NOT NULL,
+);
+
+CREATE TABLE IF NOT EXISTS ARTICLE
+(
+    articleId INT PRIMARY KEY AUTO_INCREMENT,
+    author    VARCHAR(100) NOT NULL,
+    title     VARCHAR(100) NOT NULL,
+    contents  TEXT         NOT NULL,
+    userId    VARCHAR(100) NOT NULL,
+    FOREIGN KEY (userId) REFERENCES USERS (userId)
+);
+
