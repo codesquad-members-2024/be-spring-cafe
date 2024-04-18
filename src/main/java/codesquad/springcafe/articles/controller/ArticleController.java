@@ -3,7 +3,7 @@ package codesquad.springcafe.articles.controller;
 
 import codesquad.springcafe.articles.service.ArticleService;
 import codesquad.springcafe.articles.model.Article;
-import codesquad.springcafe.articles.model.dto.ArticleCreateDto;
+import codesquad.springcafe.articles.model.dto.ArticleCreationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,8 +24,8 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String postArticle(ArticleCreateDto articleCreateDto) {
-        articleService.createArticle(articleCreateDto);
+    public String postArticle(ArticleCreationRequest articleCreationRequest) {
+        articleService.createArticle(articleCreationRequest);
         return "redirect:/";
     }
 

@@ -1,11 +1,11 @@
 package codesquad.springcafe.articles.model.dto;
 
-public class ArticleCreateDto {
+public class ArticleCreationRequest {
     private final String userId;
     private final String title;
     private final String content;
 
-    public ArticleCreateDto(String userId, String title, String content) {
+    public ArticleCreationRequest(String userId, String title, String content) {
         this.userId = userId;
         this.title = title;
         this.content = content;

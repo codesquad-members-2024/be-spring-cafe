@@ -1,6 +1,6 @@
 package codesquad.springcafe.users.model;
 
-import codesquad.springcafe.users.model.dto.UserUpdateData;
+import codesquad.springcafe.users.model.dto.UserUpdateRequest;
 
 import java.security.*;
 import java.time.LocalDate;
@@ -74,7 +74,7 @@ public class User {
         return creationDate;
     }
 
-    public void updateUser(UserUpdateData updateData) {
+    public void updateUser(UserUpdateRequest updateData) {
         this.name = updateData.getNewName();
         this.email = updateData.getNewEmail();
         byte[] saltBytes = generateSalt();

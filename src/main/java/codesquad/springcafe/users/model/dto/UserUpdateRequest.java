@@ -1,12 +1,12 @@
 package codesquad.springcafe.users.model.dto;
 
-public class UserUpdateData {
+public class UserUpdateRequest {
     private final String newName;
     private final String newEmail;
     private final String currentPassword;
     private final String newPassword;
 
-    public UserUpdateData(String newName, String newEmail, String currentPassword, String newPassword) {
+    public UserUpdateRequest(String newName, String newEmail, String currentPassword, String newPassword) {
         this.newName = newName;
         this.newEmail = newEmail;
         this.currentPassword = currentPassword;

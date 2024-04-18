@@ -3,13 +3,12 @@ package codesquad.springcafe.users.repository;
 import codesquad.springcafe.users.model.User;
 import codesquad.springcafe.exception.UserNotFoundException;
 import codesquad.springcafe.db.UserDatabase;
-import codesquad.springcafe.users.model.dto.UserCredentialDto;
+import codesquad.springcafe.users.model.data.UserCredentialData;
 import codesquad.springcafe.users.model.dto.UserPreviewDto;
-import codesquad.springcafe.users.model.dto.UserUpdateData;
+import codesquad.springcafe.users.model.dto.UserUpdateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -53,17 +52,17 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<UserCredentialDto> getUserCredential(String userId) {
+    public Optional<UserCredentialData> getUserCredential(String userId) {
         User user = userDatabase.findUserById(userId).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다"));
 
-        UserCredentialDto userCredentialDto = new UserCredentialDto(user.getSalt(), user.getHashedPassword());
+        UserCredentialData userCredentialData = new UserCredentialData(user.getSalt(), user.getHashedPassword());
 
-        return Optional.of(userCredentialDto);
+        return Optional.of(userCredentialData);
     }
 
 
     @Override
-    public void updateUser(String userId, UserUpdateData updateData) {
+    public void updateUser(String userId, UserUpdateRequest updateData) {
         User user = userDatabase.findUserById(userId).orElseThrow(() -> new UserNotFoundException("유저를 찾을 수 없습니다."));
 
         user.updateUser(updateData);

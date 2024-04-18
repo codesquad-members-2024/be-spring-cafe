@@ -37,12 +37,12 @@ public class UserController {
     }
 
     @PostMapping
-    public String registerUser(UserCreateDto userCreateDto, Model model) {
-        userService.createUser(userCreateDto);
+    public String registerUser(UserCreationRequest userCreationRequest, Model model) {
+        userService.createUser(userCreationRequest);
 
-        model.addAttribute("userEmail", userCreateDto.getEmail());
-        model.addAttribute("userId", userCreateDto.getUserId());
-        model.addAttribute("userName", userCreateDto.getName());
+        model.addAttribute("userEmail", userCreationRequest.getEmail());
+        model.addAttribute("userId", userCreationRequest.getUserId());
+        model.addAttribute("userName", userCreationRequest.getName());
         return "user/login_success";
     }
 
@@ -65,7 +65,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/update")
-    public String updateUser(@PathVariable String userId, UserUpdateData updateData, Model model) {
+    public String updateUser(@PathVariable String userId, UserUpdateRequest updateData, Model model) {
         try {
             userService.updateUser(userId, updateData);
         } catch (PasswordMismatchException e) {
@@ -84,10 +84,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String loginUser(HttpServletRequest request, UserLoginDto userLoginDto, Model model) {
+    public String loginUser(HttpServletRequest request, UserLoginRequest userLoginRequest, Model model) {
         HttpSession session = request.getSession();
         try {
-            UserPreviewDto userPreviewDto = userService.loginUser(userLoginDto);
+            UserPreviewDto userPreviewDto = userService.loginUser(userLoginRequest);
             session.setAttribute("sessionedUser", userPreviewDto);
         } catch (UserNotFoundException | PasswordMismatchException e) {
             model.addAttribute("errorMsg", e.getMessage());

@@ -1,14 +1,13 @@
-package codesquad.springcafe.users.model.dto;
+package codesquad.springcafe.users.model.data;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-import java.util.Objects;
 
-public class UserCredentialDto {
+public class UserCredentialData {
     private final String salt;
     private final String hashedPassword;
-    public UserCredentialDto(String salt, String hashedPassword) {
+    public UserCredentialData(String salt, String hashedPassword) {
         this.salt = salt;
         this.hashedPassword = hashedPassword;
     }

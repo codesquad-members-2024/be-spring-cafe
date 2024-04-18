@@ -1,9 +1,9 @@
 package codesquad.springcafe.users.repository;
 
 import codesquad.springcafe.users.model.User;
-import codesquad.springcafe.users.model.dto.UserCredentialDto;
+import codesquad.springcafe.users.model.data.UserCredentialData;
 import codesquad.springcafe.users.model.dto.UserPreviewDto;
-import codesquad.springcafe.users.model.dto.UserUpdateData;
+import codesquad.springcafe.users.model.dto.UserUpdateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,18 +64,18 @@ public class H2UserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<UserCredentialDto> getUserCredential(String userId) {
+    public Optional<UserCredentialData> getUserCredential(String userId) {
         String sql = "SELECT SALT, HASHEDPASSWORD FROM USERS WHERE USERID = ?";
         return jdbcTemplate.query(sql, new Object[]{userId}, rs -> {
             if (rs.next()) {
-                return Optional.of(new UserCredentialDto(rs.getString(SALT), rs.getString(HASHEDPASSWORD)));
+                return Optional.of(new UserCredentialData(rs.getString(SALT), rs.getString(HASHEDPASSWORD)));
             }
             return Optional.empty();
         });
     }
 
     @Override
-    public void updateUser(String userId, UserUpdateData updateData) {
+    public void updateUser(String userId, UserUpdateRequest updateData) {
         String sql = "UPDATE USERS SET EMAIL = ?, NAME = ?, PASSWORD = ? WHERE USERID = ?";
         jdbcTemplate.update(sql, updateData.getNewEmail(), updateData.getNewName(), updateData.getNewPassword(), userId);
     }
