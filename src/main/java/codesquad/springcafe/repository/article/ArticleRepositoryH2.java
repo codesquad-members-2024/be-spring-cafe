@@ -75,6 +75,12 @@ public class ArticleRepositoryH2 implements ArticleRepository {
     }
 
     @Override
+    public void delete(long id) {
+        String sql = "delete from ARTICLE where ARTICLE_ID = ?";
+        template.update(sql, id);
+    }
+
+    @Override
     public void clear() {
         String sql = "alter table if exists article drop constraint if exists fk_created_by; TRUNCATE TABLE ARTICLE; ALTER TABLE ARTICLE ALTER COLUMN ARTICLE_ID RESTART WITH 1";
         template.update(sql);

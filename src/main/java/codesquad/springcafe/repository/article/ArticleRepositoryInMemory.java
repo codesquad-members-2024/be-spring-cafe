@@ -48,6 +48,11 @@ public class ArticleRepositoryInMemory implements ArticleRepository {
     }
 
     @Override
+    public void delete(long id) {
+        store.remove(id);
+    }
+
+    @Override
     public void clear() {
         store.clear();
         sequence.set(0L);
