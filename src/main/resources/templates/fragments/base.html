@@ -65,9 +65,14 @@
         <div class="collapse navbar-collapse" id="navbar-collapse2">
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="/">Posts</a></li>
-                <li th:if="${session.loginUserId == null}"><a href="/users/login" methods="GET" role="button">로그인</a></li>
-                <li th:if="${session.loginUserId == null}"><a href="/users/join" methods="GET" role="button">회원가입</a></li>
-                <li th:if="${session.loginUserId != null}"><a href="/users/logout" methods="POST" role="button">로그아웃</a></li>
+                <li th:if="${session.loginUserId == null}"><a href="/users/login" role="button">로그인</a></li>
+                <li th:if="${session.loginUserId == null}"><a href="/users/join" role="button">회원가입</a></li>
+                <li th:if="${session.loginUserId != null}">
+                    <form th:action="@{/users/logout}" method="post">
+                        <button type="submit" class="btn btn-link navbar-button">로그아웃</button>
+                    </form>
+<!--                    <a href="/users/logout" methods="POST" role="button">로그아웃</a>-->
+                </li>
                 <li th:if="${session.loginUserId != null}"><a th:href="@{/users/{userId}/form(userId = ${session.loginUserId})}" role="button">개인정보수정</a></li>
             </ul>
         </div>
