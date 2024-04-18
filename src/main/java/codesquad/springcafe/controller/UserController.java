@@ -59,7 +59,7 @@ public class UserController {
     @PostMapping("/login")
     public String login(@RequestParam String userId, @RequestParam String password, HttpSession httpSession) {
         if (userService.isValidUser(userId, password)) {
-            httpSession.setAttribute("loginUser", userId);
+            httpSession.setAttribute("loginUserId", userId);
             log.debug("로그인 성공: {}", userId);
             return "redirect:/";
         }
@@ -80,8 +80,6 @@ public class UserController {
     @PutMapping("/{userId}")
     public String updateUser(@PathVariable String userId, @RequestParam("password") String password, @RequestParam("newPassword") String newPassword, @RequestParam("name") String name, @RequestParam("email") String email) {
         UserUpdateDto userUpdateDto = new UserUpdateDto(userId, password, newPassword, name, email);
-
-
         try {
             userService.update(userUpdateDto);
         } catch (IllegalArgumentException e) {
