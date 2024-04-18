@@ -15,8 +15,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,13 +41,16 @@ class UserServiceImplTest {
 
     @Test
     void testFindUserById() {
-        Optional<User> optionalUser = Optional.of(new User("username", "password", "name", "email@example.com"));
-        when(userRepository.findById(anyLong())).thenReturn(optionalUser);
+        // given
+        User user = new User("username", "password", "name", "email@example.com");
+        when(userRepository.findByUserId("username")).thenReturn(Optional.of(user));
 
-        Optional<User> foundUser = userService.findUserById(1L);
+        // when
+        Optional<User> foundUser = userService.findUserByUserId("username");
 
+        // then
         assertTrue(foundUser.isPresent());
-        assertThat(foundUser.get().getUserId()).isEqualTo("username");
+        assertThat(foundUser.get().getName()).isEqualTo("name");
     }
 
     @Test
