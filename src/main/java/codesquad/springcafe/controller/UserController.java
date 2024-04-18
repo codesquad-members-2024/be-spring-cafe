@@ -61,4 +61,18 @@ public class UserController {
         model.addAttribute("user", user);
         return "users/profile";
     }
+
+    // 회원정보 수정 화면
+    @GetMapping("{id}/edit")
+    public String showEditForm(@PathVariable("id") Long id, Model model){
+        Optional<User> userOptional = userService.findUserById(id);
+
+        if (!userOptional.isPresent()){
+            logger.info("User with id {} not found", id);
+            return "redirect:/users/users";
+        }
+
+        model.addAttribute("user", userOptional.get());
+        return "users/form_update";
+    }
 }
