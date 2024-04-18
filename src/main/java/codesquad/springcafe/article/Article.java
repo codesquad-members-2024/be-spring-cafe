@@ -22,14 +22,6 @@ public class Article {
         this.createdTime = LocalDateTime.now();
     }
 
-    public Article(String writer, String title, String content, Long articleId, LocalDateTime createdTime) {
-        this.writer = writer;
-        this.title = title;
-        this.content = content;
-        this.articleId = articleId;
-        this.createdTime = createdTime;
-    }
-
     public Long getArticleId() {
         return articleId;
     }

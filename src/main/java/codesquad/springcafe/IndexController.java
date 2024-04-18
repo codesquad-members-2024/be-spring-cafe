@@ -15,8 +15,8 @@ public class IndexController {
     ArticleDatabase articleDatabase;
 
     @Autowired
-    public IndexController(ArticleDatabase articleH2Database) {
-        this.articleDatabase = articleH2Database;
+    public IndexController(ArticleDatabase articleDatabase) {
+        this.articleDatabase = articleDatabase;
     }
 
     @GetMapping({"/", "/index", "/index.html"})

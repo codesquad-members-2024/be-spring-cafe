@@ -3,15 +3,16 @@ package codesquad.springcafe.article;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
-import java.util.Collections;
 
 @Repository
 public class ArticleMemoryDatabase implements ArticleDatabase{
 
     private final static Map<Long, Article> articleMap = new LinkedHashMap<>();
+    private static long sequence = 0L;
 
     @Override
     public void addArticle(Article article) {
+        article.setArticleId(++sequence);
         articleMap.put(article.getArticleId(), article);
     }
 

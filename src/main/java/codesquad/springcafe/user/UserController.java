@@ -16,8 +16,8 @@ public class UserController {
     UserDatabase userDB;
 
     @Autowired
-    UserController(UserDatabase userH2Database) {
-        this.userDB = userH2Database;
+    UserController(UserDatabase userDatabase) {
+        this.userDB = userDatabase;
     }
 
     @PostMapping("/users")

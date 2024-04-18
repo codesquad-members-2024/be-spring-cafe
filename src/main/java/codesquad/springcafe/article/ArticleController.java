@@ -18,8 +18,8 @@ public class ArticleController {
     ArticleDatabase articleDatabase;
 
     @Autowired
-    public ArticleController(ArticleDatabase articleH2Database) {
-        this.articleDatabase = articleH2Database;
+    public ArticleController(ArticleDatabase articleDatabase) {
+        this.articleDatabase = articleDatabase;
     }
 
     @PostMapping("/questions")

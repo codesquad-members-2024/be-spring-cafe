@@ -13,8 +13,8 @@ public class LoginController {
     UserDatabase userDatabase;
 
     @Autowired
-    public LoginController(UserDatabase userH2Database) {
-        this.userDatabase = userH2Database;
+    public LoginController(UserDatabase userDatabase) {
+        this.userDatabase = userDatabase;
     }
 
     @PostMapping("/user/login")

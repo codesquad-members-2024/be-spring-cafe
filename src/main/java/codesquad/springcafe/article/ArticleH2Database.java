@@ -1,6 +1,7 @@
 package codesquad.springcafe.article;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -9,6 +10,7 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
+@Primary
 public class ArticleH2Database implements ArticleDatabase {
 
     JdbcTemplate jdbcTemplate;
