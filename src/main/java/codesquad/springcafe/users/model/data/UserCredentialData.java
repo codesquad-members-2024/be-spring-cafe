@@ -5,29 +5,19 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 public class UserCredentialData {
-    private final String salt;
     private final String hashedPassword;
-    public UserCredentialData(String salt, String hashedPassword) {
-        this.salt = salt;
+
+    public UserCredentialData(String hashedPassword) {
         this.hashedPassword = hashedPassword;
     }
 
-    public boolean verifyPassword(String inputPassword) {
-        String hashedInputPassword = hashPassword(inputPassword, Base64.getDecoder().decode(salt));
-        return hashedInputPassword.equals(hashedPassword);
-    }
-
-    private String hashPassword(String password, byte[] salt) {
-        try {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-            messageDigest.reset();
-            messageDigest.update(salt);
-            byte[] hashedBytes = messageDigest.digest(password.getBytes());
-            return Base64.getEncoder().encodeToString(hashedBytes);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("SHA-256 알고리즘을 찾을 수 없습니다.", e);
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
         }
+        UserCredentialData other = (UserCredentialData) obj;
+        return this.hashedPassword.equals(other.hashedPassword);
     }
-
 
 }

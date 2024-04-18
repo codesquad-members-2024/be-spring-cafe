@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Optional;
 
+
 @Repository
 public class MemoryUserRepository implements UserRepository {
     private static final Logger logger = LoggerFactory.getLogger(MemoryUserRepository.class);
@@ -55,7 +56,7 @@ public class MemoryUserRepository implements UserRepository {
     public Optional<UserCredentialData> getUserCredential(String userId) {
         User user = userDatabase.findUserById(userId).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다"));
 
-        UserCredentialData userCredentialData = new UserCredentialData(user.getSalt(), user.getHashedPassword());
+        UserCredentialData userCredentialData = new UserCredentialData(user.getHashedPassword());
 
         return Optional.of(userCredentialData);
     }

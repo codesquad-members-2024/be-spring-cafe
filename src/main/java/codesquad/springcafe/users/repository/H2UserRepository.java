@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 
-
 @Primary
 @Repository
 public class H2UserRepository implements UserRepository {
@@ -25,7 +24,6 @@ public class H2UserRepository implements UserRepository {
     private static final String USERID = "USERID";
     private static final String NAME = "NAME";
     private static final String EMAIL = "EMAIL";
-    private static final String SALT = "SALT";
     private static final String HASHEDPASSWORD = "HASHEDPASSWORD";
     private static final String CREATIONDATE = "CREATIONDATE";
 
@@ -38,8 +36,8 @@ public class H2UserRepository implements UserRepository {
 
     @Override
     public void createUser(User user) {
-        String sql = "INSERT INTO USERS (USERID, EMAIL, NAME, SALT, HASHEDPASSWORD, CREATIONDATE) VALUES (?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, user.getUserId(), user.getEmail(), user.getName(), user.getSalt(), user.getHashedPassword(), user.getCreationDate().toString());
+        String sql = "INSERT INTO USERS (USERID, EMAIL, NAME, HASHEDPASSWORD, CREATIONDATE) VALUES (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, user.getUserId(), user.getEmail(), user.getName(), user.getHashedPassword(), user.getCreationDate().toString());
     }
 
     @Override
@@ -65,10 +63,10 @@ public class H2UserRepository implements UserRepository {
 
     @Override
     public Optional<UserCredentialData> getUserCredential(String userId) {
-        String sql = "SELECT SALT, HASHEDPASSWORD FROM USERS WHERE USERID = ?";
+        String sql = "SELECT HASHEDPASSWORD FROM USERS WHERE USERID = ?";
         return jdbcTemplate.query(sql, new Object[]{userId}, rs -> {
             if (rs.next()) {
-                return Optional.of(new UserCredentialData(rs.getString(SALT), rs.getString(HASHEDPASSWORD)));
+                return Optional.of(new UserCredentialData(rs.getString(HASHEDPASSWORD)));
             }
             return Optional.empty();
         });
