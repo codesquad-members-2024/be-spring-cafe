@@ -24,7 +24,7 @@ public class UserController {
     @GetMapping("/user/{userId}")
     public String showProfile(@PathVariable String userId, Model model) {
         UserViewDto userDto = userDao.findUser(userId)
-                .map(userMapper::toDto)
+                .map(userMapper::toProfileDto)
                 .orElseThrow(() -> new IllegalArgumentException(userId + "를 찾을 수 없습니다"));
 
         model.addAttribute("users", userDto);
@@ -34,7 +34,7 @@ public class UserController {
     // 회원가입 기능
     @PostMapping("/user")
     public String create(@ModelAttribute UserCreationDto userCreationDto) {
-        User user = userMapper.toUser(userCreationDto);
+        User user = userMapper.toCreateUser(userCreationDto);
         userDao.save(user);
         return "redirect:/users";
     }
@@ -46,7 +46,7 @@ public class UserController {
         // 인덱스 번호를 유저마다 붙여 View 에게 전달하는 DTO생성
         AtomicLong atomicLong = new AtomicLong(0L);
         List<UserViewDto> userDtos = users.stream()
-                .map(user -> userMapper.toDto(user, atomicLong.incrementAndGet()))
+                .map(user -> userMapper.toListDto(user, atomicLong.incrementAndGet()))
                 .toList();
 
         model.addAttribute("users", userDtos);
@@ -61,7 +61,7 @@ public class UserController {
 
     @PutMapping("/user/{userId}/form")
     public String updateUser(@PathVariable String userId, UserCreationDto dto) {
-        User user = userMapper.toUser(userId, dto);
+        User user = userMapper.toUpdateUser(userId, dto);
         userDao.updateUser(user);
         return "redirect:/users";
     }

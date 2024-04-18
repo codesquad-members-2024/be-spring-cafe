@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Optional;
 
 @Controller
 public class ArticleController {
@@ -25,20 +24,20 @@ public class ArticleController {
     // 아티클 id를 가지고 해당 아티클 보여주기 없으면 기본 홈페이지 보여주기
     @GetMapping("/article/{id}")
     public String showArticle(@PathVariable int id, Model model) {
-        Optional<Article> optArticle = articleDao.findBy(id);
-        return optArticle.map(article -> {
-            model.addAttribute("article", article);
-            return "qna/show";
-        }).orElse("index");
+        return articleDao.findBy(id)
+                .map(article -> {
+                    model.addAttribute("article", article);
+                    return "qna/show";
+                }).orElse("index");
     }
 
 
     // 아티클 등록
     @PostMapping("/article")
-    public String storeArticle(@ModelAttribute ArticleFormDto articleFormDto) {
-        final String writer = articleFormDto.getWriter();
-        final String title = articleFormDto.getTitle();
-        final String contents = articleFormDto.getContents();
+    public String storeArticle(@ModelAttribute ArticleCraetionDto articleCraetionDto) {
+        final String writer = articleCraetionDto.getWriter();
+        final String title = articleCraetionDto.getTitle();
+        final String contents = articleCraetionDto.getContents();
         final LocalDateTime createAt = LocalDateTime.now();
 
         Article article = new Article(writer, title, contents, createAt);

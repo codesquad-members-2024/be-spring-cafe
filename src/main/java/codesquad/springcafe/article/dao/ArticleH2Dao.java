@@ -43,7 +43,7 @@ public class ArticleH2Dao implements ArticleDao {
 
     private RowMapper<Article> articleRowMapper() {
         return (rs, rowNum) -> {
-            long id = rs.getLong("id");
+            Long id = rs.getLong("id");
             String writer = rs.getString("writer");
             String title = rs.getString("title");
             String contents = rs.getString("contents");

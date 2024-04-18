@@ -1,11 +1,11 @@
 package codesquad.springcafe.article;
 
-public class ArticleFormDto {
+public class ArticleCraetionDto {
     private String writer;
     private String title;
     private String contents;
 
-    public ArticleFormDto(String writer, String title, String contents) {
+    public ArticleCraetionDto(String writer, String title, String contents) {
         this.writer = writer;
         this.title = title;
         this.contents = contents;
