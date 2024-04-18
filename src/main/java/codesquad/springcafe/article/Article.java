@@ -30,7 +30,7 @@ public class Article {
         return contents;
     }
 
-    public void setArticleId(long articleId) {
+    public void setArticleId(Long articleId) {
         this.articleId = articleId;
     }
 
@@ -44,5 +44,10 @@ public class Article {
 
     public void setContents(String contents) {
         this.contents = contents;
+    }
+
+    public void update(Article article) {
+        this.title = article.title;
+        this.contents = article.contents;
     }
 }
