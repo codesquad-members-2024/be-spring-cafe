@@ -18,6 +18,7 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
+    public static final String LOGIN_USER_ID = "loginUserId";
     private final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
@@ -59,7 +60,7 @@ public class UserController {
     @PostMapping("/login")
     public String login(@RequestParam String userId, @RequestParam String password, HttpSession httpSession) {
         if (userService.isValidUser(userId, password)) {
-            httpSession.setAttribute("loginUserId", userId);
+            httpSession.setAttribute(LOGIN_USER_ID, userId);
             log.debug("로그인 성공: {}", userId);
             return "redirect:/";
         }
@@ -88,5 +89,11 @@ public class UserController {
         }
         log.debug("user {} update", userUpdateDto.getUserId());
         return "redirect:/users";
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpSession httpSession) {
+        httpSession.invalidate();
+        return "redirect:/";
     }
 }
