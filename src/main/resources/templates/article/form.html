@@ -21,6 +21,7 @@
           <textarea name="contents" id="contents" rows="5" class="form-control"></textarea>
         </div>
         <input type="hidden" name="author" id="author" th:value="${session.nickname}">
+        <input type="hidden" name="userId" id="userId" th:value="${session.userId}">
         <button type="submit" class="btn btn-success clearfix pull-right">질문하기</button>
         <div class="clearfix"/>
       </form>

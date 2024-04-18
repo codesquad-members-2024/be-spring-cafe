@@ -29,8 +29,8 @@ class MainControllerTest {
     @DisplayName("게시글이 2개 저장될 때 index 페이지 테스트")
     void mainIndexTest() throws Exception {
         //Given
-        Article article1 = new Article((long) 1, "title1", "author1", "contents1");
-        Article article2 = new Article((long) 2, "title2", "author2", "contents2");
+        Article article1 = new Article((long) 1, "title1", "author1", "contents1", "userId1");
+        Article article2 = new Article((long) 2, "title2", "author2", "contents2", "userId2");
         System.out.println(articleDatabase.findAll().size());
         //when & then
         when(articleDatabase.findAll()).thenReturn(Arrays.asList(article1, article2));
