@@ -21,14 +21,14 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public void createUser(UserDto userDto) {
-        String SQL = "INSERT INTO users (user_id, nickname, email, password) VALUES (?, ?, ?, ?)";
+        String SQL = "INSERT INTO `user` (`user_id`, `nickname`, `email`, `password`) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(SQL, userDto.getUserId(), userDto.getNickname(), userDto.getEmail(),
                 userDto.getPassword());
     }
 
     @Override
     public void updateUser(String userId, UserUpdateDto userUpdateDto) {
-        String SQL = "UPDATE users SET password = ?, nickname = ?, email = ? WHERE user_id = ?";
+        String SQL = "UPDATE `user` SET `password` = ?, `nickname` = ?, `email` = ? WHERE `user_id` = ?";
         jdbcTemplate.update(SQL, userUpdateDto.getNewPassword(), userUpdateDto.getNewNickname(),
                 userUpdateDto.getNewEmail(),
                 userId);
@@ -36,13 +36,13 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public List<User> findAllUsers() {
-        String SQL = "SELECT * FROM users";
+        String SQL = "SELECT * FROM `user`";
         return jdbcTemplate.query(SQL, userRowMapper());
     }
 
     @Override
     public Optional<User> findByUserId(String userId) {
-        String SQL = "SELECT * FROM users WHERE user_id = ?";
+        String SQL = "SELECT * FROM `user` WHERE `user_id` = ?";
         return Optional.ofNullable(jdbcTemplate.queryForObject(SQL, userRowMapper(), userId));
     }
 

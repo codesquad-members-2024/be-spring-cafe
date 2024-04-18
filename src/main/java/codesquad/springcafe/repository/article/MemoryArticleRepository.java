@@ -2,7 +2,6 @@ package codesquad.springcafe.repository.article;
 
 import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.dto.ArticleDto;
-import codesquad.springcafe.repository.user.MemoryUserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

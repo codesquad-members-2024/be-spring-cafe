@@ -1,4 +1,4 @@
-create table users
+create table `user`
 (
     id       BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     user_id  VARCHAR(255) NOT NULL,

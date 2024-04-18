@@ -1,4 +1,4 @@
-create table articles
+create table article
 (
     id      BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     writer  VARCHAR(255) NOT NULL,
