@@ -8,8 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import codesquad.springcafe.domain.article.Article;
+import codesquad.springcafe.domain.member.Member;
 import codesquad.springcafe.repository.article.ArticleRepository;
-import codesquad.springcafe.service.article.ArticleService;
+import codesquad.springcafe.repository.member.MemberRepository;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,20 +28,33 @@ import org.springframework.test.web.servlet.ResultActions;
 class ArticleControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Autowired
-    ArticleService articleService;
+    private ArticleRepository articleRepository;
 
     @Autowired
-    ArticleRepository articleRepository;
+    private MemberRepository memberRepository;
 
     private static final String BASE_URL = "/questions";
 
+    @DisplayName("로그인된 상태가 아니면 /quetions 에 접속 시 /login 으로 리다이렉션된다")
     @Test
-    void get_request_publish() throws Exception {
+    void get_request_publish_fail() throws Exception {
         // given & when
         ResultActions result = mockMvc.perform(get(BASE_URL));
+
+        // then
+        result.andExpect(status().is3xxRedirection());
+    }
+
+    @DisplayName("로그인된 상태면 /quetions 에 정상 접속된다")
+    @Test
+    void get_request_publish_success() throws Exception {
+        // given & when
+        ResultActions result = mockMvc.perform(get(BASE_URL)
+                .sessionAttr("SID", "test-test-test-test")
+        );
 
         // then
         result.andExpect(status().isOk())
@@ -51,12 +65,15 @@ class ArticleControllerTest {
     @Test
     void publish_success_when_post_request_with_article() throws Exception {
         // given
+        memberRepository.save(new Member("testUser", "123", null, null));
+
         String articleParams = "title=testTitle&createdBy=testUser&contents=testContents";
 
         // when
         ResultActions result = mockMvc.perform(post(BASE_URL)
                 .content(articleParams)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .sessionAttr("SID", "test-test-test-test")
         );
 
         // then
@@ -76,17 +93,20 @@ class ArticleControllerTest {
         // 제목에 빈 값이 들어갈 때
         ResultActions noTitleResult = mockMvc.perform(post(BASE_URL)
                 .content(noTitle)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .sessionAttr("SID", "test-test-test-test"));
 
         // 본문에 빈 값이 들어갈 때
         ResultActions noContentsResult = mockMvc.perform(post(BASE_URL)
                 .content(noContents)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .sessionAttr("SID", "test-test-test-test"));
 
         // 작성자에 빈 값이 들어갈 때
         ResultActions noCreatedByResult = mockMvc.perform(post(BASE_URL)
                 .content(noCreatedBy)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .sessionAttr("SID", "test-test-test-test"));
 
         // then
         noTitleResult.andExpect(status().is2xxSuccessful())
@@ -108,7 +128,8 @@ class ArticleControllerTest {
         articleRepository.save(article);
 
         // when
-        ResultActions result = mockMvc.perform(get(BASE_URL + "/1"));
+        ResultActions result = mockMvc.perform(get(BASE_URL + "/1")
+                .sessionAttr("SID", "test-test-test-test"));
 
         // then
         result.andExpect(status().isOk())
@@ -120,7 +141,8 @@ class ArticleControllerTest {
     @Test
     void detail_fail() throws Exception {
         // given & when
-        ResultActions result = mockMvc.perform(get(BASE_URL + "/1"));
+        ResultActions result = mockMvc.perform(get(BASE_URL + "/1")
+                .sessionAttr("SID", "test-test-test-test"));
 
         // then
         result.andExpect(status().isOk())
