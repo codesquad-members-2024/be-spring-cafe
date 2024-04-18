@@ -1,6 +1,7 @@
 package codesquad.springcafe.database.article;
 
 import codesquad.springcafe.model.Article;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ public class ArticleH2Database implements ArticleDatabase {
         parameters.put("content", article.getContent());
         parameters.put("writeDate", article.getWriteDate());
         parameters.put("views", article.getViews());
+        parameters.put("isDeleted", article.isDeleted());
 
         Number key = jdbcInsert.executeAndReturnKey(parameters);
         article.setId((key.longValue()));
@@ -37,7 +39,7 @@ public class ArticleH2Database implements ArticleDatabase {
 
     @Override
     public Optional<Article> findBy(Long id) {
-        String sql = "select id, writer, title, content, writedate, views from articles where id = ?";
+        String sql = "select id, writer, title, content, writedate, views, isDeleted from articles where id = ? and isDeleted = false";
         List<Article> result = jdbcTemplate.query(sql, articleRowMapper(), id);
         return result.stream()
                 .findAny();
@@ -45,22 +47,22 @@ public class ArticleH2Database implements ArticleDatabase {
 
     @Override
     public List<Article> findAll() {
-        String sql = "select id, writer, title, content, writedate, views from articles";
+        String sql = "select id, writer, title, content, writedate, views, isDeleted from articles where isDeleted=false";
         return jdbcTemplate.query(sql, articleRowMapper());
     }
 
     @Override
     public void update(Article article) {
-        String sql = "UPDATE articles SET title = ?, content = ?, writer = ?, views = ? WHERE id = ?";
-        jdbcTemplate.update(sql, article.getTitle(), article.getContent(), article.getWriter(), article.getViews(),
-                article.getId());
+        String sql = "UPDATE articles SET title = ?, content = ?, writer = ?, views = ?, isDeleted = ? WHERE id = ?";
+        jdbcTemplate.update(sql, article.getTitle(), article.getContent(), article.getWriter(), article.getViews()
+                , article.isDeleted(), article.getId());
     }
-
-    @Override
-    public void delete(Long id) {
-        String sql = "DELETE FROM articles WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
+//
+//    @Override
+//    public void delete(Long id) {
+//        String sql = "DELETE FROM articles WHERE id = ?";
+//        jdbcTemplate.update(sql, id);
+//    }
 
 
     @Override
@@ -75,9 +77,9 @@ public class ArticleH2Database implements ArticleDatabase {
             String writer = rs.getString("writer");
             String title = rs.getString("title");
             String content = rs.getString("content");
-            Article article = new Article(writer, title, content);
+            LocalDateTime writeDate = rs.getTimestamp("writeDate").toLocalDateTime();
+            Article article = new Article(writer, title, content, writeDate);
             article.setId(rs.getLong("id"));
-            article.setWriteDate(rs.getTimestamp("writedate").toLocalDateTime());
             article.setViews(rs.getLong("views"));
             return article;
         };

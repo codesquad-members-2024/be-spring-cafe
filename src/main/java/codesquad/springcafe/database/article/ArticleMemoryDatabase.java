@@ -33,10 +33,10 @@ public class ArticleMemoryDatabase implements ArticleDatabase {
         store.put(article.getId(), article);
     }
 
-    @Override
-    public void delete(Long id) {
-        store.remove(id);
-    }
+//    @Override
+//    public void delete(Long id) {
+//        store.remove(id);
+//    }
 
     @Override
     public void clear() {

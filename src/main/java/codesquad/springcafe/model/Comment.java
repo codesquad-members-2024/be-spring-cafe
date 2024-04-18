@@ -4,35 +4,20 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import org.springframework.format.annotation.DateTimeFormat;
 
-public class Article {
+public class Comment {
     private final String writer;
-    private final String title;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private final String content;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:MM:ss")
+    private final Long articleId;
     private final LocalDateTime writeDate;
     private boolean isDeleted;
-    private long views;
     private Long id;
 
-    public Article(String writer, String title, String content, LocalDateTime writeDate) {
+    public Comment(String writer, String content, Long articleId, LocalDateTime writeDate) {
         this.writer = writer;
-        this.title = title;
         this.content = content;
+        this.articleId = articleId;
         this.writeDate = writeDate;
-    }
-
-    /**
-     * 조회수를 증가시킵니다.
-     */
-    public void increaseViews() {
-        views++;
-    }
-
-    public Article update(String title, String content) {
-        Article article = new Article(writer, title, content, writeDate);
-        article.setId(id);
-        article.setViews(views);
-        return article;
     }
 
     public void delete() {
@@ -43,12 +28,16 @@ public class Article {
         return writer;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
     public String getContent() {
         return content;
+    }
+
+    public Long getArticleId() {
+        return articleId;
+    }
+
+    public LocalDateTime getWriteDate() {
+        return writeDate;
     }
 
     public Long getId() {
@@ -57,18 +46,6 @@ public class Article {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public LocalDateTime getWriteDate() {
-        return writeDate;
-    }
-
-    public long getViews() {
-        return views;
-    }
-
-    public void setViews(long views) {
-        this.views = views;
     }
 
     public boolean isDeleted() {
@@ -83,25 +60,25 @@ public class Article {
         if (object == null || getClass() != object.getClass()) {
             return false;
         }
-        Article article = (Article) object;
-        return Objects.equals(writer, article.writer) && Objects.equals(title, article.title)
-                && Objects.equals(content, article.content) && Objects.equals(id, article.id);
+        Comment comment = (Comment) object;
+        return Objects.equals(writer, comment.writer) && Objects.equals(content, comment.content)
+                && Objects.equals(articleId, comment.articleId) && Objects.equals(writeDate,
+                comment.writeDate) && Objects.equals(id, comment.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(writer, title, content, id);
+        return Objects.hash(writer, content, articleId, writeDate, id);
     }
 
     @Override
     public String toString() {
-        return "Article{" +
+        return "Comment{" +
                 "writer='" + writer + '\'' +
-                ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
+                ", articleId=" + articleId +
                 ", writeDate=" + writeDate +
                 ", isDeleted=" + isDeleted +
-                ", views=" + views +
                 ", id=" + id +
                 '}';
     }
