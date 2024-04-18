@@ -1,6 +1,5 @@
 package codesquad.springcafe.user;
 
-import codesquad.springcafe.NoDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -26,7 +25,7 @@ public class UserController {
     public String showProfile(@PathVariable String userId, Model model) {
         UserViewDto userDto = userDao.findUser(userId)
                 .map(userMapper::toDto)
-                .orElseThrow(() -> new NoDataException(userId + "를 찾을 수 없습니다"));
+                .orElseThrow(() -> new IllegalArgumentException(userId + "를 찾을 수 없습니다"));
 
         model.addAttribute("users", userDto);
         return "user/profile";
