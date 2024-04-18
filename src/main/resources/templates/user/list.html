@@ -7,10 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link href="/css/reset.css" rel="stylesheet">
     <link href="/css/user/list.css" rel="stylesheet">
+    <script src="/js/global.js"></script>
 </head>
 <body>
 <div class="background">
-    {{>base/part/navbar_toMain}}
+    <div th:replace="~{base/part/navbar :: navbar}"></div>
 
     <div class="description">
         <div class="desc-container">
@@ -19,14 +20,32 @@
         </div>
     </div>
 
-    <p class="total_num">전체 멤버 {{totalUserCnt}}명</p>
+    <p class="total_num">전체 멤버 <span th:text="${totalUserCnt}">0</span>명</p>
 
-    {{#users}}
-    {{> base/user/user_profile_link}}
-    {{/users}}
-    {{^users}}
-    <p style="font-weight: bold;">회원가입한 사용자가 없습니다.</p>
-    {{/users}}
+    <div class="container" id="main">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-default">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>아이디</th>
+                        <th>닉네임</th>
+                        <th>이메일</th>
+                        <th>가입일자</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${users}">
+                        <td><a class="profile-link" th:href="@{'/profile/' + ${user.loginId}}" th:text="${user.loginId}"></a></td>
+                        <td th:text="${user.name}"></td>
+                        <td th:text="${user.email}"></td>
+                        <td th:text="${user.createdAt}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

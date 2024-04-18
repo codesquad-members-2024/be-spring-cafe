@@ -26,9 +26,10 @@ public class UserRepositoryLocal implements UserRepository{
         return Optional.ofNullable(users.get(id));
     }
 
-    public Optional<User> findByEmail(String email) {
+    @Override
+    public Optional<User> findByLoginId(String loginId) {
         List<User> findUsers = users.values().stream()
-                .filter(u -> u.getEmail().equals(email))
+                .filter(u -> u.getLoginId().equals(loginId))
                 .toList();
 
         // TODO : 예외 클래스 생성
@@ -49,5 +50,10 @@ public class UserRepositoryLocal implements UserRepository{
 
     public void deleteAll() {
         users.clear();
+    }
+
+    @Override
+    public Boolean existsById(Long userId) {
+        return users.containsKey(userId);
     }
 }

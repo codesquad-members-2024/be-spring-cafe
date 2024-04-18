@@ -7,12 +7,14 @@ import java.time.LocalDateTime;
 // TODO: 빌더 패턴 사용
 public class User extends BaseTime {
     private Long id;
+    private String loginId; //unique
     private String name;
     private String email;
     private String password;
 
-    public User(String name, String email, String password, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public User(String loginId, String name, String email, String password, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         super(createdAt, modifiedAt);
+        this.loginId = loginId;
         this.name = name;
         this.email = email;
         this.password = password;
@@ -27,6 +29,10 @@ public class User extends BaseTime {
         this.id = id;
     }
 
+    public String getLoginId() {
+        return loginId;
+    }
+
     public String getName() {
         return name;
     }
@@ -35,8 +41,12 @@ public class User extends BaseTime {
         return email;
     }
 
-    // TODO: 암호화 로직
     public String getPassword() {
         return password;
+    }
+
+    public void update(String name, String email) {
+        this.name = name;
+        this.email = email;
     }
 }

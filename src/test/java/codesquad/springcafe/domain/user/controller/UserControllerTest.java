@@ -1,77 +1,70 @@
 package codesquad.springcafe.domain.user.controller;
 
-import codesquad.springcafe.domain.user.model.User;
-import codesquad.springcafe.domain.user.model.UserRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import codesquad.springcafe.domain.user.data.UserJoinRequest;
+import codesquad.springcafe.domain.user.data.UserListResponse;
+import codesquad.springcafe.domain.user.data.UserResponse;
+import codesquad.springcafe.domain.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static codesquad.springcafe.global.utils.DateUtils.convertCreatedAt;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 // UserController 단위테스트
 // TODO: 실패 테스트도 작성
-@SpringBootTest
-@AutoConfigureMockMvc
+
+@WebMvcTest(UserController.class)
 class UserControllerTest {
+
+    @MockBean
+    private UserService userService;
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private WebApplicationContext context;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @BeforeEach
-    public void mockMvcSetUp() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-    }
-
-    @AfterEach
-    public void cleanup() {
-        userRepository.deleteAll();
-    }
-
-    @Test
+    @ParameterizedTest
+    @CsvSource(value = {
+            "hong,홍길동,hong@gmail.com,1234",
+            "lim,임꺽정,lim@gmail.com,5678",
+            "shin,신사임당,shin@gmail.com,9012"
+    })
     @DisplayName("회원가입에 성공한다.")
-    void testPostUser() throws Exception {
+    void testPostUser(String loginId, String name, String email, String password) throws Exception {
         //given
-        final String url = "/users";
-        final String email = "hong@gmail.com";
-        final String name = "hong";
-        final String password = "1234";
+        final String url = "/user";
+
+        given(userService.join(new UserJoinRequest(loginId, email, name, password)))
+                .willReturn(1L);
 
         //when
         final ResultActions result = mockMvc.perform(
                 post(url).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("userId", loginId)
                         .param("email", email)
                         .param("name", name)
                         .param("password", password)); // POST
 
         //then
         result.andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_HTML))
                 .andExpect(view().name("/user/registration_success"))
                 .andExpect(model().attribute("user", allOf( // userJoinData에는 getPwd가 없다. email, name만 확인
+                        hasProperty("loginId", equalTo(loginId)),
                         hasProperty("email", equalTo(email)),
                         hasProperty("name", equalTo(name))
                 )));
@@ -82,51 +75,64 @@ class UserControllerTest {
     void testGetJoinedUserList() throws Exception {
         //given
         final String url = "/users";
-        List<User> userList = Arrays.asList(
-                new User("홍길동", "hong@gmail.com", "1234", LocalDateTime.now(), LocalDateTime.now()),
-                new User("임꺽정", "lim@gmail.com", "5678", LocalDateTime.now(), LocalDateTime.now()),
-                new User("신사임당", "shin@gmail.com", "9012", LocalDateTime.now(), LocalDateTime.now())
+
+        List<UserResponse> userList = Arrays.asList(
+                new UserResponse("hong", "홍길동", "hong@gmail.com", "2024-01-14 13:38:00"),
+                new UserResponse("lim","임꺽정", "lim@gmail.com", "2024-01-14 14:38:00"),
+                new UserResponse("shin","신사임당", "shin@gmail.com", "2024-01-14 15:38:00")
         );
-        userList.forEach(user -> userRepository.save(user));
+
+        given(userService.getUsers()).willReturn(new UserListResponse(userList));
+
+        MockHttpSession httpSession = new MockHttpSession();
+        httpSession.setAttribute("userId", 1);
 
         //when
-        final ResultActions result = mockMvc.perform(get(url)); // GET
+        final ResultActions result = mockMvc.perform(get(url)
+                .session(httpSession)); // GET
 
         //then
         result.andExpect(status().isOk())   // 200 OK
-                .andExpect(content().contentType(MediaType.TEXT_HTML))  // HTML 응답
                 .andExpect(view().name("user/list"))    // 뷰 이름
                 .andExpect(model().attribute("totalUserCnt", userList.size()))
                 .andExpect(model().attribute("users", containsInAnyOrder(
                         userList.stream().map(user ->
                                 allOf(
-                                        hasProperty("id", equalTo(user.getId())),
+                                        hasProperty("loginId", equalTo(user.getLoginId())),
                                         hasProperty("name", equalTo(user.getName())),
-                                        hasProperty("email", equalTo(user.getEmail()))
+                                        hasProperty("email", equalTo(user.getEmail())),
+                                        hasProperty("createdAt", equalTo(user.getCreatedAt()))
                                 )
                         ).collect(Collectors.toList())
                 )));
     }
 
-    @Test
+    @ParameterizedTest
+    @CsvSource(value = {
+            "hong,홍길동,hong@gmail.com,2024-01-14 13:38:00",
+            "lim,임꺽정,lim@gmail.com,2024-01-14 14:38:00",
+            "shin,신사임당,shin@gmail.com,2024-01-14 15:38:00"
+    })
     @DisplayName("유저 프로필 조회에 성공한다.")
-    void testGetUserProfile() throws Exception {
+    void testGetUserProfile(String loginId, String name, String email, String createdAt) throws Exception {
         //given
-        final String url = "/users/{userId}";
-        User user = new User("hong", "hong@gmail.com", "1234", LocalDateTime.now(), LocalDateTime.now());
-        Long userSavedId = userRepository.save(user).getId();
+        final String url = "/profile/{loginId}";
+
+        given(userService.getUser(loginId)).willReturn(new UserResponse(loginId, email, name, createdAt));
+
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("userId", 1);
 
         //when
-        final ResultActions result = mockMvc.perform(get(url, userSavedId));
+        final ResultActions result = mockMvc.perform(get(url, loginId).session(session));
 
         //then
         result.andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_HTML))
                 .andExpect(view().name("user/profile"))
                 .andExpect(model().attribute("user", allOf(
-                        hasProperty("email", equalTo(user.getEmail())),
-                        hasProperty("name", equalTo(user.getName())),
-                        hasProperty("createdAt", equalTo(convertCreatedAt(user.getCreatedAt())))
+                        hasProperty("email", equalTo(email)),
+                        hasProperty("name", equalTo(name)),
+                        hasProperty("createdAt", equalTo(createdAt))
                 )));
     }
 }

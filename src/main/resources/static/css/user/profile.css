@@ -94,7 +94,7 @@ li {
     margin-bottom: 5px;
 }
 
-.email, .nickname {
+.email, .nickname, .loginId {
     margin: 0;
 }
 
@@ -134,6 +134,30 @@ li {
     font-weight: bold; /* 라벨 텍스트 굵게 설정 */
 }
 
-.user-info .email, .user-info .nickname {
+.user-info .email, .user-info .nickname, .user-info .loginId{
     padding-left: 10px; /* 이메일과 닉네임 사이 여백 설정 */
+}
+
+.title {
+    font-size: 32px;
+    text-align: center;
+    font-weight: 500;
+    margin-top: 100px;
+    margin-bottom: 35px;
+}
+
+.complete{
+    align-items: center;
+    text-align: center;
+    width: 200px;
+    height: 30px;
+    font-size: 14px;
+    background-color: black;
+    color: white;
+    margin: 20px;
+}
+
+.complete:hover {
+    background-color: #ffcd00;
+    color: black;
 }

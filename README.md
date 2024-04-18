@@ -26,7 +26,7 @@
     ```
 
 ## step1️⃣
-
+### [공부한 내용](https://github.com/sharpie1330/be-spring-cafe/wiki/ModelAttribute,-WebMvcConfigurer,-Application-Context)
 ### 마주했던 문제 🤔
 
 ### mvc cannot resolve mvc view 오류
@@ -83,15 +83,67 @@
 - 문제 상황
   - user를 저장하고 반환되는 user 객체에서 getId()를 시도했으나, NPE 발생
 - 코드
-  ```java
-      public User save(User user){
-          long userId = sequence.incrementAndGet();
-          user.setId(userId);
-          return users.put(userId, user);
-      }
+  ```
+    public User save(User user){
+        long userId = sequence.incrementAndGet();
+        user.setId(userId);
+        return users.put(userId, user);
+    }
   ```
 - 해결 방법
   - map의 put의 반환타입이 Map<K, V>의 V여서 당연히 지금 저장한 값의 결과를 반환할 것이라고 생각했다.
   - map의 put은 새로운 요소를 추가할 때 해당 요소의 이전 값이 있으면 그 값을 반환한다
   - 이 경우 새로운 요소가 추가되는 경우므로 이전 값이 없어 null을 반환하고, 무엇보다 그 이전 값이 있더라도 해당 값을 활용해서는 안 된다.
   - 저장하려는 user 객체를 반환하도록 수정하여 해결
+
+## step 2️⃣
+
+### [공부한 내용](https://github.com/sharpie1330/be-spring-cafe/wiki/%EB%B9%84%EB%B0%80%EB%B2%88%ED%98%B8-%EC%95%94%ED%98%B8%ED%99%94,-CSRF-Token,-Filter%EC%99%80-Interceptor)
+### 마주했던 문제 🤔
+
+### 인터셉터를 거칠 url 패턴 접근 시 css 적용 안되는 문제
+- 문제 상황
+  - 로그인 여부를 확인할 인터셉터를 만들어 config 클래스에 등록했는데, css가 적용되지 않은 html만 표시되었다
+- 원인 분석 & 해결
+  - 인터셉터가 CSS 파일에 대한 요청까지 가로채어 발생하는 문제.
+  - /static/** 경로를 제외할 url 패턴으로 등록해 해결했다
+
+### 캐시 삭제
+- 적용하고 싶었던 것
+  - 로그인이나 회원가입 완료를 하고 이전 화면으로 돌아갔을 때 내가 제출했던 내용이 그대로 남아있지 않기를 원했다
+#### 시도 1: Cache-Control 헤더를 추가하는 Filter를 등록
+  - 장점
+    - 브라우저와 중간 캐시가 응답을 캐시하지 않아 항상 서버에서 새로운 데이터를 가져온다
+    - 중복된 요청이나 오래된 캐시 데이터로 인한 문제를 방지
+    - 사용자에게 항상 최신의 콘텐츠를 제공
+  - 단점
+    - 서버 부하가 증가하고 네트워크 트래픽이 증가한다
+    - 매번 서버에 요청을 보내야 하고 대용량 파일이나 이미지를 사용하는 경우 트래픽 증가가 더 심각할 수 있다
+  - 결론: 단점이 더 크므로 사용하지 말자
+  - 또한 해당 방법은 내가 원하는 결과를 가져오지 못했다
+
+#### 시도 2: javascript로 뒤로가기 이벤트가 발생하면 새로고침을 하자
+  - 뒤로가기를 하든, 앞으로가기를 하든 해당 사이트가 새로 로드되어야 한다
+  - Back/Forward Cache
+    - BFCache는 페이지를 이동할 때 js를 포함한 전체 페이지를 캐시하고, 사용자가 뒤로 또는 앞으로 페이지를 이동할 떄 페이지의 전체 상태를 복원하는 브라우저 최적화다
+    - 이전에 작성된 요청에 대한 응답만 포함하는 HTTP 캐시와 달리 전체 페이지의 스냅샷
+    - 이런 bfcache로부터 복원된 데이터 중 사용자 상태를 유지해야 하는 민감한 정보가 있는 경우 데이터를 업데이트 해야
+  - 해결 방법
+    - 'pageshow' 이벤트 발생 시 back_forward 동작에 대해 감지하고 새로고침을 하는 로직을 js로 구현해 전역적으로 적용했다
+    - 참고 자료 (자세한 것은 참고 자료 참조)
+      - https://onbaba.tistory.com/4
+      - https://kghworks.tistory.com/117
+      - https://goldpumpkin.co.kr/entry/%EB%92%A4%EB%A1%9C%EA%B0%80%EA%B8%B0-%EC%B2%B4%ED%81%AC-%ED%9B%84-%EC%83%88%EB%A1%9C%EA%B3%A0%EC%B9%A8%ED%95%98%EA%B8%B0
+  - **하지만, 여전히 문제가 있다...**
+    - 가끔 회원가입 성공 페이지에 앞으로 가기, 뒤로 가기 버튼을 통해 접근하면, 기존의 요청이 다시 전송되어지는 문제로 '중복된 사용자' 예외가 발생한다!
+
+#### 시도 3 (해결): 회원가입 요청 리다이렉트, 회원가입, 로그인 후 해당 페이지 접근 시 메인 페이지로 리다이렉트
+- 다시, 어떤 문제?
+  - 회원가입 요청에 대한 결과로 환영 페이지 뷰를 리턴하고 있다
+  - 뒤로가기 후 앞으로가기를 하면 실제로는 같은 URL에서의 요청이므로 문제가 발생할 수 있다
+  - 브라우저는 이전 페이지의 캐시된 버전을 보여주기 때문에 사용자는 다시 이전 페이지에 대해 같은 요청을 보내는 것처럼 보인다
+- 해결 방법
+  - /user 라는 포스트 요청에 대한 결과 페이지 url도 /user로 표시되는데, 아예 /welcome/{userId}와 같은 형식의 url로 redirect를 시키자
+- 추가 기능
+  - AfterAuthorizeInterceptor를 추가해서, 회원가입, 로그인 후 해당 페이지에 다시 접근 시 그냥 메인 페이지로 리다이렉트 시켜 주자
+  - 이 기능은 굳이 필요 없을 수 있지만 편의상으로 기능을 추가했다. 일단 추가해 두고 추후 문제가 생기면 제거하기로 한다

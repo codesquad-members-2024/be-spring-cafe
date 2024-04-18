@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>kakao Java Web Programming</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="/css/reset.css" rel="stylesheet">
+    <link href="/css/user/profile.css" rel="stylesheet">
+    <script src="/js/global.js"></script>
+</head>
+<body>
+<div class="background">
+    <div th:replace="~{base/part/navbar :: navbar}"></div>
+
+    <div class="container" id="main">
+        <header class="post-header">
+            <p class="title">회원정보 수정</p>
+        </header>
+        <div class="profile">
+            <img src="/images/user-default.png" alt="프로필 사진">
+            <div class="user-info">
+                <form class="info-container" method="post" action="/profile/my/edit">
+                    <input type="hidden" name="CSRF_TOKEN" th:value="${session.CSRF_TOKEN}">
+                    <input type="hidden" name="_method" value="PUT"/>
+                    <table>
+                        <tr>
+                            <td class="label">아이디</td>
+                            <td class="loginId" th:text="${user.getLoginId()}"></td>
+                        </tr>
+                        <tr>
+                            <td class="label">이메일</td>
+                            <td class="email">
+                                <div class="form-group">
+                                    <label for="email"></label>
+                                    <input type="email" class="form-control" id="email" name="email" th:value="${user.getEmail()}" placeholder="이메일을 입력하세요" required>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">닉네임</td>
+                            <td class="nickname">
+                                <div class="form-group">
+                                    <label for="name"></label>
+                                    <input class="form-control" id="name" name="name" th:value="${user.getName()}" placeholder="닉네입을 입력하세요" required>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <button type="submit" class="complete">완료</button>
+                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

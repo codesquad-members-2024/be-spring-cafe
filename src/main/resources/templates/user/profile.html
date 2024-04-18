@@ -7,31 +7,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link href="/css/reset.css" rel="stylesheet">
     <link href="/css/user/profile.css" rel="stylesheet">
+    <script src="/js/global.js"></script>
 </head>
 <body>
 <div class="background">
-    {{> base/part/navbar_toMain}}
+    <div th:replace="~{base/part/navbar :: navbar}"></div>
 
     <div class="container" id="main">
         <div class="profile">
             <img src="/images/user-default.png" alt="프로필 사진">
             <div class="user-info">
-                {{#user}}
                 <table>
                     <tr>
+                        <td class="label">아이디</td>
+                        <td class="loginId" th:text="${user.getLoginId()}"></td>
+                    </tr>
+                    <tr>
                         <td class="label">이메일</td>
-                        <td class="email">{{getEmail}}</td>
+                        <td class="email" th:text="${user.getEmail()}"></td>
                     </tr>
                     <tr>
                         <td class="label">닉네임</td>
-                        <td class="nickname">{{getName}}</td>
+                        <td class="nickname" th:text="${user.getName()}"></td>
                     </tr>
                 </table>
-                {{/user}}
             </div>
-            <div class="buttons">
-                <button class="edit-button">정보 수정</button>
-                <button class="delete-button">회원 탈퇴</button>
+            <div th:fragment="profile" class="buttons">
+                <a th:if="${my}" class="edit-button" href="/profile/my/edit">정보 수정</a>
+                <a th:if="${my}" class="delete-button">회원 탈퇴</a>
             </div>
         </div>
     </div>

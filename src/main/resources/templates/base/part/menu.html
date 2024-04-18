@@ -1,0 +1,18 @@
+<ul th:fragment="menu" class="nav navbar-nav navbar-right">
+    <li class="active"><a href="/users">멤버 리스트</a></li>
+    <li th:if="${session.userId}">
+        <a class="black-component" href="/profile/my" role="button">마이페이지</a>
+    </li>
+    <li th:if="${session.userId}">
+        <form action="/user/logout" method="post">
+            <input type="hidden" name="CSRF_TOKEN" th:value="${session.CSRF_TOKEN}">
+            <button style="display: flex; align-items: center; justify-content: center;" class="black-component" type="submit">로그아웃</button>
+        </form>
+    </li>
+    <li th:unless="${session.userId}">
+        <a class="black-component" href="/login" role="button">로그인</a>
+    </li>
+    <li th:unless="${session.userId}">
+        <a class="black-component" href="/join" role="button">회원가입</a>
+    </li>
+</ul>

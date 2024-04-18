@@ -1,0 +1,63 @@
+package codesquad.springcafe.domain.question.controller;
+
+import codesquad.springcafe.domain.question.data.QuestionListResponse;
+import codesquad.springcafe.domain.question.data.QuestionPostRequest;
+import codesquad.springcafe.domain.question.data.QuestionResponse;
+import codesquad.springcafe.domain.question.service.QuestionService;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+public class QuestionController {
+
+    private final QuestionService questionService;
+
+    @Autowired
+    public QuestionController(QuestionService questionService) {
+        this.questionService = questionService;
+    }
+
+    // 게시글 작성
+    @PostMapping("/post")
+    public String postQuestion(HttpSession httpSession, @Valid @ModelAttribute QuestionPostRequest questionPostRequest) {
+        Long userId = getSessionUserId(httpSession);
+        questionService.postQuestion(userId, questionPostRequest);
+
+        return "redirect:/questions";
+    }
+
+    // 게시글 목록 조회
+    @GetMapping({"/", "/questions"})
+    public String getQuestions(Model model) {
+        QuestionListResponse questionListResponse = questionService.getQuestions();
+
+        model.addAttribute("totalQuestionCnt", questionListResponse.getTotalQuestionCnt());
+        model.addAttribute("questions", questionListResponse.getQuestions());
+
+        return "index";
+    }
+
+    // 게시글 상세 조회
+    @GetMapping("/question/{questionId}")
+    public String getQuestion(HttpSession httpSession,
+                              @PathVariable("questionId") Long questionId, Model model) {
+        Long userId = getSessionUserId(httpSession);
+        QuestionResponse questionResponse = questionService.getQuestion(userId, questionId);
+
+        model.addAttribute("question", questionResponse);
+
+        return "/post/show";
+    }
+
+    private Long getSessionUserId(HttpSession httpSession) {
+        Object userId = httpSession.getAttribute("userId");
+        if (userId == null) {
+            throw new IllegalStateException("인증이 필요한 요청입니다.");
+        }
+        return (Long) userId;
+    }
+}
