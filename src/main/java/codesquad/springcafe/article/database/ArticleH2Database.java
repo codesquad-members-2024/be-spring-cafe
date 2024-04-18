@@ -25,7 +25,7 @@ public class ArticleH2Database implements ArticleDatabase {
     }
 
     @Override
-    public Article findById(long articleId) {
+    public Article findById(Long articleId) {
         String sql = "SELECT * FROM article WHERE articleid = ?";
         return jdbcTemplate.queryForObject(sql, new ArticleRowMapper(), articleId);
     }
@@ -39,6 +39,12 @@ public class ArticleH2Database implements ArticleDatabase {
     @Override
     public void clear() {
         jdbcTemplate.update("DELETE FROM article");
+    }
+
+    @Override
+    public void update(Article article, Long articleId) {
+        String sql = "UPDATE article SET title = ?, contents = ? WHERE articleid = ?";
+        jdbcTemplate.update(sql, article.getTitle(), article.getContents(), articleId);
     }
 
 }

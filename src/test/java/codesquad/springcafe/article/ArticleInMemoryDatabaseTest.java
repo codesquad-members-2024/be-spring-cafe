@@ -23,7 +23,7 @@ class ArticleInMemoryDatabaseTest {
     @Test
     @DisplayName("ArticleDatabase에 게시글이 잘 저장되는지 테스트")
     void saveArticle() {
-        Article article = new ArticleBuilder().articleId(1).author("jayden").title("제목")
+        Article article = new ArticleBuilder().articleId(1L).author("jayden").title("제목")
             .contents("내용").build();
 
         articleInMemoryDatabase.save(article);
@@ -34,7 +34,7 @@ class ArticleInMemoryDatabaseTest {
     @DisplayName("ArticleDatabase의 모든 게시글이 잘 찾아지는지 테스트")
     void testFindAllArticles() {
 
-        Article article = new ArticleBuilder().articleId(1).author("jayden").title("제목")
+        Article article = new ArticleBuilder().articleId(1L).author("jayden").title("제목")
             .contents("내용").build();
 
         articleInMemoryDatabase.save(article);

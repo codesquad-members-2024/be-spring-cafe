@@ -19,7 +19,7 @@ public class ArticleInMemoryDatabase implements ArticleDatabase {
     }
 
     @Override
-    public Article findById(long id) {
+    public Article findById(Long id) {
         return articles.stream()
             .filter(article -> article.getArticleId() == id)
             .findFirst()
@@ -34,5 +34,11 @@ public class ArticleInMemoryDatabase implements ArticleDatabase {
     @Override
     public void clear() {
         articles.clear();
+    }
+
+    @Override
+    public void update(Article article, Long articleId) {
+        Article foundArticle = findById(articleId);
+        foundArticle.update(article);
     }
 }

@@ -7,9 +7,11 @@ public interface ArticleDatabase {
 
     void save(Article article);
 
-    Article findById(long articleId);
+    Article findById(Long articleId);
 
     List<Article> findAll();
+
+    void update(Article article, Long articleId);
 
     void clear();
 }
