@@ -45,15 +45,15 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute UserDto userDto) {
-        User newUser = userRepository.createUser(userDto.toEntity());
+    public String createUser(@ModelAttribute UserDto userDto) {
+        User newUser = userRepository.createUser(userDto);
         logger.info("회원가입 성공: {}", newUser.toDto());
         return "redirect:/users"; // 이 uri로 리다이렉트
     }
 
     @GetMapping("/{userId}")
     public String userProfile(@PathVariable("userId") String userId, Model model) {
-        Optional<User> optionalUser = userRepository.findByUserId(userId);
+        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
         if (optionalUser.isPresent()) {
             User findedUser = optionalUser.get();
             model.addAttribute("user", findedUser);
@@ -83,7 +83,7 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@RequestParam("userId") String userId, @RequestParam("password") String password) {
-        Optional<User> optionalUser = userRepository.findByUserId(userId);
+        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
         if (optionalUser.isPresent()) {
             User loginedUser = optionalUser.get();
             if (loginedUser.getPassword().equals(password)) {

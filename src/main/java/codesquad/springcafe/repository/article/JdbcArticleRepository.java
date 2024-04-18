@@ -4,8 +4,19 @@ import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.dto.ArticleDto;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+@Primary
+@Repository
 public class JdbcArticleRepository implements ArticleRepository {
+    private final JdbcTemplate jdbcTemplate;
+
+    public JdbcArticleRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     @Override
     public Article createArticle(ArticleDto articleDto) {
         return null;
@@ -17,7 +28,7 @@ public class JdbcArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Optional<Article> findByArticleId(Long articleId) {
+    public Optional<Article> findArticleById(Long articleId) {
         return Optional.empty();
     }
 }

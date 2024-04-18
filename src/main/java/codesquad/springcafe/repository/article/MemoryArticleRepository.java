@@ -7,17 +7,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class MemoryArticleRepository implements ArticleRepository {
     private static final Map<Long, Article> articles = new ConcurrentHashMap<>();
-    private Long articleId = 0L;
+    private Long id = 0L;
 
     @Override
     public Article createArticle(ArticleDto articleDto) {
-        Article article = articleDto.toEntity(++articleId);
-        articles.put(articleId, article);
+        Article article = articleDto.toEntity();
+        article.setId(++id);
+        articles.put(id, article);
         return article;
     }
 
@@ -27,7 +29,7 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Optional<Article> findByArticleId(Long articleId) {
-        return Optional.ofNullable(articles.get(articleId));
+    public Optional<Article> findArticleById(Long id) {
+        return Optional.ofNullable(articles.get(id));
     }
 }

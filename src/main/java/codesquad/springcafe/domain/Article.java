@@ -1,32 +1,48 @@
 package codesquad.springcafe.domain;
 
+import codesquad.springcafe.dto.ArticleDto;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Article {
-    private Long articleId;
+    private Long id;
     private String writer;
     private String title;
     private String content;
-    private LocalDateTime localDateTime;
+    private LocalDateTime created;
     private long views;
 
-    public Article(Long articleId, String writer, String title, String content, LocalDateTime localDateTime,
-                   long views) {
-        this.articleId = articleId;
+    public Article(Long id, String writer, String title, String content, LocalDateTime created, long views) {
+        this.id = id;
         this.writer = writer;
         this.title = title;
         this.content = content;
-        this.localDateTime = localDateTime;
+        this.created = created;
         this.views = views;
+    }
+
+    public Article(String writer, String title, String content) {
+        this.writer = writer;
+        this.title = title;
+        this.content = content;
+        this.created = LocalDateTime.now();
+        this.views = 0L;
+    }
+
+    public ArticleDto toDto() {
+        return new ArticleDto(title, content);
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void increaseViews() {
         views++;
     }
 
-    public Long getArticleId() {
-        return articleId;
+    public Long getId() {
+        return id;
     }
 
     public String getWriter() {
@@ -41,23 +57,11 @@ public class Article {
         return content;
     }
 
-    public String getLocalDateTime() {
-        return localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    public String getCreated() {
+        return created.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     public long getViews() {
         return views;
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "articleId=" + articleId +
-                ", writer='" + writer + '\'' +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", localDateTime=" + localDateTime +
-                ", views=" + views +
-                '}';
     }
 }

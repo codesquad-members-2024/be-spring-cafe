@@ -40,12 +40,12 @@
                     <tbody>
                     <tr th:each="article: ${articles}">
                         <td>
-                            <a th:href="@{/articles/{articleId}(articleId=${article.getArticleId()})}"
+                            <a th:href="@{/articles/{articleId}(articleId=${article.getId()})}"
                                th:text="${article.getTitle()}">Title
                             </a>
                         </td>
                         <td th:text="${article.getWriter()}"></td>
-                        <td th:text="${article.getLocalDateTime()}"></td>
+                        <td th:text="${article.getCreated()}"></td>
                         <td th:text="${article.getViews()}"></td>
                     </tr>
                     </tbody>
