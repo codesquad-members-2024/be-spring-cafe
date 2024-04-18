@@ -1,30 +1,34 @@
 package codesquad.springcafe.user.respository;
 
-import codesquad.springcafe.database.firstcollection.Users;
 import codesquad.springcafe.exceptions.NoSuchUserException;
 import codesquad.springcafe.user.domain.User;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class MemoryUserRepository implements UserRepository{
-    private static final Users userDB = new Users();
+    private static final Map<String, User> userDB = new ConcurrentHashMap<>();
 
 
+    @Override
     public void storeUser(User user) {
-        userDB.put(user);
+        userDB.put(user.getName(), user);
     }
 
+    @Override
     public List<User> getAllUsers() {
-        return userDB.getUsers();
+        return new ArrayList<>(userDB.values());
     }
 
+    @Override
     public User findByName(String name) throws NoSuchUserException{
-        Optional<User> user = userDB.getUser(name);
-        if (user.isEmpty()) throw new NoSuchUserException();
+        User user = userDB.get(name);
+        if (user == null) throw new NoSuchUserException();
 
-        return user.get();
+        return user;
     }
 }

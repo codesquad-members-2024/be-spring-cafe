@@ -1,6 +1,7 @@
 package codesquad.springcafe.user;
 
 import codesquad.springcafe.exceptions.NoSuchUserException;
+import codesquad.springcafe.user.domain.LoginUser;
 import codesquad.springcafe.user.domain.User;
 import codesquad.springcafe.user.respository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +44,11 @@ public class UserController {
         model.addAttribute("user", user);
 
         return "user/profile";
+    }
+
+    @PostMapping("/login")
+    public String login(@ModelAttribute LoginUser loginUser) {
+        String userId = loginUser.getUserId();
+
     }
 }
