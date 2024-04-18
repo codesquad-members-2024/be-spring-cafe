@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="kr">
+<head th:replace="~{fragment/layout/header :: header(~{::title})}">
+    <title>Unpublish</title>
+</head>
+
+<body th:replace="~{fragment/layout/content :: content(~{::contentBody})}">
+<div th:fragment="contentBody" class="container" id="main">
+    <div class="col-md-12 col-sm-12 col-lg-10 col-lg-offset-1">
+        <div class="panel panel-default content-main">
+            <form th:action="@{|/questions/${articleId}|}" action="" method="post" th:method="delete">
+                <div class="form-group">
+                    <header class="qna-header">
+                        <h2>정말 삭제하시겠습니까?</h2>
+                        <div class="content-main">
+                            <input type="button" value="뒤로가기" onclick="history.back();"
+                                   class="btn btn-success clearfix text-center"/>
+                            <button type="submit" class="btn btn-danger clearfix text-center">삭제하기</button>
+                        </div>
+                    </header>
+                </div>
+                <div class="clearfix"/>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

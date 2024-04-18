@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -111,5 +112,26 @@ public class ArticleController {
         articleManager.editArticle(loginId, form);
 
         return "redirect:/questions/{articleId}";
+    }
+
+    @GetMapping("/{articleId}/delete")
+    public String confirmUnpulish(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
+                                  @PathVariable("articleId") long articleId) {
+        /* 게시물 존재 검증 */
+        articleManager.validateExists(articleId);
+
+        /* 작성자 검증 */
+        Optional<Article> optionalArticle = articleManager.findArticle(articleId);
+        articleManager.validateAuthor(loginId, optionalArticle.get().getCreatedBy());
+
+        return "qna/deleteConfirm";
+    }
+
+    @DeleteMapping("/{articleId}")
+    public String unpublish(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
+                            @PathVariable("articleId") long id) {
+        articleManager.unpublish(loginId, id);
+
+        return "redirect:/";
     }
 }
