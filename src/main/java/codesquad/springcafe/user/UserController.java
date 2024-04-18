@@ -5,8 +5,9 @@ import codesquad.springcafe.exceptions.NoSuchUserException;
 import codesquad.springcafe.user.domain.LoginUser;
 import codesquad.springcafe.user.domain.User;
 import codesquad.springcafe.user.service.UserService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -16,6 +17,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+
+import java.util.Collections;
+import java.util.Map;
 
 import static codesquad.springcafe.constants.Constant.*;
 
@@ -89,11 +93,23 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public String updateUserProfile(@ModelAttribute User after) throws NoSuchUserException{
+    public String updateUserProfile(@ModelAttribute User after) throws NoSuchUserException {
         User before = userService.findUserById(after.getUserId());
 
         userService.updateUser(before, after);
 
         return "redirect:/user/profile";
+    }
+
+    @PostMapping("/duplicate_check")
+    @ResponseBody
+    public Map<String, Boolean> checkDuplicate(@RequestBody String requestJson) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(requestJson);
+        String value = rootNode.path("value").asText();
+
+        boolean result = userService.checkValueIsDuplicate(value);
+
+        return Collections.singletonMap("check", result);
     }
 }

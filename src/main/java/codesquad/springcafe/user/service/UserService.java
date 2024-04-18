@@ -21,4 +21,6 @@ public interface UserService {
 
     void updateUser(User before, User after);
 
+    boolean checkValueIsDuplicate(String value);
+
 }

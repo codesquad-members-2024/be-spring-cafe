@@ -40,11 +40,17 @@ public class MemoryUserRepository implements UserRepository{
                         .findFirst();
         if (optionalUser.isEmpty()) throw new NoSuchUserException();
 
-        return optionalUser.get();
+        return optionalUser.orElseThrow(() -> new NoSuchUserException());
     }
 
     @Override
     public void removeUser(String name) {
         userDB.remove(name);
+    }
+
+    @Override
+    public boolean exist(String value) {
+        return userDB.values().stream()
+                            .anyMatch(user -> user.getUserId().equals(value) || user.getName().equals(value));
     }
 }

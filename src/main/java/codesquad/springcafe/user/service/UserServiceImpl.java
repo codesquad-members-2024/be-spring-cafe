@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -60,5 +59,10 @@ public class UserServiceImpl implements UserService{
     public void updateUser(User before, User after) {
         userRepository.removeUser(before.getName());
         userRepository.storeUser(after);
+    }
+
+    @Override
+    public boolean checkValueIsDuplicate(String value) {
+        return !userRepository.exist(value);
     }
 }

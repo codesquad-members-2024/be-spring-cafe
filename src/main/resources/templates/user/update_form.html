@@ -11,6 +11,36 @@
     <![endif]-->
     <link th:href="@{/css/styles.css}" href="../../static/css/styles.css" rel="stylesheet">
 </head>
+<script>
+    function checkName() {
+        const userName = document.getElementById('name').value;
+        const checkNameButton = document.getElementById('checkNameButton');
+        const submitButton = document.getElementById('update-btn');
+
+        fetch('/user/duplicate_check', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ value: userName}),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.check) {
+                    alert("닉네임 중복 확인 완료");
+                    checkNameButton.className = "btn clearfix pull-right";
+                    checkNameButton.disabled = true;
+                    document.getElementById('name').readOnly = true;
+                    submitButton.disabled = false;
+                    submitButton.className = "btn btn-success clearfix pull-right";
+
+                } else {
+                    alert("중복되거나 잘못된 닉네임입니다");
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
 <body>
 <nav class="navbar navbar-fixed-top header">
     <div class="col-md-12">
@@ -88,12 +118,18 @@
               <div class="form-group">
                   <label for="name">이름</label>
                   <input class="form-control" id="name" name="name" placeholder="Name" required>
+                  <button
+                          id="checkNameButton"
+                          class="btn btn-danger clearfix pull-right"
+                          type="button"
+                          onclick="checkName()"
+                  >중복 확인</button>
               </div>
               <div class="form-group">
                   <label for="email">이메일</label>
                   <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
               </div>
-              <button type="submit" class="btn btn-success clearfix pull-right">업데이트</button>
+              <button id="update-btn" type="submit" class="btn btn-success clearfix pull-right" disabled>업데이트</button>
               <div class="clearfix" />
           </form>
         </div>

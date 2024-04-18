@@ -16,4 +16,6 @@ public interface UserRepository {
 
     void removeUser(String name);
 
+    boolean exist(String value);
+
 }
