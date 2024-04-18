@@ -23,7 +23,7 @@ public class HomeController {
     @GetMapping
     public String home(Model model) {
         List<Article> articles = articleRepository.findAllArticles();
-        logger.info("게시글 수: {}", articles.size());
+        logger.debug("게시글 수: {}", articles.size());
         model.addAttribute("articles", articles);
         return "index";
     }

@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
-    User createUser(UserDto userDto);
+    Long createUser(UserDto userDto);
 
-    User updateUser(String userId, UserUpdateDto userUpdateDto);
+    void updateUser(String userId, UserUpdateDto userUpdateDto);
 
     List<User> findAllUsers();
 
     Optional<User> findUserByUserId(String userId);
+
+    void clear();
 }

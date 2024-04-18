@@ -45,9 +45,9 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String createUser(@ModelAttribute UserDto userDto) {
-        User newUser = userRepository.createUser(userDto);
-        logger.info("회원가입 성공: {}", newUser.toDto());
+    public String create(@ModelAttribute UserDto userDto) {
+        Long id = userRepository.createUser(userDto);
+        logger.debug("회원가입: {}", id);
         return "redirect:/users"; // 이 uri로 리다이렉트
     }
 
@@ -57,7 +57,7 @@ public class UserController {
         if (optionalUser.isPresent()) {
             User findedUser = optionalUser.get();
             model.addAttribute("user", findedUser);
-            logger.info("사용자 프로필 조회: {}", findedUser.toDto());
+            logger.debug("프로필 조회: {}", findedUser.toDto());
             return "user/profile";
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
@@ -71,8 +71,7 @@ public class UserController {
 
     @PutMapping("/{userId}/update")
     public String update(@PathVariable("userId") String userId, @ModelAttribute UserUpdateDto userUpdateDto) {
-        User updatedUser = userRepository.updateUser(userId, userUpdateDto);
-        logger.info("업데이트 성공: {}", updatedUser.toDto());
+        userRepository.updateUser(userId, userUpdateDto);
         return "redirect:/users";
     }
 
@@ -87,7 +86,7 @@ public class UserController {
         if (optionalUser.isPresent()) {
             User loginedUser = optionalUser.get();
             if (loginedUser.getPassword().equals(password)) {
-                logger.info("로그인 성공: {}", loginedUser.toDto());
+                logger.debug("로그인: {}", loginedUser.toDto());
                 return "redirect:/";
             }
         } else {

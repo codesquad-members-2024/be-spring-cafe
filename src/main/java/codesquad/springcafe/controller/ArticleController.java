@@ -35,8 +35,8 @@ public class ArticleController {
 
     @PostMapping("/create")
     public String postArticle(@ModelAttribute ArticleDto articleDto) {
-        Article newArticle = articleRepository.createArticle(articleDto);
-        logger.info("게시글 작성 성공: {}", newArticle.toDto());
+        Long id = articleRepository.createArticle(articleDto);
+        logger.debug("게시글 작성: {}", id);
         return "redirect:/";
     }
 
@@ -45,7 +45,7 @@ public class ArticleController {
         Optional<Article> optionalArticle = articleRepository.findArticleById(articleId);
         if (optionalArticle.isPresent()) {
             Article article = optionalArticle.get();
-            logger.info("게시글 상세 조회: {}", article.toDto());
+            logger.debug("게시글 상세보기: {}", article.toDto());
             article.increaseViews(); // 조회수 증가
             model.addAttribute("article", article);
             return "article/show";

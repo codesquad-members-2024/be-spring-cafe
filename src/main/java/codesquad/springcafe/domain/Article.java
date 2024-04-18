@@ -5,14 +5,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Article {
-    private Long id;
+    private long id;
     private String writer;
     private String title;
     private String content;
     private LocalDateTime created;
     private long views;
 
-    public Article(Long id, String writer, String title, String content, LocalDateTime created, long views) {
+    public Article(long id, String writer, String title, String content, LocalDateTime created, long views) {
         this.id = id;
         this.writer = writer;
         this.title = title;
@@ -33,7 +33,7 @@ public class Article {
         return new ArticleDto(title, content);
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -41,7 +41,7 @@ public class Article {
         views++;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

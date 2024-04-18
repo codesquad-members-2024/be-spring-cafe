@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-@Primary
 @Repository
 public class JdbcArticleRepository implements ArticleRepository {
     private final JdbcTemplate jdbcTemplate;
@@ -18,7 +17,7 @@ public class JdbcArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Article createArticle(ArticleDto articleDto) {
+    public Long createArticle(ArticleDto articleDto) {
         return null;
     }
 
@@ -28,7 +27,12 @@ public class JdbcArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Optional<Article> findArticleById(Long articleId) {
+    public Optional<Article> findArticleById(Long id) {
         return Optional.empty();
+    }
+
+    @Override
+    public void clear() {
+
     }
 }

@@ -6,14 +6,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class User {
-    private Long id;
+    private long id;
     private String userId;
     private String nickname;
     private String email;
     private String password;
     private LocalDateTime created;
 
-    public User(Long id, String userId, String nickname, String email, String password, LocalDateTime created) {
+    public User(long id, String userId, String nickname, String email, String password, LocalDateTime created) {
         this.id = id;
         this.userId = userId;
         this.nickname = nickname;
