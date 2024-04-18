@@ -15,4 +15,6 @@ public interface MemberService {
     boolean validatePassword(Member findMember, String beforePassword);
 
     void update(String loginId, UpdateMember updateParam);
+
+    Optional<Member> login(String loginId, String password);
 }

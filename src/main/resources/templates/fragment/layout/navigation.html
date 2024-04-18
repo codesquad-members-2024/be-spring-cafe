@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="kr">
 <nav th:fragment="common_nav" class="navbar navbar-fixed-top header">
     <div class="col-md-12">
         <div class="navbar-header">
@@ -33,7 +35,7 @@
         </div>
     </div>
 </nav>
-<div th:fragment="subnav" class="navbar navbar-default" id="subnav">
+<div th:fragment="subnav" class="navbar navbar-default" id="subnav" th:object="${session.SID}">
     <div class="col-md-12">
         <div class="navbar-header">
             <a href="#" style="margin-left:15px;" class="navbar-btn btn btn-default btn-plus dropdown-toggle"
@@ -56,15 +58,20 @@
         <div class="collapse navbar-collapse" id="navbar-collapse2">
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="/">Posts</a></li>
-                <li><a href="/members/login" role="button">로그인</a></li>
-                <li><a href="/members/add" role="button">회원가입</a></li>
+                <li th:unless="${session.SID}"><a href="/login" role="button">로그인</a></li>
+                <li th:unless="${session.SID}"><a href="/members/add" role="button">회원가입</a></li>
                 <!--
                 <li><a href="#loginModal" role="button" data-toggle="modal">로그인</a></li>
                 <li><a href="#registerModal" role="button" data-toggle="modal">회원가입</a></li>
                 -->
-                <li><a href="#" role="button">로그아웃</a></li>
-                <li><a href="#" role="button">개인정보수정</a></li>
+                <li th:if="${session.SID}">
+                    <form action="/logout" method="post">
+                        <button type="submit" class="navbar-btn btn btn-danger clearfix pull-right">로그아웃</button>
+                    </form>
+                </li>
+                <li th:if="${session.SID}"><a href="/members" role="button">개인정보수정</a></li>
             </ul>
         </div>
     </div>
 </div>
+</html>

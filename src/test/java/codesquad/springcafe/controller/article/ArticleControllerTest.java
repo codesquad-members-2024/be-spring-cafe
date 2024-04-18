@@ -10,15 +10,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import codesquad.springcafe.domain.article.Article;
 import codesquad.springcafe.repository.article.ArticleRepository;
 import codesquad.springcafe.service.article.ArticleService;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+@ActiveProfiles("test")
 @SpringBootTest
 @AutoConfigureMockMvc
 class ArticleControllerTest {
@@ -101,6 +104,7 @@ class ArticleControllerTest {
     void detail_success() throws Exception {
         // given
         Article article = new Article();
+        article.setCreatedAt(LocalDateTime.now());
         articleRepository.save(article);
 
         // when

@@ -9,6 +9,7 @@ import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -53,7 +54,11 @@ public class MemberRepositoryH2 implements MemberRepository {
     @Override
     public Optional<Member> findById(String loginId) {
         String sql = "select MEMBER_ID, LOGIN_ID, PASSWORD, USERNAME, EMAIL from MEMBER where LOGIN_ID = ?";
-        return Optional.ofNullable(template.queryForObject(sql, memberRowMapper(), loginId));
+        try {
+            return Optional.ofNullable(template.queryForObject(sql, memberRowMapper(), loginId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -71,7 +76,7 @@ public class MemberRepositoryH2 implements MemberRepository {
 
     @Override
     public void clear() {
-        String sql = "ALTER TABLE MEMBER ALTER COLUMN MEMBER_ID RESTART WITH 1";
+        String sql = "TRUNCATE TABLE MEMBER; ALTER TABLE MEMBER ALTER COLUMN MEMBER_ID RESTART WITH 1";
         template.update(sql);
     }
 

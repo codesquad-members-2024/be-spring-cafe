@@ -11,7 +11,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles(profiles = "test")
 @SpringBootTest
 class MemberServiceTest {
 
@@ -100,5 +102,54 @@ class MemberServiceTest {
 
         // then
         assertThat(result).isFalse();
+    }
+
+    @DisplayName("기존 아이디를 찾지 못하면 비어있는 Optional을 반환한다")
+    @Test
+    void login_fail_when_not_found_by_login_id() {
+        // given
+        Member member = new Member("tester", "123", "yelly jelly", "yelly@test.com");
+        memberService.join(member);
+
+        // when
+        Optional<Member> optionalMember = memberService.login("no_id", "123");
+
+
+        // given
+        assertThat(optionalMember).isEmpty();
+    }
+
+    @DisplayName("잘못된 패스워드를 입력하면 비어있는 Optional을 반환한다")
+    @Test
+    void login_fail_when_wrong_password() {
+        // given
+        Member member = new Member("tester", "123", "yelly jelly", "yelly@test.com");
+        memberService.join(member);
+
+        // when
+        Optional<Member> optionalMember = memberService.login("tester", "123123123");
+
+
+        // given
+        assertThat(optionalMember).isEmpty();
+    }
+
+    @DisplayName("올바른 아이디와 패스워드를 입력하면 OptionalMember를 반환한다")
+    @Test
+    void login_success() {
+        // given
+        Member member = new Member("tester", "123", "yelly jelly", "yelly@test.com");
+        memberService.join(member);
+
+        // when
+        Optional<Member> optionalMember = memberService.login("tester", "123");
+
+
+        // given
+        assertThat(optionalMember).isPresent();
+        assertThat(optionalMember.get()).extracting("loginId").isEqualTo("tester");
+        assertThat(optionalMember.get()).extracting("password").isEqualTo("123");
+        assertThat(optionalMember.get()).extracting("userName").isEqualTo("yelly jelly");
+        assertThat(optionalMember.get()).extracting("email").isEqualTo("yelly@test.com");
     }
 }

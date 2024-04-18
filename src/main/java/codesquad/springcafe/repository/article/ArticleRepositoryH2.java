@@ -9,6 +9,7 @@ import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -53,7 +54,11 @@ public class ArticleRepositoryH2 implements ArticleRepository {
     @Override
     public Optional<Article> findById(long id) {
         String sql = "select ARTICLE_ID, TITLE, CONTENTS, CREATED_BY, CREATED_AT from ARTICLE where ARTICLE_ID = ?";
-        return Optional.ofNullable(template.queryForObject(sql, articleRowMapper(), id));
+        try {
+            return Optional.ofNullable(template.queryForObject(sql, articleRowMapper(), id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -64,7 +69,7 @@ public class ArticleRepositoryH2 implements ArticleRepository {
 
     @Override
     public void clear() {
-        String sql = "ALTER TABLE ARTICLE ALTER COLUMN ARTICLE_ID RESTART WITH 1";
+        String sql = "TRUNCATE TABLE ARTICLE; ALTER TABLE ARTICLE ALTER COLUMN ARTICLE_ID RESTART WITH 1";
         template.update(sql);
     }
 
