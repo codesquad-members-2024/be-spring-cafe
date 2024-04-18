@@ -1,7 +1,7 @@
 {{#articles}}
 <tr>
-    <td class="article-title"><a href="/articles/{{getArticleId}}">{{getTitle}}</a></td>
-    <td>{{getUserId}}</td>
+    <td><a class="article-title" href="/articles/{{getArticleId}}">{{getTitle}}</a></td>
+    <td><a class="user-id-title" href="/users/profile/{{getUserId}}">{{getUserId}}</a></td>
     <td>{{getCreationDate}}</td>
     <td>{{getPageViews}}</td>
 </tr>

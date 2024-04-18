@@ -20,4 +20,8 @@ public class UserCredentialData {
         return this.hashedPassword.equals(other.hashedPassword);
     }
 
+    @Override
+    public String toString(){
+        return this.hashedPassword;
+    }
 }

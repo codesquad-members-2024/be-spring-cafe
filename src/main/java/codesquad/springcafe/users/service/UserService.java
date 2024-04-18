@@ -31,7 +31,8 @@ public class UserService {
     }
 
     public void createUser(UserCreationRequest userCreationRequest) {
-        User user = new User(userCreationRequest.getUserId(), userCreationRequest.getEmail(), userCreationRequest.getName(), userCreationRequest.getPassword());
+        String hashedPassword = hashService.hashPassword(userCreationRequest.getPassword());
+        User user = new User(userCreationRequest.getUserId(), userCreationRequest.getEmail(), userCreationRequest.getName(), hashedPassword);
         logger.debug("User Created : {}", user);
 
         userRepository.createUser(user);
@@ -46,13 +47,21 @@ public class UserService {
         return userRepository.findUserById(userId).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다"));
     }
 
-    public void updateUser(String userId, UserUpdateRequest updateData) {
-        UserCredentialData inputCredentialData = new UserCredentialData(hashService.hashPassword(updateData.getCurrentPassword()));
+    public void updateUser(String userId, UserUpdateRequest updateRequest) {
+        // updateRequest의 currentPassword를 sha-256 해시
+        String hashedCurrentPassword = hashService.hashPassword(updateRequest.getCurrentPassword());
+
+        // 비밀번호 검증을 위한 객체 생성
+        UserCredentialData inputCredentialData = new UserCredentialData(hashedCurrentPassword);
         UserCredentialData userCredentialData = userRepository.getUserCredential(userId).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
 
+        // 객체 간의 비밀번호 값 검증
         validatePassword(inputCredentialData, userCredentialData);
 
-        userRepository.updateUser(userId, updateData);
+        // Repository로 보내기 위한 dto 생성
+        UserUpdateDto updateDto = new UserUpdateDto(updateRequest.getNewName(), updateRequest.getNewEmail(), hashService.hashPassword(updateRequest.getNewPassword()));
+
+        userRepository.updateUser(userId, updateDto);
 
         logger.debug("User Updated : {}", userId);
     }
@@ -67,6 +76,8 @@ public class UserService {
     }
 
     private void validatePassword(UserCredentialData inputCredentialData, UserCredentialData userCredentialData) {
+        System.out.println(inputCredentialData.toString());
+        System.out.println(userCredentialData.toString());
         if (!inputCredentialData.equals(userCredentialData)) {
             throw new PasswordMismatchException("입력한 비밀번호가 일치하지 않습니다.");
         }

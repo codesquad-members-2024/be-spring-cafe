@@ -3,6 +3,7 @@ package codesquad.springcafe.users.repository;
 import codesquad.springcafe.users.model.User;
 import codesquad.springcafe.users.model.data.UserCredentialData;
 import codesquad.springcafe.users.model.dto.UserPreviewDto;
+import codesquad.springcafe.users.model.dto.UserUpdateDto;
 import codesquad.springcafe.users.model.dto.UserUpdateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,9 +74,9 @@ public class H2UserRepository implements UserRepository {
     }
 
     @Override
-    public void updateUser(String userId, UserUpdateRequest updateData) {
+    public void updateUser(String userId, UserUpdateDto updateDto) {
         String sql = "UPDATE USERS SET EMAIL = ?, NAME = ?, HASHEDPASSWORD = ? WHERE USERID = ?";
-        jdbcTemplate.update(sql, updateData.getNewEmail(), updateData.getNewName(), updateData.getNewPassword(), userId);
+        jdbcTemplate.update(sql, updateDto.getNewEmail(), updateDto.getNewName(), updateDto.getNewPassword(), userId);
     }
 
     private static class UserPreviewRowMapper implements org.springframework.jdbc.core.RowMapper<UserPreviewDto> {
