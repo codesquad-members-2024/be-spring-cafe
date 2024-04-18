@@ -59,6 +59,7 @@ public class MemberController {
 
     @GetMapping("/{loginId}")
     public String memberInfo(@PathVariable("loginId") String loginId, Model model) {
+        /* 멤버 존재 검증 */
         Member findMember = validateExists(loginId);
 
         /* Member 객체를 DTO로 변환 */
@@ -68,11 +69,15 @@ public class MemberController {
         return "members/profile";
     }
 
+    private ResponseMember convertToDTO(Member member) {
+        return new ResponseMember(member.getLoginId(), member.getUserName(), member.getEmail());
+    }
+
     @GetMapping("/{loginId}/update")
     public String updateForm(@SessionAttribute(name = SessionConst.SESSION_ID, required = false) String sessionMemberId,
                              @PathVariable("loginId") String loginId, @ModelAttribute("form") UpdateMember form) {
         /* 로그인 검증 */
-        validateLoginMember(sessionMemberId, loginId);
+        validateLoginId(sessionMemberId, loginId);
 
         /* 멤버 존재 검증 */
         Member findMember = validateExists(loginId);
@@ -82,7 +87,7 @@ public class MemberController {
         return "members/updateForm";
     }
 
-    private void validateLoginMember(String sessionMemberId, String loginId) {
+    private void validateLoginId(String sessionMemberId, String loginId) {
         if (sessionMemberId == null || !sessionMemberId.equals(loginId)) {
             throw new UnauthorizedException("다른 회원의 정보를 수정할 수 없습니다. 로그인 멤버 아이디: " + loginId);
         }
@@ -94,6 +99,12 @@ public class MemberController {
             throw new ResourceNotFoundException("멤버를 찾을 수 없습니다. 멤버 아이디: " + loginId);
         }
         return findMember.get();
+    }
+
+    private void fillForm(UpdateMember form, Member member) {
+        form.setLoginId(member.getLoginId());
+        form.setUserName(member.getUserName());
+        form.setEmail(member.getEmail());
     }
 
     @PutMapping("/{loginId}")
@@ -121,16 +132,5 @@ public class MemberController {
         /* 정상 로직 */
         memberService.update(loginId, form);
         return "redirect:/members/{loginId}";
-    }
-
-    private void fillForm(UpdateMember form, Member member) {
-        form.setLoginId(member.getLoginId());
-        form.setUserName(member.getUserName());
-        form.setEmail(member.getEmail());
-    }
-
-    private ResponseMember convertToDTO(Member member) {
-
-        return new ResponseMember(member.getLoginId(), member.getUserName(), member.getEmail());
     }
 }
