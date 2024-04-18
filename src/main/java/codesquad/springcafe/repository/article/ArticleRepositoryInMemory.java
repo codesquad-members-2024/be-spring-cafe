@@ -1,5 +1,6 @@
 package codesquad.springcafe.repository.article;
 
+import codesquad.springcafe.controller.article.UpdateArticle;
 import codesquad.springcafe.domain.article.Article;
 import java.util.Comparator;
 import java.util.List;
@@ -37,6 +38,13 @@ public class ArticleRepositoryInMemory implements ArticleRepository {
         return store.values().stream()
                 .sorted(Comparator.comparing(Article::getCreatedAt).reversed())
                 .toList();
+    }
+
+    @Override
+    public void update(UpdateArticle updateParam) {
+        Article article = store.get(updateParam.getId());
+        article.setTitle(updateParam.getTitle());
+        article.setContents(updateParam.getContents());
     }
 
     @Override

@@ -2,17 +2,24 @@ package codesquad.springcafe.repository.article;
 
 import static org.assertj.core.api.Assertions.*;
 
+import codesquad.springcafe.controller.article.UpdateArticle;
 import codesquad.springcafe.domain.article.Article;
+import codesquad.springcafe.domain.member.Member;
+import codesquad.springcafe.repository.member.MemberRepositoryH2;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 @JdbcTest
 @Import(ArticleRepositoryH2.class)
 class ArticleRepositoryH2Test {
@@ -20,9 +27,18 @@ class ArticleRepositoryH2Test {
     @Autowired
     private ArticleRepositoryH2 repository;
 
+    @SpyBean
+    private MemberRepositoryH2 memberRepository;
+
+    @BeforeEach
+    void setUp() {
+        memberRepository.save(new Member("yelly", "123", null, null));
+    }
+
     @AfterEach
     void reset_pk() {
         repository.clear();
+        memberRepository.clear();
     }
 
     @DisplayName("yelly라는 작성자로 게시물을 최초로 추가하면 id는 1 이다")
@@ -91,5 +107,33 @@ class ArticleRepositoryH2Test {
         assertThat(articles).hasSize(10);
         assertThat(articles).extracting("title")
                 .contains("test", "test", "test", "test", "test", "test", "test", "test", "test", "test");
+    }
+
+    @DisplayName("제목을 success title, 본문을 success contents 로 바꿀 수 있다")
+    @Test
+    void update() {
+        // given
+        Article article = new Article();
+        article.setTitle("test");
+        article.setContents("test body");
+        article.setCreatedBy("yelly");
+        article.setCreatedAt(LocalDateTime.parse("2024-04-12T00:00:00"));
+
+        repository.save(article);
+
+        UpdateArticle updateParam = new UpdateArticle();
+        updateParam.setId(1L);
+        updateParam.setCreatedBy("yelly");
+        updateParam.setTitle("success title");
+        updateParam.setContents("success contents");
+
+        // when
+        repository.update(updateParam);
+        Article findArticle = repository.findById(1L).get();
+
+        // then
+        assertThat(findArticle.getTitle()).isEqualTo("success title");
+        assertThat(findArticle.getCreatedBy()).isEqualTo("yelly");
+        assertThat(findArticle.getContents()).isEqualTo("success contents");
     }
 }

@@ -1,5 +1,6 @@
 package codesquad.springcafe.repository.article;
 
+import codesquad.springcafe.controller.article.UpdateArticle;
 import codesquad.springcafe.domain.article.Article;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -68,8 +69,14 @@ public class ArticleRepositoryH2 implements ArticleRepository {
     }
 
     @Override
+    public void update(UpdateArticle updateParam) {
+        String sql = "update ARTICLE set TITLE = ?, CONTENTS = ? where ARTICLE_ID = ?";
+        template.update(sql, updateParam.getTitle(), updateParam.getContents(), updateParam.getId());
+    }
+
+    @Override
     public void clear() {
-        String sql = "TRUNCATE TABLE ARTICLE; ALTER TABLE ARTICLE ALTER COLUMN ARTICLE_ID RESTART WITH 1";
+        String sql = "alter table if exists article drop constraint if exists fk_created_by; TRUNCATE TABLE ARTICLE; ALTER TABLE ARTICLE ALTER COLUMN ARTICLE_ID RESTART WITH 1";
         template.update(sql);
     }
 
