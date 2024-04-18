@@ -20,6 +20,13 @@
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse2">
             <ul class="nav navbar-nav navbar-right">
+                {{#loginUserId}}
+                    {{loginUserId}} 님, 환영합니다!!
+                {{/loginUserId}}
+                {{^loginUserId}}
+                    로그인하지 않은 유저
+                {{/loginUserId}}
+
                 <li class="active"><a href="/">Posts</a></li>
                 <li><a href="/login" role="button">로그인</a></li>
                 <li><a href="/users/form" role="button">회원가입</a></li>

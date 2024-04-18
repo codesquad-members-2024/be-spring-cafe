@@ -28,7 +28,7 @@ public class LoginController {
             return "/user/login_failed";
         }
         HttpSession session = request.getSession();
-        session.setAttribute("userid", userLoginDTO.getUserid());
+        session.setAttribute("loginUserId", userLoginDTO.getUserid());
         return "redirect:/";
     }
 

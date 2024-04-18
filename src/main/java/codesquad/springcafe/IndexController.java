@@ -27,9 +27,8 @@ public class IndexController {
         model.addAttribute("articleList", articleList);
 
         HttpSession session = request.getSession(false);
-        model.addAttribute("loginUserId", "X");
         if (session != null) {
-            String loginUserId = (String) session.getAttribute("userId");
+            String loginUserId = (String) session.getAttribute("loginUserId");
             model.addAttribute("loginUserId", loginUserId);
         }
         return "index";
