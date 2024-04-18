@@ -79,7 +79,11 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public String updateUser(@PathVariable String userId, @RequestParam("password") String password, @RequestParam("newPassword") String newPassword, @RequestParam("name") String name, @RequestParam("email") String email) {
+    public String updateUser(@PathVariable String userId, @RequestParam("password") String password, @RequestParam("newPassword") String newPassword, @RequestParam("name") String name, @RequestParam("email") String email, HttpSession httpSession) {
+        String loginUserId = (String) httpSession.getAttribute(LOGIN_USER_ID);
+        if (!loginUserId.equals(userId)) {
+            return "redirect:/";
+        }
         UserUpdateDto userUpdateDto = new UserUpdateDto(userId, password, newPassword, name, email);
         try {
             userService.update(userUpdateDto);
