@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -36,7 +37,8 @@ public class UserH2Dao implements UserDao {
     @Override
     public Optional<User> findUser(String userId) {
         final String sql = "SELECT nickname, email FROM USERS WHERE userId = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, userRowMapper(), userId));
+        List<User> users = jdbcTemplate.query(sql, userRowMapper(), userId);
+        return users.stream().findAny();
     }
 
     @Override
