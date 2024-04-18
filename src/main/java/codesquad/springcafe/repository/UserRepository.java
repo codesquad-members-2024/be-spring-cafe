@@ -8,7 +8,11 @@ import java.util.*;
 @Repository
 public class UserRepository {
 
-    private List<User> users = new ArrayList<>();
+    private final List<User> users;
+
+    public UserRepository() {
+        this.users = new ArrayList<>();
+    }
 
     public void addUser(User user) {
         users.add(user);
@@ -24,7 +28,18 @@ public class UserRepository {
         return Optional.empty(); // 해당 userId를 가진 사용자가 없을 경우 empty Optional을 반환
     }
 
-    public Collection<User> findAll() {
+    public List<User> findAll() {
         return users;
+    }
+
+    public void userUpdate(User updatedUser) {
+        // 업데이트할 사용자 정보를 가져옴
+        Optional<User> optionalUser = findUserById(updatedUser.getUserId());
+        optionalUser.ifPresent(user -> {
+            // 업데이트할 사용자 정보를 입력받은 정보로 갱신
+            user.setName(updatedUser.getName());
+            user.setPassword(updatedUser.getPassword());
+            user.setEmail(updatedUser.getEmail());
+        });
     }
 }

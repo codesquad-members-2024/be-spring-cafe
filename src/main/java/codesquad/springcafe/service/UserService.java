@@ -22,7 +22,7 @@ public class UserService {
 
     private void validateDuplicateUser(User user) {
         // 같은 이름이 있는 중복 회원 X
-        userRepository.findUserById(user.getName())
+        userRepository.findUserById(user.getUserId())
                 .ifPresent(m -> {
                     throw new IllegalStateException("이미 존재하는 회원입니다.");
                 });
@@ -32,10 +32,14 @@ public class UserService {
      * 전체 회원 조회
      */
     public List<User> findUsers() {
-        return (List<User>) userRepository.findAll();
+        return userRepository.findAll();
     }
 
     public Optional<User> findOne(String userId) {
         return userRepository.findUserById(userId);
+    }
+
+    public void userUpdate(User updatedUser) {
+        userRepository.userUpdate(updatedUser);
     }
 }

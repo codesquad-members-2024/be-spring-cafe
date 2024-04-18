@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 
 /**
  * 회원 목록 조회 : GET '/users'
@@ -27,7 +29,7 @@ public class UserController {
 
     @GetMapping("/create")
     public String user() {
-        return "/users/form"; // 파일 자체를 반환
+        return "users/form";
     }
 
     @PostMapping("/create")
@@ -39,12 +41,33 @@ public class UserController {
     @GetMapping
     public String userList(Model model) {
         model.addAttribute("users", userService.findUsers());
-        return "/users/list";
+        return "users/list";
     }
 
     @GetMapping("/{userId}")
     public String findUser(@PathVariable String userId, Model model) {
         model.addAttribute("user", userService.findOne(userId));
-        return "/users/profile";
+        return "users/profile";
+    }
+
+    @GetMapping("/{userId}/form")
+    public String updateForm(@PathVariable String userId, Model model) {
+        Optional<User> optionalUser = userService.findOne(userId);
+        optionalUser.ifPresent(user -> model.addAttribute("user", user));
+        model.addAttribute("userId", userId); // userId도 함께 모델에 추가
+        return "users/updateForm";
+    }
+
+    @PutMapping("/{userId}/form")
+    public String userUpdate(@PathVariable String userId, @ModelAttribute User updatedUser, Model model) {
+        Optional<User> optionalUser = userService.findOne(userId);
+        optionalUser.ifPresent(user -> {
+                    user.setName(updatedUser.getName());
+                    user.setPassword(updatedUser.getPassword());
+                    user.setEmail(updatedUser.getEmail());
+                    userService.userUpdate(user);
+                }
+        );
+        return "redirect:/users";
     }
 }
