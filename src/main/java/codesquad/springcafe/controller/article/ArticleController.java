@@ -85,11 +85,11 @@ public class ArticleController {
         articleManager.validateExists(articleId);
 
         /* 작성자 검증 */
-        articleManager.validateAuthor(loginId, form.getCreatedBy());
+        Article findArticle = articleManager.findArticle(articleId).get();
+        articleManager.validateAuthor(loginId, findArticle.getCreatedBy());
 
         /* 정상 로직 */
-        Optional<Article> optionalArticle = articleManager.findArticle(articleId);
-        fillForm(form, optionalArticle.get());
+        fillForm(form, findArticle);
 
         return "qna/updateForm";
     }
