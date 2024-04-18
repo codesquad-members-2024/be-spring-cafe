@@ -60,7 +60,7 @@ public class UserController {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return null;
         }
-        model.addAttribute("user", user);
+        model.addAttribute("user", user.get());
         return "users/updateForm";
     }
 

@@ -33,9 +33,10 @@ public class H2UserDatabase implements UserDatabase {
 
     @Override
     public void update(String userId, User updatedUser) {
-        String sql = "update users set email=? where userid=?";
+        String sql = "update users set nickname=?, email=? where userid=?";
         jdbcTemplate.update(
                 sql,
+                updatedUser.getNickname(),
                 updatedUser.getEmail(),
                 updatedUser.getUserId());
     }
