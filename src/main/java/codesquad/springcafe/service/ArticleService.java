@@ -1,32 +1,44 @@
 package codesquad.springcafe.service;
 
+import codesquad.springcafe.dto.article.ArticleInfoDTO;
+import codesquad.springcafe.dto.article.UploadDTO;
 import codesquad.springcafe.model.Article;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import codesquad.springcafe.repository.article.ArticleRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ArticleService {
 
-    private final List<Article> articles = new ArrayList<>();
+    private final ArticleRepository articleRepository;
+    private Long index = 0L;
 
-    public Article createArticle(String writer, String title, String contents) {
-        Long index = (long) articles.size() + 1;
-        Article newArticle = new Article(index, LocalDateTime.now(), writer, title, contents);
-        articles.add(newArticle);
-        return newArticle;
+    @Autowired
+    public ArticleService(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
     }
 
-    public List<Article> findAllArticles() {
-        return new ArrayList<>(articles);
+    public ArticleInfoDTO upload(UploadDTO uploadDTO) {
+        Article newArticle = uploadDTO.toArticle(++index);
+        articleRepository.save(newArticle);
+        return newArticle.toDTO();
     }
 
-    public Article findArticleByIndex(Long index) {
-        Optional<Article> articleOptional = articles.stream()
-            .filter(article -> article.getIndex().equals(index))
-            .findAny();
-        return articleOptional.orElse(null);
+    public List<ArticleInfoDTO> findAllArticles() {
+        List<Article> articles = articleRepository.getAll();
+        return articles.stream()
+            .map(Article::toDTO)
+            .collect(Collectors.toList());
+    }
+
+    public ArticleInfoDTO findArticleByIndex(Long index) {
+        Optional<Article> targetArticle = articleRepository.getByIndex(index);
+        if (targetArticle.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        return targetArticle.get().toDTO();
     }
 }

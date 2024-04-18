@@ -85,11 +85,11 @@
         <tbody>
         {{#users}}
         <tr>
-          <th scope="row"></th>
-          <td><a href="/users/{{userId}}">{{userId}}</a></td>
-          <td>{{name}}</td>
-          <td>{{email}}</td>
-          <td><a href="/users/{{userId}}/form" class="btn btn-success" role="button">수정</a></td>
+          <th scope="row">{{index}}</th>
+          <td style="vertical-align: middle;"><a href="/users/{{userId}}">{{userId}}</a></td>
+          <td style="vertical-align: middle;">{{name}}</td>
+          <td style="vertical-align: middle;">{{email}}</td>
+          <td style="vertical-align: middle;"><a href="/users/{{userId}}/form" class="btn btn-success" role="button">수정</a></td>
         </tr>
         {{/users}}
         </tbody>

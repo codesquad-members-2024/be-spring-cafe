@@ -1,6 +1,7 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.model.Article;
+import codesquad.springcafe.dto.article.ArticleInfoDTO;
+import codesquad.springcafe.dto.article.UploadDTO;
 import codesquad.springcafe.service.ArticleService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,24 +23,23 @@ public class ArticleController {
     }
 
     @PostMapping("/questions")
-    public String createArticle(@ModelAttribute Article article, Model model) {
-        Article newArticle = articleService.createArticle(article.getWriter(), article.getTitle(), article.getContents());
+    public String upload(@ModelAttribute("article") UploadDTO uploadDTO, Model model) {
+        ArticleInfoDTO newArticle = articleService.upload(uploadDTO);
         model.addAttribute("article", newArticle);
         return "redirect:/";
     }
 
     @GetMapping("/")
-    public String showArticleList(Model model) {
-        List<Article> articles = articleService.findAllArticles();
+    public String showList(Model model) {
+        List<ArticleInfoDTO> articles = articleService.findAllArticles();
         model.addAttribute("articles", articles);
         return "index";
     }
 
     @GetMapping("articles/{index}")
-    public String showArticle(@PathVariable Long index,
-        Model model) {
-        Article article = articleService.findArticleByIndex(index);
-        model.addAttribute("article", article);
+    public String showArticle(@PathVariable Long index, Model model) {
+        ArticleInfoDTO targetArticle = articleService.findArticleByIndex(index);
+        model.addAttribute("article", targetArticle);
         return "/qna/show";
     }
 }
