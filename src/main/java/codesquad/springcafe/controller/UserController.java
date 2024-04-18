@@ -48,16 +48,14 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/form")
-    public String showUpdateInfoForm(@PathVariable String userId,
-        Model model) {
+    public String showUpdateInfoForm(@PathVariable String userId, Model model) {
         UserInfoDTO targetUser = userService.findUserById(userId);
         model.addAttribute("user", targetUser);
         return "/user/updateForm";
     }
 
     @PutMapping("/{userId}/update")
-    public String updateInfo(@PathVariable String userId,
-        @ModelAttribute("user") UserUpdateDTO updateInfo, Model model) {
+    public String updateInfo(@PathVariable String userId, @ModelAttribute("user") UserUpdateDTO updateInfo, Model model) {
         UserInfoDTO updatedUser = userService.updateInfo(userId, updateInfo);
         model.addAttribute("user", updatedUser);
         return "redirect:/users";
