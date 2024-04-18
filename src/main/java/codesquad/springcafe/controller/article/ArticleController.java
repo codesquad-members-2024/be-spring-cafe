@@ -115,7 +115,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}/delete")
-    public String confirmUnpulish(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
+    public String confirmUnpublish(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
                                   @PathVariable("articleId") long articleId) {
         /* 게시물 존재 검증 */
         articleManager.validateExists(articleId);
