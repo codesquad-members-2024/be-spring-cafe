@@ -12,12 +12,6 @@ import java.util.List;
 @Primary
 public class UserJdbcRepository implements UserRepository {
 
-    private static final String INSERT_USER_SQL = "INSERT INTO users (user_id, password, name, email) VALUES (?, ?, ?, ?)";
-    private static final String SELECT_ALL_USERS_SQL = "SELECT * FROM users";
-    private static final String SELECT_USER_BY_ID_SQL = "SELECT * FROM users WHERE user_id = ?";
-    private static final String DELETE_ALL_USERS_SQL = "DELETE FROM users";
-    private static final String UPDATE_USER_SQL = "UPDATE users SET password = ?, name = ?, email = ? WHERE user_id = ?";
-
     private final JdbcTemplate jdbcTemplate;
 
     public UserJdbcRepository(JdbcTemplate jdbcTemplate) {
@@ -26,27 +20,32 @@ public class UserJdbcRepository implements UserRepository {
 
     @Override
     public void saveUser(User user) {
-        jdbcTemplate.update(INSERT_USER_SQL, user.getUserId(), user.getPassword(), user.getName(), user.getEmail());
+        String sql = "INSERT INTO users (user_id, password, name, email) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, user.getUserId(), user.getPassword(), user.getName(), user.getEmail());
     }
 
     @Override
     public List<User> findAllUsers() {
-        return jdbcTemplate.query(SELECT_ALL_USERS_SQL, userRowMapper());
+        String sql = "SELECT * FROM users";
+        return jdbcTemplate.query(sql, userRowMapper());
     }
 
     @Override
     public User findUserById(String userId) {
-        return jdbcTemplate.queryForObject(SELECT_USER_BY_ID_SQL, userRowMapper(), userId);
+        String sql = "SELECT * FROM users WHERE user_id = ?";
+        return jdbcTemplate.queryForObject(sql, userRowMapper(), userId);
     }
 
     @Override
     public void clear() {
-        jdbcTemplate.update(DELETE_ALL_USERS_SQL);
+        String sql = "DELETE FROM users";
+        jdbcTemplate.update(sql);
     }
 
     @Override
     public void update(User user) {
-        jdbcTemplate.update(UPDATE_USER_SQL, user.getPassword(), user.getName(), user.getEmail(), user.getUserId());
+        String sql = "UPDATE users SET password = ?, name = ?, email = ? WHERE user_id = ?";
+        jdbcTemplate.update(sql, user.getPassword(), user.getName(), user.getEmail(), user.getUserId());
     }
 
     private RowMapper<User> userRowMapper() {
