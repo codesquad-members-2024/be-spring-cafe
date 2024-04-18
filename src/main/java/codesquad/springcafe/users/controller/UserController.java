@@ -1,6 +1,7 @@
 package codesquad.springcafe.users.controller;
 
 import codesquad.springcafe.exception.PasswordMismatchException;
+import codesquad.springcafe.exception.UserAccessException;
 import codesquad.springcafe.exception.UserNotFoundException;
 import codesquad.springcafe.users.model.dto.*;
 import codesquad.springcafe.users.service.UserService;
@@ -56,12 +57,23 @@ public class UserController {
     }
 
     @GetMapping("/update/{userId}")
-    public String getUserEditPage(@PathVariable String userId, Model model) {
-        UserPreviewDto userPreviewDto = userService.findUserById(userId);
+    public String getUserEditPage(@PathVariable String userId, HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
 
-        model.addAttribute("user", userPreviewDto);
+        UserPreviewDto sessionedUser = (UserPreviewDto) session.getAttribute("sessionedUser");
 
-        return "user/updateForm";
+        if (sessionedUser.getUserId().equals(userId)) {
+
+            UserPreviewDto userPreviewDto = userService.findUserById(userId);
+
+            model.addAttribute("user", userPreviewDto);
+
+            return "user/updateForm";
+        }
+        if (sessionedUser == null) {
+            throw new  UserNotFoundException("존재하지 않는 사용자입니다.");
+        }
+        throw new UserAccessException("수정할 수 있는 권한이 없습니다.");
     }
 
     @PutMapping("/update/{userId}")

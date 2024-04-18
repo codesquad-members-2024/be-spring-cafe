@@ -19,7 +19,7 @@ public class ExceptionController {
     public String handleUserNotFoundException(UserNotFoundException e, Model model) {
         logger.error(e.getClass().getSimpleName() + " : " + e.getMessage());
         model.addAttribute("errorMsg", e.getMessage());
-        return "error/404page";
+        return "error/error_page";
     }
 
     @ExceptionHandler(ArticleNotFoundException.class)
@@ -27,14 +27,24 @@ public class ExceptionController {
     public String handleArticleNotFoundException(ArticleNotFoundException e, Model model) {
         logger.error(e.getClass().getSimpleName() + " : " + e.getMessage());
         model.addAttribute("errorMsg", e.getMessage());
-        return "error/404page";
+        return "error/error_page";
     }
 
     @ExceptionHandler(ServletException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public String showMainPage(ServletException e, Model model) {
         logger.error(e.getClass().getSimpleName() + " : " + e.getMessage());
         String errorMsg = "잘못된 접근입니다.";
         model.addAttribute("errorMsg", errorMsg);
-        return "error/404page";
+        return "error/error_page";
     }
+
+    @ExceptionHandler(UserAccessException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public String handleUserAccessException(UserAccessException e, Model model) {
+        logger.error(e.getClass().getSimpleName() + " : " + e.getMessage());
+        model.addAttribute("errorMsg", e.getMessage());
+        return "error/error_page";
+    }
+
 }
