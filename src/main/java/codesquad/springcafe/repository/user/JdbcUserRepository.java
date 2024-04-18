@@ -20,11 +20,10 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     @Override
-    public Long createUser(UserDto userDto) {
+    public void createUser(UserDto userDto) {
         String SQL = "INSERT INTO users (user_id, nickname, email, password) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(SQL, userDto.getUserId(), userDto.getNickname(), userDto.getEmail(),
                 userDto.getPassword());
-        return userDto.toEntity().getId();
     }
 
     @Override
@@ -42,7 +41,7 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findUserByUserId(String userId) {
+    public Optional<User> findByUserId(String userId) {
         String SQL = "SELECT * FROM users WHERE user_id = ?";
         return Optional.ofNullable(jdbcTemplate.queryForObject(SQL, userRowMapper(), userId));
     }
@@ -55,11 +54,5 @@ public class JdbcUserRepository implements UserRepository {
             String password = rs.getString("password");
             return new User(userId, nickname, email, password);
         };
-    }
-
-    @Override
-    public void clear() {
-        String SQL = "DELETE FROM users";
-        jdbcTemplate.update(SQL);
     }
 }

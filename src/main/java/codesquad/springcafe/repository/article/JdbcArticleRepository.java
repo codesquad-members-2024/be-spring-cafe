@@ -17,8 +17,8 @@ public class JdbcArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Long createArticle(ArticleDto articleDto) {
-        return null;
+    public void createArticle(ArticleDto articleDto) {
+
     }
 
     @Override
@@ -27,12 +27,7 @@ public class JdbcArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Optional<Article> findArticleById(Long id) {
+    public Optional<Article> findById(long id) {
         return Optional.empty();
-    }
-
-    @Override
-    public void clear() {
-
     }
 }

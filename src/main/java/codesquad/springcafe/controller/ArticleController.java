@@ -35,17 +35,16 @@ public class ArticleController {
 
     @PostMapping("/create")
     public String postArticle(@ModelAttribute ArticleDto articleDto) {
-        Long id = articleRepository.createArticle(articleDto);
-        logger.debug("게시글 작성: {}", id);
+        articleRepository.createArticle(articleDto);
         return "redirect:/";
     }
 
     @GetMapping("/{articleId}")
     public String showArticle(@PathVariable Long articleId, Model model) {
-        Optional<Article> optionalArticle = articleRepository.findArticleById(articleId);
+        Optional<Article> optionalArticle = articleRepository.findById(articleId);
         if (optionalArticle.isPresent()) {
             Article article = optionalArticle.get();
-            logger.debug("게시글 상세보기: {}", article.toDto());
+            logger.debug("게시글 상세: {}", article.toDto());
             article.increaseViews(); // 조회수 증가
             model.addAttribute("article", article);
             return "article/show";

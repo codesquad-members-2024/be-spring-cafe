@@ -43,11 +43,7 @@ public class User {
         this.email = userUpdateDto.getNewEmail();
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

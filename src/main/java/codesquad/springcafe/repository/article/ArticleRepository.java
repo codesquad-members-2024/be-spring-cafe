@@ -6,11 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ArticleRepository {
-    Long createArticle(ArticleDto articleDto);
+    void createArticle(ArticleDto articleDto);
 
     List<Article> findAllArticles();
 
-    Optional<Article> findArticleById(Long id);
-
-    void clear();
+    Optional<Article> findById(long id);
 }
