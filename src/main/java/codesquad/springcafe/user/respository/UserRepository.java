@@ -1,32 +1,15 @@
 package codesquad.springcafe.user.respository;
 
-import codesquad.springcafe.database.Database;
 import codesquad.springcafe.exceptions.NoSuchUserException;
 import codesquad.springcafe.user.domain.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
-public class UserRepository {
+public interface UserRepository {
+    void storeUser(User user);
 
-    private final Database database;
+    List<User> getAllUsers();
 
-    @Autowired
-    public UserRepository(Database database) {
-        this.database = database;
-    }
+    User findByName(String name) throws NoSuchUserException;
 
-    public void storeUser(User user) {
-        database.addUser(user);
-    }
-
-    public List<User> getAllUsers() {
-        return database.getUsersAsList();
-    }
-
-    public User findByName(String name) throws NoSuchUserException{
-        return database.findUserByName(name);
-    }
 }
