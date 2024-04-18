@@ -46,7 +46,7 @@ public class UserController {
         return "user/login_success";
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/profile/{userId}")
     public String getUserProfile(@PathVariable String userId, Model model) {
         UserPreviewDto userPreviewDto = userService.findUserById(userId);
 
@@ -55,7 +55,7 @@ public class UserController {
         return "user/profile";
     }
 
-    @GetMapping("/{userId}/form")
+    @GetMapping("/update/{userId}")
     public String getUserEditPage(@PathVariable String userId, Model model) {
         UserPreviewDto userPreviewDto = userService.findUserById(userId);
 
@@ -64,7 +64,7 @@ public class UserController {
         return "user/updateForm";
     }
 
-    @PutMapping("/{userId}/update")
+    @PutMapping("/update/{userId}")
     public String updateUser(@PathVariable String userId, UserUpdateRequest updateData, Model model) {
         try {
             userService.updateUser(userId, updateData);

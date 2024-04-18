@@ -90,3 +90,16 @@ CREATE TABLE ARTICLES (
       FOREIGN KEY (userId) REFERENCES USERS(userId)
 );
 ```
+
+## 3) ```users/login``` & ```users/{userId}``` 접속 문제
+
+- URL을 해당 경로로 해놓았더니, user가 회원가입을 할 때, userId가 ```login```인 경우에는 유저 페이지 접근이 불가하였다.
+- 이를 통해, URL에 문제점이 있다는 것을 알게 되었고, 리팩토링!
+
+### 해결
+
+| URL                         | 기능                      | 구현 상태 |
+|:----------------------------|:------------------------|:-----:|
+| GET /users/profile/{userId} | 유저 아이디에 대한 프로필을 보여준다    |  ⭕️   |
+| GET /users/update/{userId}  | 유저 아이디에 대한 수정 페이지를 보여준다 |  ⭕️   |
+| PUT /users/update/{userId}  | 유저 아이디 수정 기능            |  ⭕️   |
