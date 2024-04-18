@@ -15,21 +15,12 @@ import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static codesquad.springcafe.domain.article.repository.ArticleConsts.DEFAULT_POINT;
+import static codesquad.springcafe.domain.article.repository.ArticleConsts.*;
+import static java.sql.Types.VARCHAR;
 
 @Repository
 @Primary
 public class H2ArticleRepository implements ArticleRepository {
-
-    private final String ADD_SQL = "INSERT INTO ARTICLE (TITLE, CONTENT, CREATEDAT, AUTHORID, POINT) VALUES ( ?, ?, ?, ?, ?);";
-    private final String FIND_BY_ID_SQL = "SELECT * FROM ARTICLE WHERE Id = ? AND STATUS = 'OPEN';";
-    private final String FIND_BY_USER_SQL = "SELECT * FROM ARTICLE WHERE authorId = ? AND STATUS = 'OPEN'; ";
-    private final String FIND_ALL_SQL = "SELECT * FROM article WHERE STATUS = 'OPEN' ORDER BY createdAt DESC;";
-    private final String ADD_POINT_SQL = "UPDATE ARTICLE SET point = point + 1 WHERE id = ?;";
-    private final String UPDATE_ARTICLE = "UPDATE ARTICLE SET TITLE = ?, CONTENT = ?,  CREATEDAT = ?  WHERE ID = ?;";
-
-    private final String GET_USER_NAME = "SELECT NAME FROM USERS WHERE USERID = ?";
-    private final String DELETE_ALL = "DELETE FROM ARTICLE";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -41,6 +32,8 @@ public class H2ArticleRepository implements ArticleRepository {
 
     @Override
     public void add(ArticlePostReq articlePostReq, SimpleUserInfo simpleUserInfo) throws IllegalArgumentException {
+        String ADD = "INSERT INTO ARTICLE (TITLE, CONTENT, CREATEDAT, AUTHORID, POINT) VALUES ( ?, ?, ?, ?, ?);";
+
         Object[] args = new Object[]{
                 articlePostReq.title(),
                 articlePostReq.content(),
@@ -48,23 +41,25 @@ public class H2ArticleRepository implements ArticleRepository {
                 simpleUserInfo.id(),
                 DEFAULT_POINT};
 
-        jdbcTemplate.update(ADD_SQL, args);
+        jdbcTemplate.update(ADD, args);
     }
 
     @Override
     public void delete(int id) {
-        String sql = "UPDATE ARTICLE SET STATUS = 'CLOSE' WHERE ID = ? ;";
-        Object[] args = new Object[]{id};
+        String DELETE = "UPDATE ARTICLE SET STATUS = ? WHERE ID = ? ;";
+        Object[] args = new Object[]{CLOSE , id};
 
-        jdbcTemplate.update(sql, args);
+        jdbcTemplate.update(DELETE, args);
     }
 
     @Override
     public Article findById(int id) {
-        Object[] args = new Object[]{id};
-        int[] pramTypes = new int[]{Types.VARCHAR};
+        String FIND_BY_ID = "SELECT * FROM ARTICLE WHERE ID = ? AND STATUS = ?;";
+
+        Object[] args = new Object[]{id, OPEN};
+        int[] pramTypes = new int[]{VARCHAR, VARCHAR};
         try {
-            return jdbcTemplate.query(FIND_BY_ID_SQL, args, pramTypes, articleRowMapper()).get(0);
+            return jdbcTemplate.query(FIND_BY_ID, args, pramTypes, articleRowMapper()).get(0);
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
@@ -72,48 +67,60 @@ public class H2ArticleRepository implements ArticleRepository {
 
     @Override
     public List<Article> findAll() {
-        return jdbcTemplate.query(FIND_ALL_SQL, articleRowMapper());
+        String FIND_ALL = "SELECT * FROM ARTICLE WHERE STATUS = " + OPEN + " ORDER BY CREATEDAT DESC;";
+
+        return jdbcTemplate.query(FIND_ALL, articleRowMapper());
     }
 
     @Override
     public List<Article> findByUserId(String id) {
+        String FIND_BY_USER = "SELECT * FROM ARTICLE WHERE AUTHORID = ? AND STATUS = " + OPEN;
+
         Object[] args = new Object[]{id};
-        int[] pramTypes = new int[]{Types.VARCHAR};
-        return jdbcTemplate.query(FIND_BY_USER_SQL, args, pramTypes, articleRowMapper());
+        int[] pramTypes = new int[]{VARCHAR};
+        return jdbcTemplate.query(FIND_BY_USER, args, pramTypes, articleRowMapper());
     }
 
     @Override
     public void addPoint(int articleId) {
+        String ADD_POINT = "UPDATE ARTICLE SET POINT = ARTICLE.POINT + 1 WHERE ID = ?;";
+
         Object[] args = new Object[]{articleId};
-        jdbcTemplate.update(ADD_POINT_SQL, args);
+        jdbcTemplate.update(ADD_POINT, args);
     }
 
     @Override
     public void update(int id, ArticlePostReq articlePostReq) {
+        String UPDATE = "UPDATE ARTICLE SET TITLE = ?, CONTENT = ?,  CREATEDAT = ?  WHERE ID = ?;";
+
         Object[] args = new Object[]{articlePostReq.title(), articlePostReq.content(), Timestamp.valueOf(LocalDateTime.now()), id};
-        jdbcTemplate.update(UPDATE_ARTICLE, args);
+        jdbcTemplate.update(UPDATE, args);
     }
 
     @Override
     public void deleteAll() {
+        String DELETE_ALL = "DELETE FROM ARTICLE";
+
         jdbcTemplate.update(DELETE_ALL);
     }
 
     private RowMapper<Article> articleRowMapper() {
         return (resultSet, rowNum) -> new Article(
-                resultSet.getInt("id"),
-                resultSet.getTimestamp("createdAt"),
-                new SimpleUserInfo(resultSet.getString("authorId"), getUserName(resultSet.getString("authorId"))),
-                resultSet.getString("title"),
-                resultSet.getString("content"),
-                resultSet.getInt("point")
+                resultSet.getInt(ID),
+                resultSet.getTimestamp(CREATEDAT),
+                new SimpleUserInfo(resultSet.getString(AUTHORID), getUserName(resultSet.getString(AUTHORID))),
+                resultSet.getString(TITLE),
+                resultSet.getString(CONTENT),
+                resultSet.getInt(POINT)
         );
     }
 
     private String getUserName(String id) {
+        String GET_USER_NAME = "SELECT NAME FROM USERS WHERE USERID = ?";
+
         try {
             Object[] args = new Object[]{id};
-            int[] paramTypes = new int[]{Types.VARCHAR};
+            int[] paramTypes = new int[]{VARCHAR};
             return jdbcTemplate.queryForObject(GET_USER_NAME, args, paramTypes, String.class);
         } catch (EmptyResultDataAccessException e) {
             return null;
