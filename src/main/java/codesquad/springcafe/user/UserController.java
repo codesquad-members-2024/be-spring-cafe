@@ -44,7 +44,7 @@ public class UserController {
     }
 
     @GetMapping("/profile/{name}")
-    public String showUserProfile(Model model, @PathVariable String name) throws NoSuchUserException{
+    public String showUserProfile(Model model, @PathVariable String name) throws NoSuchUserException {
         User user = userService.findUserByName(name);
 
         model.addAttribute("user", user);
@@ -53,7 +53,7 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public String showLoginUserProfile(Model model, HttpSession session, @CookieValue(name = SESSION_LOGIN) String sessionId) throws NoSuchUserException{
+    public String showLoginUserProfile(Model model, HttpSession session, @CookieValue(name = SESSION_LOGIN) String sessionId) throws NoSuchUserException {
         String userId = (String) session.getAttribute(sessionId);
         User user = userService.findUserById(userId);
 
@@ -72,6 +72,18 @@ public class UserController {
         cookie.setPath("/");
 
         response.addCookie(cookie);
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session, @CookieValue(name = SESSION_LOGIN) String sessionId, HttpServletResponse response) {
+        session.removeAttribute(sessionId);
+        Cookie deleteCookie = new Cookie(sessionId, null);
+        deleteCookie.setMaxAge(0);
+        deleteCookie.setPath("/");
+
+        response.addCookie(deleteCookie);
+
         return "redirect:/";
     }
 }
