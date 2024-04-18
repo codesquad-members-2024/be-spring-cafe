@@ -14,24 +14,12 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (request.getMethod().contentEquals("POST")) return true;
 
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            Cookie[] cookies = request.getCookies();
-            for (Cookie cookie : cookies) {
-                if (validateCookie(cookie, session)) {
-                    return true;
-                }
-            }
-        }
+        HttpSession session = request.getSession();
+        Object loginUser = session.getAttribute(SESSION_LOGIN);
+
+        if (loginUser != null) return true;
 
         response.sendRedirect("/user/login.html");
-        return false;
-    }
-
-    private boolean validateCookie(Cookie cookie, HttpSession session) {
-        if (cookie.getName().contentEquals(SESSION_LOGIN)) {
-            return session.getAttribute(cookie.getValue()) != null;
-        }
         return false;
     }
 }

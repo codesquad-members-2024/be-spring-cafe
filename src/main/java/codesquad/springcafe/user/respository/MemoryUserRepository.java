@@ -14,7 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MemoryUserRepository implements UserRepository{
     private static final Map<String, User> userDB = new ConcurrentHashMap<>();
 
-
     @Override
     public void storeUser(User user) {
         userDB.put(user.getName(), user);
@@ -42,5 +41,10 @@ public class MemoryUserRepository implements UserRepository{
         if (optionalUser.isEmpty()) throw new NoSuchUserException();
 
         return optionalUser.get();
+    }
+
+    @Override
+    public void removeUser(String name) {
+        userDB.remove(name);
     }
 }

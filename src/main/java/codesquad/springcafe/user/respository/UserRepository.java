@@ -14,4 +14,6 @@ public interface UserRepository {
 
     User findById(String id) throws NoSuchUserException;
 
+    void removeUser(String name);
+
 }

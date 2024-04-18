@@ -17,6 +17,8 @@ public interface UserService {
 
     User findUserById(String id) throws NoSuchUserException;
 
-    String loginVerification(LoginUser loginUser) throws CanNotLoginException;
+    void loginVerification(LoginUser loginUser) throws CanNotLoginException;
+
+    void updateUser(User before, User after);
 
 }

@@ -6,6 +6,7 @@ import codesquad.springcafe.user.domain.LoginUser;
 import codesquad.springcafe.user.domain.User;
 import codesquad.springcafe.user.service.UserService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -53,9 +54,9 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public String showLoginUserProfile(Model model, HttpSession session, @CookieValue(name = SESSION_LOGIN) String sessionId) throws NoSuchUserException {
-        String userId = (String) session.getAttribute(sessionId);
-        User user = userService.findUserById(userId);
+    public String showLoginUserProfile(Model model, HttpSession session) throws NoSuchUserException {
+        LoginUser loginUser = (LoginUser) session.getAttribute(SESSION_LOGIN);
+        User user = userService.findUserById(loginUser.getUserId());
 
         model.addAttribute("user", user);
 
@@ -64,26 +65,35 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@ModelAttribute LoginUser loginUser, HttpSession session, HttpServletResponse response) throws CanNotLoginException {
-        String sessionKey = userService.loginVerification(loginUser);
+        userService.loginVerification(loginUser);
 
-        session.setAttribute(sessionKey, loginUser.getUserId());
+        session.setAttribute(SESSION_LOGIN, loginUser);
 
-        Cookie cookie = new Cookie(SESSION_LOGIN, sessionKey);
-        cookie.setPath("/");
-
-        response.addCookie(cookie);
         return "redirect:/";
     }
 
     @GetMapping("/logout")
-    public String logout(HttpSession session, @CookieValue(name = SESSION_LOGIN) String sessionId, HttpServletResponse response) {
-        session.removeAttribute(sessionId);
-        Cookie deleteCookie = new Cookie(sessionId, null);
-        deleteCookie.setMaxAge(0);
-        deleteCookie.setPath("/");
-
-        response.addCookie(deleteCookie);
-
+    public String logout(HttpSession session) {
+        session.invalidate();
         return "redirect:/";
+    }
+
+    @GetMapping("/update")
+    public String showUserProfileUpdateForm(Model model, HttpSession session) throws NoSuchUserException {
+        LoginUser loginUser = (LoginUser) session.getAttribute(SESSION_LOGIN);
+        User user = userService.findUserById(loginUser.getUserId());
+
+        model.addAttribute("user", user);
+
+        return "user/update_form";
+    }
+
+    @PostMapping("/update")
+    public String updateUserProfile(@ModelAttribute User after) throws NoSuchUserException{
+        User before = userService.findUserById(after.getUserId());
+
+        userService.updateUser(before, after);
+
+        return "redirect:/user/profile";
     }
 }

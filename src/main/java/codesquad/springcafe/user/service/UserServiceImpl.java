@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public String loginVerification(LoginUser loginUser) throws CanNotLoginException {
+    public void loginVerification(LoginUser loginUser) throws CanNotLoginException {
         String id = loginUser.getUserId();
         User user;
         try {
@@ -51,11 +51,14 @@ public class UserServiceImpl implements UserService{
             throw new CanNotLoginException("아이디가 존재하지 않습니다");
         }
 
-        if (user.isSamePassword(loginUser.getPassword())) {
-            UUID uuid = UUID.randomUUID();
-            return uuid.toString();
-        } else {
+        if (!user.isSamePassword(loginUser.getPassword())) {
             throw new CanNotLoginException("비밀번호가 일치하지 않습니다");
         }
+    }
+
+    @Override
+    public void updateUser(User before, User after) {
+        userRepository.removeUser(before.getName());
+        userRepository.storeUser(after);
     }
 }
