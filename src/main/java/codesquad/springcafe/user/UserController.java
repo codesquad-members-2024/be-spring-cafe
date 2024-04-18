@@ -4,10 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -23,28 +20,28 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/users/{userId}")
+    @GetMapping("/user/{userId}")
     public String showProfile(@PathVariable String userId, Model model) {
         // 저장소에서 유저 찾기
         Optional<User> optUser = userRepository.findUser(userId);
         // 유저를 View에 넘기기 전 필요한 정보만 DTO에 담기
-        Optional<UserDTO> optUserDTO = optUser.map(user -> {
-            UserDTO userDTO = new UserDTO();
+        Optional<UserDto> optUserDTO = optUser.map(user -> {
+            UserDto userDTO = new UserDto();
             userDTO.setName(user.getName());
             userDTO.setEmail(user.getEmail());
             return userDTO;
         });
 
-        // userID 를 찾으면 유저 프로필 조회, 못 찾으면 로그인 페이지로 이동.
-        return optUserDTO.map(userDTO -> {
-            model.addAttribute("user", userDTO);
+        // userID 를 찾으면 유저 프로필 조회, 못 찾으면 white Lable 페이지 반환
+        return optUserDTO.map(userDto -> {
+            model.addAttribute("user", userDto);
             return "user/profile";
-        }).orElse("user/login");
+        }).orElse("error");
     }
 
     // 회원가입 기능
     @PostMapping("/user")
-    public String create(@ModelAttribute UserCreationDTO userDTO) {
+    public String create(@ModelAttribute UserCreationDto userDTO) {
         final String userId = userDTO.getUserId();
         final String password = userDTO.getPassword();
         final String name = userDTO.getName();
@@ -54,16 +51,15 @@ public class UserController {
         userRepository.save(user);
         return "redirect:/users";
     }
-
     @GetMapping("/users")
     public String showUsers(Model model) {
         // 저장소에서 모든 유저 목록 찾기
         Collection<User> users = userRepository.getAllUsers();
         // 인덱스 번호를 유저마다 붙여 View 에게 전달하는 DTO생성
         AtomicLong atomicLong = new AtomicLong(0L);
-        List<UserDTO> userDTOs = users.stream()
+        List<UserDto> userDtos = users.stream()
                 .map(user -> {
-                    UserDTO userDTO = new UserDTO();
+                    UserDto userDTO = new UserDto();
                     userDTO.setIndex(atomicLong.incrementAndGet());
                     userDTO.setUserId(user.getUserId());
                     userDTO.setName(user.getName());
@@ -71,8 +67,20 @@ public class UserController {
                     return userDTO;
                 }).toList();
 
-        model.addAttribute("users", userDTOs);
+        model.addAttribute("users", userDtos);
         return "user/list";
     }
 
+    @GetMapping("/user/{userId}/form")
+    public String showUpdateForm(@PathVariable String userId, Model model) {
+        model.addAttribute("userId", userId);
+        return "user/updateForm";
+    }
+
+    @PutMapping("/user/{userId}/form")
+    public String updateUser(@PathVariable String userId, UserCreationDto dto) {
+        User user = new User(userId, dto.getPassword(), dto.getName(), dto.getEmail());
+        userRepository.updateUser(user);
+        return "redirect:/users";
+    }
 }
