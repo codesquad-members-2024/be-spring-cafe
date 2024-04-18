@@ -18,8 +18,6 @@ import java.util.Map;
 @Controller
 public class ArticleController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ArticleController.class);
-
     private ArticleService articleService;
 
     public ArticleController(ArticleService articleService) {

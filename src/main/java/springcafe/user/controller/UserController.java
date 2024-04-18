@@ -21,6 +21,11 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
+
+    @GetMapping("update")
+    public String update() {
+        return "user/updateform";
+    }
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -62,11 +67,6 @@ public class UserController {
         User user = userService.findById(userId);
         model.addAttribute("user", user);
         return "user/profile";
-    }
-
-    @GetMapping("update")
-    public String update() {
-        return "user/updateform";
     }
 
     @GetMapping("/signup")

@@ -3,7 +3,7 @@ package springcafe.user.service;
 import org.springframework.stereotype.Service;
 import springcafe.user.dto.UserDto;
 import springcafe.user.model.User;
-import springcafe.user.repository.UserRepository;
+import springcafe.user.repository.UserDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,25 +11,25 @@ import java.util.List;
 @Service
 public class UserService {
 
-    private static UserRepository userRepository;
+    private static UserDao userDao;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserService(UserDao userDao) {
+        this.userDao = userDao;
     }
 
     public User create(String id, String password, String username, String email) {
         User user = new User(id, password, username, email);
-        userRepository.add(user);
+        userDao.insert(user);
 
         return user;
     }
 
     public User findById(String id) {
-        return userRepository.findById(id);
+        return userDao.findById(id);
     }
 
     public List<UserDto> findAll() {
-        List<User> userList = userRepository.findAll();
+        List<User> userList = userDao.findAll();
         List<UserDto> userDtoList = new ArrayList<>();
         for (User user : userList) {
             userDtoList.add(UserDto.toUserDto(user));
@@ -39,14 +39,14 @@ public class UserService {
     }
 
     public void updateInfo(String id, String password, String name, String email){
-        User user = userRepository.findById(id);
+        User user = userDao.findById(id);
         user.updatePassword(password);
         user.updateName(name);
         user.updateEmail(email);
     }
 
     public boolean loginCheck(String id, String password) {
-        User user = userRepository.findById(id);
+        User user = userDao.findById(id);
         if (user.getPassword().equals(password)) {
             return true;
         } else {

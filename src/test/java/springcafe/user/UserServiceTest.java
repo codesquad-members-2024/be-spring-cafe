@@ -5,7 +5,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import springcafe.user.model.User;
-import springcafe.user.repository.UserRepository;
+import springcafe.user.repository.UserDao;
 import springcafe.user.service.UserService;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 class UserServiceTest {
 
     @Mock
-    private UserRepository userRepository;
+    private UserDao userDao;
 
     @InjectMocks
     private UserService userService;
@@ -32,7 +32,7 @@ class UserServiceTest {
         String email = "dusgh@naver.com";
 
         User expectedUser = new User(id, password, username, email);
-        when(userRepository.findById("A")).thenReturn(expectedUser);
+        when(userDao.findById("A")).thenReturn(expectedUser);
 
         User resultUser = userService.create(id,password, username, email);
 
