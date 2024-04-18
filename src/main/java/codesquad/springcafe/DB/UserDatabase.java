@@ -1,30 +1,22 @@
 package codesquad.springcafe.DB;
 
 import codesquad.springcafe.domain.User;
+import codesquad.springcafe.domain.UpdatedUser;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UserDatabase {
-    private static final List<User> users = new ArrayList<>();
+public interface UserDatabase{
+    void saveUser(User user);
 
-    public static void saveUser(User user) {
-        users.add(user);
-    }
+    void updateUser(String id, UpdatedUser updatedUser);
 
-    public static List<User> getAllUsers() {
-        return users;
-    }
+    List<User> getAllUsers();
 
-    public static int getUserSize(){
-        return users.size();
-    }
+    Optional<User> getUserById(String id);
 
-    public static Optional<User> getUser(String userId) {
-        return users.stream()
-                .filter(user -> user.getUserId().equals(userId))
-                .findFirst();
-    }
+    int getUsersSize();
+
+
 
 }
