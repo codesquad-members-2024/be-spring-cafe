@@ -43,8 +43,8 @@ public class PostJdbcRepository implements PostRepository {
     private RowMapper<Post> postRowMapper() {
         return (rs, rowNum) -> new Post(
                 rs.getLong("id"),
-                rs.getString("author"),
                 rs.getString("title"),
+                rs.getString("author"),
                 rs.getString("content"),
                 rs.getTimestamp("creation_time").toLocalDateTime()
         );
