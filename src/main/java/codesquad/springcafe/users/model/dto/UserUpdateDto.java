@@ -1,17 +1,13 @@
 package codesquad.springcafe.users.model.dto;
 
-import codesquad.springcafe.utils.SHA256HashService;
-
-public class UserUpdateRequest {
+public class UserUpdateDto {
     private final String newName;
     private final String newEmail;
-    private final String currentPassword;
     private final String newPassword;
 
-    public UserUpdateRequest(String newName, String newEmail, String currentPassword, String newPassword) {
+    public UserUpdateDto(String newName, String newEmail, String newPassword) {
         this.newName = newName;
         this.newEmail = newEmail;
-        this.currentPassword = currentPassword;
         this.newPassword = newPassword;
     }
 
@@ -21,10 +17,6 @@ public class UserUpdateRequest {
 
     public String getNewEmail() {
         return newEmail;
-    }
-
-    public String getCurrentPassword() {
-        return currentPassword;
     }
 
     public String getNewPassword() {

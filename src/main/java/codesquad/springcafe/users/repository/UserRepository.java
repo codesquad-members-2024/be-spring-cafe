@@ -3,6 +3,7 @@ package codesquad.springcafe.users.repository;
 import codesquad.springcafe.users.model.User;
 import codesquad.springcafe.users.model.data.UserCredentialData;
 import codesquad.springcafe.users.model.dto.UserPreviewDto;
+import codesquad.springcafe.users.model.dto.UserUpdateDto;
 import codesquad.springcafe.users.model.dto.UserUpdateRequest;
 
 import java.util.ArrayList;
@@ -17,6 +18,6 @@ public interface UserRepository {
 
     Optional<UserCredentialData> getUserCredential(String userId);
 
-    void updateUser(String userId, UserUpdateRequest updateData);
+    void updateUser(String userId, UserUpdateDto updateDto);
 
 }

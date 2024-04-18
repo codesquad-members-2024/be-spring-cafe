@@ -128,5 +128,10 @@ td {
 }
 
 .article-title{
-    text-decoration: underline; /* 밑줄을 추가 */
+    font-weight: bold;
+    color: black;
+}
+
+.user-id-title{
+    color: blue;
 }

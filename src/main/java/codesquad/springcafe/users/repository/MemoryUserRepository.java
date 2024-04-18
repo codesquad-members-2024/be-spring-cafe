@@ -5,6 +5,7 @@ import codesquad.springcafe.exception.UserNotFoundException;
 import codesquad.springcafe.db.UserDatabase;
 import codesquad.springcafe.users.model.data.UserCredentialData;
 import codesquad.springcafe.users.model.dto.UserPreviewDto;
+import codesquad.springcafe.users.model.dto.UserUpdateDto;
 import codesquad.springcafe.users.model.dto.UserUpdateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,10 +64,10 @@ public class MemoryUserRepository implements UserRepository {
 
 
     @Override
-    public void updateUser(String userId, UserUpdateRequest updateData) {
+    public void updateUser(String userId, UserUpdateDto updateDto) {
         User user = userDatabase.findUserById(userId).orElseThrow(() -> new UserNotFoundException("유저를 찾을 수 없습니다."));
 
-        user.updateUser(updateData);
+        user.updateUser(updateDto);
 
         logger.debug("User Updated : {}", user);
     }
