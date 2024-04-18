@@ -39,10 +39,7 @@
                    th:href="@{/article/{articleId}/update_form(articleId=${article.articleId})}">수정</a>
               </li>
               <li>
-                <form class="form-delete" action="/questions/423" method="POST">
-                  <input type="hidden" name="_method" value="DELETE">
-                  <button class="link-delete-article" type="submit">삭제</button>
-                </form>
+                <button class="link-delete-article" onclick="confirmDelete()">삭제</button>
               </li>
               <li>
                 <a class="link-modify-article" href="/templates/index.html">목록</a>
@@ -167,5 +164,24 @@
 <script src="../js/jquery-2.2.0.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/scripts.js"></script>
+<script th:inline="javascript">
+  function confirmDelete() {
+    if (confirm("정말 지울거야?")) {
+      var form = document.createElement("form");
+      form.method = "POST";
+      var articleId = [[${article.articleId}]];
+      form.action = "/article/" + articleId + "/delete";
+      console.log(form.action)
+      var hiddenField = document.createElement("input");
+      hiddenField.type = "hidden";
+      hiddenField.name = "_method";
+      hiddenField.value = "DELETE";
+      form.appendChild(hiddenField);
+      document.body.appendChild(form);
+      form.submit();
+    } else {
+    }
+  }
+</script>
 </body>
 </html>

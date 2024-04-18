@@ -47,4 +47,9 @@ public class ArticleH2Database implements ArticleDatabase {
         jdbcTemplate.update(sql, article.getTitle(), article.getContents(), articleId);
     }
 
+    @Override
+    public void delete(Long articleId) {
+        String sql = "DELETE FROM article WHERE articleid = ?";
+        jdbcTemplate.update(sql, articleId);
+    }
 }

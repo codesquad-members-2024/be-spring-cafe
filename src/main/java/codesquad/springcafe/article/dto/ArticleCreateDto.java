@@ -1,4 +1,7 @@
-package codesquad.springcafe.article;
+package codesquad.springcafe.article.dto;
+
+import codesquad.springcafe.article.Article;
+import codesquad.springcafe.article.ArticleBuilder;
 
 public class ArticleCreateDto {
 
