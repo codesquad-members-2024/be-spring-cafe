@@ -8,7 +8,6 @@ public class Article {
     private String title;
     private String content;
     private LocalDateTime time;
-    private String formattedTime;
     private String id;
 
 
@@ -17,12 +16,6 @@ public class Article {
         this.title = title;
         this.content = content;
         this.time = LocalDateTime.now();
-        setFormattedTime();
-    }
-
-    public void setFormattedTime(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        this.formattedTime = time.format(formatter);
     }
 
     public String getWriter(){
@@ -42,9 +35,9 @@ public class Article {
     }
 
     public String getFormattedTime(){
-        return formattedTime;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return time.format(formatter);
     }
-
 
     public String getId(){
         return id;

@@ -5,7 +5,7 @@ import codesquad.springcafe.domain.Article;
 import java.util.List;
 import java.util.ArrayList;
 
-public class ArticleDatabase {
+public class MemoryArticleDatabase {
     private static final List<Article> articles = new ArrayList<>();
 
     public static void saveArticle(Article article) {

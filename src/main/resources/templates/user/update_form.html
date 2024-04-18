@@ -27,7 +27,7 @@
             <h4 style="color:red">비밀번호가 올바르지 않습니다.</h4>
             {{/isIncorrectPassword}}
         </div>
-        <form name="question" class="info-container" method="post" action="/users/update/{{userId}}">
+        <form name="question" class="info-container" method="post" action="/users/update/{{id}}">
             <input type="hidden" name="_method" value="PUT" />
             <div class="form-group">
                 <label for="newNickname">닉네임</label>

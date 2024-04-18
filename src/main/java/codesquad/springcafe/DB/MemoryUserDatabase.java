@@ -1,30 +1,45 @@
 package codesquad.springcafe.DB;
 
 import codesquad.springcafe.domain.User;
+import codesquad.springcafe.domain.UpdatedUser;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class MemoryUserDatabase {
-    private static final List<User> users = new ArrayList<>();
+@Component
+@Qualifier("MemoryUserDatabase")
+public class MemoryUserDatabase implements UserDatabase{
+    private final List<User> users = new ArrayList<>();
 
-    public static void saveUser(User user) {
+    public void saveUser(User user) {
         users.add(user);
     }
 
-    public static List<User> getAllUsers() {
+    public void updateUser(String id, UpdatedUser updatedUser) {
+        Optional<User> userOptional = getUserById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.update(updatedUser);
+        } else {
+            throw new IllegalArgumentException("User id: " + id + " not found");
+        }
+    }
+
+    public List<User> getAllUsers() {
         return users;
     }
 
-    public static int getUserSize(){
-        return users.size();
+    public Optional<User> getUserById(String id) {
+        return users.stream()
+                .filter(user -> user.getId().equals(id))
+                .findFirst();
     }
 
-    public static Optional<User> getUser(String userId) {
-        return users.stream()
-                .filter(user -> user.getUserId().equals(userId))
-                .findFirst();
+    public int getUsersSize(){
+        return users.size();
     }
 
 }

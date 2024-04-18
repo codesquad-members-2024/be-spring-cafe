@@ -1,12 +1,12 @@
 package codesquad.springcafe.domain;
 
-public class UserUpdate {
+public class UpdatedUser {
     private final String newNickname;
     private final String newEmail;
     private final String password;
     private final String newPassword;
 
-    public UserUpdate(String newNickname, String newEmail, String password, String newPassword) {
+    public UpdatedUser(String newNickname, String newEmail, String password, String newPassword) {
         this.newNickname = newNickname;
         this.newEmail = newEmail;
         this.password = password;
