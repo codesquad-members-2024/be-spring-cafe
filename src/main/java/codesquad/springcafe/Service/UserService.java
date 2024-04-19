@@ -30,11 +30,15 @@ public class UserService {
         return user;
     }
 
-    public User update(User updatedUser) {
-        return userRepository.findById(updatedUser.getUserId())
+    public void update(User updatedUser) {
+        userRepository.findById(updatedUser.getUserId())
             .filter(user -> user.getPassword().equals(updatedUser.getPassword()))
-            .map(user -> userRepository.update(updatedUser))
-            .orElseThrow(() -> new NoSuchElementException("User not found or passwords do not match"));
+            .ifPresentOrElse(
+                user -> userRepository.update(updatedUser),
+                () -> {
+                    throw new NoSuchElementException("User not found or passwords do not match");
+                }
+            );
     }
 
     public User findUserById(String userId) {
