@@ -12,7 +12,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@Controller("/users")
+@Controller
+@RequestMapping("/users")
 public class UserController {
 
     private final UserDatabase userDatabase;
