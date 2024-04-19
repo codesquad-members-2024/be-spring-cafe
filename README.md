@@ -6,21 +6,24 @@
 
 # 📜 URL Convention
 
-| URL                           | 기능                             | 구현 상태 |
-|:------------------------------|:-------------------------------|:-----:|
-| GET / , GET /main             | 등록된 모든 게시글들을 보여준다              |  ⭕️   |
-| GET /users                    | 회원가입된 유저들을 보여준다.               |  ⭕️   |
-| POST /users                   | 입력된 폼을 가지고, 회원 가입을 수행한다        |  ⭕️   |
-| GET /users/join               | 유저 회원가입 폼을 보여준다                |  ⭕️   |
-| GET /users/login              | 로그인 페이지를 보여준다                  |  ⭕️   |
-| POST /users/login             | 사용자 로그인 기능을 수행한다               |  ⭕️   |
-| POST /users/logout            | 로그인 된 사용자를 로그아웃                |  ⭕️   |
-| GET /users/profile/{{userId}} | userId에 해당하는 profile을 보여준다     |  ⭕️   |
-| GET /users/update/{{userId}}  | userId에 해당하는 수정 페이지를 보여준다      |  ⭕️   | 
-| PUT /users/update/{{userId}}  | 사용자의 정보를 업데이트                  |  ⭕️   |
-| GET /articles/write           | 게시물 입력하는 폼을 보여준다               |  ⭕️   |
-| POST /articles                | 입력한 폼을 POST 요청으로 보낸다           |  ⭕️   |
-| GET /articles/{{articleId}}   | articleId에 해당하는 게시물 상세정보를 보여준다 |  ⭕️   |
+| URL                                   | 기능                             | 구현 상태 |
+|:--------------------------------------|:-------------------------------|:-----:|
+| GET / , GET /main                     | 등록된 모든 게시글들을 보여준다              |  ⭕️   |
+| GET /users                            | 회원가입된 유저들을 보여준다.               |  ⭕️   |
+| POST /users                           | 입력된 폼을 가지고, 회원 가입을 수행한다        |  ⭕️   |
+| GET /users/join                       | 유저 회원가입 폼을 보여준다                |  ⭕️   |
+| GET /users/login                      | 로그인 페이지를 보여준다                  |  ⭕️   |
+| POST /users/login                     | 사용자 로그인 기능을 수행한다               |  ⭕️   |
+| POST /users/logout                    | 로그인 된 사용자를 로그아웃                |  ⭕️   |
+| GET /users/profile/{{userId}}         | userId에 해당하는 profile을 보여준다     |  ⭕️   |
+| GET /users/update/{{userId}}          | userId에 해당하는 수정 페이지를 보여준다      |  ⭕️   | 
+| PUT /users/update/{{userId}}          | 사용자의 정보를 업데이트                  |  ⭕️   |
+| GET /articles/write                   | 게시물 입력하는 폼을 보여준다               |  ⭕️   |
+| POST /articles                        | 입력한 폼을 POST 요청으로 보낸다           |  ⭕️   |
+| GET /articles/{{articleId}}           | articleId에 해당하는 게시물 상세정보를 보여준다 |  ⭕️   |
+| GET /articles/update/{{articleId}}    | articleId에 해당하는 수정 페이지를 보여줌    |  ⭕️   |
+| PUT /articles/update/{{articleId}}    | articleId의 제목과 내용을 수정          |  ⭕️   |
+| DELETE /articles/delete/{{articleId}} | articleId에 대한 게시글을 삭제          |  ⭕️   |
 
 ---
 
@@ -28,29 +31,35 @@
 
 ## 로그인 하지 않은 상태
 
-| URL                           | 접근 권한 |
-|:------------------------------|:-----:|
-| GET / , GET /main             |  ⭕️   |
-| GET /users                    |  ⭕️   |
-| GET /users/join               |  ⭕️   |
-| GET /users/login              |  ⭕️   |
-| GET /users/profile/{{userId}} |   ❌   |
-| GET /users/update/{{userId}}  |   ❌   | 
-| GET /articles/write           |   ❌   |
-| GET /articles/{{articleId}}   |   ❌   |
+| URL                                   | 접근 권한 |
+|:--------------------------------------|:-----:|
+| GET / , GET /main                     |  ⭕️   |
+| GET /users                            |  ⭕️   |
+| GET /users/join                       |  ⭕️   |
+| GET /users/login                      |  ⭕️   |
+| GET /users/profile/{{userId}}         |   ❌   |
+| GET /users/update/{{userId}}          |   ❌   | 
+| GET /articles/write                   |   ❌   |
+| GET /articles/{{articleId}}           |   ❌   |
+| GET /articles/update/{{articleId}}    |   ❌   |
+| PUT /articles/update/{{articleId}}    |   ❌   |
+| DELETE /articles/delete/{{articleId}} |   ❌   |
 
 ## 로그인 한 상태
 
-| URL                           | 접근 권한 |
-|:------------------------------|:-----:|
-| GET / , GET /main             |  ⭕️   |
-| GET /users                    |   ❌   |
-| GET /users/join               |   ❌   |
-| GET /users/login              |   ❌   |
-| GET /users/profile/{{userId}} |  ⭕️   |
-| GET /users/update/{{userId}}  |  ⭕️   | 
-| GET /articles/write           |  ⭕️   |
-| GET /articles/{{articleId}}   |  ⭕️   |
+| URL                                   |        접근 권한        |
+|:--------------------------------------|:-------------------:|
+| GET / , GET /main                     |         ⭕️          |
+| GET /users                            |          ❌          |
+| GET /users/join                       |          ❌          |
+| GET /users/login                      |          ❌          |
+| GET /users/profile/{{userId}}         |         ⭕️          |
+| GET /users/update/{{userId}}          |         ⭕️          | 
+| GET /articles/write                   |         ⭕️          |
+| GET /articles/{{articleId}}           |         ⭕️          |
+| GET /articles/update/{{articleId}}    | ❌, [id가 같은 경우 : ⭕️] |
+| PUT /articles/update/{{articleId}}    | ❌, [id가 같은 경우 : ⭕️] |
+| DELETE /articles/delete/{{articleId}} | ❌, [id가 같은 경우 : ⭕️] |
 
 # 프로그램 동작
 
