@@ -7,7 +7,6 @@ import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.SessionUser;
 import codesquad.springcafe.model.UpdatedArticle;
 import codesquad.springcafe.service.ArticleService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -61,13 +60,15 @@ public class ArticleController {
     }
 
     @GetMapping("/show/{articleId}")
-    public String showDetailPage(@PathVariable long articleId, Model model, HttpServletRequest request) {
+    public String showDetailPage(@PathVariable long articleId, Model model, HttpSession httpSession) {
         articleService.increaseViewCount(articleId);
         Article article = articleService.findArticleById(articleId);
-        boolean isWriter = (boolean) request.getAttribute("isWriter");
 
-        model.addAttribute("isWriter", isWriter);
+        SessionUser sessionUser = (SessionUser) httpSession.getAttribute("sessionUser");
+        boolean isWriter = sessionUser.getArticleIds().contains(articleId);
+
         model.addAttribute("article", article);
+        model.addAttribute("isWriter", isWriter);
         return "article/show";
     }
 

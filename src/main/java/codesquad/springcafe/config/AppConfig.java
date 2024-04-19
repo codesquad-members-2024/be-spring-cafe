@@ -1,7 +1,6 @@
 package codesquad.springcafe.config;
 
 import codesquad.springcafe.interceptor.ArticlePermissionInterceptor;
-import codesquad.springcafe.interceptor.ArticleShowInterceptor;
 import codesquad.springcafe.interceptor.UserPermissionInterceptor;
 import codesquad.springcafe.interceptor.UserUpdateInterceptor;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +17,7 @@ public class AppConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/static/**");
         registry.addInterceptor(new UserUpdateInterceptor()).order(2)
                 .addPathPatterns("/users/match-pw/**", "/users/update/**");
-        registry.addInterceptor(new ArticleShowInterceptor()).order(3)
-                .addPathPatterns("/article/show/**");
-        registry.addInterceptor(new ArticlePermissionInterceptor()).order(4)
+        registry.addInterceptor(new ArticlePermissionInterceptor()).order(3)
                 .addPathPatterns("/article/update/**");
     }
 }
