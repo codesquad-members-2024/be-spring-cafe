@@ -4,7 +4,7 @@
 <link href="/css/user/list.css" rel="stylesheet">
 <body>
     <div class="background">
-        {{>layout/login_navbar}}
+        {{>layout/non_login_user_navbar}}
         <div class="description">
             <div class="desc-container">
                 <p class="desc-small">멤버리스트</p>
@@ -25,7 +25,7 @@
                         </thead>
                         <tbody>
                         {{#users}}
-                        <tr onclick="location.href='/users/{{userId}}';" style="cursor:pointer">
+                        <tr onclick="location.href='/users/detail/{{userId}}';" style="cursor:pointer">
                             <td>{{userId}}</td>
                             <td>{{nickname}}</td>
                             <td>{{email}}</td>
