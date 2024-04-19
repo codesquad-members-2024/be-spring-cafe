@@ -85,14 +85,15 @@
               </thead>
               <tbody>
                   <tr th:each="member : ${members}">
-                      <td th:text="${member.id}">id</td>
-                      <td th:text="${member.id}">id</td>
-                      <td th:text="${member.name}">name</td>
-                      <td th:text="${member.email}">email</td>
+                      <td th:text="${member.getId()}">id</td>
+                      <td th:text="${member.getLoginId()}">id</td>
+                      <td th:text="${member.getName()}">name</td>
+                      <td th:text="${member.getEmail()}">email</td>
                       <td>
                           <a th:href="@{/users/{userId}(userId=${member.id})}"
                              role="button" class="btn btn-default btn-circle">
                               <i class="fa fa-info"></i>
+                              프로필
                           </a>
                       </td>
                   </tr>

@@ -85,14 +85,14 @@
                             <img class="media-object" src="../../static/images/80-text.png">
                         </a>
                         <div class="media-body">
-                            <p th:text="${member.name}">기본이름</p>
+                            <p th:text="${members.name}">기본이름</p>
                             <p>
                                 <a href="#" class="btn btn-xs btn-default">
                                     <span class="glyphicon glyphicon-envelope"></span>&nbsp;
-                                    [[${member.email}]]
+                                    [[${members.email}]]
                                 </a>
                             </p>
-                            <p th:text="${profile.address}">주소</p>
+                            <p th:text="${members.address}">주소</p>
                         </div>
                     </div>
                 </div>
