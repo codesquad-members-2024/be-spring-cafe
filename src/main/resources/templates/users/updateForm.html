@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="kr">
-{{>layout/non_login_header}}
+{{>layout/header}}
 <link href="/css/user/form.css" rel="stylesheet">
 <link href="/css/user/profile.css" rel="stylesheet">
 <body>
 <div class="background">
-    {{>layout/non_login_navbar}}
+    {{>layout/login_user_navbar}}
     <div class="container" id="main">
         <header class="post-header">
             <p class="title">회원정보 수정</p>
@@ -16,10 +16,10 @@
                 <p><strong>아이디:</strong> {{user.userId}}</p>
             </div>
         </div>
-        {{#passwordError}}
-        <p style="color: crimson">비밀번호가 옳지 않습니다. 다시 입력해주세요</p>
-        {{/passwordError}}
         <form name="question" class="info-container" method="POST" action="/users/{{user.userId}}/update">
+            {{#passwordError}}
+            <p style="color: crimson; text-align: center">비밀번호가 옳지 않습니다. 다시 입력해주세요</p>
+            {{/passwordError}}
             <input type="hidden" name="_method" value="PUT">
             <div class="form-group">
                 <label for="email">이메일</label>
