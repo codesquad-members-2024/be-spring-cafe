@@ -1,8 +1,9 @@
 package springcafe.user.repository;
 
-import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import springcafe.user.exception.UserNotFoundException;
 import springcafe.user.model.User;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class H2UserDao implements UserDao {
     private JdbcTemplate jdbcTemplate;
 
     public H2UserDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate=jdbcTemplate;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -24,25 +25,59 @@ public class H2UserDao implements UserDao {
 
     }
 
+
     @Override
     public User findById(String userId) {
-        return jdbcTemplate.queryForObject(
-                "SELECT USERID, PASSWORD, NAME, EMAIL FROM USERS WHERE USERID =?",
-                new Object[]{userId},
-                (rs, rowNum) ->new User(
-                rs.getString("USERID"),
-                        rs.getString("PASSWORD"),
-                rs.getString("NAME"),
-                rs.getString("EMAIL"))
-        );
+
+        try {
+
+            User user = jdbcTemplate.queryForObject(
+                    "SELECT USERID, PASSWORD, NAME, EMAIL FROM USERS WHERE USERID =?",
+                    new Object[]{userId},
+                    (rs, rowNum) -> new User(
+                            rs.getString("USERID"),
+                            rs.getString("PASSWORD"),
+                            rs.getString("NAME"),
+                            rs.getString("EMAIL"))
+            );
+
+            return user;
+        } catch (EmptyResultDataAccessException e) {
+            throw new UserNotFoundException("사용자를 찾을 수 없습니다: " + userId);
+        }
     }
 
     @Override
     public List<User> findAll() {
         return jdbcTemplate.query(
                 "SELECT USERID, PASSWORD, NAME, EMAIL FROM USERS",
-                (rs, rowNum) ->new User(rs.getString("USERID"),rs.getString("PASSWORD"),
+                (rs, rowNum) -> new User(rs.getString("USERID"), rs.getString("PASSWORD"),
                         rs.getString("NAME"), rs.getString("EMAIL"))
         );
     }
+
+    @Override
+    public void update(User user) {
+        jdbcTemplate.update(
+                "UPDATE USERS SET NAME = ?, EMAIL = ? WHERE USERID = ?",
+                user.getName(), user.getEmail(), user.getUserId());
+        System.out.println("업데이트 성공: " + user.getUserId());
+
+    }
+
+    @Override
+    public boolean checkDuplicateId(String userId) {
+        try {
+            jdbcTemplate.queryForObject(
+                    "SELECT USERID FROM USERS WHERE USERID = ?",
+                    new Object[]{userId},
+                    String.class
+            );
+            return true;  //중복 아이디임
+        } catch (EmptyResultDataAccessException e) {
+            return false; //중복 아이디가 아님
+        }
+
+    }
+
 }
