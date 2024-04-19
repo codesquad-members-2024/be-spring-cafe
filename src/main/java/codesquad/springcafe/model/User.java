@@ -1,5 +1,7 @@
 package codesquad.springcafe.model;
 
+import codesquad.springcafe.dto.user.UserInfoDTO;
+
 public class User {
     private final String userId;
     private final String password;
@@ -17,15 +19,11 @@ public class User {
         return userId;
     }
 
-    public String getPassword() {
-        return password;
+    public UserInfoDTO toDTO(Long index) {
+        return new UserInfoDTO(index, userId, name, email);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
+    public UserInfoDTO toDTO() {
+        return new UserInfoDTO(0L, userId, name, email);
     }
 }
