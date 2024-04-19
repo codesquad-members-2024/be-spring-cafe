@@ -1,6 +1,8 @@
 package codesquad.springcafe.articles.repository;
 
 import codesquad.springcafe.articles.model.Article;
+import codesquad.springcafe.articles.model.dto.ArticleCreationRequest;
+import codesquad.springcafe.articles.model.dto.ArticleUpdateDto;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -13,4 +15,6 @@ public interface ArticleRepository {
     Optional<Article> findArticleById(long articleId);
 
     void incrementPageView(long articleId);
+
+    void updateArticle(long articleId, ArticleUpdateDto articleUpdateDto);
 }
