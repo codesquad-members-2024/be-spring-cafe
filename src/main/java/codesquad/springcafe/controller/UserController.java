@@ -2,6 +2,7 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.dto.UserProfileDto;
 import codesquad.springcafe.dto.UserUpdateDto;
+import codesquad.springcafe.model.UpdateUser;
 import codesquad.springcafe.model.User;
 import codesquad.springcafe.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -79,19 +80,19 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public String updateUser(@PathVariable String userId, @RequestParam("password") String password, @RequestParam("newPassword") String newPassword, @RequestParam("name") String name, @RequestParam("email") String email, HttpSession httpSession) {
+    public String updateUser(@PathVariable String userId, @ModelAttribute UserUpdateDto userUpdateDto, HttpSession httpSession) {
         String loginUserId = (String) httpSession.getAttribute(LOGIN_USER_ID);
         if (!loginUserId.equals(userId)) {
             return "redirect:/";
         }
-        UserUpdateDto userUpdateDto = new UserUpdateDto(userId, password, newPassword, name, email);
+        UpdateUser updateUser = userUpdateDto.toEntity(userId);
         try {
-            userService.update(userUpdateDto);
+            userService.update(updateUser);
         } catch (IllegalArgumentException e) {
-            log.debug("user {} password does not match", userUpdateDto.getUserId());
+            log.debug("user {} password does not match", loginUserId);
             return "redirect:/users/" + userId + "/form";
         }
-        log.debug("user {} update", userUpdateDto.getUserId());
+        log.debug("user {} update", loginUserId);
         return "redirect:/users";
     }
 

@@ -1,6 +1,7 @@
 package codesquad.springcafe.service;
 
 import codesquad.springcafe.dto.UserUpdateDto;
+import codesquad.springcafe.model.UpdateUser;
 import codesquad.springcafe.repository.UserRepository;
 import codesquad.springcafe.model.User;
 import org.springframework.stereotype.Service;
@@ -28,10 +29,10 @@ public class UserService {
         return userRepository.findUserById(userId);
     }
 
-    public void update(UserUpdateDto userUpdateDto) {
-        String userId = userUpdateDto.getUserId();
+    public void update(UpdateUser updateUser) {
+        String userId = updateUser.getUserId();
         User user = userRepository.findUserById(userId);
-        user.update(userUpdateDto);
+        user.update(updateUser);
         userRepository.update(user);
     }
 

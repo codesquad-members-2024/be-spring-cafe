@@ -44,13 +44,13 @@ public class User {
                 '}';
     }
 
-    public void update(UserUpdateDto userUpdateDto) {
-        if (!validatePassword(userUpdateDto.getPassword())) {
+    public void update(UpdateUser updateUser) {
+        if (!validatePassword(updateUser.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-        this.name = userUpdateDto.getName();
-        this.password = userUpdateDto.getNewPassword();
-        this.email = userUpdateDto.getEmail();
+        this.name = updateUser.getName();
+        this.password = updateUser.getNewPassword();
+        this.email = updateUser.getEmail();
     }
 
     public boolean validatePassword(String password) {
