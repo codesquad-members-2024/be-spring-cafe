@@ -11,14 +11,14 @@
                   <div class="wrap">
                       <div class="main">
                           <ul>
-                              <li th:each="articleEntry : ${articleList}">
+                              <li th:each="article : ${articleList}">
                                   <strong class="subject">
-                                      <a th:href="@{qna/show/{id}(id=${articleEntry.key})}" th:text="${articleEntry.value.title}">제목</a>
+                                      <a th:href="@{qna/show/{id}(id=${article.id})}" th:text="${article.title}">제목</a>
                                   </strong>
                                   <div class="auth-info">
                                       <i class="icon-add-comment"></i>
-                                      <span class="time" th:text="${#temporals.format(articleEntry.value.createDate, 'yyyy-MM-dd HH:mm')}">생성일</span>
-                                      <a href="user/profile.html" class="author" th:text="${articleEntry.value.writer}">작성자</a>
+                                      <span class="time" th:text="${#temporals.format(article.createDate, 'yyyy-MM-dd HH:mm')}">생성일</span>
+                                      <a href="user/profile.html" class="author" th:text="${article.writer}">작성자</a>
                                   </div>
                                   <div class="reply" title="댓글">
                                       <i class="icon-reply"></i>
