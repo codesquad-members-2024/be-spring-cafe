@@ -1,12 +1,12 @@
-package codesquad.springcafe;
+package codesquad.springcafe.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class User {
     private final String userId;
-    private final String password;
-    private final String email;
+    private String password;
+    private String email;
     private final LocalDateTime registerTime;
 
     private final String TIME_FORMATTING_PATTERN = "yyyy년 MM월 dd일";
@@ -25,11 +25,23 @@ public class User {
         return password;
     }
 
+    public boolean isPasswordInputCorrect(String passwordInput){
+        return passwordInput.equals(password);
+    }
+
     public String getEmail() {
         return email;
     }
 
     public String getFormattedRegisterTime(){
         return registerTime.format(DateTimeFormatter.ofPattern(TIME_FORMATTING_PATTERN));
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

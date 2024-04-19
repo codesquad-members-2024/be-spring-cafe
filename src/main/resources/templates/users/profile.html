@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="kr">
 {{>layout/non_login_header}}
-{{>layout/non_login_navbar}}
+<link href="/css/user/profile.css" rel="stylesheet">
+<link href="/css/component/post_btn.css" rel="stylesheet">
 <body>
     <div class="background">
-        <link href="/css/user/profile.css" rel="stylesheet">
+        {{>layout/non_login_navbar}}
         <div class="description">
             <div class="desc-container">
                 <p class="desc-small">프로필 정보</p>
@@ -24,6 +25,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="post-btn-container">
+            <a class="post-write-btn btn btn-primary pull-right"
+               href="/users/{{user.userId}}/update" role="button">정보 수정</a>
         </div>
     </div>
 </body>

@@ -1,35 +1,35 @@
 package codesquad.springcafe.db;
 
-import codesquad.springcafe.User;
+import codesquad.springcafe.model.User;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Component
 public class UserDatabase {
-    private static final List<User> userDatabase = new ArrayList<>();
+    private final List<User> userDatabase = new ArrayList<>();
 
-    private UserDatabase(){}
-
-    public static void addUser(User user) {
+    public void addUser(User user) {
         userDatabase.add(user);
     }
 
-    public static List<User> findAllUsers(){
+    public List<User> findAllUsers(){
         return userDatabase;
     }
 
-    public static Optional<User> findUserByUserId(String userId){
+    public Optional<User> findUserByUserId(String userId){
         return userDatabase.stream()
                 .filter(user -> user.getUserId().equals(userId))
                 .findFirst();
     }
 
-    public static void clearDatabase(){
+    public void clearDatabase(){
         userDatabase.clear();
     }
 
-    public static int getTotalUserNumber(){
+    public int getTotalUserNumber(){
         return userDatabase.size();
     }
 }
