@@ -71,8 +71,13 @@ public class UserController {
     @GetMapping("/users/update/{id}")
     // 프로필 수정 폼 보여주기
     public String showUpdateForm(@PathVariable String id, Model model) {
-        model.addAttribute("id", id);
+        Optional<User> userOptional = userDatabase.getUserById(id);
+        if(userOptional.isEmpty()){
+            return "redirect:/main";
+        }
+        User user = userOptional.get();
 
+        model.addAttribute("user", user);
         return "/user/update_form";
     }
 
@@ -87,7 +92,7 @@ public class UserController {
 
         if(!user.comparePassword(updatedUser.getPassword())){ // 비밀번호가 일치하지 않는다면
             model.addAttribute("isIncorrectPassword", true); // 올바르지 않는 pw
-            model.addAttribute("id", id);
+            model.addAttribute("user", user);
             return "/user/update_form";
         }
 

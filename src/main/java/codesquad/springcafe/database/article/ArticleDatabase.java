@@ -15,4 +15,6 @@ public interface ArticleDatabase {
 
     boolean isArticleEmpty();
 
+    void incrementViewsById(int id);
+
 }

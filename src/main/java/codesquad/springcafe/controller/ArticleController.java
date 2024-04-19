@@ -50,6 +50,7 @@ public class ArticleController {
             return "redirect:/main";
         }
 
+        articleDatabase.incrementViewsById(id); // 조회수 1 증가
         Article article = articleDatabase.getArticleById(id);
         model.addAttribute("article", article); // 해당 id에 맞는 article 반환
 

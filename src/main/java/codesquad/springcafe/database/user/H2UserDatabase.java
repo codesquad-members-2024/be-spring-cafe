@@ -47,20 +47,9 @@ public class H2UserDatabase implements UserDatabase{
 
     @Override
     public void updateUser(String id, UpdatedUser updatedUser) {
-        Optional<User> userOptional = getUserById(id);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            user.update(updatedUser);
+        jdbcTemplate.update("update users set user_password = ?, user_nickname = ?, user_email = ? where user_id = ?",
+        updatedUser.getNewPassword(), updatedUser.getNewNickname(), updatedUser.getNewEmail(), id);
 
-            jdbcTemplate.update("update users set user_password = ?, user_nickname = ?, user_email = ? where user_id = ?",
-                    user.getPassword(), user.getNickname(), user.getEmail(), id);
-
-//            jdbcTemplate.update("update users set user_password = ?, user_nickname = ?, user_email = ? where user_id = ?",
-//                    updatedUser.getNewPassword(), updatedUser.getNewNickname(), updatedUser.getNewEmail(), id);
-
-        } else {
-            throw new IllegalArgumentException("User id: " + id + " not found");
-        }
     }
 
     @Override

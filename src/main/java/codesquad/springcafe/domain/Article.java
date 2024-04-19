@@ -1,8 +1,5 @@
 package codesquad.springcafe.domain;
 
-import jakarta.annotation.Priority;
-import org.springframework.context.annotation.Primary;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -20,6 +17,7 @@ public class Article {
         this.title = title;
         this.content = content;
         this.time = LocalDateTime.now();
+        this.views = 0;
     }
 
     // h2에서 Article 값을 가져올 때 사용하는 생성자
@@ -34,6 +32,10 @@ public class Article {
 
     public void setId(int id){
         this.id = id;
+    }
+
+    public void increaseViews(){
+        this.views += 1;
     }
 
     public String getWriter(){

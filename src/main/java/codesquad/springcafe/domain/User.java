@@ -32,12 +32,9 @@ public class User {
 
     // memoryUserDatabase에만 사용
     public void update(UpdatedUser updatedUser){
-        if(!updatedUser.getNewNickname().isEmpty()){
-            this.nickname = updatedUser.getNewNickname();
-        }
-        if(!updatedUser.getNewEmail().isEmpty()){
-            this.email = updatedUser.getNewEmail();
-        }
+        this.nickname = updatedUser.getNewNickname();
+        this.email = updatedUser.getNewEmail();
+
         if(!updatedUser.getNewPassword().isEmpty()){
             this.password = updatedUser.getNewPassword();
         }

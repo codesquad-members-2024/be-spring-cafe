@@ -1,7 +1,8 @@
 package codesquad.springcafe.database.article;
 
-import codesquad.springcafe.database.article.ArticleDatabase;
 import codesquad.springcafe.domain.Article;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,6 +19,8 @@ import java.util.Map;
 @Component
 @Qualifier("H2ArticleDatabase")
 public class H2ArticleDatabase implements ArticleDatabase {
+
+    private static final Logger logger = LoggerFactory.getLogger(H2ArticleDatabase.class);
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -71,5 +74,16 @@ public class H2ArticleDatabase implements ArticleDatabase {
     @Override
     public boolean isArticleEmpty() {
         return (getArticleSize() == 0);
+    }
+
+    @Override
+    public void incrementViewsById(int id) {
+        int rowsAffected = jdbcTemplate.update("UPDATE articles SET VIEWS = VIEWS + 1 WHERE ID = ?", id);
+
+        if (rowsAffected == 0) {
+            logger.debug("해당 ID에 해당하는 article을 찾을 수 없습니다. ID: {}", id);
+        } else {
+            logger.debug("ID {}에 대한 views가 성공적으로 증가되었습니다.", id);
+        }
     }
 }

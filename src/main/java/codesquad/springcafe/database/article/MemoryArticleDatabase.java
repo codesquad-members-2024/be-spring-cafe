@@ -1,6 +1,5 @@
 package codesquad.springcafe.database.article;
 
-import codesquad.springcafe.database.article.ArticleDatabase;
 import codesquad.springcafe.domain.Article;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -37,6 +36,11 @@ public class MemoryArticleDatabase implements ArticleDatabase {
     @Override
     public boolean isArticleEmpty(){
         return articles.isEmpty();
+    }
+
+    @Override
+    public void incrementViewsById(int id) {
+        getArticleById(id).increaseViews();
     }
 
 }
