@@ -42,8 +42,8 @@ public class MemberController {
         return "user/list";
     }
 
-    @GetMapping("/user/profile/{userId}")
-    public String showProfile(Model model, @PathVariable("userId") String memberId) {
+    @GetMapping("/users/{memberId}")
+    public String showProfile(Model model, @PathVariable("memberId") String memberId) {
         Optional<Member> optionalMember = memberRepository.getMember(memberId);
         if (optionalMember.isPresent()) {
             model.addAttribute("user", optionalMember.get());

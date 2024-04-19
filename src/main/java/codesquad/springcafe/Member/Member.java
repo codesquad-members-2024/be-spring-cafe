@@ -1,7 +1,7 @@
 package codesquad.springcafe.Member;
 
 public class Member {
-    private final String memberId;
+    private String memberId;
     private final String name;
     private final String email;
     private final String password;
@@ -15,6 +15,7 @@ public class Member {
     public String getName() {
         return name;
     }
+
     public String getMemberId() {
         return memberId;
     }
