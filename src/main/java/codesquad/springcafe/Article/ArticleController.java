@@ -19,13 +19,13 @@ public class ArticleController {
         this.articleRepository = articleRepository;
     }
 
-    @GetMapping("/qna/form")
-    public String qna() {
-        return "qna/form";
+    @GetMapping("/article/form")
+    public String article() {
+        return "article/form";
     }
 
     @PostMapping("/questions")
-    public String qnaCreate(@ModelAttribute Article article) {
+    public String articleCreate(@ModelAttribute Article article) {
         article.setTime(LocalDateTime.now());
         article.setArticleNum(articleRepository.articleSize() + 1);
         articleRepository.add(article);
@@ -33,12 +33,12 @@ public class ArticleController {
     }
 
 
-    @GetMapping("/qna/{articleNum}")
+    @GetMapping("/article/{articleNum}")
     public String show(@PathVariable int articleNum, Model model) {
         Optional<Article> optionalArticle = articleRepository.findByIndex(articleNum);
         if (optionalArticle.isPresent()) {
             model.addAttribute("article", optionalArticle.get());
-            return "qna/show";
+            return "article/show";
         }
         return "redirect:/"; // 게시글을 찾을 수 없는 경우 메인 페이지로 리다이렉트합니다.
     }
