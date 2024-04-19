@@ -1,6 +1,7 @@
 package codesquad.springcafe.db;
 
 import codesquad.springcafe.articles.model.Article;
+import codesquad.springcafe.articles.model.dto.ArticleUpdateDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -42,5 +43,16 @@ public class ArticleDatabase {
         Article article = articles.get(articleId);
         article.setPageViews(article.getPageViews() + 1);
         logger.debug("Article with ID: '{}' has its page views incremented", articleId);
+    }
+
+    public void updateArticle(long articleId, ArticleUpdateDto articleUpdateDto) {
+        Article article = articles.get(articleId);
+        article.setTitle(articleUpdateDto.getTitle());
+        article.setContent(articleUpdateDto.getContent());
+        logger.debug("Article With ID : '{}' Updated", articleId);
+    }
+
+    public void deleteArticle(long articleId) {
+        articles.remove(articleId);
     }
 }
