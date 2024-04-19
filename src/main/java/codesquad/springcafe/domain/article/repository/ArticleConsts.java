@@ -13,8 +13,8 @@ public abstract class ArticleConsts {
     public static final String STATUS = "STATUS";
 
     // Check
-    public static final String OPEN = "'OPEN'";
-    public static final String CLOSE = "'CLOSE'";
+    public static final String OPEN = "OPEN";
+    public static final String CLOSE = "CLOSE";
 
     // policy
     public static final int DEFAULT_POINT = 0;
