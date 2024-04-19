@@ -1,15 +1,14 @@
 package codesquad.springcafe.dto;
 
+import java.beans.ConstructorProperties;
+
 public class User {
-    private Long id; // 자동 생성
-    private String userId;
+    private String userId; //PK
     private String password;
     private String name;
     private String email;
 
-    public  User(){
-    }
-
+    @ConstructorProperties({"userId", "password", "name", "email"})
     public User(String userId, String password, String name, String email) {
         this.userId = userId;
         this.password = password;
@@ -33,14 +32,6 @@ public class User {
         return email;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -53,7 +44,13 @@ public class User {
         this.email = email;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public String toString() {
+        return "User{" +
+                ", userId='" + userId + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

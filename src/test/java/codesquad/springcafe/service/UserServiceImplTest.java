@@ -15,8 +15,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,7 +29,7 @@ class UserServiceImplTest {
 
     @Test
     @DisplayName("회원가입 시, 유저 정보를 정상적으로 등록하고, 등록된 정보를 올바르게 반환한다")
-    void testSignup(){
+    void testSignup() {
         User user = new User("username", "password", "name", "email@example.com"); // 테스트 시 사용할 가짜 더미 데이터
         when(userRepository.save(any(User.class))).thenReturn(user); // save 메소드가 호출될 때 어떤 User 객체라도 인자로 받는다면 미리 생성한 user 객체를 반환
 
@@ -41,21 +40,24 @@ class UserServiceImplTest {
     }
 
     @Test
-    void testFindUserById(){
-        Optional<User> optionalUser = Optional.of(new User("username", "password", "name", "email@example.com"));
-        when(userRepository.findById(anyLong())).thenReturn(optionalUser);
+    void testFindUserById() {
+        // given
+        User user = new User("username", "password", "name", "email@example.com");
+        when(userRepository.findByUserId("username")).thenReturn(Optional.of(user));
 
-        Optional<User> foundUser = userService.findUserById(1L);
+        // when
+        Optional<User> foundUser = userService.findUserByUserId("username");
 
+        // then
         assertTrue(foundUser.isPresent());
-        assertThat(foundUser.get().getUserId()).isEqualTo("username");
+        assertThat(foundUser.get().getName()).isEqualTo("name");
     }
 
     @Test
-    void testFindAllUsers(){
+    void testFindAllUsers() {
         List<User> users = Arrays.asList(
-          new User("username1", "password1", "name1", "email1@example.com"),
-          new User("username2", "password2", "name2", "email2@example.com")
+                new User("username1", "password1", "name1", "email1@example.com"),
+                new User("username2", "password2", "name2", "email2@example.com")
         );
 
         when(userRepository.findAll()).thenReturn(users);

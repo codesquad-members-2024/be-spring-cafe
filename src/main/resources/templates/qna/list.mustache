@@ -79,21 +79,19 @@
             <table class="table table-hover">
                 <thead>
                 <tr>
-                    <th>사용자 아이디</th> <th>이름</th> <th>이메일</th><th></th>
+                    <th>#</th> <th>글쓴이</th> <th>제목</th> <th>내용</th><th></th>
                 </tr>
                 </thead>
 
                 <tbody>
-                {{#users}}
+                {{#articles}}
 
-                <tr>
-                    <th scope="row">{{userId}}</th>
-                    <td>{{name}}</td>
-                    <td>{{email}}</td>
-                    <td><a href="/users/{{userId}}/edit" class="btn btn-success" role="button">수정</a></td>
-                </tr>
+                    <tr>
+                        <th scope="row">{{id}}</th> <td>{{writer}}</td> <td>{{title}}</td> <td>
+                        {{content}}</td><td><a href="#" class="btn btn-success" role="button">수정</a></td>
+                    </tr>
 
-                {{/users}}
+                {{/articles}}
                 </tbody>
             </table>
         </div>
