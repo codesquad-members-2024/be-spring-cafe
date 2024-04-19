@@ -63,6 +63,9 @@ public class ArticleController {
         Article article = new Article(loginUser.getNickname(), articleWriteForm.getTitle(),
                 articleWriteForm.getContent(), LocalDateTime.now());
         articleDatabase.add(article);
+
+        loginUser.addOwnArticle(article.getId());
+
         logger.info("새로운 게시물이 추가되었습니다. {}", article);
         return "redirect:/";
     }
@@ -120,7 +123,8 @@ public class ArticleController {
      * id와 일치하는 게시글을 찾아 삭제 폼을 보여줍니다.
      */
     @GetMapping("/delete/{id}")
-    public String deleteForm(@PathVariable Long id, @ModelAttribute ArticleDeleteForm articleDeleteForm) {
+    public String deleteForm(@PathVariable Long id, Model model) {
+        model.addAttribute("articleId", id);
         return "article/delete";
     }
 
@@ -133,7 +137,7 @@ public class ArticleController {
                                 BindingResult bindingResult) {
         Article targetArticle = articleDatabase.findBy(id).get();
         validateHasComment(bindingResult, targetArticle);
-
+        // 여기 수정해야함
         if (bindingResult.hasErrors()) {
             logger.error("errors={}", bindingResult);
             return "article/delete";

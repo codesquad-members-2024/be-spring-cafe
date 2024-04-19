@@ -11,12 +11,20 @@ public class LoginUser {
         this.ownArticleIds = ownArticleIds;
     }
 
+    public LoginUser updateNickname(String nickname) {
+        return new LoginUser(nickname, ownArticleIds);
+    }
+
     public boolean hasSameNickname(String nickname) {
         return this.nickname.equals(nickname);
     }
 
     public boolean isOwnArticle(Long id) {
         return ownArticleIds.contains(id);
+    }
+
+    public void addOwnArticle(Long id) {
+        ownArticleIds.add(id);
     }
 
     public String getNickname() {

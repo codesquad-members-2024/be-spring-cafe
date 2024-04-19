@@ -20,7 +20,7 @@ public class UserAccessInterceptor implements HandlerInterceptor {
         LoginUser loginUser = LoginUserProvider.provide(session);
 
         String nickname = getPathVariable(request);
-        if (loginUser == null || !loginUser.getNickname().equals(nickname)) {
+        if (!loginUser.getNickname().equals(nickname)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return false;
         }

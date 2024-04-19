@@ -5,6 +5,7 @@ import codesquad.springcafe.model.Article;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +25,9 @@ public class ArticleService {
 
     public Set<Long> getOwnArticleIds(String userNickname) {
         List<Article> articles = articleDatabase.findAll(userNickname);
-        return null;
+        return articles.stream()
+                .map(Article::getId)
+                .collect(Collectors.toSet());
     }
 
     public Article getArticle(Long id) {

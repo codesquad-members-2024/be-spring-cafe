@@ -1,6 +1,7 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.database.user.UserDatabase;
+import codesquad.springcafe.form.user.LoginUser;
 import codesquad.springcafe.form.user.UserAddForm;
 import codesquad.springcafe.form.user.UserEditForm;
 import codesquad.springcafe.model.User;
@@ -129,7 +130,7 @@ public class UserController {
         User updateUser = targetUser.update(userEditForm.getNickname(), userEditForm.getNewPassword());
         userDatabase.update(updateUser);
 
-        session.setAttribute(LoginController.LOGIN_SESSION_NAME, updateUser);
+        updateSession(session, updateUser);
 
         logger.info("유저정보가 업데이트 되었습니다. {}", updateUser);
         String newNickname = updateUser.getNickname(); // 유저 닉네임이 수정될 경우를 반영
@@ -162,5 +163,11 @@ public class UserController {
 
     private boolean isPresentEmail(String email) {
         return userDatabase.findByEmail(email).isPresent();
+    }
+
+    private void updateSession(HttpSession session, User updateUser) {
+        LoginUser loginUser = (LoginUser) session.getAttribute(LoginController.LOGIN_SESSION_NAME);
+        LoginUser updateLoginUser = loginUser.updateNickname(updateUser.getNickname());
+        session.setAttribute(LoginController.LOGIN_SESSION_NAME, updateLoginUser);
     }
 }

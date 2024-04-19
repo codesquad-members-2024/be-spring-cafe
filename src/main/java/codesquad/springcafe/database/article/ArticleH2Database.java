@@ -48,7 +48,7 @@ public class ArticleH2Database implements ArticleDatabase {
     @Override
     public List<Article> findAll(String nickname) {
         String sql = "SELECT id, writer, title, content, writeDate, views, isDeleted FROM articles WHERE writer = ? and isDeleted = false";
-        return jdbcTemplate.query(sql, articleRowMapper());
+        return jdbcTemplate.query(sql, articleRowMapper(), nickname);
     }
 
     @Override
