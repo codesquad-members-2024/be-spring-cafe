@@ -28,10 +28,16 @@ public class AccessController {
         try {
             session.setAttribute("sessionUser", accessService.validateUser(loginInformation));
         } catch (LoginFailException e) {
-            model.addAttribute("error", true);
-            model.addAttribute("loginInformation", loginInformation);
-            return "user/login";
+           model.addAttribute("error", true);
+           model.addAttribute("loginInformation", loginInformation);
+           return "user/login";
         }
+        return "redirect:/";
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
         return "redirect:/";
     }
 }

@@ -58,13 +58,14 @@
             <div class="collapse navbar-collapse" id="navbar-collapse2">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="active"><a href="../index.html">Posts</a></li>
-                    <form th:action="@{/logout}" method="post" id="logout" style="display: none">
-                    </form>
-                    <li th:if="${isLogin}"><a href="#" role="button"
+                    <form th:action="@{/logout}" method="post" id="logout" style="display: none"></form>
+                    <form th:action="@{/logout}" method="put" id="" style="display: none"></form>
+                    <li th:if="${session.sessionUser}"><a href="#" role="button"
                                               onclick="document.getElementById('logout').submit()">로그아웃</a></li>
-                    <li th:if="${isLogin}"><a href="#" role="button">개인정보수정</a></li>
-                    <li th:unless="${isLogin}"><a href="/login" role="button">로그인</a></li>
-                    <li th:unless="${isLogin}"><a href="/user/register" role="button">회원가입</a></li>
+                    <li th:if="${session.sessionUser}"><a th:href="@{'/user/profile/' + ${session.sessionUser.userId} + '/update'}"
+                                              role="button">개인정보수정</a></li>
+                    <li th:unless="${session.sessionUser}"><a href="/login" role="button">로그인</a></li>
+                    <li th:unless="${session.sessionUser}"><a href="/user/register" role="button">회원가입</a></li>
                 </ul>
             </div>
         </div>
