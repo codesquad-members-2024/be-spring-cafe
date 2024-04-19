@@ -6,6 +6,8 @@ import codesquad.springcafe.exceptions.NoSuchArticleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ArticleServiceImpl implements ArticleService{
 
@@ -24,5 +26,10 @@ public class ArticleServiceImpl implements ArticleService{
     @Override
     public Article getArticle(String articleId) throws NoSuchArticleException {
         return articleRepository.getArticle(articleId);
+    }
+
+    @Override
+    public List<Article> getArticlesAsList() {
+        return articleRepository.getArticles();
     }
 }

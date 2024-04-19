@@ -4,6 +4,7 @@ import codesquad.springcafe.exceptions.CanNotLoginException;
 import codesquad.springcafe.exceptions.NoSuchUserException;
 import codesquad.springcafe.user.domain.LoginUser;
 import codesquad.springcafe.user.domain.User;
+import codesquad.springcafe.user.domain.UserIdentity;
 import codesquad.springcafe.user.respository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void loginVerification(LoginUser loginUser) throws CanNotLoginException {
+    public UserIdentity loginVerification(LoginUser loginUser) throws CanNotLoginException {
         String id = loginUser.getUserId();
         User user;
         try {
@@ -53,6 +54,8 @@ public class UserServiceImpl implements UserService{
         if (!user.isSamePassword(loginUser.getPassword())) {
             throw new CanNotLoginException("비밀번호가 일치하지 않습니다");
         }
+
+        return new UserIdentity(user.getUserId(), user.getName());
     }
 
     @Override

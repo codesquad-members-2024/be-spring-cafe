@@ -12,5 +12,9 @@ public class InterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginCheckInterceptor())
                 .addPathPatterns("/user/**", "/article/**")
                 .excludePathPatterns("/user/*.html");
+
+        registry.addInterceptor(new CommonModelInjector())
+                .addPathPatterns("/user/**", "/article/**", "/**")
+                .excludePathPatterns("/user/*.html");
     }
 }

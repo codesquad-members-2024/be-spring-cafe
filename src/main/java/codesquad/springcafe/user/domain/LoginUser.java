@@ -1,6 +1,8 @@
 package codesquad.springcafe.user.domain;
 
-public class LoginUser {
+import java.io.Serializable;
+
+public class LoginUser implements Serializable {
 
     private String userId;
     private String password;
@@ -17,4 +19,6 @@ public class LoginUser {
     public String getPassword() {
         return password;
     }
+
+
 }

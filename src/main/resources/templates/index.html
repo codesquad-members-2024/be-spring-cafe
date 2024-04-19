@@ -32,7 +32,8 @@
                 </div>
               </div>
           </form>
-          <ul class="nav navbar-nav navbar-right">             
+          <ul class="nav navbar-nav navbar-right">
+              <li><a th:href="@{/user/profile}" class="btn-block" th:text="${loginUser.name}">테스터</a></li>
              <li>
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-bell"></i></a>
                 <ul class="dropdown-menu">
@@ -41,6 +42,7 @@
                 </ul>
              </li>
              <li><a th:href="@{/user/list}" href="user/list.html"><i class="glyphicon glyphicon-user"></i></a></li>
+
            </ul>
         </div>	
      </div>	
@@ -50,7 +52,7 @@
         <div class="navbar-header">
             <a style="margin-left:15px;" class="navbar-btn btn btn-default btn-plus dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-home" style="color:#dd1111;"></i> Home <small><i class="glyphicon glyphicon-chevron-down"></i></small></a>
             <ul class="nav dropdown-menu">
-                <li><a href="user/profile.html"><i class="glyphicon glyphicon-user" style="color:#1111dd;"></i> Profile</a></li>
+                <li><a th:href="@{/user/profile}" href="user/profile.html"><i class="glyphicon glyphicon-user" style="color:#1111dd;"></i> Profile</a></li>
                 <li class="nav-divider"></li>
                 <li><a href="#"><i class="glyphicon glyphicon-cog" style="color:#dd1111;"></i> Settings</a></li>
             </ul>
@@ -116,7 +118,7 @@
                 </ul>
               </div>
               <div class="col-md-3 qna-write">
-                  <a th:href="@{/article/form.html}" href="../static/article/form.html" class="btn btn-primary pull-right" role="button">글쓰기</a>
+                  <a th:href="@{/article/create}" href="article/form.html" class="btn btn-primary pull-right" role="button">글쓰기</a>
               </div>
           </div>
         </div>

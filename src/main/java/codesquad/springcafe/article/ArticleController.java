@@ -1,7 +1,6 @@
 package codesquad.springcafe.article;
 
 import codesquad.springcafe.article.domain.Article;
-import codesquad.springcafe.article.repository.ArticleRepository;
 import codesquad.springcafe.article.service.ArticleService;
 import codesquad.springcafe.exceptions.NoSuchArticleException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,11 @@ public class ArticleController {
     @Autowired
     public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
+    }
+
+    @GetMapping("/create")
+    public String showArticleForm(Model model) {
+        return "article/form";
     }
 
     @PostMapping("/create")

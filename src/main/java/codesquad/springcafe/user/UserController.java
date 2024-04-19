@@ -4,6 +4,7 @@ import codesquad.springcafe.exceptions.CanNotLoginException;
 import codesquad.springcafe.exceptions.NoSuchUserException;
 import codesquad.springcafe.user.domain.LoginUser;
 import codesquad.springcafe.user.domain.User;
+import codesquad.springcafe.user.domain.UserIdentity;
 import codesquad.springcafe.user.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -49,7 +50,8 @@ public class UserController {
     }
 
     @GetMapping("/profile/{name}")
-    public String showUserProfile(Model model, @PathVariable String name) throws NoSuchUserException {
+    public String showUserProfile(Model model, @PathVariable String name, HttpSession session) throws NoSuchUserException {
+        UserIdentity loginUser = (UserIdentity) session.getAttribute(SESSION_LOGIN);
         User user = userService.findUserByName(name);
 
         model.addAttribute("user", user);
@@ -59,7 +61,7 @@ public class UserController {
 
     @GetMapping("/profile")
     public String showLoginUserProfile(Model model, HttpSession session) throws NoSuchUserException {
-        LoginUser loginUser = (LoginUser) session.getAttribute(SESSION_LOGIN);
+        UserIdentity loginUser = (UserIdentity) session.getAttribute(SESSION_LOGIN);
         User user = userService.findUserById(loginUser.getUserId());
 
         model.addAttribute("user", user);
@@ -69,9 +71,9 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@ModelAttribute LoginUser loginUser, HttpSession session, HttpServletResponse response) throws CanNotLoginException {
-        userService.loginVerification(loginUser);
+        UserIdentity userIdentity = userService.loginVerification(loginUser);
 
-        session.setAttribute(SESSION_LOGIN, loginUser);
+        session.setAttribute(SESSION_LOGIN, userIdentity);
 
         String go = (String) session.getAttribute(LOGIN_AFTER_REDIRECT);
         if (go == null) return "redirect:/";
@@ -84,12 +86,12 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/";
+        return "redirect:/user/login.html";
     }
 
     @GetMapping("/update")
     public String showUserProfileUpdateForm(Model model, HttpSession session) throws NoSuchUserException {
-        LoginUser loginUser = (LoginUser) session.getAttribute(SESSION_LOGIN);
+        UserIdentity loginUser = (UserIdentity) session.getAttribute(SESSION_LOGIN);
         User user = userService.findUserById(loginUser.getUserId());
 
         model.addAttribute("user", user);

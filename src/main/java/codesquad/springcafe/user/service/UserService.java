@@ -4,6 +4,7 @@ import codesquad.springcafe.exceptions.CanNotLoginException;
 import codesquad.springcafe.exceptions.NoSuchUserException;
 import codesquad.springcafe.user.domain.LoginUser;
 import codesquad.springcafe.user.domain.User;
+import codesquad.springcafe.user.domain.UserIdentity;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface UserService {
 
     User findUserById(String id) throws NoSuchUserException;
 
-    void loginVerification(LoginUser loginUser) throws CanNotLoginException;
+    UserIdentity loginVerification(LoginUser loginUser) throws CanNotLoginException;
 
     void updateUser(User before, User after);
 
