@@ -2,12 +2,12 @@ package springcafe.article.repository;
 
 import springcafe.article.model.Article;
 
-import java.util.Map;
+import java.util.List;
 
-public interface ArticleRepository {
+public interface ArticleDao {
 
     public void insert(Article article);
     public Article findById(Long id);
-    public Map<Long, Article> findAll();
+    public List<Article> findAll();
 
 }
