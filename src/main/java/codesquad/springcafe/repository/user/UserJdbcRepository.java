@@ -1,6 +1,7 @@
 package codesquad.springcafe.repository.user;
 
 import codesquad.springcafe.exception.db.UserNotFoundException;
+import codesquad.springcafe.model.ListUser;
 import codesquad.springcafe.model.SessionUser;
 import codesquad.springcafe.model.UpdatedUser;
 import codesquad.springcafe.model.User;
@@ -45,7 +46,7 @@ public class UserJdbcRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findUserByUserId(String userId) throws UserNotFoundException {
+    public Optional<User> findUserByUserId(String userId) {
         String sql = "SELECT id, user_id, user_password, user_name, user_email FROM users WHERE user_id = ?";
         String[] params = new String[]{userId};
         int[] paramTypes = new int[]{Types.VARCHAR};
@@ -53,7 +54,7 @@ public class UserJdbcRepository implements UserRepository {
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, params, paramTypes, userRowMapper()));
         } catch (EmptyResultDataAccessException e) {
-            throw new UserNotFoundException(userId);
+            return Optional.empty();
         }
     }
 
@@ -77,13 +78,13 @@ public class UserJdbcRepository implements UserRepository {
     }
 
     @Override
-    public List<User> findAllUser() {
-        String sql = "SELECT id, user_id, user_password, user_name, user_email FROM users";
-        return jdbcTemplate.query(sql, userRowMapper());
+    public List<ListUser> findAllUser() {
+        String sql = "SELECT id, user_id, user_name, user_email FROM users";
+        return jdbcTemplate.query(sql, listUserRowMapper());
     }
 
     @Override
-    public Optional<SessionUser> findSessionUserByUserId(String userId) throws UserNotFoundException {
+    public Optional<SessionUser> findSessionUserByUserId(String userId) {
         String sql = "SELECT user_id, user_name, user_email FROM users WHERE user_id = ?";
         String[] params = new String[]{userId};
         int[] paramTypes = new int[]{Types.VARCHAR};
@@ -100,6 +101,15 @@ public class UserJdbcRepository implements UserRepository {
                 rs.getLong("id"),
                 rs.getString("user_id"),
                 rs.getString("user_password"),
+                rs.getString("user_name"),
+                rs.getString("user_email")
+        );
+    }
+
+    private RowMapper<ListUser> listUserRowMapper() {
+        return (rs, rowNum) -> new ListUser(
+                rs.getLong("id"),
+                rs.getString("user_id"),
                 rs.getString("user_name"),
                 rs.getString("user_email")
         );

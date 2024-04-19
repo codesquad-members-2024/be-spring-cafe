@@ -2,6 +2,8 @@ package codesquad.springcafe.service.impl;
 
 import codesquad.springcafe.exception.db.UserNotFoundException;
 import codesquad.springcafe.exception.service.DuplicateUserIdException;
+import codesquad.springcafe.exception.service.UserNotJoinedException;
+import codesquad.springcafe.model.ListUser;
 import codesquad.springcafe.model.LoginUser;
 import codesquad.springcafe.model.SessionUser;
 import codesquad.springcafe.model.UpdatedUser;
@@ -33,7 +35,7 @@ public class UserManagementService implements UserService {
             String userId = user.getUserId();
             validateDuplicateUserId(userId); // 중복 검증
             userRepository.addUser(user);
-            logger.info("[사용자 생성 완료] - " + user);
+            logger.info("[사용자 생성 완료] - {}", user);
         } catch (DuplicateUserIdException e) {
             logger.error("이미 중복된 ID를 가진 사용자가 존재합니다.");
             throw new DuplicateUserIdException(user.getUserId());
@@ -52,59 +54,39 @@ public class UserManagementService implements UserService {
     }
 
     @Override
-    public Optional<User> findUserByUserId(String userId) {
-        Optional<User> optUser = Optional.empty();
-        try {
-            optUser = userRepository.findUserByUserId(userId);
-        } catch (UserNotFoundException e) {
-            logger.error("사용자가 존재하지 않습니다.");
-        }
-        return optUser;
+    public User findUserByUserId(String userId) {
+        Optional<User> optUser = userRepository.findUserByUserId(userId);
+        return optUser.orElseThrow(() -> new UserNotFoundException(userId));
     }
 
     @Override
     public void updateUser(String userId, UpdatedUser updatedUser) {
-        try {
-            userRepository.updateUser(userId, updatedUser);
-        } catch (UserNotFoundException e) {
-            logger.error("사용자가 존재하지 않습니다.");
-        }
-        logger.info("[" + userId + " 사용자 수정 성공]");
+        userRepository.updateUser(userId, updatedUser);
+        logger.info("[{} 사용자 수정 성공]", userId);
     }
 
     @Override
     public void deleteUser(String userId) {
         String deletedUserId = userRepository.deleteUser(userId);
-        logger.info("[" + deletedUserId + "번째 사용자 삭제 성공]");
+        logger.info("[{} 사용자 삭제 성공]", deletedUserId);
     }
 
     @Override
-    public List<User> findAllUser() {
+    public List<ListUser> findAllUser() {
         return userRepository.findAllUser();
     }
 
     @Override
-    public boolean isJoinedUser(LoginUser loginUser) {
+    public boolean isJoinedUser(LoginUser loginUser) throws UserNotJoinedException {
         String userId = loginUser.getUserId();
-        Optional<User> optUser = findUserByUserId(userId);
-        if (optUser.isPresent()) {
-            User user = optUser.get();
-            if (user.matchUser(loginUser)) {
-                return true;
-            }
-            return false;
-        }
-        return false;
+        Optional<User> optUser = userRepository.findUserByUserId(userId);
+        User user = optUser.orElseThrow(() -> new UserNotJoinedException(userId));
+        return user.matchUser(loginUser);
     }
 
     @Override
-    public Optional<SessionUser> findSessionUserById(String userId) {
-        Optional<SessionUser> optSessionUser = Optional.empty();
-        try {
-            optSessionUser = userRepository.findSessionUserByUserId(userId);
-        } catch (UserNotFoundException e) {
-            logger.error("사용자가 존재하지 않습니다.");
-        }
-        return optSessionUser;
+    public SessionUser findSessionUserById(String userId) {
+        Optional<SessionUser> optSessionUser = userRepository.findSessionUserByUserId(userId);
+        return optSessionUser.orElseThrow(() -> new UserNotFoundException(userId));
     }
 }

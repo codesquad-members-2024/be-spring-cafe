@@ -1,6 +1,7 @@
 package codesquad.springcafe.repository.user;
 
 import codesquad.springcafe.exception.db.UserNotFoundException;
+import codesquad.springcafe.model.ListUser;
 import codesquad.springcafe.model.SessionUser;
 import codesquad.springcafe.model.UpdatedUser;
 import codesquad.springcafe.model.User;
@@ -46,12 +47,12 @@ public class UserMemoryRepository implements UserRepository {
     }
 
     @Override
-    public List<User> findAllUser() {
-        return users;
+    public List<ListUser> findAllUser() {
+        return null;
     }
 
     @Override
-    public Optional<SessionUser> findSessionUserByUserId(String userId) throws UserNotFoundException {
+    public Optional<SessionUser> findSessionUserByUserId(String userId) {
         return Optional.empty();
     }
 }
