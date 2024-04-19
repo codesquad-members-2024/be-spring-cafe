@@ -16,9 +16,9 @@ public class QuestionRepositoryLocal implements QuestionRepository{
     private static final AtomicLong sequence = new AtomicLong(0);
 
     public Question save(Question question){
-        long userId = sequence.incrementAndGet();
-        question.setId(userId);
-        questions.put(userId, question);
+        long questionId = sequence.incrementAndGet();
+        question.setId(questionId);
+        questions.put(questionId, question);
         return question;
     }
 

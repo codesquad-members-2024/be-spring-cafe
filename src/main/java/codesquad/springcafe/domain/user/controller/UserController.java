@@ -63,7 +63,7 @@ public class UserController {
             throw new IllegalStateException("로그아웃 할 수 없습니다.");  // TODO : exception 추가
         }
 
-        session.removeAttribute("userId");
+        session.invalidate();
         return "redirect:/";
     }
 
