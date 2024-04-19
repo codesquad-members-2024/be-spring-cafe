@@ -13,19 +13,11 @@ public class UserCreationDto {
         this.email = email;
     }
 
-    public String getUserId() {
-        return userId;
+    public User toEntity() {
+        return new User(userId, password, name, email);
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
+    public User toEntity(String userId) {
+        return new User(userId, password, name, email);
     }
 }

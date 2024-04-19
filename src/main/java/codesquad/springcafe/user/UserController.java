@@ -6,48 +6,39 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class UserController {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final UserDao userDao;
-    private final UserMapper userMapper;
+    private final UserService service;
 
-    public UserController(UserDao userDao, UserMapper userMapper) {
-        this.userDao = userDao;
-        this.userMapper = userMapper;
+    public UserController(UserService service) {
+        this.service = service;
     }
 
     @GetMapping("/user/{userId}")
     public String showProfile(@PathVariable String userId, Model model) {
-        UserViewDto userDto = userDao.findUser(userId)
-                .map(userMapper::toProfileDto)
-                .orElseThrow(() -> new IllegalArgumentException(userId + "를 찾을 수 없습니다"));
-
-        model.addAttribute("users", userDto);
+        UserViewDto userProfile = service.profile(userId);
+        model.addAttribute("user", userProfile);
         return "user/profile";
     }
 
     // 회원가입 기능
     @PostMapping("/user")
     public String create(@ModelAttribute UserCreationDto userCreationDto) {
-        User user = userMapper.toCreateUser(userCreationDto);
-        userDao.save(user);
+        service.save(userCreationDto);
         return "redirect:/users";
     }
 
     @GetMapping("/users")
     public String showUsers(Model model) {
         // 저장소에서 모든 유저 목록 찾기
-        Collection<User> users = userDao.getAllUsers();
+        List<UserViewDto> userDtos = service.getAllUsers();
         // 인덱스 번호를 유저마다 붙여 View 에게 전달하는 DTO생성
         AtomicLong atomicLong = new AtomicLong(0L);
-        List<UserViewDto> userDtos = users.stream()
-                .map(user -> userMapper.toListDto(user, atomicLong.incrementAndGet()))
-                .toList();
+        userDtos.forEach(dto -> dto.numbering(atomicLong.incrementAndGet()));
 
         model.addAttribute("users", userDtos);
         return "user/list";
@@ -61,8 +52,7 @@ public class UserController {
 
     @PutMapping("/user/{userId}/form")
     public String updateUser(@PathVariable String userId, UserCreationDto dto) {
-        User user = userMapper.toUpdateUser(userId, dto);
-        userDao.updateUser(user);
+        service.update(userId, dto);
         return "redirect:/users";
     }
 }

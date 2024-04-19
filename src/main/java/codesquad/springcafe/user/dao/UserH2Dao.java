@@ -42,7 +42,7 @@ public class UserH2Dao implements UserDao {
     }
 
     @Override
-    public void updateUser(User user) {
+    public void update(User user) {
         final String sql = "UPDATE USERS SET password=?, nickname=?, email=? WHERE userId=?";
         jdbcTemplate.update(sql, user.getPassword(), user.getNickName(), user.getEmail(), user.getUserId());
     }
