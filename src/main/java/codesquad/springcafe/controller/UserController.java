@@ -64,10 +64,10 @@ public class UserController {
 
     // 회원정보 수정 화면
     @GetMapping("{id}/edit")
-    public String showEditForm(@PathVariable("id") String id, Model model){
+    public String showEditForm(@PathVariable("id") String id, Model model) {
         Optional<User> userOptional = userService.findUserByUserId(id);
 
-        if (!userOptional.isPresent()){
+        if (!userOptional.isPresent()) {
             logger.info("User with id {} not found", id);
             return "redirect:/users/users";
         }
@@ -77,7 +77,7 @@ public class UserController {
     }
 
     // 회원 정보 수정 처리
-    @PutMapping("{id}")
+    @PutMapping("{id}/edit")
     public String updateUser(@PathVariable("id") String id, @ModelAttribute User user, RedirectAttributes redirectAttributes) {
         User updatedUser = userService.updateUser(id, user);
         logger.info("updated user={}", updatedUser);
