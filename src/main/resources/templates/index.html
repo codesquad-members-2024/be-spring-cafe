@@ -17,16 +17,16 @@
                   <div class="wrap">
                       <div class="main">
                           <strong class="subject">
-                              <a th:href="@{/article/{articleNum}(articleNum=${article.articleNumber})}" th:text="${article.title}"></a>
+                              <a th:href="@{/article/{articleNum}(articleNum=${article.articleNum})}" th:text="${article.title}"></a>
                           </strong>
                           <div class="auth-info">
                               <i class="icon-add-comment"></i>
-                              <span class="time" th:text="${article.createdAtFormatted}"></span>
+                              <span class="time" th:text="${article.time}"></span>
                               <a href="user/profile.html" class="author" th:text="${article.writer}"></a>
                           </div>
                           <div class="reply" title="댓글">
                               <i class="icon-reply"></i>
-                              <span class="point" th:text="${article.articleNumber}"></span>
+                              <span class="point" th:text="${article.articleNum}"></span>
                           </div>
                       </div>
                   </div>

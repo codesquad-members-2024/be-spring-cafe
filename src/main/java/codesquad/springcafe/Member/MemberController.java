@@ -37,6 +37,7 @@ public class MemberController {
         return "user/list";
     }
     
+    //TODO 아직 안됨 html 수정 필요
     @GetMapping("/user/profile/{userId}")
     public String showProfile(Model model, @PathVariable("userId") String memberId) {
         Optional<Member> optionalMember = memberRepository.getMember(memberId);
