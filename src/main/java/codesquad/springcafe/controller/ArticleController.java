@@ -2,7 +2,9 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.db.article.ArticleDatabase;
 import codesquad.springcafe.model.Article;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,12 +44,17 @@ public class ArticleController {
     @GetMapping("/detail/{sequence}")
     public String loadArticleContent(@PathVariable long sequence,
                                      Model model,
+                                     HttpServletRequest request,
                                      HttpServletResponse response) throws IOException {
         Optional<Article> article = articleDatabase.findArticleBySequence(sequence);
         if(article.isEmpty()){
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return null;
         }
+        HttpSession session = request.getSession(false);
+        boolean isLoggedIn = session != null && session.getAttribute("springCafeMember") != null;
+
+        model.addAttribute("loginUser", isLoggedIn);
         model.addAttribute("article", article.get());
         return "article/show";
     }

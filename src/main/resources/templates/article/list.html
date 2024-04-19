@@ -6,7 +6,15 @@
 
 <body>
 <div class="background">
+    <!-- 로그인 사용자용 내비게이션 바 -->
+    {{#loginUser}}
+    {{>layout/login_user_navbar}}
+    {{/loginUser}}
+
+    <!-- 비로그인 사용자용 내비게이션 바 -->
+    {{^loginUser}}
     {{>layout/non_login_user_navbar}}
+    {{/loginUser}}
     <div class="description">
         <div class="desc-container">
             <p class="desc-small">안녕하세요</p>
