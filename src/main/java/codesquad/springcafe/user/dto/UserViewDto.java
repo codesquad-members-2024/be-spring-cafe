@@ -1,4 +1,6 @@
-package codesquad.springcafe.user;
+package codesquad.springcafe.user.dto;
+
+import codesquad.springcafe.user.User;
 
 public class UserViewDto {
     private Long index;

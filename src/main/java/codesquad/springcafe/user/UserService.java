@@ -1,5 +1,7 @@
 package codesquad.springcafe.user;
 
+import codesquad.springcafe.user.dto.UserCreationDto;
+import codesquad.springcafe.user.dto.UserViewDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

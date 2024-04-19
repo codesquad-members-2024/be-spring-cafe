@@ -1,5 +1,7 @@
 package codesquad.springcafe.user;
 
+import codesquad.springcafe.user.dto.UserCreationDto;
+import codesquad.springcafe.user.dto.UserViewDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -55,4 +57,9 @@ public class UserController {
         service.update(userId, dto);
         return "redirect:/users";
     }
+
+//    @GetMapping("/user/login")
+//    public String login(@ModelAttribute UserLoginRequestDto dto) {
+//        return service.login(dto);
+//    }
 }
