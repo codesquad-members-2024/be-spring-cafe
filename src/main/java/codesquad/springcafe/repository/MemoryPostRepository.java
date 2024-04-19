@@ -1,10 +1,10 @@
 package codesquad.springcafe.repository;
 
 import codesquad.springcafe.domain.Post;
-import codesquad.springcafe.domain.User;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class MemoryPostRepository implements PostRepository {
@@ -12,6 +12,7 @@ public class MemoryPostRepository implements PostRepository {
 
     @Override
     public Post save(Post post) {
+        post.setId(posts.size()+1);
         posts.add(post);
         return post;
     }
@@ -24,5 +25,10 @@ public class MemoryPostRepository implements PostRepository {
     @Override
     public List<Post> findAll() {
         return posts;
+    }
+
+    @Override
+    public Post findById(int id) {
+        return posts.get(id-1);
     }
 }

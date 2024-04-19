@@ -1,6 +1,7 @@
 package codesquad.springcafe.domain;
 
 public class Post {
+    private long id;
     private String writer;
     private String title;
     private String contents;
@@ -9,6 +10,10 @@ public class Post {
         this.writer = writer;
         this.title = title;
         this.contents = contents;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public void setTitle(String title) {
@@ -29,5 +34,9 @@ public class Post {
 
     public String getContents() {
         return contents;
+    }
+
+    public long getId() {
+        return id;
     }
 }
