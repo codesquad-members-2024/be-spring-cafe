@@ -33,6 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry){
         registry.addInterceptor(new LoginCheckInterceptor())
-                .addPathPatterns("/users");
+                .addPathPatterns("/users")
+                .addPathPatterns("/articles/add");
     }
 }
