@@ -4,8 +4,10 @@ import codesquad.springcafe.db.article.ArticleDatabase;
 import codesquad.springcafe.db.article.H2ArticleDatabase;
 import codesquad.springcafe.db.user.H2UserDatabase;
 import codesquad.springcafe.db.user.UserDatabase;
+import codesquad.springcafe.interceptor.LoginCheckInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
@@ -26,5 +28,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public ArticleDatabase articleDatabase() {
         return new H2ArticleDatabase(dataSource);
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry){
+        registry.addInterceptor(new LoginCheckInterceptor())
+                .addPathPatterns("/users");
     }
 }
