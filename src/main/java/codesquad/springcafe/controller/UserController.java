@@ -82,6 +82,6 @@ public class UserController {
         User updatedUser = userService.updateUser(id, user);
         logger.info("updated user={}", updatedUser);
         redirectAttributes.addAttribute("id", updatedUser.getUserId());
-        return "redirect:/users";
+        return "redirect:/users/{id}";
     }
 }
