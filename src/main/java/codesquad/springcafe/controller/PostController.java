@@ -1,6 +1,8 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.domain.Post;
+import codesquad.springcafe.repository.PostRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -10,6 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/posts")
 public class PostController {
+
+    private final PostRepository repository;
+
+    @Autowired
+    public PostController(PostRepository repository) {
+        this.repository = repository;
+    }
+
     //    게시글 폼 보여줌
     @GetMapping
     public String postForm() {
@@ -18,6 +28,7 @@ public class PostController {
 
     @PostMapping
     public String createPost(@ModelAttribute Post post) {
+        repository.save(post);
         return "redirect:/";
     }
 

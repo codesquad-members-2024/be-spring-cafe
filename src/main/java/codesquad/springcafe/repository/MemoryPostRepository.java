@@ -2,9 +2,11 @@ package codesquad.springcafe.repository;
 
 import codesquad.springcafe.domain.Post;
 import codesquad.springcafe.domain.User;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+@Repository
 public class MemoryPostRepository implements PostRepository {
     private static final List<Post> posts = new ArrayList<>();
 
