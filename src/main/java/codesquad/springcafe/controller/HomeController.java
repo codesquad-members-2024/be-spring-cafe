@@ -1,6 +1,6 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.ListArticle;
 import codesquad.springcafe.service.ArticleService;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
@@ -25,7 +25,7 @@ public class HomeController {
     @GetMapping(value = {"/", "/home"})
     public String showHomePage(Model model, HttpSession httpSession) {
         httpSession.removeAttribute("matchPw");
-        List<Article> articles = articleService.findAllArticle();
+        List<ListArticle> articles = articleService.findAllArticle();
         model.addAttribute("articleList", articles);
         return "article/list";
     }
