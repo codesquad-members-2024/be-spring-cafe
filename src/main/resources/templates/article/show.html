@@ -37,8 +37,16 @@
                                 <p class="article-content">조회수 : {{article.getPageViews}}</p>
                             </div>
                             <div class="article-header-button">
-                                <button class="article-button adjust-btn-color" onclick=window.location.href='/articles/update/{{article.getArticleId}}'>수정</button>
-                                <button class="article-button delete-btn-color">삭제</button>
+                                <button class="article-button adjust-btn-color"
+                                        onclick=window.location.href='/articles/update/{{article.getArticleId}}'>수정
+                                </button>
+                                <form id="deleteForm" method="POST" action="/articles/delete/{{article.getArticleId}}">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="submit" class="article-button delete-btn-color">삭제</button>
+                                </form>
+<!--                                <button class="article-button delete-btn-color"-->
+<!--                                        onclick=window.location.href='/articles/delete/{{article.getArticleId}}'>삭제-->
+<!--                                </button>-->
                             </div>
                         </div>
                         <div class="article-doc">
