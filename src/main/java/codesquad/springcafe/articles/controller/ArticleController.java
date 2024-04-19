@@ -45,7 +45,7 @@ public class ArticleController {
     @GetMapping("/update/{articleId}")
     public String showArticleUpdatePage(@PathVariable long articleId, HttpServletRequest request, Model model) {
         Article article = articleService.findArticleById(articleId);
-        
+
         HttpSession session = request.getSession();
         UserPreviewDto userPreviewDto = (UserPreviewDto) session.getAttribute("sessionedUser");
 

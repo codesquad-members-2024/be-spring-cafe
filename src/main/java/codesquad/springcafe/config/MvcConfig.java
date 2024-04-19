@@ -37,7 +37,8 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoggedOutInterceptor())
                 .addPathPatterns("/users/profile/{userId}") // 유저 프로필 보기
                 .addPathPatterns("/articles/write")         // 게시글 작성
-                .addPathPatterns("/articles/{articleId}");   // 게시글 세부 내용
+                .addPathPatterns("/articles/{articleId}")   // 게시글 세부 내용
+                .addPathPatterns("/articles/update/{articleId}");   // 게시글 수정 페이지
 
     }
 }
