@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
+@Controller("/users")
 public class UserController {
 
     private final UserDatabase userDatabase;
@@ -22,13 +22,13 @@ public class UserController {
         this.userDatabase = userDatabase;
     }
 
-    @PostMapping("/users")
+    @PostMapping
     public String createUser(@ModelAttribute User user) {
         userDatabase.addUser(user);
         return "redirect:/users";
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public String userList(Model model){
         List<User> users = userDatabase.findAllUsers();
         model.addAttribute("users", users);
@@ -36,7 +36,7 @@ public class UserController {
         return "users/list";
     }
 
-    @GetMapping("/users/{userId}")
+    @GetMapping("/{userId}")
     public String userProfile(
             @PathVariable String userId,
             HttpServletResponse response,
@@ -50,7 +50,7 @@ public class UserController {
         return "users/profile";
     }
 
-    @GetMapping("/users/{userId}/update")
+    @GetMapping("/{userId}/update")
     public String getProfileEditPage(
             @PathVariable String userId,
             Model model,
@@ -64,7 +64,7 @@ public class UserController {
         return "users/updateForm";
     }
 
-    @PutMapping("/users/{userId}/update")
+    @PutMapping("/{userId}/update")
     public String updateProfile(
             @PathVariable String userId,
             @RequestParam String nickname,
