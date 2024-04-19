@@ -23,10 +23,10 @@ public class UserController {
         this.userDatabase = userDatabase;
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public String createUser(@ModelAttribute User user) {
         userDatabase.addUser(user);
-        return "redirect:/users";
+        return "redirect:/";
     }
 
     @GetMapping
@@ -37,7 +37,7 @@ public class UserController {
         return "users/list";
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("detail/{userId}")
     public String userProfile(
             @PathVariable String userId,
             HttpServletResponse response,
@@ -51,7 +51,7 @@ public class UserController {
         return "users/profile";
     }
 
-    @GetMapping("/{userId}/update")
+    @GetMapping("detail/{userId}/update")
     public String getProfileEditPage(
             @PathVariable String userId,
             Model model,
@@ -65,7 +65,7 @@ public class UserController {
         return "users/updateForm";
     }
 
-    @PutMapping("/{userId}/update")
+    @PutMapping("detail/{userId}/update")
     public String updateProfile(
             @PathVariable String userId,
             @RequestParam String nickname,
