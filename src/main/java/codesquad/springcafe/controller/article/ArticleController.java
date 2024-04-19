@@ -1,19 +1,22 @@
 package codesquad.springcafe.controller.article;
 
+import codesquad.springcafe.controller.SessionConst;
 import codesquad.springcafe.domain.article.Article;
 import codesquad.springcafe.service.article.ArticleManager;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Controller
 @RequestMapping("/questions")
@@ -26,7 +29,10 @@ public class ArticleController {
     }
 
     @GetMapping
-    public String publish(@ModelAttribute("article") ArticleForm form) {
+    public String publish(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
+                          @ModelAttribute("article") ArticleForm form) {
+        form.setCreatedBy(loginId);
+
         return "qna/form";
     }
 
@@ -44,18 +50,15 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}")
-    public String detail(@PathVariable("articleId") long id, Model model) {
-        Optional<Article> optionalArticle = articleManager.findArticle(id);
-        if (optionalArticle.isEmpty()) {
-            return "error/404";
-        }
+    public String detail(@PathVariable("articleId") long articleId, Model model) {
+        Article findArticle = articleManager.findArticle(articleId);
 
         /* 줄바꿈 문자 추가 */
         String lineSeparator = System.lineSeparator();
         model.addAttribute("lineSeparator", lineSeparator);
 
         /* 모델 속성 추가 */
-        model.addAttribute("article", optionalArticle.get());
+        model.addAttribute("article", findArticle);
 
         return "qna/detail";
     }
@@ -69,5 +72,64 @@ public class ArticleController {
         article.setCreatedAt(LocalDateTime.now());
 
         return article;
+    }
+
+    @GetMapping("/{articleId}/edit")
+    public String editForm(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
+                           @PathVariable("articleId") long articleId, @ModelAttribute("form") UpdateArticle form) {
+        Article findArticle = articleManager.findArticle(articleId);
+
+        /* 작성자 검증 */
+        articleManager.validateAuthor(loginId, findArticle.getCreatedBy());
+
+        /* 정상 로직 */
+        fillForm(form, findArticle);
+
+        return "qna/updateForm";
+    }
+
+    private void fillForm(UpdateArticle form, Article findArticle) {
+        form.setId(findArticle.getId());
+        form.setCreatedBy(findArticle.getCreatedBy());
+        form.setTitle(findArticle.getTitle());
+        form.setContents(findArticle.getContents());
+    }
+
+    @PutMapping("/{articleId}")
+    public String edit(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
+                       @PathVariable("articleId") long articleId, @Validated @ModelAttribute("form") UpdateArticle form,
+                       BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "qna/updateForm";
+        }
+
+        articleManager.editArticle(loginId, form);
+
+        return "redirect:/questions/{articleId}";
+    }
+
+    @GetMapping("/{articleId}/delete")
+    public String confirmUnpublish(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
+                                  @PathVariable("articleId") long articleId) {
+        Article findArticle = articleManager.findArticle(articleId);
+
+        /* 작성자 검증 */
+        articleManager.validateAuthor(loginId, findArticle.getCreatedBy());
+
+        return "qna/deleteConfirm";
+    }
+
+    @DeleteMapping("/{articleId}")
+    public String unpublish(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
+                            @PathVariable("articleId") long articleId) {
+        Article findArticle = articleManager.findArticle(articleId);
+
+        /* 작성자 검증 */
+        articleManager.validateAuthor(loginId, findArticle.getCreatedBy());
+
+        /* 정상 흐름 */
+        articleManager.unpublish(articleId);
+
+        return "redirect:/";
     }
 }

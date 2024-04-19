@@ -2,6 +2,8 @@ package codesquad.springcafe.controller.member;
 
 import codesquad.springcafe.controller.SessionConst;
 import codesquad.springcafe.domain.member.Member;
+import codesquad.springcafe.service.exception.ResourceNotFoundException;
+import codesquad.springcafe.service.exception.UnauthorizedException;
 import codesquad.springcafe.service.member.MemberService;
 import java.util.List;
 import java.util.Optional;
@@ -57,39 +59,52 @@ public class MemberController {
 
     @GetMapping("/{loginId}")
     public String memberInfo(@PathVariable("loginId") String loginId, Model model) {
-        Optional<Member> findMember = memberService.findMember(loginId);
-
-        if (findMember.isEmpty()) {
-            return "error/404";
-        }
+        /* 멤버 존재 검증 */
+        Member findMember = validateExists(loginId);
 
         /* Member 객체를 DTO로 변환 */
-        Member member = findMember.get();
-        ResponseMember responseMember = convertToDTO(member);
+        ResponseMember responseMember = convertToDTO(findMember);
         model.addAttribute("member", responseMember);
 
         return "members/profile";
     }
 
+    private ResponseMember convertToDTO(Member member) {
+        return new ResponseMember(member.getLoginId(), member.getUserName(), member.getEmail());
+    }
+
     @GetMapping("/{loginId}/update")
-    public String updateForm(@SessionAttribute(name = SessionConst.SESSION_ID, required = false) String loginMemberId,
+    public String updateForm(@SessionAttribute(name = SessionConst.SESSION_ID, required = false) String sessionMemberId,
                              @PathVariable("loginId") String loginId, @ModelAttribute("form") UpdateMember form) {
+        /* 로그인 검증 */
+        validateLoginId(sessionMemberId, loginId);
 
-        /* 로그인 된 상태가 아니거나, 로그인 유저 본인이 아니면 401 에러 */
-        if (loginMemberId == null || !loginMemberId.equals(loginId)) {
-            return "error/403";
-        }
+        /* 멤버 존재 검증 */
+        Member findMember = validateExists(loginId);
 
-        Optional<Member> findMember = memberService.findMember(loginId);
-
-        if (findMember.isEmpty()) {
-            return "error/404";
-        }
-
-        Member member = findMember.get();
-        fillForm(form, member);
+        fillForm(form, findMember);
 
         return "members/updateForm";
+    }
+
+    private void validateLoginId(String sessionMemberId, String loginId) {
+        if (sessionMemberId == null || !sessionMemberId.equals(loginId)) {
+            throw new UnauthorizedException("다른 회원의 정보를 수정할 수 없습니다. 로그인 멤버 아이디: " + loginId);
+        }
+    }
+
+    private Member validateExists(String loginId) {
+        Optional<Member> findMember = memberService.findMember(loginId);
+        if (findMember.isEmpty()) {
+            throw new ResourceNotFoundException("멤버를 찾을 수 없습니다. 멤버 아이디: " + loginId);
+        }
+        return findMember.get();
+    }
+
+    private void fillForm(UpdateMember form, Member member) {
+        form.setLoginId(member.getLoginId());
+        form.setUserName(member.getUserName());
+        form.setEmail(member.getEmail());
     }
 
     @PutMapping("/{loginId}")
@@ -117,16 +132,5 @@ public class MemberController {
         /* 정상 로직 */
         memberService.update(loginId, form);
         return "redirect:/members/{loginId}";
-    }
-
-    private void fillForm(UpdateMember form, Member member) {
-        form.setLoginId(member.getLoginId());
-        form.setUserName(member.getUserName());
-        form.setEmail(member.getEmail());
-    }
-
-    private ResponseMember convertToDTO(Member member) {
-
-        return new ResponseMember(member.getLoginId(), member.getUserName(), member.getEmail());
     }
 }

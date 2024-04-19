@@ -44,7 +44,6 @@ public class LoginController {
         Optional<Member> loginMember = memberService.login(form.getLoginId(), form.getPassword());
 
         if (loginMember.isEmpty()) {
-            log.info("login fail 2 {} {}", form.getLoginId(), form.getPassword());
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
             return "login/loginForm";
         }

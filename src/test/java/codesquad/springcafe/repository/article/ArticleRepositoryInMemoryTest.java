@@ -2,6 +2,7 @@ package codesquad.springcafe.repository.article;
 
 import static org.assertj.core.api.Assertions.*;
 
+import codesquad.springcafe.controller.article.UpdateArticle;
 import codesquad.springcafe.domain.article.Article;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -115,5 +116,31 @@ class ArticleRepositoryInMemoryTest {
         article.setCreatedAt(createdAt);
 
         return article;
+    }
+
+    @DisplayName("제목을 success title, 본문을 success contents 로 바꿀 수 있다")
+    @Test
+    void update() {
+        // given
+        String title = "test";
+        String createdBy = "guest";
+        String contents = "test body";
+        Article article = makeArticle(title, createdBy, contents, LocalDateTime.parse("2024-04-10T00:00:00"));
+        articleRepository.save(article);
+
+        UpdateArticle updateParam = new UpdateArticle();
+        updateParam.setId(1L);
+        updateParam.setCreatedBy("guest");
+        updateParam.setTitle("success title");
+        updateParam.setContents("success contents");
+
+        // when
+        articleRepository.update(updateParam);
+        Article findArticle = articleRepository.findById(1L).get();
+
+        // then
+        assertThat(findArticle.getTitle()).isEqualTo("success title");
+        assertThat(findArticle.getCreatedBy()).isEqualTo("guest");
+        assertThat(findArticle.getContents()).isEqualTo("success contents");
     }
 }

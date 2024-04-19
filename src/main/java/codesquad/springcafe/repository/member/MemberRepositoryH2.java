@@ -76,7 +76,7 @@ public class MemberRepositoryH2 implements MemberRepository {
 
     @Override
     public void clear() {
-        String sql = "TRUNCATE TABLE MEMBER; ALTER TABLE MEMBER ALTER COLUMN MEMBER_ID RESTART WITH 1";
+        String sql = "alter table if exists ARTICLE drop constraint if exists fk_created_by; truncate table MEMBER; alter table MEMBER alter column MEMBER_ID restart with 1";
         template.update(sql);
     }
 
