@@ -35,4 +35,8 @@ public class User {
     public String getCrateTime() {
         return crateTime.toString();
     }
+
+    public boolean isSamePassword(String password) {
+        return this.password.contentEquals(password);
+    }
 }
