@@ -32,6 +32,14 @@ public class Article {
         this.articleId = articleId;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     @Override
     public String toString() {
         return "userId : " + userId + ", title : " + title + ", content : " + content + ", creatinDate : " + creationDate;

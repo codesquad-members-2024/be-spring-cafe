@@ -45,11 +45,11 @@ public class MemoryArticleRepository implements ArticleRepository {
 
     @Override
     public void updateArticle(long articleId, ArticleUpdateDto articleUpdateDto) {
-
+        articleDatabase.updateArticle(articleId, articleUpdateDto);
     }
 
     @Override
     public void deleteArticle(long articleId) {
-
+        articleDatabase.deleteArticle(articleId);
     }
 }
