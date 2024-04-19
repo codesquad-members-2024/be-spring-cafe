@@ -34,6 +34,14 @@
                                     <a class="black-component" th:if="${isWriter}" style="margin-left: 10px"
                                        th:href="@{/article/update/{articleId}(articleId=${articleId})}">수정하기
                                     </a>
+                                    <form method="post"
+                                          th:action="@{/article/delete/{articleId}(articleId=${articleId})}">
+                                        <button type="submit" class="black-component" th:if="${isWriter}"
+                                                style="margin-left: 10px; display: flex; align-items: center; justify-content: center;">
+                                            삭제하기
+                                        </button>
+                                        <input type="hidden" name="_method" value="DELETE">
+                                    </form>
                                 </div>
                             </div>
                         </div>
