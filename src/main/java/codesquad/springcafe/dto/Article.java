@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 
 public class Article {
     private Long id; // 자동 생성 아티클 아이디
-    private String writer;
+    private String writer; // =userId
     private String title;
     private String content;
     private Timestamp timestamp;
