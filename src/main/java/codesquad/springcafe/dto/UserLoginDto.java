@@ -4,23 +4,26 @@ import codesquad.springcafe.model.LoginUser;
 import jakarta.validation.constraints.NotBlank;
 
 public class UserLoginDto {
-    @NotBlank(message = "아이디를 입력하세요")
-    private final String userId;
+    @NotBlank
+    private String userId;
 
-    @NotBlank(message = "비밀번호를 입력하세요")
-    private final String userPassword;
-
-    public UserLoginDto(String userId, String userPassword) {
-        this.userId = userId;
-        this.userPassword = userPassword;
-    }
+    @NotBlank
+    private String userPassword;
 
     public String getUserId() {
         return userId;
     }
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public String getUserPassword() {
         return userPassword;
+    }
+
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
     }
 
     public LoginUser creatLoginUser() {

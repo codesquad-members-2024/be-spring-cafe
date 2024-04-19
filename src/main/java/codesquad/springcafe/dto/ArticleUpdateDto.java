@@ -1,9 +1,9 @@
 package codesquad.springcafe.dto;
 
-import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.UpdatedArticle;
 import jakarta.validation.constraints.NotBlank;
 
-public class ArticleWriteDto {
+public class ArticleUpdateDto {
     @NotBlank
     private String title;
     @NotBlank
@@ -25,7 +25,7 @@ public class ArticleWriteDto {
         this.content = content;
     }
 
-    public Article createArticle(String userId) {
-        return new Article(userId, title, content);
+    public UpdatedArticle createUpdatedArticle(String userId) {
+        return new UpdatedArticle(userId, title, content);
     }
 }

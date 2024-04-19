@@ -18,23 +18,28 @@
         <header class="post-header">
             <p class="title"><span th:text="${userId}"></span>님의 회원정보 수정</p>
         </header>
-        <form name="question" class="info-container" method="post" action="">
-            <div class="form-group">
+        <form name="question" class="info-container" method="post" action=""
+              th:object="${userUpdateDto}">
+            <div class="form-group" th:classappend="${#fields.hasErrors('userPassword')} ? 'has-error'">
                 <label for="userPassword">비밀번호</label>
-                <input type="password" class="form-control" id="userPassword" name="userPassword"
+                <input type="password" class="form-control" id="userPassword" th:field="*{userPassword}"
                        placeholder="비밀번호를 입력하세요">
                 <input type="hidden" name="_method" value="PUT">
             </div>
-            <div class="form-group">
+            <span class="error-message" style="margin-top: 10px; color:red" th:errors="*{userPassword}"></span>
+            <div class="form-group" th:classappend="${#fields.hasErrors('userName')} ? 'has-error'">
                 <label for="userName">이름</label>
-                <input class="form-control" id="userName" name="userName" placeholder="이름을 입력하세요">
+                <input class="form-control" id="userName" th:field="*{userName}" placeholder="이름을 입력하세요">
                 <input type="hidden" name="_method" value="PUT">
             </div>
-            <div class="form-group">
+            <span class="error-message" style="margin-top: 10px; color:red" th:errors="*{userName}"></span>
+            <div class="form-group" th:classappend="${#fields.hasErrors('userEmail')} ? 'has-error'">
                 <label for="userEmail">이메일</label>
-                <input type="email" class="form-control" id="userEmail" name="userEmail" placeholder="이메일을 입력하세요">
+                <input type="email" class="form-control" id="userEmail" th:field="*{userEmail}"
+                       placeholder="이메일을 입력하세요">
                 <input type="hidden" name="_method" value="PUT">
             </div>
+            <span class="error-message" style="margin-top: 10px; color:red" th:errors="*{userEmail}"></span>
             <button type="submit" class="btn btn-success clearfix pull-right">수정하기</button>
         </form>
     </div>

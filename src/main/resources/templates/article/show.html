@@ -18,21 +18,27 @@
         <div class="col-md-12 col-sm-12 col-lg-12">
             <div class="panel panel-default">
                 <header class="post-header">
-                    <p class="post-title" th:text="${article.getTitle()}">Title</p>
+                    <p class="post-title" th:text="${article.getTitle()}"></p>
                 </header>
                 <div class="content-main">
                     <article class="article">
                         <div class="article-header">
-                            <div class="article-header-text">
-                                <p class="article-content" th:text="${article.getWriter()}">Writer</p>
-                                <p class="article-content" th:text="${article.getFormattedCreationTime()}">
-                                    CreationTime
-                                </p>
-                                <p class="article-content" th:text="${article.getViewCount()}">ViewCount</p>
+                            <div class="article-header-text"
+                                 style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <p class="article-content" th:text="${article.getUserId()}"></p>
+                                    <p class="article-content" th:text="${article.getFormattedCreationTime()}"></p>
+                                    <p class="article-content" th:text="${article.getViewCount()}"></p>
+                                </div>
+                                <div>
+                                    <a class="black-component" th:if="${isWriter}" style="margin-left: 10px"
+                                       th:href="@{/article/update/{articleId}(articleId=${articleId})}">수정하기
+                                    </a>
+                                </div>
                             </div>
                         </div>
                         <div class="article-doc">
-                            <p class="article-content" th:text="${article.getContent()}">Content</p>
+                            <p class="article-content" th:text="${article.getContent()}"></p>
                         </div>
                     </article>
 
