@@ -14,8 +14,8 @@ public class User {
         this.email = email;
     }
 
-    public boolean isIdMatched(String id) {
-        return this.userId.equals(id);
+    public boolean matchPassword(String password){
+        return this.password.equals(password);
     }
 
     public void updateName(String name){
@@ -24,10 +24,6 @@ public class User {
 
     public void updateEmail(String email) {
         this.email = email;
-    }
-
-    public void updatePassword(String password){
-        this.password = password;
     }
 
     public String getUserId() {
