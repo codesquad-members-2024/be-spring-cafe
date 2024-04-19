@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
+@RequestMapping("/articles")
 public class ArticleController {
     private final ArticleDatabase articleDatabase;
     private final AtomicLong sequence = new AtomicLong();
@@ -22,8 +23,13 @@ public class ArticleController {
         this.articleDatabase = articleDatabase;
     }
 
-    @PostMapping("/articles")
-    public String createPost(
+    @GetMapping("/add")
+    public String getArticleCreationForm(){
+        return "article/form";
+    }
+
+    @PostMapping("/add")
+    public String createArticle(
             @ModelAttribute Article article
     ) {
         long seq = sequence.incrementAndGet();
@@ -33,7 +39,7 @@ public class ArticleController {
     }
 
 
-    @GetMapping("/articles/{sequence}")
+    @GetMapping("/detail/{sequence}")
     public String loadArticleContent(@PathVariable long sequence,
                                      Model model,
                                      HttpServletResponse response) throws IOException {
