@@ -3,14 +3,14 @@ package springcafe.article.repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import springcafe.article.model.Article;
-import springcafe.user.model.User;
+
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
-public class H2ArticleDao implements ArticleRepository {
+public class H2ArticleDao implements ArticleDao {
 
     private JdbcTemplate jdbcTemplate;
 
@@ -41,11 +41,11 @@ public class H2ArticleDao implements ArticleRepository {
     }
 
     @Override
-    public Map<Long, Article> findAll() {
+    public List<Article> findAll() {
         return jdbcTemplate.query(
                 "SELECT ID, WRITER, TITLE, CONTENTS, CREATE_DATE FROM ARTICLES",
                 (rs) -> {
-                    Map<Long, Article> resultMap = new HashMap<>();
+                    List<Article> articleList = new ArrayList();
 
                     while (rs.next()) {
                         Long id = rs.getLong("ID");
@@ -55,10 +55,10 @@ public class H2ArticleDao implements ArticleRepository {
                         LocalDateTime createDate = rs.getTimestamp("CREATE_DATE").toLocalDateTime();
 
                         Article article = new Article(writer, title, contents, createDate, id);
-                        resultMap.put(id, article);
+                        articleList.add(article);
 
                     }
-                    return resultMap;
+                    return articleList;
                 }
         );
     }
