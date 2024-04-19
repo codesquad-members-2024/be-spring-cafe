@@ -13,12 +13,6 @@ public class User {
         this.email = email;
     }
 
-    public void updateUser(String password, String name, String email) {
-        this.password = password;
-        this.name = name;
-        this.email = email;
-    }
-
     public String getUserId() {
         return userid;
     }

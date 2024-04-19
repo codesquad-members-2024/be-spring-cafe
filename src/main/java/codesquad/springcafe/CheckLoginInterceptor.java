@@ -15,13 +15,19 @@ public class CheckLoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        return HandlerInterceptor.super.preHandle(request, response, handler);
+        return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         HttpSession session = request.getSession();
-        if (modelAndView != null) {
+        String viewName = null;
+        if(modelAndView != null) {
+            viewName = modelAndView.getViewName();
+        }
+        // 리다이렉트의 경우 ModelAndView가 AddObject된 요소들을 쿼리 파라미터에 담아 전달하기 때문에 조건문을 달았습니다.
+        // Location : localhost:8080/;?loginUserId=dao
+        if (viewName != null && !viewName.startsWith("redirect:")) {
             if (session != null) {
                 Object loginUserId = session.getAttribute("loginUserId");
                 if (loginUserId != null) {
@@ -33,6 +39,6 @@ public class CheckLoginInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+
     }
 }

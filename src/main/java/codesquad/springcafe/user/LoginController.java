@@ -13,17 +13,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class LoginController {
 
     UserDatabase userDatabase;
+    UserCrednetialService userCrednetialService;
 
     @Autowired
-    public LoginController(UserDatabase userDatabase) {
+    public LoginController(UserDatabase userDatabase, UserCrednetialService userCrednetialService) {
         this.userDatabase = userDatabase;
     }
 
     @PostMapping("/user/login")
     public String login(@ModelAttribute UserLoginDTO userLoginDTO, HttpServletRequest request, Model model) {
-        if (!userDatabase.isExistUser(userLoginDTO.getUserid()) ||
-            !userLoginDTO.isMatchedPwd(userDatabase.getUser(userLoginDTO.getUserid())
-                                                    .getPassword())) {
+        if (!userCrednetialService.checkValidCredential(userLoginDTO)) {
             model.addAttribute("outputMessage", "아이디나 비밀번호가 맞지 않습니다.");
             return "/user/login_failed";
         }

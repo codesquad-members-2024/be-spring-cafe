@@ -13,19 +13,21 @@ import java.util.List;
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-    UserDatabase userDB;
+    UserDatabase userDatabase;
+    private final UserCrednetialService userCrednetialService;
 
     @Autowired
-    UserController(UserDatabase userDatabase) {
-        this.userDB = userDatabase;
+    UserController(UserDatabase userDatabase, UserCrednetialService userCrednetialService) {
+        this.userDatabase = userDatabase;
+        this.userCrednetialService = userCrednetialService;
     }
 
     @PostMapping("/users")
     public String createUser(@ModelAttribute User user) {
-        if (userDB.isExistUser(user.getUserId()) == true) {
+        if (userDatabase.isExistUser(user.getUserId()) == true) {
             return "redirect:/users/form/" + user.getUserId();
         }
-        userDB.addUser(user);
+        userDatabase.addUser(user);
         logger.debug("add user : {}", user.getUserId());
         return "redirect:/users";
     }
@@ -38,14 +40,14 @@ public class UserController {
 
     @GetMapping("/users")
     public String showUsers(Model model) {
-        List<User> userList = userDB.getUserList();
+        List<User> userList = userDatabase.getUserList();
         model.addAttribute("userList", userList);
         return "user/list";
     }
 
     @GetMapping("/users/{userid}")
     public String showUser(@PathVariable String userid, Model model) {
-        User user = userDB.getUser(userid);
+        User user = userDatabase.getUser(userid);
         model.addAttribute("user", user);
         return "user/profile";
     }
@@ -57,10 +59,16 @@ public class UserController {
     }
 
     @PutMapping("/users/{userid}")
-    public String updateUser(@ModelAttribute User editedUser) {
-        User oldUser = userDB.getUser(editedUser.getUserId());
-        oldUser.updateUser(editedUser.getPassword(), editedUser.getName(), editedUser.getEmail());
-        logger.info("update user : {}", oldUser.getUserId());
+    public String updateUser(@ModelAttribute UserLoginDTO userLoginDTO, // userid, pwd
+                             @ModelAttribute User editedUser, // userid, pwd, name, email
+                             Model model) {
+        if (!userCrednetialService.checkValidCredential(userLoginDTO)) {
+            model.addAttribute("invalidInput", true);
+            System.out.println("invalidINput");
+            return "redirect:/users/" + userLoginDTO.getUserid() + "/form";
+        }
+        userDatabase.updateUser(editedUser);
+        logger.info("update user : {}", editedUser.getUserId());
         return "redirect:/users";
     }
 
