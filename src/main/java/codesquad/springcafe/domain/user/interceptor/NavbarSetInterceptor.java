@@ -11,9 +11,8 @@ public class NavbarSetInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
         SimpleUserInfo loginUser = (SimpleUserInfo) request.getSession().getAttribute("loginUser");
-        if (modelAndView != null && loginUser != null) {
-            modelAndView.addObject("navbarUser", loginUser);
-            modelAndView.addObject("user_section", true);
+        if (loginUser != null) {
+            request.setAttribute("user_section", true);
         }
     }
 }
