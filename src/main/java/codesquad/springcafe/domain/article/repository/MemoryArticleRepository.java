@@ -68,6 +68,7 @@ public class MemoryArticleRepository implements ArticleRepository {
 
     @Override
     public void deleteAll() {
+        nowIndex = 1;
         articles.clear();
     }
 }

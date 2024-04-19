@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static codesquad.springcafe.domain.article.repository.ArticleConsts.*;
+import static java.sql.Types.INTEGER;
 import static java.sql.Types.VARCHAR;
 
 @Repository
@@ -57,7 +58,7 @@ public class H2ArticleRepository implements ArticleRepository {
         String FIND_BY_ID = "SELECT * FROM ARTICLE WHERE ID = ? AND STATUS = ?;";
 
         Object[] args = new Object[]{id, OPEN};
-        int[] pramTypes = new int[]{VARCHAR, VARCHAR};
+        int[] pramTypes = new int[]{INTEGER, VARCHAR};
         try {
             return jdbcTemplate.query(FIND_BY_ID, args, pramTypes, articleRowMapper()).get(0);
         } catch (IndexOutOfBoundsException e) {
@@ -67,17 +68,19 @@ public class H2ArticleRepository implements ArticleRepository {
 
     @Override
     public List<Article> findAll() {
-        String FIND_ALL = "SELECT * FROM ARTICLE WHERE STATUS = " + OPEN + " ORDER BY CREATEDAT DESC;";
+        String FIND_ALL = "SELECT * FROM ARTICLE WHERE STATUS = ? ORDER BY CREATEDAT DESC;";
 
-        return jdbcTemplate.query(FIND_ALL, articleRowMapper());
+        Object[] args = new Object[]{OPEN};
+        int[] pramTypes = new int[]{VARCHAR};
+        return jdbcTemplate.query(FIND_ALL, args, articleRowMapper());
     }
 
     @Override
     public List<Article> findByUserId(String id) {
-        String FIND_BY_USER = "SELECT * FROM ARTICLE WHERE AUTHORID = ? AND STATUS = " + OPEN;
+        String FIND_BY_USER = "SELECT * FROM ARTICLE WHERE AUTHORID = ? AND STATUS = ?;";
 
-        Object[] args = new Object[]{id};
-        int[] pramTypes = new int[]{VARCHAR};
+        Object[] args = new Object[]{id, OPEN};
+        int[] pramTypes = new int[]{VARCHAR, VARCHAR};
         return jdbcTemplate.query(FIND_BY_USER, args, pramTypes, articleRowMapper());
     }
 
