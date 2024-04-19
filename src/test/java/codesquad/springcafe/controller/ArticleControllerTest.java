@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -26,7 +27,10 @@ class ArticleControllerTest {
     @Test
     @DisplayName("글 작성 폼으로 이동")
     void getQuestionFormTest() throws Exception {
-        mockMvc.perform(get("/question"))
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("loginUserId", "cori123");
+
+        mockMvc.perform(get("/question").session(session))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("qna/form"))
                 .andReturn();
@@ -35,12 +39,15 @@ class ArticleControllerTest {
     @Test
     @DisplayName("게시글을 저장 후 홈페이지로 리다이렉트")
     void writeQuestionTest() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("loginUserId", "cori123");
+
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/users")
                 .param("writer", "cori")
                 .param("title", "1234")
                 .param("contents", "hello world");
 
-        mockMvc.perform(post("/question"))
+        mockMvc.perform(post("/question").session(session))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 

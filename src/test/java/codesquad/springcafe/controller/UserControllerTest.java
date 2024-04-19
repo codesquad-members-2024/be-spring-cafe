@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -26,7 +27,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("회원가입을 하면 /users로 리다이렉트해야한다.")
-    public void testRegister() throws Exception {
+    void testRegister() throws Exception {
         // 테스트 데이터 준비
         String userId = "test_user";
         String password = "test_password";
@@ -59,12 +60,15 @@ class UserControllerTest {
     void updateUserTest() throws Exception {
         String userListUri = "/users";
         String updateUserUri = "/users/cori123";
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("loginUserId", "cori123");
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.put(updateUserUri)
                 .param("password", "1111")
                 .param("newPassword", "2222")
                 .param("name", "cori")
-                .param("email", "cori@naver.com");
+                .param("email", "cori@naver.com")
+                .session(session);
 
         mockMvc.perform(request)
                 .andExpect(status().is3xxRedirection())
@@ -78,12 +82,15 @@ class UserControllerTest {
 
         String userUpdateFormUri = "/users/cori123/form";
         String updateUserUri = "/users/cori123";
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("loginUserId", "cori123");
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.put(updateUserUri)
                 .param("password", "1111")
                 .param("newPassword", "2222")
                 .param("name", "cori")
-                .param("email", "cori@naver.com");
+                .param("email", "cori@naver.com")
+                .session(session);
 
         mockMvc.perform(request)
                 .andExpect(status().is3xxRedirection())
