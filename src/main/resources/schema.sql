@@ -16,5 +16,5 @@ CREATE TABLE articles (
     writer VARCHAR(50) NOT NULL,
     title VARCHAR(50) NOT NULL,
     publishTime TIMESTAMP NOT NULL,
-    content VARCHAR(255) NOT NULL
+    content VARCHAR(10000) NOT NULL
 );
