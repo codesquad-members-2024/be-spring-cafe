@@ -22,6 +22,7 @@ spring:
     servlet:
       cache: false
       expose-session-attributes: true
+      expose-request-attributes: true
 
   profiles:
     default: dev
