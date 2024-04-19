@@ -45,6 +45,7 @@ public class ArticleController {
     @GetMapping("/update/{articleId}")
     public String showArticleUpdatePage(@PathVariable long articleId, HttpServletRequest request, Model model) {
         Article article = articleService.findArticleById(articleId);
+        
         HttpSession session = request.getSession();
         UserPreviewDto userPreviewDto = (UserPreviewDto) session.getAttribute("sessionedUser");
 
@@ -61,4 +62,18 @@ public class ArticleController {
         return "redirect:/articles/{articleId}";
     }
 
+    @DeleteMapping("/delete/{articleId}")
+    public String deleteArticle(@PathVariable long articleId, HttpServletRequest request) {
+        Article article = articleService.findArticleById(articleId);
+
+        HttpSession session = request.getSession();
+        UserPreviewDto userPreviewDto = (UserPreviewDto) session.getAttribute("sessionedUser");
+
+        if (!userPreviewDto.getUserId().equals(article.getUserId())) {
+            throw new UserAccessException("게시물에 대한 접근 권한이 없습니다.");
+        }
+
+        articleService.deleteArticle(articleId);
+        return "redirect:/";
+    }
 }

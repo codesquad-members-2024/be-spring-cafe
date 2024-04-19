@@ -103,4 +103,10 @@ public class H2ArticleRepository implements ArticleRepository {
         String sql = "UPDATE ARTICLES SET TITLE = ?, CONTENT = ? WHERE ARTICLEID = ?";
         jdbcTemplate.update(sql, articleUpdateDto.getTitle(), articleUpdateDto.getContent(), articleId);
     }
+
+    @Override
+    public void deleteArticle(long articleId) {
+        String sql = "DELETE FROM ARTICLES WHERE ARTICLEID = ?";
+        jdbcTemplate.update(sql, articleId);
+    }
 }

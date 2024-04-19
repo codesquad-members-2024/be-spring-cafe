@@ -17,4 +17,6 @@ public interface ArticleRepository {
     void incrementPageView(long articleId);
 
     void updateArticle(long articleId, ArticleUpdateDto articleUpdateDto);
+
+    void deleteArticle(long articleId);
 }

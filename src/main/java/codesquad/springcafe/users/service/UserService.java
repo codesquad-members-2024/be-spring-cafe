@@ -76,8 +76,6 @@ public class UserService {
     }
 
     private void validatePassword(UserCredentialData inputCredentialData, UserCredentialData userCredentialData) {
-        System.out.println(inputCredentialData.toString());
-        System.out.println(userCredentialData.toString());
         if (!inputCredentialData.equals(userCredentialData)) {
             throw new PasswordMismatchException("입력한 비밀번호가 일치하지 않습니다.");
         }
