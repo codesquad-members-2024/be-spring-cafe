@@ -2,6 +2,7 @@ package springcafe.user.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class UserCreateForm {
@@ -16,7 +17,7 @@ public class UserCreateForm {
     @NotEmpty(message = "이름은 필수 항목입니다.")
     private String name;
     @NotEmpty(message = "이메일을 필수 항목입니다.")
-    @Email
+    @Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$", message = "올바른 이메일 주소를 입력해야 합니다.")
     private String email;
 
 
