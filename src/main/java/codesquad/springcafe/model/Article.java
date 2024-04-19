@@ -39,6 +39,10 @@ public class Article {
         isDeleted = true;
     }
 
+    public boolean hasSameWriter(String writer) {
+        return this.writer.equals(writer);
+    }
+
     public String getWriter() {
         return writer;
     }

@@ -9,6 +9,8 @@ public interface ArticleDatabase {
 
     Optional<Article> findBy(Long id);
 
+    List<Article> findAll(String nickname);
+
     List<Article> findAll();
 
     void update(Article article);

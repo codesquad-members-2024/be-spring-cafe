@@ -1,8 +1,10 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.database.user.UserDatabase;
 import codesquad.springcafe.form.user.LoginForm;
+import codesquad.springcafe.form.user.LoginUser;
 import codesquad.springcafe.model.User;
+import codesquad.springcafe.service.ArticleService;
+import codesquad.springcafe.service.LoginService;
 import jakarta.servlet.http.HttpSession;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -19,10 +21,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class LoginController {
     public static final String LOGIN_SESSION_NAME = "loginUser";
     private final Logger logger = LoggerFactory.getLogger(LoginController.class);
-    private final UserDatabase userDatabase;
+    private final LoginService loginService;
+    private final ArticleService articleService;
 
-    public LoginController(UserDatabase userDatabase) {
-        this.userDatabase = userDatabase;
+    public LoginController(LoginService loginService, ArticleService articleService) {
+        this.loginService = loginService;
+        this.articleService = articleService;
     }
 
     /**
@@ -39,16 +43,19 @@ public class LoginController {
     @PostMapping("/login")
     public String login(@Validated @ModelAttribute LoginForm loginForm, BindingResult bindingResult,
                         HttpSession session, @RequestParam(defaultValue = "/") String redirectUrl) {
-        Optional<User> optionalUser = userDatabase.findByEmail(loginForm.getEmail());
-        validateLoginInfo(loginForm.getPassword(), bindingResult, optionalUser);
-
+        Optional<User> optionalUser = loginService.getMatchedUser(loginForm.getEmail(), loginForm.getPassword());
+        if (optionalUser.isEmpty()) {
+            bindingResult.reject("Wrong");
+        }
         if (bindingResult.hasErrors()) {
             logger.error("errors={}", bindingResult);
             return "user/login";
         }
-        User loginUser = optionalUser.get();
-
+        User user = optionalUser.get();
+        String nickname = user.getNickname();
+        LoginUser loginUser = new LoginUser(nickname, articleService.getOwnArticleIds(nickname));
         session.setAttribute(LOGIN_SESSION_NAME, loginUser);
+
         logger.info("{} 님이 로그인하셨습니다", loginUser.getNickname());
         return "redirect:" + redirectUrl;
     }
@@ -60,15 +67,5 @@ public class LoginController {
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/";
-    }
-
-    private void validateLoginInfo(String password, BindingResult bindingResult, Optional<User> optionalUser) {
-        if (optionalUser.isEmpty() || isWrongPassword(password, optionalUser.get())) {
-            bindingResult.reject("Wrong");
-        }
-    }
-
-    private boolean isWrongPassword(String password, User user) {
-        return !user.hasSamePassword(password);
     }
 }

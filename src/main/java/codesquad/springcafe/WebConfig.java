@@ -42,7 +42,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .order(USER_ACCESS_ORDER)
                 .addPathPatterns("/users/edit/*", "/users/profile/*");
 
-        registry.addInterceptor(new ArticleAccessInterceptor(articleDatabase()))
+        registry.addInterceptor(new ArticleAccessInterceptor())
                 .order(ARTICLE_ACCESS_ORDER)
                 .addPathPatterns("/articles/edit/*", "/articles/delete/*");
     }

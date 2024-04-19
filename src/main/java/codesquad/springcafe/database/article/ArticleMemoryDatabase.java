@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class ArticleMemoryDatabase implements ArticleDatabase {
     private final Map<Long, Article> store = new ConcurrentHashMap<>();
@@ -21,6 +22,13 @@ public class ArticleMemoryDatabase implements ArticleDatabase {
     @Override
     public Optional<Article> findBy(Long id) {
         return Optional.ofNullable(store.get(id));
+    }
+
+    @Override
+    public List<Article> findAll(String nickname) {
+        return findAll().stream()
+                .filter(article -> article.hasSameWriter(nickname))
+                .collect(Collectors.toList());
     }
 
     @Override

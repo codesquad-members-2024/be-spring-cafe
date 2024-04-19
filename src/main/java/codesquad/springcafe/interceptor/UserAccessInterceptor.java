@@ -1,6 +1,6 @@
 package codesquad.springcafe.interceptor;
 
-import codesquad.springcafe.model.User;
+import codesquad.springcafe.form.user.LoginUser;
 import codesquad.springcafe.util.LoginUserProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,15 +17,14 @@ public class UserAccessInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         HttpSession session = request.getSession(false);
-        User loginUser = LoginUserProvider.provide(session);
+        LoginUser loginUser = LoginUserProvider.provide(session);
 
         String nickname = getPathVariable(request);
-        if (loginUser == null || !loginUser.hasSameNickname(nickname)) {
+        if (loginUser == null || !loginUser.getNickname().equals(nickname)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return false;
         }
         return true;
-
     }
 
     private String getPathVariable(HttpServletRequest request) {

@@ -5,9 +5,9 @@ import codesquad.springcafe.database.comment.CommentDatabase;
 import codesquad.springcafe.form.article.ArticleDeleteForm;
 import codesquad.springcafe.form.article.ArticleWriteForm;
 import codesquad.springcafe.form.comment.CommentWriteForm;
+import codesquad.springcafe.form.user.LoginUser;
 import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.Comment;
-import codesquad.springcafe.model.User;
 import codesquad.springcafe.util.LoginUserProvider;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -59,7 +59,7 @@ public class ArticleController {
             logger.error("errors ={}", bindingResult);
             return "article/form";
         }
-        User loginUser = LoginUserProvider.provide(session);
+        LoginUser loginUser = LoginUserProvider.provide(session);
         Article article = new Article(loginUser.getNickname(), articleWriteForm.getTitle(),
                 articleWriteForm.getContent(), LocalDateTime.now());
         articleDatabase.add(article);
@@ -130,9 +130,8 @@ public class ArticleController {
      */
     @DeleteMapping("/delete/{id}")
     public String deleteArticle(@PathVariable Long id, @Validated @ModelAttribute ArticleDeleteForm articleDeleteForm,
-                                BindingResult bindingResult, HttpSession session) {
+                                BindingResult bindingResult) {
         Article targetArticle = articleDatabase.findBy(id).get();
-        validatePassword(articleDeleteForm, bindingResult, session);
         validateHasComment(bindingResult, targetArticle);
 
         if (bindingResult.hasErrors()) {
@@ -168,7 +167,7 @@ public class ArticleController {
             model.addAttribute("comments", commentDatabase.findAll(articleId));
             return "article/show";
         }
-        User loginUser = LoginUserProvider.provide(session);
+        LoginUser loginUser = LoginUserProvider.provide(session);
         Comment comment = new Comment(loginUser.getNickname(), commentWriteForm.getContent(), articleId,
                 LocalDateTime.now());
 
@@ -191,7 +190,7 @@ public class ArticleController {
         }
 
         Comment comment = optionalComment.get();
-        User loginUser = LoginUserProvider.provide(session);
+        LoginUser loginUser = LoginUserProvider.provide(session);
         if (!loginUser.hasSameNickname(comment.getWriter())) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return null;
@@ -201,15 +200,6 @@ public class ArticleController {
         commentDatabase.update(comment);
         logger.info("코멘트가 삭제되었습니다. {}", comment);
         return "redirect:/articles/detail/" + articleId;
-    }
-
-
-    private void validatePassword(ArticleDeleteForm articleDeleteForm, BindingResult bindingResult,
-                                  HttpSession session) {
-        User user = LoginUserProvider.provide(session);
-        if (!user.hasSamePassword(articleDeleteForm.getPassword())) {
-            bindingResult.rejectValue("password", "Wrong");
-        }
     }
 
     private void validateHasComment(BindingResult bindingResult, Article targetArticle) {
