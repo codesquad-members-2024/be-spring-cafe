@@ -2,7 +2,7 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.dto.ArticleDto;
-import codesquad.springcafe.repository.article.ArticleRepositoryInterface;
+import codesquad.springcafe.repository.article.ArticleRepository;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +21,10 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/articles")
 public class ArticleController {
     private static final Logger logger = LoggerFactory.getLogger(ArticleController.class);
-    private final ArticleRepositoryInterface articleRepository;
+    private final ArticleRepository articleRepository;
 
     @Autowired
-    public ArticleController(ArticleRepositoryInterface articleRepository) {
+    public ArticleController(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
 
@@ -35,17 +35,16 @@ public class ArticleController {
 
     @PostMapping("/create")
     public String postArticle(@ModelAttribute ArticleDto articleDto) {
-        Article newArticle = articleRepository.createArticle(articleDto);
-        logger.info("게시글 작성 성공: {}", newArticle);
+        articleRepository.createArticle(articleDto);
         return "redirect:/";
     }
 
-    @GetMapping("/{articleId}")
-    public String showArticle(@PathVariable Long articleId, Model model) {
-        Optional<Article> optionalArticle = articleRepository.findByArticleId(articleId);
+    @GetMapping("/{id}")
+    public String showArticle(@PathVariable long id, Model model) {
+        Optional<Article> optionalArticle = articleRepository.findById(id);
         if (optionalArticle.isPresent()) {
             Article article = optionalArticle.get();
-            logger.info("게시글 상세 조회: {}", article);
+            logger.debug("게시글 상세: {}", article.toDto());
             article.increaseViews(); // 조회수 증가
             model.addAttribute("article", article);
             return "article/show";

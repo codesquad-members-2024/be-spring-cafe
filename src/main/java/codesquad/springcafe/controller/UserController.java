@@ -3,7 +3,7 @@ package codesquad.springcafe.controller;
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.dto.UserDto;
 import codesquad.springcafe.dto.UserUpdateDto;
-import codesquad.springcafe.repository.user.UserRepositoryInterface;
+import codesquad.springcafe.repository.user.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -25,10 +25,10 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/users")
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-    private final UserRepositoryInterface userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserController(UserRepositoryInterface userRepository) {
+    public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -46,8 +46,7 @@ public class UserController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute UserDto userDto) {
-        User newUser = userRepository.createUser(userDto.toEntity());
-        logger.info("회원가입 성공: {}", newUser.toDto());
+        userRepository.createUser(userDto);
         return "redirect:/users"; // 이 uri로 리다이렉트
     }
 
@@ -57,7 +56,7 @@ public class UserController {
         if (optionalUser.isPresent()) {
             User findedUser = optionalUser.get();
             model.addAttribute("user", findedUser);
-            logger.info("사용자 프로필 조회: {}", findedUser.toDto());
+            logger.debug("프로필 조회: {}", findedUser.toDto());
             return "user/profile";
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
@@ -71,8 +70,7 @@ public class UserController {
 
     @PutMapping("/{userId}/update")
     public String update(@PathVariable("userId") String userId, @ModelAttribute UserUpdateDto userUpdateDto) {
-        User updatedUser = userRepository.updateUser(userId, userUpdateDto);
-        logger.info("업데이트 성공: {}", updatedUser.toDto());
+        userRepository.updateUser(userId, userUpdateDto);
         return "redirect:/users";
     }
 
@@ -87,7 +85,7 @@ public class UserController {
         if (optionalUser.isPresent()) {
             User loginedUser = optionalUser.get();
             if (loginedUser.getPassword().equals(password)) {
-                logger.info("로그인 성공: {}", loginedUser.toDto());
+                logger.debug("로그인 사용자: {}", loginedUser.toDto());
                 return "redirect:/";
             }
         } else {

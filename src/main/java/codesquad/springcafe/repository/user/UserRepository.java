@@ -1,36 +1,17 @@
 package codesquad.springcafe.repository.user;
 
 import codesquad.springcafe.domain.User;
+import codesquad.springcafe.dto.UserDto;
 import codesquad.springcafe.dto.UserUpdateDto;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public class UserRepository implements UserRepositoryInterface {
-    private static final List<User> users = new ArrayList<>();
+public interface UserRepository {
+    void createUser(UserDto userDto);
 
-    @Override
-    public User createUser(User user) {
-        users.add(user);
-        return user;
-    }
+    void updateUser(String userId, UserUpdateDto userUpdateDto);
 
-    @Override
-    public User updateUser(String userId, UserUpdateDto userUpdateDto) {
-        User user = findByUserId(userId).get();
-        user.update(userUpdateDto);
-        return user;
-    }
+    List<User> findAllUsers();
 
-    @Override
-    public List<User> findAllUsers() {
-        return users;
-    }
-
-    @Override
-    public Optional<User> findByUserId(String userId) {
-        return users.stream().filter(user -> user.getUserId().equals(userId)).findFirst();
-    }
+    Optional<User> findByUserId(String userId);
 }
