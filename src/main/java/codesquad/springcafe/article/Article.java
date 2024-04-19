@@ -3,18 +3,38 @@ package codesquad.springcafe.article;
 import java.time.LocalDateTime;
 
 public class Article {
-    private final int id;
+    private Long id;
     private final String writer;
     private final String title;
     private final String contents;
     private final LocalDateTime createAt;
 
-    public Article(int id, String writer, String title, String contents, LocalDateTime createAt) {
-        this.id = id;
+    public Article(String writer, String title, String contents, LocalDateTime createAt) {
         this.writer = writer;
         this.title = title;
         this.contents = contents;
         this.createAt = createAt;
+    }
+
+    public String getWriter() {
+        return writer;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getContents() {
+        return contents;
+    }
+
+    public LocalDateTime getCreateAt() {
+        return createAt;
+    }
+
+    // DB에서 꺼내올때만 사용
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override

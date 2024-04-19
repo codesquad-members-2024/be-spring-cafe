@@ -11,44 +11,46 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Optional;
 
 @Controller
 public class ArticleController {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final ArticleRepository articleRepository;
+    private final ArticleDao articleDao;
 
-    public ArticleController(ArticleRepository repository) {
-        articleRepository = repository;
+    public ArticleController(ArticleDao articleDao) {
+        this.articleDao = articleDao;
     }
 
+    // 아티클 id를 가지고 해당 아티클 보여주기 없으면 기본 홈페이지 보여주기
     @GetMapping("/article/{id}")
     public String showArticle(@PathVariable int id, Model model) {
-        Optional<Article> optArticle = articleRepository.findBy(id);
-        return optArticle.map(article -> {
-            model.addAttribute("article", article);
-            return "qna/show";
-        }).orElse("index");
+        return articleDao.findBy(id)
+                .map(article -> {
+                    model.addAttribute("article", article);
+                    return "qna/show";
+                }).orElseThrow(() -> new IllegalArgumentException(id + "는 찾을 수 없습니다"));
     }
 
 
+    // 아티클 등록
     @PostMapping("/article")
-    public String storeArticle(@ModelAttribute ArticleDto articleDto) {
-        final String writer = articleDto.getWriter();
-        final String title = articleDto.getTitle();
-        final String contents = articleDto.getContents();
+    public String storeArticle(@ModelAttribute ArticleCraetionDto articleCraetionDto) {
+        final String writer = articleCraetionDto.getWriter();
+        final String title = articleCraetionDto.getTitle();
+        final String contents = articleCraetionDto.getContents();
         final LocalDateTime createAt = LocalDateTime.now();
-        final int id = articleRepository.size() + 1;
-        Article article = new Article(id, writer, title, contents, createAt);
+
+        Article article = new Article(writer, title, contents, createAt);
 
         log.debug("들어온 게시글 : {}", article);
-        articleRepository.save(id, article);
+        articleDao.save(article);
         return "redirect:/articles";
     }
 
+    // 모든 아티클 보여주기
     @GetMapping("/articles")
     public String showArticle(Model model) {
-        Collection<Article> allArticles = articleRepository.findAll();
+        Collection<Article> allArticles = articleDao.findAll();
         model.addAttribute("articles", allArticles);
         return "index";
     }

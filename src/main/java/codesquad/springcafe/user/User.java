@@ -5,22 +5,33 @@ import java.util.Objects;
 public class User {
     private final String userId;
     private final String password;
-    private final String name;
+    private final String nickName;
     private final String email;
 
-    public User(String userId, String password, String name, String email) {
+    public User(String userId, String password, String nickName, String email) {
         this.userId = userId;
         this.password = password;
-        this.name = name;
+        this.nickName = nickName;
         this.email = email;
+    }
+
+    public User(String userId, String nickName, String email) {
+        this.userId = userId;
+        this.nickName = nickName;
+        this.email = email;
+        this.password = "";
     }
 
     public String getUserId() {
         return userId;
     }
 
-    public String getName() {
-        return name;
+    public String getPassword() {
+        return password;
+    }
+
+    public String getNickName() {
+        return nickName;
     }
 
     public String getEmail() {
@@ -45,7 +56,7 @@ public class User {
         return "User{" +
                 "userId='" + userId + '\'' +
                 ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
+                ", name='" + nickName + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }
