@@ -1,5 +1,6 @@
 package codesquad.springcafe.articles.service;
 
+import codesquad.springcafe.articles.model.dto.ArticleUpdateDto;
 import codesquad.springcafe.articles.repository.ArticleRepository;
 import codesquad.springcafe.exception.ArticleNotFoundException;
 import codesquad.springcafe.articles.model.Article;
@@ -39,8 +40,11 @@ public class ArticleService {
         return articleContent.orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
     }
 
-    public void incrementPageViews(long articleId){
+    public void incrementPageViews(long articleId) {
         articleRepository.incrementPageView(articleId);
     }
 
+    public void updateArticle(long articleId, ArticleUpdateDto articleUpdateDto) {
+        articleRepository.updateArticle(articleId, articleUpdateDto);
+    }
 }

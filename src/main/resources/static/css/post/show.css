@@ -70,8 +70,43 @@ li {
 
 .article-header-text {
     color: gray;
-    display: flex;
+    display: inline-flex;
 }
+
+.article-header-button {
+    display: inline-flex;
+}
+
+.article-button {
+    width: 80px;
+    height: 40px;
+    margin: 0 10px;
+    background: none;
+    border: 2px solid black;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: large;
+    cursor: pointer; /* 마우스 커서를 손가락 모양으로 변경 */
+}
+
+.delete-btn-color {
+    background-color: #ff0000; /* 커서가 올라갔을 때 바뀔 색상 */
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn-color:hover {
+    background-color: #8d192b;
+}
+
+.adjust-btn-color {
+    background-color: greenyellow;
+    transition: background-color 0.3s ease;
+}
+
+.adjust-btn-color:hover {
+    background-color: forestgreen;
+}
+
 
 .article-content {
     margin-right: 20px;
@@ -138,7 +173,7 @@ li {
     padding: 3%;
     width: 90%;
     height: 50px;
-    border:none;
+    border: none;
 }
 
 .form-control:focus {

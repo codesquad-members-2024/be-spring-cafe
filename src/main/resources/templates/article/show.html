@@ -34,7 +34,11 @@
                                 <p class="article-content">
                                     작성일자 : {{article.getCreationDate}}
                                 </p>
-                                <p class="article-content">조회수 :  {{article.getPageViews}}</p>
+                                <p class="article-content">조회수 : {{article.getPageViews}}</p>
+                            </div>
+                            <div class="article-header-button">
+                                <button class="article-button adjust-btn-color" onclick=window.location.href='/articles/update/{{article.getArticleId}}'>수정</button>
+                                <button class="article-button delete-btn-color">삭제</button>
                             </div>
                         </div>
                         <div class="article-doc">

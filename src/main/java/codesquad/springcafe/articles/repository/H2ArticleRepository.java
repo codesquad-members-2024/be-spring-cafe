@@ -1,6 +1,8 @@
 package codesquad.springcafe.articles.repository;
 
 import codesquad.springcafe.articles.model.Article;
+import codesquad.springcafe.articles.model.dto.ArticleCreationRequest;
+import codesquad.springcafe.articles.model.dto.ArticleUpdateDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,5 +96,11 @@ public class H2ArticleRepository implements ArticleRepository {
     public void incrementPageView(long articleId) {
         String sql = "UPDATE ARTICLES SET PAGEVIEWS = PAGEVIEWS + 1 WHERE ARTICLEID = ?";
         jdbcTemplate.update(sql, articleId);
+    }
+
+    @Override
+    public void updateArticle(long articleId, ArticleUpdateDto articleUpdateDto) {
+        String sql = "UPDATE ARTICLES SET TITLE = ?, CONTENT = ? WHERE ARTICLEID = ?";
+        jdbcTemplate.update(sql, articleUpdateDto.getTitle(), articleUpdateDto.getContent(), articleId);
     }
 }

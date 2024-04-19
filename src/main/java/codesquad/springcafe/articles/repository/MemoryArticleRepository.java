@@ -1,5 +1,6 @@
 package codesquad.springcafe.articles.repository;
 
+import codesquad.springcafe.articles.model.dto.ArticleUpdateDto;
 import codesquad.springcafe.db.ArticleDatabase;
 import codesquad.springcafe.articles.model.Article;
 import org.slf4j.Logger;
@@ -40,5 +41,10 @@ public class MemoryArticleRepository implements ArticleRepository {
     @Override
     public void incrementPageView(long articleId) {
         articleDatabase.updatePageView(articleId);
+    }
+
+    @Override
+    public void updateArticle(long articleId, ArticleUpdateDto articleUpdateDto) {
+
     }
 }
