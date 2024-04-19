@@ -45,9 +45,7 @@ public class ArticleController {
      * 사용자에게 아티클 폼을 보여줍니다.
      */
     @GetMapping("/add")
-    public String articleForm(Model model) {
-        ArticleWriteForm articleWriteForm = new ArticleWriteForm("", "");
-        model.addAttribute("articleWriteForm", articleWriteForm);
+    public String articleForm(@ModelAttribute("articleWriteForm") ArticleWriteForm articleWriteForm) {
         return "article/form";
     }
 
@@ -55,8 +53,8 @@ public class ArticleController {
      * 사용자가 작성한 아티클을 생성하고 데이터베이스에 저장합니다.
      */
     @PostMapping("/add")
-    public String addForm(@Validated @ModelAttribute ArticleWriteForm articleWriteForm, BindingResult bindingResult,
-                          HttpSession session) {
+    public String addArticle(@Validated @ModelAttribute ArticleWriteForm articleWriteForm, BindingResult bindingResult,
+                             HttpSession session) {
         if (bindingResult.hasErrors()) {
             logger.error("errors ={}", bindingResult);
             return "article/form";
@@ -122,9 +120,7 @@ public class ArticleController {
      * id와 일치하는 게시글을 찾아 삭제 폼을 보여줍니다.
      */
     @GetMapping("/delete/{id}")
-    public String deleteForm(@PathVariable Long id, Model model) {
-        ArticleDeleteForm articleDeleteForm = new ArticleDeleteForm("");
-        model.addAttribute(articleDeleteForm);
+    public String deleteForm(@PathVariable Long id, @ModelAttribute ArticleDeleteForm articleDeleteForm) {
         return "article/delete";
     }
 

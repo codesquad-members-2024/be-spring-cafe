@@ -8,7 +8,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,9 +29,7 @@ public class LoginController {
      * 사용자에게 로그인 폼을 보여줍니다.
      */
     @GetMapping("/login")
-    public String loginForm(Model model) {
-        LoginForm loginForm = new LoginForm("", "");
-        model.addAttribute("loginForm", loginForm);
+    public String loginForm(@ModelAttribute LoginForm loginForm) {
         return "user/login";
     }
 

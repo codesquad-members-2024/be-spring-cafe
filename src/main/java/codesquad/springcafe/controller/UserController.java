@@ -47,9 +47,7 @@ public class UserController {
      * 회원가입 폼을 사용자에게 보여줍니다.
      */
     @GetMapping("/add")
-    public String userForm(Model model) {
-        UserAddForm userAddForm = new UserAddForm("", "", "");
-        model.addAttribute("userAddForm", userAddForm);
+    public String userForm(@ModelAttribute UserAddForm userAddForm) {
         return "user/form";
     }
 
