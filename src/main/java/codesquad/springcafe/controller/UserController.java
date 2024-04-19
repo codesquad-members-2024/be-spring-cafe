@@ -3,6 +3,7 @@ package codesquad.springcafe.controller;
 import codesquad.springcafe.dto.UpdateUser;
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,8 +49,13 @@ public class UserController {
     }
 
     @PutMapping("/user/profile/{userId}/update")
-    public String editProfile(UpdateUser updateUser, @PathVariable("userId") String userId, Model model) {
-        if (userService.editUserProfile(updateUser, userId)) {
+    public String editProfile(UpdateUser updateUser, @PathVariable("userId") String userId, Model model,
+                              HttpSession session) {
+        Object value = session.getAttribute("sessionUser");
+        User actual = (User) value;
+        User expected = userService.getUserById(userId);
+
+        if (userService.editUserProfile(updateUser, expected, actual)) {
             return "redirect:/user/list";
         } else {
             model.addAttribute("error", true);

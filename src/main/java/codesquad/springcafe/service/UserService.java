@@ -2,6 +2,7 @@ package codesquad.springcafe.service;
 
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.dto.UpdateUser;
+import codesquad.springcafe.exception.InvalidAccessException;
 import codesquad.springcafe.repository.UserRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -33,8 +34,14 @@ public class UserService {
 
     // 유저정보 수정
     // e) 해당되는 유저가 없으면 에러
-    public boolean editUserProfile(UpdateUser updateUser, String userId) {
-        User target = userRepository.getById(userId);
+    public boolean editUserProfile(UpdateUser updateUser, User expected, User actual) {
+        if (!isSameUser(expected, actual)) {
+            throw new InvalidAccessException("다른 사용자의 정보는 변경할 수 없습니다");
+        }
+        return editProcess(updateUser, actual);
+    }
+
+    private boolean editProcess(UpdateUser updateUser, User target) {
         String password = updateUser.getPassword();
 
         if (target.checkPassword(password)) {
@@ -45,5 +52,9 @@ public class UserService {
             return true;
         }
         return false;
+    }
+
+    private boolean isSameUser(User expected, User actual) {
+        return expected.getUserId().equals(actual.getUserId());
     }
 }
