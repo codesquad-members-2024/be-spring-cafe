@@ -10,23 +10,23 @@ public class Article {
     private static final String TO_STRING_FORMAT = "[게시글] %s, %s, %s, %s";
 
     private long id;
-    private String writer;
+    private String userId;
     private String title;
     private String content;
     private LocalDateTime creationTime;
     private long viewCount;
 
-    public Article(String writer, String title, String content) {
-        this.writer = writer;
+    public Article(String userId, String title, String content) {
+        this.userId = userId;
         this.title = title;
         this.content = content;
         this.creationTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         this.viewCount = 0;
     }
 
-    public Article(long id, String writer, String title, String content, LocalDateTime creationTime, long viewCount) {
+    public Article(long id, String userId, String title, String content, LocalDateTime creationTime, long viewCount) {
         this.id = id;
-        this.writer = writer;
+        this.userId = userId;
         this.title = title;
         this.content = content;
         this.creationTime = creationTime;
@@ -41,12 +41,12 @@ public class Article {
         this.id = id;
     }
 
-    public String getWriter() {
-        return writer;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setWriter(String writer) {
-        this.writer = writer;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getTitle() {
@@ -65,13 +65,6 @@ public class Article {
         this.content = content;
     }
 
-    public String getFormattedCreationTime() {
-        if (creationTime == null) {
-            return EMPTY;
-        }
-        return creationTime.format(DateTimeFormatter.ofPattern(DATE_FORMAT));
-    }
-
     public long getViewCount() {
         return viewCount;
     }
@@ -84,8 +77,8 @@ public class Article {
         return creationTime;
     }
 
-    public void setCreationTime(LocalDateTime localDateTime) {
-        this.creationTime = localDateTime;
+    public String getFormattedCreationTime() {
+        return creationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     @Override

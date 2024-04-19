@@ -13,8 +13,10 @@ public class UserUpdateInterceptor implements HandlerInterceptor {
             throws IOException {
         HttpSession httpSession = request.getSession();
         Object value = httpSession.getAttribute("sessionUser");
+
+        // TODO: 이렇게 추출하는 방법말고 다른 방법으로 개선해보기
         String[] pathParts = request.getRequestURI().split("/");
-        String pathUserId = pathParts[pathParts.length - 1]; // 마지막 부분을 가져옴
+        String pathUserId = pathParts[pathParts.length - 1]; // 마지막 부분(사용자 ID)을 가져옴
         if (value != null) {
             SessionUser sessionUser = (SessionUser) value;
             if (!sessionUser.getUserId().equals(pathUserId)) {
