@@ -27,7 +27,7 @@
                     </thead>
                     <tbody>
                     {{#articles}}
-                    <tr onclick="location.href='/articles/{{sequence}}';" style="cursor:pointer">
+                    <tr onclick="location.href='/articles/detail/{{sequence}}';" style="cursor:pointer">
                         <td>{{sequence}}</td>
                         <td>{{title}}</td>
                         <td>{{writer}}</td>
@@ -40,7 +40,7 @@
         </div>
     </div>
     <div class="post-btn-container">
-        <a class="post-write-btn btn btn-primary pull-right" href="article/form.html" role="button">글쓰기</a>
+        <a class="post-write-btn btn btn-primary pull-right" href="/articles/add" role="button">글쓰기</a>
     </div>
 </div>
 </body>
