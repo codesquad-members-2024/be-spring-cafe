@@ -3,6 +3,7 @@ package codesquad.springcafe.article.domain;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -13,14 +14,18 @@ public class Article {
     private String writer;
     private String title;
     private String contents;
-    private final LocalDateTime createTime;
+    private Timestamp createTime;
 
-    public Article(String writer, String title, String contents) {
+    public Article(String identifier, String writer, String title, String contents, Timestamp createTime) {
         this.writer = URLDecoder.decode(writer, StandardCharsets.UTF_8);
         this.title = title;
         this.contents = contents;
-        this.createTime = LocalDateTime.now();
-        this.identifier = UUID.randomUUID();
+
+        if (createTime != null) this.createTime = createTime;
+        else this.createTime = Timestamp.valueOf(LocalDateTime.now());
+
+        if (identifier != null) this.identifier = UUID.fromString(identifier);
+        else this.identifier = UUID.randomUUID();
     }
 
     public String getIdentifier() {
@@ -39,8 +44,12 @@ public class Article {
         return contents;
     }
 
+    public String getRoughCrateTime() {
+        return createTime.toString();
+    }
+
     public String getCreateTime() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        return createTime.format(formatter);
+        return createTime.toLocalDateTime().format(formatter);
     }
 }
