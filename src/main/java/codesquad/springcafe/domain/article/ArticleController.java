@@ -99,8 +99,8 @@ public class ArticleController {
     public String getDeletePage(@PathVariable int id, HttpServletRequest request, Model model) {
         SimpleUserInfo loginUser = (SimpleUserInfo) request.getSession().getAttribute("loginUser");
 
-        if (!articleService.canModify(id, loginUser)) {
-            throw new AuthorizationException("다른 사람의 게시글을 삭제할 수 없습니다!");
+        if (!articleService.canDelete(id, loginUser)) {
+            throw new AuthorizationException("해당 게시글을 삭제할 수 없습니다!");
         }
 
         model.addAttribute("articleId", id);
