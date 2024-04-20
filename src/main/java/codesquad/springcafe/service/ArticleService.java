@@ -1,17 +1,18 @@
 package codesquad.springcafe.service;
 
 import codesquad.springcafe.model.Article;
-import codesquad.springcafe.repository.ArticleRepository;
+import codesquad.springcafe.repository.MemoryArticleRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ArticleService {
-    private final ArticleRepository articleRepository;
+    private final MemoryArticleRepository articleRepository;
 
     public ArticleService() {
-        this.articleRepository = new ArticleRepository();
+        this.articleRepository = new MemoryArticleRepository();
     }
 
     public void writeArticle(Article article) {
@@ -22,7 +23,7 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
-    public Article findArticleByIndex(int index) {
-        return articleRepository.findByIndex(index);
+    public Optional<Article> findArticleById(Long id) {
+        return articleRepository.findById(id);
     }
 }
