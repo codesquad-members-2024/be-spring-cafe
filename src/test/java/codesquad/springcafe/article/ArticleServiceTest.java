@@ -4,6 +4,9 @@ import codesquad.springcafe.domain.article.ArticleService;
 import codesquad.springcafe.domain.article.DTO.ArticlePostReq;
 import codesquad.springcafe.domain.article.DTO.ArticleWithComments;
 import codesquad.springcafe.domain.article.repository.ArticleRepository;
+import codesquad.springcafe.domain.comment.CommentService;
+import codesquad.springcafe.domain.comment.DTO.Comment;
+import codesquad.springcafe.domain.comment.DTO.CommentPostReq;
 import codesquad.springcafe.domain.comment.repository.CommentRepository;
 import codesquad.springcafe.domain.user.DTO.SimpleUserInfo;
 import codesquad.springcafe.exception.NotFoundException;
@@ -18,7 +21,6 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@ActiveProfiles("test")
 @SpringBootTest
 class ArticleServiceTest {
 
@@ -29,11 +31,13 @@ class ArticleServiceTest {
     @Qualifier("testRepo")
     CommentRepository commentRepository;
 
+    CommentService commentService;
     ArticleService articleService;
 
     @BeforeEach
     void setUp() {
-        articleService = new ArticleService(articleRepository, commentRepository);
+        commentService = new CommentService(commentRepository);
+        articleService = new ArticleService(articleRepository, commentService);
     }
 
     @Test
@@ -118,6 +122,56 @@ class ArticleServiceTest {
         // when
         SimpleUserInfo author2 = new SimpleUserInfo("tester22", "테스터22");
         boolean result = articleService.canModify(1, author2);
+
+        //then
+        assertThat(result).isFalse();
+    }
+
+    @DisplayName("전달받은 유저 정보와 작성자가 일치하면 삭제 가능하다")
+    @Test
+    void canDelete() {
+        // given
+        ArticlePostReq article = new ArticlePostReq("제목", "내용");
+        SimpleUserInfo author = new SimpleUserInfo("tester", "테스터");
+        articleService.postArticle(article, author);
+
+        // when
+        boolean result = articleService.canDelete(1, author);
+
+        //then
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("전달받은 유저 정보와 작성자가 일치하지 않는다면 삭제 불가하다")
+    @Test
+    void canNotDelete() {
+        // given
+        ArticlePostReq article = new ArticlePostReq("제목", "내용");
+        SimpleUserInfo author = new SimpleUserInfo("tester", "테스터");
+        articleService.postArticle(article, author);
+
+        // when
+        SimpleUserInfo author2 = new SimpleUserInfo("tester22", "테스터22");
+        boolean result = articleService.canDelete(1, author2);
+
+        //then
+        assertThat(result).isFalse();
+    }
+
+    @DisplayName("게시글의 다른 유저의 댓글이 존재하면 삭제 불가하다")
+    @Test
+    void canNotDeleteWithOthersComment() {
+        // given
+        ArticlePostReq article = new ArticlePostReq("제목", "내용");
+        SimpleUserInfo author = new SimpleUserInfo("tester", "테스터");
+        articleService.postArticle(article, author);
+
+        SimpleUserInfo author2 = new SimpleUserInfo("tester22", "테스터22");
+        CommentPostReq comment = new CommentPostReq(1, "댓글");
+        commentService.postComment(comment , author2);
+
+        // when
+        boolean result = articleService.canDelete(1, author);
 
         //then
         assertThat(result).isFalse();

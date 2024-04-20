@@ -45,4 +45,8 @@ public class CommentService {
     public int getArticleId(int id) {
         return commentRepository.findById(id).articleId();
     }
+
+    public List<Comment> findByArticleId(int articleId) {
+        return commentRepository.findByArticleId(articleId);
+    }
 }
