@@ -22,7 +22,8 @@
                   <td><a th:href="@{'/user/profile/' + ${user.userId}}" th:text="${user.userId}"></a></td> <!-- 사용자 아이디 -->
                   <td th:text="${user.name}"></td> <!-- 이름 -->
                   <td th:text="${user.email}"></td> <!-- 이메일 -->
-                  <td><a th:href="@{'/user/profile/' + ${user.userId} + '/update'}" class="btn btn-success" role="button">수정</a></td> <!-- 수정 버튼 -->
+                  <td><a th:if="${loggedInUserId == user.userId}"
+                         th:href="@{'/user/profile/' + ${user.userId} + '/update'}" class="btn btn-success" role="button">수정</a></td> <!-- 수정 버튼 -->
               </tr>
               </tbody>
           </table>
