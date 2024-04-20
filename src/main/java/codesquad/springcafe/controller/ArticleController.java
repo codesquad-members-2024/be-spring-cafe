@@ -67,9 +67,9 @@ public class ArticleController {
     }
 
 
-    @GetMapping("/articles/{index}")
-    public String getArticle(@PathVariable int index, Model model) {
-        model.addAttribute("article", articleService.findArticleByIndex(index)); // 객체의 이름을 지정하고 타임리프 통해서 html 사용할 수 있게 해준다.
+    @GetMapping("/articles/{id}")
+    public String getArticle(@PathVariable Long id, Model model) {
+        model.addAttribute("article", articleService.findArticleById(id)); // 객체의 이름을 지정하고 타임리프 통해서 html 사용할 수 있게 해준다.
         return "qna/show";
     }
 }
