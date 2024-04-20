@@ -39,7 +39,14 @@ public class UserService {
         return userRepository.findUserById(userId);
     }
 
-    public void userUpdate(User updatedUser) {
+    public void userUpdate(String userId, User updatedUser) {
+        Optional<User> optionalUser = findOne(userId);
+        optionalUser.ifPresent(user -> {
+                    user.setName(updatedUser.getName());
+                    user.setPassword(updatedUser.getPassword());
+                    user.setEmail(updatedUser.getEmail());
+                }
+        );
         userRepository.userUpdate(updatedUser);
     }
 }
