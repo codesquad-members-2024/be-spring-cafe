@@ -35,21 +35,21 @@ public class UserController {
 
     @GetMapping
     public String showList(Model model) {
-        List<UserInfoDTO> users = userService.findAllUsers();
+        List<UserInfoDTO> users = userService.findAll();
         model.addAttribute("users", users);
         return "/user/list";
     }
 
     @GetMapping("/{userId}")
     public String showProfile(@PathVariable String userId, Model model) {
-        UserInfoDTO targetUser = userService.findUserById(userId);
+        UserInfoDTO targetUser = userService.findById(userId);
         model.addAttribute("user", targetUser);
         return "/user/profile";
     }
 
     @GetMapping("/{userId}/form")
     public String showUpdateInfoForm(@PathVariable String userId, Model model) {
-        UserInfoDTO targetUser = userService.findUserById(userId);
+        UserInfoDTO targetUser = userService.findById(userId);
         model.addAttribute("user", targetUser);
         return "/user/updateForm";
     }
