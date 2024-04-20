@@ -19,11 +19,14 @@ public class CommonModelInjector implements HandlerInterceptor {
         HttpSession session = request.getSession(false);
 
         UserIdentity userIdentity = new UserIdentity("", "");
+        boolean isLogin = false;
 
         if (session != null && session.getAttribute(SESSION_LOGIN) != null) {
+            isLogin = true;
             userIdentity = (UserIdentity) session.getAttribute(SESSION_LOGIN);
         }
 
+        modelAndView.addObject("isLogin", isLogin);
         modelAndView.addObject("loginUser", userIdentity);
     }
 }

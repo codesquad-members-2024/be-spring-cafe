@@ -25,10 +25,20 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Article getArticle(String identifier) throws NoSuchArticleException {
+    public Article get(String identifier) throws NoSuchArticleException {
         Article article = articleDB.get(identifier);
         if (article == null) throw new NoSuchArticleException();
 
         return article;
+    }
+
+    @Override
+    public void update(Article article) throws NoSuchArticleException {
+
+    }
+
+    @Override
+    public void delete(String identifier) throws NoSuchArticleException {
+
     }
 }

@@ -11,5 +11,9 @@ public interface ArticleRepository {
 
     List<Article> getArticles();
 
-    Article getArticle(String identifier) throws NoSuchArticleException;
+    Article get(String identifier) throws NoSuchArticleException;
+
+    void update(Article article) throws NoSuchArticleException;
+
+    void delete(String identifier) throws NoSuchArticleException;
 }

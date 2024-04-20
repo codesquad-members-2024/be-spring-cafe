@@ -65,9 +65,9 @@
         <div class="collapse navbar-collapse" id="navbar-collapse2">
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="../index.html">Posts</a></li>
-                <li><a th:href="@{/user/login.html}" href="../../static/user/login.html" role="button">로그인</a></li>
+                <li th:if="${!isLogin}"><a th:href="@{/user/login.html}" href="../../static/user/login.html" role="button">로그인</a></li>
                 <li><a th:href="@{/user/form.html}" href="../../static/user/form.html" role="button">회원가입</a></li>
-                <li><a th:href="@{/user/logout}" href="#" role="button">로그아웃</a></li>
+                <li th:if="${isLogin}"><a th:href="@{/user/logout}" href="#" role="button">로그아웃</a></li>
                 <li><a th:href="@{/user/update}" href="#" role="button">개인정보수정</a></li>
             </ul>
         </div>
@@ -101,11 +101,11 @@
                   <div class="article-util">
                       <ul class="article-util-list">
                           <li>
-                              <a class="link-modify-article" href="/questions/423/form">수정</a>
+                              <a class="link-modify-article" th:href="@{/article/update/{id}(id=${article.identifier})}" href="/questions/423/form">수정</a>
                           </li>
                           <li>
-                              <form class="form-delete" action="/questions/423" method="POST">
-                                  <input type="hidden" name="_method" value="DELETE">
+                              <form class="form-delete" action="/article/delete" method="POST">
+                                  <input type="hidden" name="identifier" th:value="${article.identifier}" value="DELETE">
                                   <button class="link-delete-article" type="submit">삭제</button>
                               </form>
                           </li>

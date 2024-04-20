@@ -17,7 +17,8 @@ public class Article {
     private Timestamp createTime;
 
     public Article(String identifier, String writer, String title, String contents, Timestamp createTime) {
-        this.writer = URLDecoder.decode(writer, StandardCharsets.UTF_8);
+        if (writer != null) this.writer = URLDecoder.decode(writer, StandardCharsets.UTF_8);
+
         this.title = title;
         this.contents = contents;
 
@@ -26,6 +27,10 @@ public class Article {
 
         if (identifier != null) this.identifier = UUID.fromString(identifier);
         else this.identifier = UUID.randomUUID();
+    }
+
+    public void setIdentifierFromString(String identifier) {
+        this.identifier = UUID.fromString(identifier);
     }
 
     public String getIdentifier() {
