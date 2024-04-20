@@ -4,35 +4,29 @@ import codesquad.springcafe.model.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
-@Repository
 public class MemoryUserRepository implements UserRepository {
 
-    private final List<User> users;
+    private final Map<String, User> users;
 
     public MemoryUserRepository() {
-        this.users = new ArrayList<>();
+        this.users = new ConcurrentHashMap<>();
     }
 
     @Override
     public void addUser(User user) {
-        users.add(user);
+        users.put(user.getUserId(), user);
     }
 
     @Override
     public Optional<User> findUserById(String userId) {
-        // userId에 해당하는 사용자를 찾아서 Optional로 감싸서 반환
-        for (User user : users) {
-            if (user.getUserId().equals(userId)) {
-                return Optional.of(user);
-            }
-        }
-        return Optional.empty(); // 해당 userId를 가진 사용자가 없을 경우 empty Optional을 반환
+        return Optional.ofNullable(users.get(userId));
     }
 
     @Override
     public List<User> findAll() {
-        return users;
+        return new ArrayList<>(users.values());
     }
 
     @Override
