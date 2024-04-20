@@ -5,7 +5,6 @@ import codesquad.springcafe.dto.UserDto;
 import codesquad.springcafe.dto.UserUpdateDto;
 import codesquad.springcafe.repository.user.UserRepository;
 import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,15 +51,12 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public String userProfile(@PathVariable("userId") String userId, Model model) {
-        Optional<User> optionalUser = userRepository.findByUserId(userId);
-        if (optionalUser.isPresent()) {
-            User findedUser = optionalUser.get();
-            model.addAttribute("user", findedUser);
-            logger.debug("프로필 조회: {}", findedUser.toDto());
-            return "user/profile";
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-        }
+        User findedUser = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        model.addAttribute("user", findedUser);
+        logger.debug("프로필 조회: {}", findedUser.toDto());
+        return "user/profile";
     }
 
     @GetMapping("/{userId}/update")
@@ -68,7 +64,7 @@ public class UserController {
         return "user/update";
     }
 
-    @PutMapping("/{userId}/update")
+    @PutMapping("/{userId}/update") // 실패하면 어떻게 되는거지? 예외처리 공부
     public String update(@PathVariable("userId") String userId, @ModelAttribute UserUpdateDto userUpdateDto) {
         userRepository.updateUser(userId, userUpdateDto);
         return "redirect:/users";
@@ -81,16 +77,14 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@RequestParam("userId") String userId, @RequestParam("password") String password) {
-        Optional<User> optionalUser = userRepository.findByUserId(userId);
-        if (optionalUser.isPresent()) {
-            User loginedUser = optionalUser.get();
-            if (loginedUser.getPassword().equals(password)) {
-                logger.debug("로그인 사용자: {}", loginedUser.toDto());
-                return "redirect:/";
-            }
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 조회 실패");
+        User loginedUser = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 조회 실패"));
+
+        if (!loginedUser.getPassword().equals(password)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
         }
-        return null;
+
+        logger.debug("로그인 사용자: {}", loginedUser.toDto());
+        return "redirect:/";
     }
 }
