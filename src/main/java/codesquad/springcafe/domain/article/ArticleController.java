@@ -3,6 +3,7 @@ package codesquad.springcafe.domain.article;
 import codesquad.springcafe.domain.article.dto.Article;
 import codesquad.springcafe.domain.article.service.ArticleService;
 import codesquad.springcafe.constants.Constant;
+import codesquad.springcafe.domain.comment.service.CommentService;
 import codesquad.springcafe.exceptions.NoSuchArticleException;
 import codesquad.springcafe.exceptions.NotAuthenticationException;
 import codesquad.springcafe.domain.user.dto.UserIdentity;
@@ -17,10 +18,12 @@ import org.springframework.web.bind.annotation.*;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final CommentService commentService;
 
     @Autowired
-    public ArticleController(ArticleService articleService) {
+    public ArticleController(ArticleService articleService, CommentService commentService) {
         this.articleService = articleService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/create")
@@ -44,6 +47,8 @@ public class ArticleController {
         articleService.updateArticle(article);
 
         model.addAttribute("article", article);
+
+        model.addAttribute("comments", commentService.getComments(article));
 
         return "article/show";
     }
