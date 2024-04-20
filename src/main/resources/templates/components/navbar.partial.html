@@ -40,15 +40,15 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="/">Posts</a></li>
 
-                {{#user_section}}
+                {{#loginUser}}
                 <li class="active"><a href="/user/{{loginUser.id}}">{{loginUser.name}}</a></li>
                 <li><a href="#" onclick="document.getElementById('logout-form').submit(); return false;" role="button">로그아웃</a></li>
-                {{/user_section}}
+                {{/loginUser}}
 
-                {{^user_section}}
+                {{^loginUser}}
                 <li><a href="/user/login" role="button">로그인</a></li>
                 <li><a href="/user/form" role="button">회원가입</a></li>
-                {{/user_section}}
+                {{/loginUser}}
             </ul>
         </div>
     </div>
