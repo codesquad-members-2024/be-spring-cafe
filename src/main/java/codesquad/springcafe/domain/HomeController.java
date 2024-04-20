@@ -1,10 +1,6 @@
-package codesquad.springcafe;
+package codesquad.springcafe.domain;
 
-import codesquad.springcafe.article.repository.ArticleRepository;
-import codesquad.springcafe.article.service.ArticleService;
-import codesquad.springcafe.constants.Constant;
-import codesquad.springcafe.user.domain.LoginUser;
-import codesquad.springcafe.user.domain.UserIdentity;
+import codesquad.springcafe.domain.article.service.ArticleService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

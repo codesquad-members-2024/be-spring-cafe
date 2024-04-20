@@ -1,11 +1,11 @@
-package codesquad.springcafe.article;
+package codesquad.springcafe.domain.article;
 
-import codesquad.springcafe.article.domain.Article;
-import codesquad.springcafe.article.service.ArticleService;
+import codesquad.springcafe.domain.article.dto.Article;
+import codesquad.springcafe.domain.article.service.ArticleService;
 import codesquad.springcafe.constants.Constant;
 import codesquad.springcafe.exceptions.NoSuchArticleException;
 import codesquad.springcafe.exceptions.NotAuthenticationException;
-import codesquad.springcafe.user.domain.UserIdentity;
+import codesquad.springcafe.domain.user.dto.UserIdentity;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

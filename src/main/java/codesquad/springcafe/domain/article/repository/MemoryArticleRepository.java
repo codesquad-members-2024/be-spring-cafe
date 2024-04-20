@@ -1,6 +1,6 @@
-package codesquad.springcafe.article.repository;
+package codesquad.springcafe.domain.article.repository;
 
-import codesquad.springcafe.article.domain.Article;
+import codesquad.springcafe.domain.article.dto.Article;
 import codesquad.springcafe.exceptions.NoSuchArticleException;
 import org.springframework.stereotype.Repository;
 
@@ -34,11 +34,11 @@ public class MemoryArticleRepository implements ArticleRepository {
 
     @Override
     public void update(Article article) throws NoSuchArticleException {
-
+        articleDB.replace(article.getIdentifier(), article);
     }
 
     @Override
     public void delete(String identifier) throws NoSuchArticleException {
-
+        articleDB.remove(identifier);
     }
 }

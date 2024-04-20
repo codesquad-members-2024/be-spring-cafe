@@ -1,7 +1,7 @@
-package codesquad.springcafe.article.repository;
+package codesquad.springcafe.domain.article.repository;
 
-import codesquad.springcafe.article.domain.Article;
-import codesquad.springcafe.article.repository.util.ArticleRowMapper;
+import codesquad.springcafe.domain.article.dto.Article;
+import codesquad.springcafe.domain.article.repository.util.ArticleRowMapper;
 import codesquad.springcafe.exceptions.NoSuchArticleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

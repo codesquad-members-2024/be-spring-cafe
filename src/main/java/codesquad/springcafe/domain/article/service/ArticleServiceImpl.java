@@ -1,9 +1,9 @@
-package codesquad.springcafe.article.service;
+package codesquad.springcafe.domain.article.service;
 
-import codesquad.springcafe.article.domain.Article;
-import codesquad.springcafe.article.repository.ArticleRepository;
+import codesquad.springcafe.domain.article.dto.Article;
+import codesquad.springcafe.domain.article.repository.ArticleRepository;
 import codesquad.springcafe.exceptions.NoSuchArticleException;
-import codesquad.springcafe.user.domain.UserIdentity;
+import codesquad.springcafe.domain.user.dto.UserIdentity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

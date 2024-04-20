@@ -1,16 +1,14 @@
-package codesquad.springcafe.user;
+package codesquad.springcafe.domain.user;
 
 import codesquad.springcafe.exceptions.CanNotLoginException;
 import codesquad.springcafe.exceptions.NoSuchUserException;
-import codesquad.springcafe.user.domain.LoginUser;
-import codesquad.springcafe.user.domain.User;
-import codesquad.springcafe.user.domain.UserIdentity;
-import codesquad.springcafe.user.service.UserService;
+import codesquad.springcafe.domain.user.dto.LoginUser;
+import codesquad.springcafe.domain.user.dto.User;
+import codesquad.springcafe.domain.user.dto.UserIdentity;
+import codesquad.springcafe.domain.user.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;

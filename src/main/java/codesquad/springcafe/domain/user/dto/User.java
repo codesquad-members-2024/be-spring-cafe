@@ -1,4 +1,4 @@
-package codesquad.springcafe.user.domain;
+package codesquad.springcafe.domain.user.dto;
 
 
 import java.time.LocalDateTime;

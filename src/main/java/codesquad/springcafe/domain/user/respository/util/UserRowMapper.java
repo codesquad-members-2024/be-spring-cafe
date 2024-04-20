@@ -1,7 +1,7 @@
-package codesquad.springcafe.user.respository.util;
+package codesquad.springcafe.domain.user.respository.util;
 
 
-import codesquad.springcafe.user.domain.User;
+import codesquad.springcafe.domain.user.dto.User;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

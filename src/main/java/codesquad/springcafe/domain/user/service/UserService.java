@@ -1,10 +1,10 @@
-package codesquad.springcafe.user.service;
+package codesquad.springcafe.domain.user.service;
 
+import codesquad.springcafe.domain.user.dto.User;
+import codesquad.springcafe.domain.user.dto.UserIdentity;
 import codesquad.springcafe.exceptions.CanNotLoginException;
 import codesquad.springcafe.exceptions.NoSuchUserException;
-import codesquad.springcafe.user.domain.LoginUser;
-import codesquad.springcafe.user.domain.User;
-import codesquad.springcafe.user.domain.UserIdentity;
+import codesquad.springcafe.domain.user.dto.LoginUser;
 
 import java.util.List;
 

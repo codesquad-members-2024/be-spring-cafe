@@ -1,8 +1,8 @@
-package codesquad.springcafe.article.service;
+package codesquad.springcafe.domain.article.service;
 
-import codesquad.springcafe.article.domain.Article;
+import codesquad.springcafe.domain.article.dto.Article;
 import codesquad.springcafe.exceptions.NoSuchArticleException;
-import codesquad.springcafe.user.domain.UserIdentity;
+import codesquad.springcafe.domain.user.dto.UserIdentity;
 
 import java.util.List;
 

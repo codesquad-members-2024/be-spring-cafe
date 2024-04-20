@@ -1,6 +1,5 @@
-package codesquad.springcafe.article.domain;
+package codesquad.springcafe.domain.article.dto;
 
-import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;

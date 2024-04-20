@@ -1,6 +1,6 @@
-package codesquad.springcafe.article.repository;
+package codesquad.springcafe.domain.article.repository;
 
-import codesquad.springcafe.article.domain.Article;
+import codesquad.springcafe.domain.article.dto.Article;
 import codesquad.springcafe.exceptions.NoSuchArticleException;
 
 import java.util.List;

@@ -1,8 +1,8 @@
-package codesquad.springcafe.user.respository;
+package codesquad.springcafe.domain.user.respository;
 
+import codesquad.springcafe.domain.user.dto.User;
+import codesquad.springcafe.domain.user.respository.util.UserRowMapper;
 import codesquad.springcafe.exceptions.NoSuchUserException;
-import codesquad.springcafe.user.domain.User;
-import codesquad.springcafe.user.respository.util.UserRowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

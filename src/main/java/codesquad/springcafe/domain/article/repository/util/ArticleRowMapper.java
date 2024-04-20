@@ -1,6 +1,6 @@
-package codesquad.springcafe.article.repository.util;
+package codesquad.springcafe.domain.article.repository.util;
 
-import codesquad.springcafe.article.domain.Article;
+import codesquad.springcafe.domain.article.dto.Article;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

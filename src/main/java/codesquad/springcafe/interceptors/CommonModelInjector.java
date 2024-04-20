@@ -1,6 +1,6 @@
 package codesquad.springcafe.interceptors;
 
-import codesquad.springcafe.user.domain.UserIdentity;
+import codesquad.springcafe.domain.user.dto.UserIdentity;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
