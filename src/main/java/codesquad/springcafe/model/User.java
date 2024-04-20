@@ -5,12 +5,21 @@ public class User {
     private String password;
     private String name;
     private String email;
+    private Long id;
 
     public User(String userId, String password, String name, String email) {
         this.userId = userId;
         this.password = password;
         this.name = name;
         this.email = email;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setUserId(String userId) {
