@@ -9,9 +9,9 @@ public class Config implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor())
-                .addPathPatterns(
-                        "/user/**"
-                );
+        registry.addInterceptor(new AccessInterceptor())
+                .addPathPatterns("/user/**")
+                .addPathPatterns("/qna")
+                .excludePathPatterns("/user/register");
     }
 }

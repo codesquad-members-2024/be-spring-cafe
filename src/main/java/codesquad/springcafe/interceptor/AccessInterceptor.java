@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-public class LoginInterceptor implements HandlerInterceptor {
+public class AccessInterceptor implements HandlerInterceptor {
 
     /**
      * 로그인되어 있지 않은 상태의 경우, 로그인 페이지로 redirect
