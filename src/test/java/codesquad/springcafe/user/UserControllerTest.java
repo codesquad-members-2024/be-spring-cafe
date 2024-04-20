@@ -106,7 +106,7 @@ public class UserControllerTest {
                         .session(session)
                         .param("userId", id)
                         .param("password", password))
-                .andExpect(status().is(302)).andExpect(redirectedUrl("/?user_section=true"));
+                .andExpect(status().is(302)).andExpect(redirectedUrl("/"));
 
         verify(userService, times(1)).login(id, password);
         assertThat(session.getAttribute("loginUser")).isNotNull().isInstanceOf(SimpleUserInfo.class);
