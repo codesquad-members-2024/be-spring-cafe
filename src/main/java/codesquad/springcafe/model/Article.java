@@ -7,7 +7,7 @@ public class Article {
     private String title;
     private String contents;
     private final LocalDateTime currentTime;
-    private int id;
+    private Long id;
 
     public Article(String writer, String title, String contents) {
         this.writer = writer;
@@ -44,11 +44,11 @@ public class Article {
         return currentTime;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }
