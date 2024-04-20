@@ -6,18 +6,20 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 @Repository
-public class UserRepository {
+public class MemoryUserRepository implements UserRepository {
 
     private final List<User> users;
 
-    public UserRepository() {
+    public MemoryUserRepository() {
         this.users = new ArrayList<>();
     }
 
+    @Override
     public void addUser(User user) {
         users.add(user);
     }
 
+    @Override
     public Optional<User> findUserById(String userId) {
         // userId에 해당하는 사용자를 찾아서 Optional로 감싸서 반환
         for (User user : users) {
@@ -28,10 +30,12 @@ public class UserRepository {
         return Optional.empty(); // 해당 userId를 가진 사용자가 없을 경우 empty Optional을 반환
     }
 
+    @Override
     public List<User> findAll() {
         return users;
     }
 
+    @Override
     public void userUpdate(User updatedUser) {
         // 업데이트할 사용자 정보를 가져옴
         Optional<User> optionalUser = findUserById(updatedUser.getUserId());
