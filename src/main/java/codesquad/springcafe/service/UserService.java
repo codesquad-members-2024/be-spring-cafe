@@ -1,7 +1,7 @@
 package codesquad.springcafe.service;
 
 import codesquad.springcafe.model.User;
-import codesquad.springcafe.repository.UserRepository;
+import codesquad.springcafe.repository.MemoryUserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-    private final UserRepository userRepository = new UserRepository();
+    private final MemoryUserRepository userRepository = new MemoryUserRepository();
 
     /**
      * 회원 가입
