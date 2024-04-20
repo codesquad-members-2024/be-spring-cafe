@@ -23,6 +23,10 @@ public class UserService {
         repository.save(user);
     }
 
+    public void update(User user) {
+        repository.save(user);
+    }
+
     private void validateIsNull(User user) {
         if(user.getId() == null || user.getId().equals("")) {
             throw new IllegalStateException("유효하지 않은 아이디");

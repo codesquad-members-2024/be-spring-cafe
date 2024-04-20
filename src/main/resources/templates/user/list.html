@@ -26,6 +26,7 @@
                     </td>
                     <td th:text="${member.name}">이름</td>
                     <td th:text="${member.email}">이메일</td>
+                    <td><a th:href="@{/users/{userId}/update(userId=${member.id})}" class="btn btn-success" role="button">수정</a></td>
                 </tr>
                 </tbody>
             </table>
