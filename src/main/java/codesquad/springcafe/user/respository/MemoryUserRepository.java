@@ -2,6 +2,7 @@ package codesquad.springcafe.user.respository;
 
 import codesquad.springcafe.exceptions.NoSuchUserException;
 import codesquad.springcafe.user.domain.User;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

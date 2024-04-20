@@ -2,7 +2,6 @@ package codesquad.springcafe.user.domain;
 
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 public class User {
 
@@ -36,7 +35,19 @@ public class User {
         return crateTime.toString();
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public boolean isSamePassword(String password) {
         return this.password.contentEquals(password);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("(").append(userId).append(",").append(password).append(",").append(email).append(",").append(name).append(",").append(getCrateTime()).append(")");
+
+        return sb.toString();
     }
 }
