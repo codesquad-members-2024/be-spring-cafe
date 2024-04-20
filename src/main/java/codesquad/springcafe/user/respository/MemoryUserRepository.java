@@ -2,7 +2,6 @@ package codesquad.springcafe.user.respository;
 
 import codesquad.springcafe.exceptions.NoSuchUserException;
 import codesquad.springcafe.user.domain.User;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -50,8 +49,19 @@ public class MemoryUserRepository implements UserRepository{
     }
 
     @Override
-    public boolean exist(String value) {
+    public boolean isIdExist(String value) {
         return userDB.values().stream()
-                            .anyMatch(user -> user.getUserId().equals(value) || user.getName().equals(value));
+                            .anyMatch(user -> user.getUserId().equals(value));
+    }
+
+    @Override
+    public boolean isNameExist(String value) {
+        return userDB.values().stream()
+                .anyMatch(user -> user.getName().equals(value));
+    }
+
+    @Override
+    public void updateUser(User user) {
+        userDB.replace(user.getUserId(), user);
     }
 }

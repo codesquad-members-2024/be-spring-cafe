@@ -16,6 +16,10 @@ public interface UserRepository {
 
     void removeUser(String name);
 
-    boolean exist(String value);
+    boolean isIdExist(String value);
+
+    boolean isNameExist(String value);
+
+    void updateUser(User user);
 
 }

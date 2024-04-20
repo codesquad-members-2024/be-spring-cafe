@@ -59,13 +59,14 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void updateUser(User before, User after) {
-        userRepository.removeUser(before.getName());
-        userRepository.storeUser(after);
+    public void updateUser(User after) {
+        userRepository.updateUser(after);
     }
 
     @Override
-    public boolean checkValueIsDuplicate(String value) {
-        return !userRepository.exist(value);
+    public boolean checkValueIsDuplicate(String key, String value) {
+        if (key.contentEquals("userId")) {
+            return !userRepository.isIdExist(value);
+        } else return !userRepository.isNameExist(value);
     }
 }

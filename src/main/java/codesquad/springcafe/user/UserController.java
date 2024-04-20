@@ -103,9 +103,7 @@ public class UserController {
 
     @PostMapping("/update")
     public String updateUserProfile(@ModelAttribute User after) throws NoSuchUserException {
-        User before = userService.findUserById(after.getUserId());
-
-        userService.updateUser(before, after);
+        userService.updateUser(after);
 
         return "redirect:/user/profile";
     }
@@ -115,9 +113,10 @@ public class UserController {
     public Map<String, Boolean> checkDuplicate(@RequestBody String requestJson) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(requestJson);
+        String key = rootNode.path("key").asText();
         String value = rootNode.path("value").asText();
 
-        boolean result = userService.checkValueIsDuplicate(value);
+        boolean result = userService.checkValueIsDuplicate(key, value);
 
         return Collections.singletonMap("check", result);
     }

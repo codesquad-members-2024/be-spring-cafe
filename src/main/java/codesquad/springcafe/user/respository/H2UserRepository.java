@@ -30,7 +30,7 @@ public class H2UserRepository implements UserRepository{
         jdbcTemplate.update("INSERT INTO Users (userId, password, email, name, createTime) values (?, ?, ?, ?, ?)",
                 user.getUserId(), user.getPassword(), user.getEmail(), user.getName(), user.getCrateTime());
 
-        logger.debug("id={} 인 유저 db에 저장 완료", user.getUserId());
+        logger.info("id={} 인 유저 db에 저장 완료", user.getUserId());
     }
 
     @Override
@@ -45,7 +45,7 @@ public class H2UserRepository implements UserRepository{
         List<User> result = jdbcTemplate.query(sql, new UserRowMapper(), name);
         if (result.isEmpty()) throw new NoSuchUserException();
 
-        logger.debug("name={} 에 해당하는 유저 검색 완료", name);
+        logger.info("name={} 에 해당하는 유저 검색 완료", name);
 
         return result.getFirst();
     }
@@ -57,7 +57,7 @@ public class H2UserRepository implements UserRepository{
         List<User> result = jdbcTemplate.query(sql, new UserRowMapper(), id);
         if (result.isEmpty()) throw new NoSuchUserException();
 
-        logger.debug("id={} 에 해당하는 유저 검색 완료", id);
+        logger.info("id={} 에 해당하는 유저 검색 완료", id);
         return result.getFirst();
     }
 
@@ -67,15 +67,35 @@ public class H2UserRepository implements UserRepository{
 
         int update = jdbcTemplate.update(sql, name);
 
-        logger.debug(String.format("%d행의 %s이름의 유저 삭제 완료", update, name));
+        logger.info(String.format("%d행의 %s이름의 유저 삭제 완료", update, name));
     }
 
     @Override
-    public boolean exist(String value) {
-        String sql = "SELECT COUNT(*) FROM USERS WHERE userId = ? OR name = ?";
-        int count = jdbcTemplate.queryForObject(sql, Integer.class, value, value);
+    public boolean isIdExist(String value) {
+        try {
+            findById(value);
+        } catch (NoSuchUserException e) {
+            return false;
+        }
+        return true;
+    }
 
-        logger.debug(String.format("name 또는 userId 값이 %s인 행 %d 개 존재함", value, count));
-        return count > 0;
+    @Override
+    public boolean isNameExist(String value) {
+        try {
+            findByName(value);
+        } catch (NoSuchUserException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public void updateUser(User user) {
+        String sql = "UPDATE USERS SET name = ?, email = ?, password = ? WHERE userId = ?";
+        jdbcTemplate.update(sql,
+                user.getName(), user.getEmail(), user.getPassword(), user.getUserId());
+        logger.info("id={}인 유저 정보 업데이트 완료", user.getUserId());
     }
 }

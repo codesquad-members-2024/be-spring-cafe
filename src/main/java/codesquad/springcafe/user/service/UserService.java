@@ -20,8 +20,8 @@ public interface UserService {
 
     UserIdentity loginVerification(LoginUser loginUser) throws CanNotLoginException;
 
-    void updateUser(User before, User after);
+    void updateUser(User after);
 
-    boolean checkValueIsDuplicate(String value);
+    boolean checkValueIsDuplicate(String key, String value);
 
 }
