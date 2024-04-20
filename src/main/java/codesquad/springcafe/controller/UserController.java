@@ -5,12 +5,10 @@ import codesquad.springcafe.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class UserController {
@@ -48,6 +46,19 @@ public class UserController {
         User user = service.findUserById(id).get();
         model.addAttribute("user", user);
         return "user/profile";
+    }
+
+    @GetMapping("/users/{id}/update")
+    public String profileUpdate(@PathVariable String id, Model model) {
+        User user = service.findUserById(id).get();
+        model.addAttribute("user", user);
+        return "user/updateForm";
+    }
+
+    @PutMapping("/users/{id}/update")
+    public String profileUpdate(@ModelAttribute User user) {
+        service.update(user);
+        return "redirect:/";
     }
 
 }
