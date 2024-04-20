@@ -23,7 +23,7 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
-    public Optional<Article> findArticleById(Long id) {
-        return articleRepository.findById(id);
+    public Article findArticleById(Long id) {
+        return articleRepository.findById(id).get();
     }
 }
