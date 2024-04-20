@@ -14,7 +14,8 @@ public class ArticleRowMapper implements RowMapper<Article> {
                 rs.getString("writer"),
                 rs.getString("title"),
                 rs.getString("contents"),
-                rs.getTimestamp("createTime")
+                rs.getTimestamp("createTime"),
+                rs.getInt("viewCount")
         );
     }
 

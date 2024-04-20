@@ -39,6 +39,10 @@ public class ArticleController {
     public String showArticle(Model model, @PathVariable String articleId) throws NoSuchArticleException {
         Article article = articleService.getArticle(articleId);
 
+        //조회수 추가
+        article.addViewCount();
+        articleService.updateArticle(article);
+
         model.addAttribute("article", article);
 
         return "article/show";
@@ -57,7 +61,6 @@ public class ArticleController {
 
     @PostMapping("/update/{articleId}")
     public String updateArticle(@PathVariable String articleId, @ModelAttribute Article article, HttpSession session) throws NoSuchArticleException, NotAuthenticationException {
-
         article.setIdentifierFromString(articleId);
         articleService.updateArticle(article);
 

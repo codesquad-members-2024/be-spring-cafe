@@ -15,8 +15,9 @@ public class Article {
     private String title;
     private String contents;
     private Timestamp createTime;
+    private int viewCount;
 
-    public Article(String identifier, String writer, String title, String contents, Timestamp createTime) {
+    public Article(String identifier, String writer, String title, String contents, Timestamp createTime, Integer viewCount) {
         if (writer != null) this.writer = URLDecoder.decode(writer, StandardCharsets.UTF_8);
 
         this.title = title;
@@ -27,6 +28,13 @@ public class Article {
 
         if (identifier != null) this.identifier = UUID.fromString(identifier);
         else this.identifier = UUID.randomUUID();
+
+        if (viewCount != null) this.viewCount = viewCount;
+        else this.viewCount = 0;
+    }
+
+    public void addViewCount() {
+        this.viewCount++;
     }
 
     public void setIdentifierFromString(String identifier) {
@@ -51,6 +59,10 @@ public class Article {
 
     public String getRoughCrateTime() {
         return createTime.toString();
+    }
+
+    public int getViewCount() {
+        return viewCount;
     }
 
     public String getCreateTime() {

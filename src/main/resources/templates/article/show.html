@@ -79,6 +79,7 @@
         <div class="panel panel-default">
           <header class="qna-header">
               <h2 th:text="${article.title}" class="qna-title">InitializingBean implements afterPropertiesSet() 호출되지 않는 문제.</h2>
+              <h5 th:text="|조회수 ${article.viewCount}|">조회수 0</h5>
           </header>
           <div class="content-main">
               <article class="article">
@@ -112,6 +113,7 @@
                           <li>
                               <a class="link-modify-article" th:href="@{/}" href="/templates/index.html">목록</a>
                           </li>
+
                       </ul>
                   </div>
               </article>

@@ -52,10 +52,10 @@ public class H2ArticleRepository implements ArticleRepository{
 
     @Override
     public void update(Article article) throws NoSuchArticleException {
-        String sql = "UPDATE ARTICLE SET title = ?, contents = ? WHERE identifier = ?";
+        String sql = "UPDATE ARTICLE SET title = ?, contents = ?, VIEWCOUNT = ? WHERE identifier = ?";
 
         int update = jdbcTemplate.update(sql,
-                article.getTitle(), article.getContents(), article.getIdentifier());
+                article.getTitle(), article.getContents(), article.getViewCount(), article.getIdentifier());
 
         if (update == 0) throw new NoSuchArticleException();
         logger.debug("[{}] 아티클 업데이트 완료", article.getIdentifier());
