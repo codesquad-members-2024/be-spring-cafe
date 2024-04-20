@@ -6,15 +6,15 @@ import java.time.LocalDateTime;
 public class UploadDTO {
     private final String title;
     private final String writer;
-    private final String contents;
+    private final String content;
 
-    public UploadDTO(String title, String writer, String contents) {
+    public UploadDTO(String title, String writer, String content) {
         this.title = title;
         this.writer = writer;
-        this.contents = contents;
+        this.content = content;
     }
 
     public Article toArticle(Long index) {
-        return new Article(index, LocalDateTime.now(), title, writer, contents);
+        return new Article(index, LocalDateTime.now(), title, writer, content);
     }
 }

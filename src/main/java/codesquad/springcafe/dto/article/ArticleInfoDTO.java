@@ -1,25 +1,21 @@
 package codesquad.springcafe.dto.article;
 
-import codesquad.springcafe.model.Reply;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public class ArticleInfoDTO {
     private final Long index;
     private final LocalDateTime timestamp;
     private final String writer;
     private final String title;
-    private final String contents;
-    private final List<Reply> replies;
+    private final String content;
 
-    public ArticleInfoDTO(Long index, LocalDateTime timestamp, String writer, String title, String contents, List<Reply> replies) {
+    public ArticleInfoDTO(Long index, LocalDateTime timestamp, String writer, String title, String content) {
         this.index = index;
         this.timestamp = timestamp;
         this.writer = writer;
         this.title = title;
-        this.contents = contents;
-        this.replies = replies;
+        this.content = content;
     }
 
     public Long getIndex() {
@@ -39,15 +35,7 @@ public class ArticleInfoDTO {
         return title;
     }
 
-    public String getContents() {
-        return contents;
-    }
-
-    public List<Reply> getReplies() {
-        return replies;
-    }
-
-    public int getReplyCounts() {
-        return replies.size();
+    public String getContent() {
+        return content;
     }
 }

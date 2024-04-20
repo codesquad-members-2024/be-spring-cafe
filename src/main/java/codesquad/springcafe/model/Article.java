@@ -6,33 +6,20 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 
 public class Article {
     private final Long index;
     private final LocalDateTime timestamp;
     private final String writer;
     private final String title;
-    private final String contents;
-    private final List<Reply> replies;
+    private final String content;
 
-    public Article(Long index, LocalDateTime timestamp, String writer, String title, String contents) {
+    public Article(Long index, LocalDateTime timestamp, String writer, String title, String content) {
         this.index = index;
         this.timestamp = timestamp;
         this.writer = writer;
         this.title = title;
-        this.contents = contents;
-        this.replies = new ArrayList<>();
-    }
-
-    public Article(Long index, LocalDateTime timestamp, String writer, String title, String contents, List<Reply> replies) {
-        this.index = index;
-        this.timestamp = timestamp;
-        this.writer = writer;
-        this.title = title;
-        this.contents = contents;
-        this.replies = replies;
+        this.content = content;
     }
 
     public Long getIndex() {
@@ -51,7 +38,11 @@ public class Article {
         return title;
     }
 
+    public String getContent() {
+        return content;
+    }
+
     public ArticleInfoDTO toDTO() {
-        return new ArticleInfoDTO(index, timestamp, writer, title, contents, replies);
+        return new ArticleInfoDTO(index, timestamp, writer, title, content);
     }
 }

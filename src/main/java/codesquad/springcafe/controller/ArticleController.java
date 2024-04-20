@@ -31,14 +31,14 @@ public class ArticleController {
 
     @GetMapping("/")
     public String showList(Model model) {
-        List<ArticleInfoDTO> articles = articleService.findAllArticles();
+        List<ArticleInfoDTO> articles = articleService.findAll();
         model.addAttribute("articles", articles);
         return "index";
     }
 
     @GetMapping("articles/{index}")
     public String showArticle(@PathVariable Long index, Model model) {
-        ArticleInfoDTO targetArticle = articleService.findArticleByIndex(index);
+        ArticleInfoDTO targetArticle = articleService.findByIndex(index);
         model.addAttribute("article", targetArticle);
         return "/qna/show";
     }
