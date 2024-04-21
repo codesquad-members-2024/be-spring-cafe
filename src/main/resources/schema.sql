@@ -36,5 +36,5 @@ create table comment
     created_by varchar(255),
     created_at timestamp,
     constraint fk_comment_created_by foreign key (created_by) references member(login_id),
-    constraint fk_comment_article_id foreign key (article_id) references article(article_id)
+    constraint fk_comment_article_id foreign key (article_id) references article(article_id) on delete restrict
 );
