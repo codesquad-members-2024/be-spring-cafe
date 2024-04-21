@@ -61,13 +61,8 @@ class UserControllerTest {
                         .param("password", password)); // POST
 
         //then
-        result.andExpect(status().isOk())
-                .andExpect(view().name("/user/registration_success"))
-                .andExpect(model().attribute("user", allOf( // userJoinData에는 getPwd가 없다. email, name만 확인
-                        hasProperty("loginId", equalTo(loginId)),
-                        hasProperty("email", equalTo(email)),
-                        hasProperty("name", equalTo(name))
-                )));
+        result.andExpect(status().isFound())
+                .andExpect(redirectedUrl("/welcome"));
     }
 
     @Test
