@@ -1,31 +1,27 @@
 package codesquad.springcafe.repository;
 
 import codesquad.springcafe.domain.User;
+import codesquad.springcafe.domain.repository.UserRepository;
 import java.util.List;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
 @Primary
 @Repository
 public class H2UserRepository implements UserRepository {
     private final Logger logger = LoggerFactory.getLogger(H2ArticleRepository.class);
-    private JdbcTemplate jdbcTemplate;
-    private final RowMapper<User> userRowMapper = (resultSet, rowNum) -> {
-        User user = new User(
-                resultSet.getString("userId"),
-                resultSet.getString("name"),
-                resultSet.getString("email"),
-                resultSet.getString("password")
-        );
-        return user;
-    };
+    private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<User> userRowMapper;
 
     public H2UserRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        userRowMapper = BeanPropertyRowMapper.newInstance(User.class);
     }
 
     @Override
