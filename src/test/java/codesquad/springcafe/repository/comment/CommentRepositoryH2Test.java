@@ -47,6 +47,7 @@ class CommentRepositoryH2Test {
     void reset_pk() {
         memberRepository.clear();
         articleRepository.clear();
+        commentRepository.clear();
     }
 
     @DisplayName("yelly 아이디를 가진 멤버가 1번 게시물에 대한 댓글을 작성할 수 있다")
