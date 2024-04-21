@@ -52,4 +52,10 @@ public class UserRepositoryLocal implements UserRepository{
     public Boolean existsById(Long userId) {
         return users.containsKey(userId);
     }
+
+    @Override
+    public User update(Long userId, User updateUser) {
+        users.put(userId, updateUser);
+        return updateUser;
+    }
 }

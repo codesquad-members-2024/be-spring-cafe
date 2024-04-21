@@ -2,8 +2,6 @@ package codesquad.springcafe.domain.user.model;
 
 import codesquad.springcafe.global.model.BaseTime;
 
-import java.time.LocalDateTime;
-
 // TODO: 빌더 패턴 사용
 public class User extends BaseTime {
     private Long id;
@@ -12,8 +10,12 @@ public class User extends BaseTime {
     private String email;
     private String password;
 
-    public User(String loginId, String name, String email, String password, LocalDateTime createdAt, LocalDateTime modifiedAt) {
-        super(createdAt, modifiedAt);
+    public User() {
+
+    }
+
+    public User(String loginId, String name, String email, String password) {
+        super();
         this.loginId = loginId;
         this.name = name;
         this.email = email;
@@ -45,8 +47,9 @@ public class User extends BaseTime {
         return password;
     }
 
-    public void update(String name, String email) {
+    public User update(String name, String email) {
         this.name = name;
         this.email = email;
+        return this;
     }
 }

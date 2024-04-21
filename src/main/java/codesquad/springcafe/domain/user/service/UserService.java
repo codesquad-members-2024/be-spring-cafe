@@ -95,7 +95,8 @@ public class UserService {
     // 내 프로필 수정 TODO : 테스트 가능하도록 수정
     public void updateMyProfile(Long userId, UserUpdateRequest userUpdateRequest) {
         User user = findUserById(userId);
-        user.update(userUpdateRequest.getName(), userUpdateRequest.getEmail());
+        User updateUser = user.update(userUpdateRequest.getName(), userUpdateRequest.getEmail());
+        userRepository.update(user.getId(), updateUser);
     }
 
     private User findUserByLoginId(String loginId) {

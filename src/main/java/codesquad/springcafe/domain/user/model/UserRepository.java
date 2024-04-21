@@ -8,4 +8,6 @@ public interface UserRepository extends BasicRepository<User, Long> {
     Optional<User> findByLoginId(String loginId);
 
     Boolean existsById(Long userId);
+
+    User update(Long userId, User updateUser);
 }
