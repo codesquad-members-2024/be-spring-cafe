@@ -59,7 +59,6 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li class="active"><a href="../index.html">Posts</a></li>
                     <form th:action="@{/logout}" method="post" id="logout" style="display: none"></form>
-                    <form th:action="@{/logout}" method="put" id="" style="display: none"></form>
                     <li th:if="${session.sessionUser}"><a href="#" role="button"
                                               onclick="document.getElementById('logout').submit()">로그아웃</a></li>
                     <li th:if="${session.sessionUser}"><a th:href="@{'/user/profile/' + ${session.sessionUser.userId} + '/update'}"
