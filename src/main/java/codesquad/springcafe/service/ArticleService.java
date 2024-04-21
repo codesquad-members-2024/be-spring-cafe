@@ -1,6 +1,7 @@
 package codesquad.springcafe.service;
 
 import codesquad.springcafe.model.Article;
+import codesquad.springcafe.repository.ArticleRepository;
 import codesquad.springcafe.repository.MemoryArticleRepository;
 import org.springframework.stereotype.Service;
 
@@ -9,10 +10,10 @@ import java.util.Optional;
 
 @Service
 public class ArticleService {
-    private final MemoryArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
 
-    public ArticleService() {
-        this.articleRepository = new MemoryArticleRepository();
+    public ArticleService(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
     }
 
     public void writeArticle(Article article) {
