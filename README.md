@@ -2,131 +2,89 @@
 
 2024 마스터즈 백엔드 스프링 카페
 
-## step-3 DB에 저장하기
+## step-4 로그인 구현
 
 ### ⚒ 기능 구현 목록
 
-- [x] H2 DB 연결
-- [x] DB 테이블 생성
-- [x] DB를 통해 게시글 저장, 조회하기
-- [x] DB를 통해 사용자 정보 저장, 조회하기
-- [x] EC2 인스턴스를 사용하여 배포하기
-
-### 🐶 배포 주소 : [🔗](http://54.180.125.197:8080/) (0417~)
+- [x] 로그인 기능
+- [x] 로그아웃 기능
+- [x] 로그아웃 상태에서 로그인 권한이 필요한 페이지에 접근하는 경우 차단
+- [x] 프로필 수정 시 본인의 프로필만 수정 가능하도록 제한하는 기능
 
 ### 🤔 설계 및 고민
 
-#### - DB 테이블 설계는 어떻게 할까?
+#### - modelAndView는 Redirection 시에 URL에 쿼리 파라미터가 표시된다 🥲
 
-- article은 pk의 기능을 할 수 있는 값이 필요하니까 auto increment를 이용해서 id를 따로 만듦
-- user는 userId가 존재하고, 변경할 수 없는 값이기 때문에, pk의 역할을 충분히 할 수 있을 것 같아서 따로 id를 지정하지 않았다.
+- 처음에는 로그인 시 동적으로 버튼을 다르게 표시하기 위해 컨트롤러에서 다른 요청들을 처리한 후에 마지막에 로그인 여부를 포함시키려는 생각으로 Interceptor의 posthandler를 사용했다.
+- MedelAndView에 object를 추가하는 방식으로 로그인 여부를 판단하게 했는데, 이렇게 하는 경우 리다이렉트 후에 url에 쿼리 파라미터로 해당 값이 붙어서 출력된다는 문제가 생겼다.
+  &rarr; `http://localhost:8080/?isLogin=true`
+- ModelAndView를 전달한 후 리다이렉트가 되면, 새로운 요청이 일어나서 해당 내용은 초기화가 되기 때문에 그 내용을 유지하기 위해서 이렇게 값이 붙는다고 한다.
+  하지만 지정된 요소들이 이렇게 직접 노출되는 것은 좋지 않다고 생각했고, 해당 값이 보이지 않게 하고 싶었다.
+- 그러다 굳이 이렇게 따로 값을 주지 않아도 session 값을 바로 가져와서 thymeleaf에서 사용할 수 있다는 것을 알게 되었다!
+- `session.setAttribute()`로 세션 값 세팅 &rarr; `th:if="${session.sessionUser}"`처럼 thymeleaf에서 사용
 
-#### - article를 DB에 어떻게 저장하고 가져와야 하나?
+&rarr; **그런데 궁금한 점은 ModelAndView에 addObject로 인터셉터에서 추가해주는 경우에만 URI에 쿼리 파라미터가 보인다는 사실이다. (리다이렉트 시)**  
+동일한 상황에서 일반 컨트롤러에서 ModelAndView를 이용해 추가를 할 경우에는 쿼리 파라미터가 표시되지 않는다 🤔
 
-- 기존에는 Article 타입을 다루는 임시 DB 역할을 하는 자료구조가 있었고, 거기에 저장을 하고 있었음
-- 글을 저장할 때 기존에는 생성자에 `LocalDateTime.now`를 이용해서 시간을 세팅하도록 했다 &rarr;
-  이때는 Article 객체로 바로 저장되고 또 Article 객체로 바로 꺼내서 사용했기 때문에 별 문제가 없었다.
-- DB를 연결하게 되면서 DB의 내용과 자바 객체를 연결할 필요성이 생겨남. DB에 있는 값은 Article이 아님! 값들을 가져와서 객체로 만들어 주어야만 비로소 Article이 됨
-- 그런데 가져온 정보로 Article을 만들면 time이 또 다시 현재 시간으로 세팅되는 상황이 발생
-- 처음에는 기본 생성자와 setter를 사용해서 Article 내에서 다 처리하도록 했으나..  
-  &rarr; request 요청으로 들어오는 정보는 제목, 글쓴이, 본문 3가지. 따라서 이 3개를 받아와서 저장을 위한 객체를 따로 만들자. 굳이 Article로 만든 다음에 저장할 필요가 없을 것 같다. (
-  DTO)
+- 인터셉터에서 Model로 전달한 값이 리다이렉트 되는 경우에는 사라지기 때문에 쿼리 파라미터에 표시되어 전달된다고 하는데, 이는 인터셉터에서만 그렇게 작동되고 있다.
+- 동일하게 일반 컨트롤러에서 model에 추가한 값이 url로 전달되도록 하기 위해서는 RedirectView에 RedirectAttributes로 추가를 해야 한다고 하는데, 왜 인터셉터는 model에만 추가해도
+  쿼리로 보이는 것인지?
 
 ```
-// 게시글 db에 저장
-    public void addArticle(RegisterArticle registerArticle) {
-        jdbcTemplate.update("INSERT INTO Articles (writer, title, contents, time) VALUES (?,?,?,?)",
-                registerArticle.getWriter(), registerArticle.getTitle(), registerArticle.getContents(), registerArticle.getTime());
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+                           ModelAndView modelAndView) throws Exception {
+        if(modelAndView != null) {
+        // 해당 값이 URI로 보인다
+            modelAndView.addObject("isLogin",true);
+        }
     }
-}
+    
+        @PostMapping("/qna")
+    public String register(RegisterArticle registerArticle, ModelAndView model) {
+        articleService.registerArticle(registerArticle);
+        // 여기서 추가하는 경우에는 보이지 않는다.
+        model.addObject("test",10);
+        return "redirect:/";
+    }
 ```
 
-#### - 로그를 찍고 싶다..! [🔗](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jdbc/core/simple/SimpleJdbcInsert.html)
+- 검색해서 정보를 찾기 어려워서 디버깅으로 흐름을 뜯어보았다.
+- 그냥 컨트롤러에서 `model.addObject` 하면 일단 defaultModel에 추가가 되는데, 이후 리다이렉트 하는 과정에서 모델이 redirectModel로 변경된다.
+    - `ModelAndViewContainer`의 `getModel`에서 redirectModel`을 사용할지 defaultModel을 사용할지 판단해서 모델을 세팅한다.
+    - 판단 기준 중 `redirectModelScenario` 변수가 있는데, 뷰 이름에 redirect가 들어가기 때문에 이 부분을 체크해서 모델을 redirectModel로 사용하도록 하는 것
+    - 그리고 이후 targetUrl을 만들 때, 모델에 있는 값을 확인해서 뒤에 쿼리로 붙이는데, 모델 안에 값이 없으므로 아무것도 붙지 않은 url이 만들어진다.
+- 그런데 인터셉터에서 `model.addObject` 하면 해당 값이 모든 처리가 끝난 후 넘어오는 ModelAndView로 추가가 된다.
+    - 이미 컨트롤러에서 redirectModel로 변경해서 인터셉터에 전달했고, 거기에 값을 추가하는 거니까 따로 위와 같이 리다이렉트인지 여부를 확인, 변경하는 작업은 일어나지 않고
+      그래서 이번에는 ModelAndView에 추가된 값 그대로 targetUrl이 만들어진다.
 
-- 저장하면서 로그로 저장되었다는 정보를 표시하고 싶은데, 위와 같이 구현할 경우 방금 저장된 Article을 다시 가져오기가 어려웠다.
-- SimpleJdbcInsert라는 클래스를 알게 되어 해당 클래스를 사용하도록 코드를 수정해보았다.
-- SimpleJdbcInsert
-    - DB 테이블에 INSERT하는 간단한 기능을 제공하는 클래스
-    - INSERT문의 작성에 필요한 정보 메타데이터를 처리해준다.
-    - 테이블 이름, 컬럼 이름, 컬럼 값이 저장되어 있는 Map으로 사용할 수 있음
-  ```
-      public void add(Article article) {
-        // SimpleJdbcInsert를 생성하고, insert할 테이블명과 자동으로 키가 생성되는 컬럼의 이름을 지정
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("Articles")
-                .usingGeneratedKeyColumns("id");
-        
-        // map에 insert할 값들을 세팅
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("writer", article.getWriter());
-        parameters.put("title", article.getTitle());
-        parameters.put("contents", article.getContents());
-        parameters.put("time", article.getTime());
+#### - html 파일에서 로그아웃을 Post 요청 보내도록 수정 시, css가 적용되지 않는 문제
 
-        // executeAndReturnKey 메서드를 통해, 실행 후 아까 지정한 id 컬럼을 가져온다
-        Long key = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
-        article.setId(key);
-    }
-  ```
-- 이제 저장된 Article이 무엇인지 알 수 있게 되었다.
-- 추가로 Map 자료구조 대신 SqlParameterSource 인터페이스 구현체를 이용해서 값을 넘겨줄 수도 있다.
-    - MapSqlParameterSource &rarr; addValue 메서드 체이닝으로 Map의 put처럼 값을 추가한다.
-    - BeanPropertySqlParameterSource &rarr; bean 객체로부터 파라미터 값을 바로 가져온다.
+- 로그아웃 버튼을 누르는 경우 post 요청이 가도록 html을 수정했는데, a 태그로 구현되어 있던 부분을 form으로 변경하니 css가 기존과 다르게 잘 적용이 되지 않았다.
+- 그러다 진짜 데이터를 전달하는 역할을 하는 form은 숨기고 보이는 부분은 기존 버튼 그대로 설정할 수 있는 방법이 있다는 것을 알게 되어 다음과 같이 구현했다.
 
-#### - 기존 DB 역할 클래스와 H2를 바꿔서 연결해도 정상적으로 바로 동작하도록 하고 싶다.
-
-- Repository 어노테이션이 여러 개 존재하는 상황에서 Primary 어노테이션을 이용해서 원한다면 바로바로 DB를 갈아끼우고 싶다..
-- 인터페이스를 활용해서 각 도메인에 해당하는 Repository를 만들었고, 또 각각 H2 데이터베이스와 기존 DB 클래스와 연결되는 Repository 구현체를 만들었다.
-- Primary 어노테이션을 이용하면 spring이 해당 Repository를 찾아 데이터를 저장해 줄 것이다.
+```
+                    <form th:action="@{/logout}" method="post" id="logout" style="display: none"></form>
+                    <li th:if="${session.sessionUser}"><a href="#" role="button"
+                                              onclick="document.getElementById('logout').submit()">로그아웃</a></li> 
+```
 
 ### 📚 학습 중
 
-#### - thmyleaf
+#### HttpSession [🔗](https://docs.oracle.com/javaee%2F7%2Fapi%2F%2F/javax/servlet/http/HttpSession.html)
+> Provides a way to identify a user across more than one page request or visit to a Web site and to store information about that user.
 
-- 타임리프에서 객체의 프로퍼티에 접근할 때 메서드호출 방법, 프로퍼티 바로접근이 있는데 바로접근 방식 권장
-
-#### - JdbcTemplate [🔗](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jdbc/core/JdbcTemplate.html)
-
-- jdbc는 자바와 데이터베이스를 연결할 수 있도록 하는 api
-    - 이를 통해 어떤 종류의 DB와 연결을 하더라도 DB별로 api를 작성하지 않아도 되며, jdbc 하나의 표준을 이용해서 사용할 수 있게 되었다.
-- 그리고 jdbcTemplate는 말 그대로 이런 jdbc를 잘 사용할 수 있도록 하는 템플릿 역할을 하는 클래스이다.
-
-#### - queryForObject
-
-- 단일 결과 행을 반환하는 sql 쿼리를 실행한 결과를 자바 객체로 매핑하는 메서드
-
-```
-// 전체 게시글의 수를 가져와서 Integer 객체로 매핑하는 메서드
-public Integer getCountOfArticle() {
-    String sql = "SELECT COUNT(*) FROM Articles";
-    return jdbcTemplate.queryForObject(sql, Integer.class);
-}
-```
-
-- 단일 컬럼일 경우에는 위와 같이 바로 매핑이 가능하지만, 컬럼이 여러개일 경우에는 RowMapper를 이용하여 매핑을 진행해야 한다.
-
-```
-    public User getUser(String id) {
-        final String SELECT_USER = "SELECT * FROM USERS WHERE userId= ?";
-        return jdbcTemplate.queryForObject(SELECT_USER, userRowMapper, id);
-    }
-```
-
-#### - RowMapper [🔗](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jdbc/core/RowMapper.html)
-
-- DB의 레코드 값들을 자바 객체로 매핑하도록 하는 역할을 하는 인터페이스
-
-```
-    private final RowMapper<User> userRowMapper = (resultSet, rowNum) -> {
-        User user = new User(
-                resultSet.getString("userId"),
-                resultSet.getString("name"),
-                resultSet.getString("email"),
-                resultSet.getString("password")
-        );
-        return user;
-    };
-```
-
-- resultSet을 이용해 컬럼의 값을 가져와서 User를 만드는 것을 확인할 수 있다.
-- 람다를 이용해 RowMapper를 구현하여 사용해 보았다.
+- 세션의 역할을 하는 인터페이스
+- `setAttribute`으로 객체를 세션에 바인딩할수 있고, `getAttribute`로 꺼내어 쓸 수 있다.
+- 로그아웃을 하기 위해 사용한 `invalidate`은 세션을 무효화하고, 바인딩 된 객체들을 모두 삭제한다.
+- 그밖에도 세션과 관련된 요청을 마지막으로 받은 시간을 알려주는 `getLastAccessedTime`, 세션 유효시간을 설정할 수 있는 `setMaxInactiveInterval`등 관련 기능들을 제공한다
+#### WebMvcConfigurer [🔗](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/config/annotation/WebMvcConfigurer.html)
+- spring mvc 설정을 커스터마이징 할 수 있는 기능을 제공하는 인터페이스
+- 인터셉터뿐 아니라 리소스 핸들러나 뷰 리졸버 등 원하는 대로 설정을 변경할 수 있음
+- 기존 bean 설정을 그대로 유지하고 원하는 부분만 바꾸고 싶다면 @EnableWebMvc 을 사용하지 않고 WebMvcConfigurer를 구현하면 Ok
+#### HandlerInterceptor [🔗](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/HandlerInterceptor.html)
+- 핸들러(컨트롤러)의 실행 전/후에 특정한 로직을 수행할 수 있도록 하는 기능을 제공
+- 3가지 메서드가 정의되어 있는데 호출 타이밍에 따른 차이가 있다.
+  - `preHandle` : 핸들러가 호출되기 전에 해당 메서드가 호출된다.
+  - `postHandle` : 핸들러가 호출되어 성공적으로 실행되고 나서, 뷰를 랜더링하기 전에 해당 메서드가 호출된다.
+  - `afterCompletion` : 뷰가 랜더링이 되고 난 이후에 호출된다.
