@@ -21,5 +21,7 @@ public interface CommentService {
 
     void deleteComment(DeleteComment comment) throws NoSuchCommentException;
 
+    void addLike(String commentId) throws NoSuchCommentException;
+
     boolean userHasPermission(UserIdentity userIdentity, String commentId) throws NoSuchCommentException;
 }

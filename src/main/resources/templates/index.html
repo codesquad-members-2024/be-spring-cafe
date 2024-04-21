@@ -96,10 +96,7 @@
                               <span th:text="${article.createTime}" class="time">2016-01-15 18:47</span>
                               <a th:href="@{/user/profile/{name}(name=${article.writer})}" th:text="${article.writer}" href="user/profile.html" class="author">자바지기</a>
                           </div>
-                          <div class="reply" title="댓글">
-                              <i class="icon-reply"></i>
-                              <span th:text="${article.viewCount}" class="point">8</span>
-                          </div>
+                              <h5 th:text="|조회수 ${article.viewCount}|" class="text-muted">조회수 0</h5>
                       </div>
                   </div>
               </li>

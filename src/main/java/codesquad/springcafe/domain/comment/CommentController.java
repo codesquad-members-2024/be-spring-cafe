@@ -7,7 +7,9 @@ import codesquad.springcafe.domain.comment.dto.DeleteComment;
 import codesquad.springcafe.domain.comment.dto.UpdateComment;
 import codesquad.springcafe.domain.comment.service.CommentService;
 import codesquad.springcafe.domain.user.dto.UserIdentity;
+import codesquad.springcafe.exceptions.NoSuchCommentException;
 import codesquad.springcafe.exceptions.NotAuthenticationException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -72,7 +74,7 @@ public class CommentController {
     }
 
     @PostMapping("/delete")
-    public String deleteComment(@ModelAttribute DeleteComment comment, HttpSession session) throws NotAuthenticationException{
+    public String deleteComment(@ModelAttribute DeleteComment comment, HttpSession session) throws NotAuthenticationException {
         if (!commentService.userHasPermission((UserIdentity) session.getAttribute(SESSION_LOGIN), comment.getIdentifier())) {
             throw new NotAuthenticationException();
         }
@@ -80,5 +82,13 @@ public class CommentController {
         commentService.deleteComment(comment);
 
         return "redirect:/article/show/" + comment.getWrittenArticle();
+    }
+
+    @GetMapping("/like/{commentId}")
+    public String likeComment(HttpServletRequest request, @PathVariable String commentId) throws NoSuchCommentException {
+        Comment commentById = commentService.getCommentById(commentId);
+        commentService.addLike(commentId);
+
+        return "redirect:/article/show/" + commentById.getWrittenArticle();
     }
 }

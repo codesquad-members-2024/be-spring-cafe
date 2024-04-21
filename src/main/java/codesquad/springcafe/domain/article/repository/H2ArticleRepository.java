@@ -62,10 +62,10 @@ public class H2ArticleRepository implements ArticleRepository{
     }
 
     @Override
-    public void update(String identifier, int viewCount) throws NoSuchArticleException {
-        String sql = "UPDATE ARTICLE SET viewCount = ? where identifier = ?";
+    public void addViewCount(String identifier) throws NoSuchArticleException {
+        String sql = "UPDATE ARTICLE SET viewCount = viewCount + 1 where identifier = ?";
 
-        int update = jdbcTemplate.update(sql, viewCount, identifier);
+        int update = jdbcTemplate.update(sql, identifier);
         if (update == 0) throw new NoSuchArticleException();
     }
 

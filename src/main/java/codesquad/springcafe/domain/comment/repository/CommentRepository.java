@@ -15,5 +15,7 @@ public interface CommentRepository {
 
     void update(String commentId, String contents) throws NoSuchCommentException;
 
+    void addLike(String commentId) throws NoSuchCommentException;
+
     void delete(String commentId) throws NoSuchCommentException;
 }

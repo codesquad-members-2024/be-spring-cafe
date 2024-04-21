@@ -50,6 +50,11 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
+    public void addLike(String commentId) throws NoSuchCommentException {
+        commentRepository.addLike(commentId);
+    }
+
+    @Override
     public boolean userHasPermission(UserIdentity userIdentity, String commentId) throws NoSuchCommentException{
         Comment comment = commentRepository.get(commentId);
 

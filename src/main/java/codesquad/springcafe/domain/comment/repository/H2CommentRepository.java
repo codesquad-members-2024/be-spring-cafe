@@ -59,6 +59,13 @@ public class H2CommentRepository implements CommentRepository{
     }
 
     @Override
+    public void addLike(String commentId) throws NoSuchCommentException {
+        String sql = "UPDATE COMMENTS SET likeCount = likeCount + 1 where identifier = ?";
+        int update = jdbcTemplate.update(sql, commentId);
+        if (update == 0) throw new NoSuchCommentException();
+    }
+
+    @Override
     public void delete(String commentId) throws NoSuchCommentException {
         String sql = "delete from COMMENTS where identifier = ?";
 

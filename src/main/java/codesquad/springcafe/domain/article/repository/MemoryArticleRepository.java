@@ -38,7 +38,7 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public void update(String identifier, int viewCount) throws NoSuchArticleException {
+    public void addViewCount(String identifier) throws NoSuchArticleException {
 
     }
 

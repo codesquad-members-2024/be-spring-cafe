@@ -130,7 +130,11 @@
                                       <a class="article-header-time" th:text="${comment.createTime}">
                                           2016-01-12 14:06
                                       </a>
+
                                   </div>
+                              </div>
+                              <div class="article-header-text">
+                                  <p class="text-muted" style="font-size: 13px" th:text="|추천수 ${comment.likeCount}|">추천수 0</p>
                               </div>
                               <div class="article-doc comment-doc">
                                   <br/>
@@ -149,7 +153,7 @@
                                           </form>
                                       </li>
                                       <li>
-                                          <a class="link-modify-article" href="/">
+                                          <a class="link-modify-article" href="/" th:href="@{/comment/like/{id}(id=${comment.identifier})}">
                                               추천하기
                                           </a>
                                       </li>

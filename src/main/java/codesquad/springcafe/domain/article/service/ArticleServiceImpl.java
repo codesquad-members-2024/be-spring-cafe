@@ -52,7 +52,7 @@ public class ArticleServiceImpl implements ArticleService{
     @Override
     public void addViewCount(Article article) {
         article.addViewCount();
-        articleRepository.update(article.getIdentifier(), article.getViewCount());
+        articleRepository.addViewCount(article.getIdentifier());
     }
 
     @Override
