@@ -5,8 +5,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class Article {
-    private static final String EMPTY = "";
-    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm";
     private static final String TO_STRING_FORMAT = "[게시글] %s, %s, %s, %s";
 
     private long id;
