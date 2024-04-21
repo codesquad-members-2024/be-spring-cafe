@@ -44,7 +44,7 @@ public class UserController {
         User savedUser = userService.signup(user);
         logger.info("user.toString = {}", user.toString());
         redirectAttributes.addAttribute("id", savedUser.getUserId());
-        return "redirect:/users/{id}";
+        return "redirect:/users/{id}"; // redirect:/users + savedUser.getUserId ;
     }
 
     // 회원 상세 조회
