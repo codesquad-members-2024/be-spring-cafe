@@ -137,7 +137,7 @@ class ArticleRepositoryH2Test {
         assertThat(findArticle.getContents()).isEqualTo("success contents");
     }
 
-    @DisplayName("게시물을 soft delete 하면 deleted 상태가 true 가 된다")
+    @DisplayName("게시물을 soft delete 하면 deleted 상태가 true 가 되어 조회되지 않는다")
     @Test
     void softDelete() {
         // given
@@ -151,10 +151,10 @@ class ArticleRepositoryH2Test {
 
         // when
         repository.softDelete(1L);
-        Article findArticle = repository.findById(1L).get();
+        Optional<Article> optionalArticle = repository.findById(1L);
 
         // then
-        assertThat(findArticle.isDeleted()).isTrue();
+        assertThat(optionalArticle).isEmpty();
     }
 
     @DisplayName("delete 상태인 게시물을 복원하면 deleted 상태가 false 가 된다")
