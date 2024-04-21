@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class ArticleController {
 
-    ArticleService articleService = new ArticleService();
+    ArticleService articleService;
+
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
+    }
 
     /**
      * 글 쓰기 화면
