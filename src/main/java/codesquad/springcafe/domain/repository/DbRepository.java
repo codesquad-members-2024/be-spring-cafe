@@ -1,4 +1,4 @@
-package codesquad.springcafe.repository;
+package codesquad.springcafe.domain.repository;
 
 import java.util.List;
 

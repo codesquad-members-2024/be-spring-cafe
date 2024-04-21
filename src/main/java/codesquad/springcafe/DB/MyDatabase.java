@@ -2,6 +2,8 @@ package codesquad.springcafe.DB;
 
 import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.domain.User;
+import codesquad.springcafe.domain.db.ArticleDatabase;
+import codesquad.springcafe.domain.db.UserDatabase;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

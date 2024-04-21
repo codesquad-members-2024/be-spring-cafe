@@ -2,14 +2,14 @@ package codesquad.springcafe.dto;
 
 import java.time.LocalDateTime;
 
-public class RegisterArticle {
+public class ArticleForm {
     private String writer;
     private String title;
     private String contents;
     private LocalDateTime time;
 
 
-    public RegisterArticle(String writer, String title, String contents){
+    public ArticleForm(String writer, String title, String contents){
         this.writer = writer;
         this.title = title;
         this.contents = contents;

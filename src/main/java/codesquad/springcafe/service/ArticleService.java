@@ -1,8 +1,8 @@
 package codesquad.springcafe.service;
 
 import codesquad.springcafe.domain.Article;
-import codesquad.springcafe.dto.RegisterArticle;
-import codesquad.springcafe.repository.ArticleRepository;
+import codesquad.springcafe.dto.ArticleForm;
+import codesquad.springcafe.domain.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +16,10 @@ public class ArticleService {
     }
 
     // 게시글 등록
-    public void registerArticle(RegisterArticle registerArticle) {
+    public void register(ArticleForm articleForm) {
         Article article = new Article(
-                registerArticle.getWriter(), registerArticle.getTitle(),
-                registerArticle.getContents(), registerArticle.getTime()
+                articleForm.getWriter(), articleForm.getTitle(),
+                articleForm.getContents(), articleForm.getTime()
         );
         h2ArticleRepository.add(article);
     }
