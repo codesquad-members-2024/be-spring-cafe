@@ -54,7 +54,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}")
-    public String detail(@PathVariable("articleId") long articleId, Model model) {
+    public String detail(@LoginId String loginId, @PathVariable("articleId") long articleId, Model model) {
         /* 줄바꿈 문자 추가 */
         String lineSeparator = System.lineSeparator();
         model.addAttribute("lineSeparator", lineSeparator);
@@ -69,6 +69,9 @@ public class ArticleController {
 
         /* 댓글 폼 추가 */
         model.addAttribute("commentForm", new CommentForm());
+
+        /* 로그인된 사용자 추가 */
+        model.addAttribute("loginMember", loginId);
 
         return "qna/detail";
     }

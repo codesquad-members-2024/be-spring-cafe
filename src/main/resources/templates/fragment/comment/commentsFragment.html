@@ -23,6 +23,7 @@
         </div>
         <div class="article-util">
             <ul class="article-util-list">
+                <th:block th:if="${loginMember == comment.createdBy}">
                 <li>
                     <a class="link-modify-article" th:href="@{|/questions/${articleId}/comments/${comment.id}/edit|}">
                         수정
@@ -34,6 +35,7 @@
                         <button type="submit" class="delete-answer-button">삭제</button>
                     </form>
                 </li>
+                </th:block>
             </ul>
         </div>
     </article>
