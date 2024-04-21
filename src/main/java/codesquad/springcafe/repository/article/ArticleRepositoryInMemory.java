@@ -53,6 +53,16 @@ public class ArticleRepositoryInMemory implements ArticleRepository {
     }
 
     @Override
+    public void softDelete(long id) {
+        store.values().forEach(Article::softDelete);
+    }
+
+    @Override
+    public void restore(long id) {
+        store.values().forEach(Article::restore);
+    }
+
+    @Override
     public void clear() {
         store.clear();
         sequence.set(0L);

@@ -63,6 +63,11 @@ public class Article {
         return deleted;
     }
 
+    public Article setDeleted(boolean deleted) {
+        this.deleted = deleted;
+        return this;
+    }
+
     public Article restore() {
         this.deleted = false;
         return this;

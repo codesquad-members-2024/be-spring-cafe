@@ -143,4 +143,45 @@ class ArticleRepositoryInMemoryTest {
         assertThat(findArticle.getCreatedBy()).isEqualTo("guest");
         assertThat(findArticle.getContents()).isEqualTo("success contents");
     }
+
+    @DisplayName("게시물을 soft delete 하면 deleted 상태가 true 가 된다")
+    @Test
+    void softDelete() {
+        // given
+        Article article = new Article();
+        article.setTitle("test");
+        article.setContents("test body");
+        article.setCreatedBy("yelly");
+        article.setCreatedAt(LocalDateTime.parse("2024-04-12T00:00:00"));
+
+        articleRepository.save(article);
+
+        // when
+        articleRepository.softDelete(1L);
+        Article findArticle = articleRepository.findById(1L).get();
+
+        // then
+        assertThat(findArticle.isDeleted()).isTrue();
+    }
+
+    @DisplayName("delete 상태인 게시물을 복원하면 deleted 상태가 false 가 된다")
+    @Test
+    void restore() {
+        // given
+        Article article = new Article();
+        article.setTitle("test");
+        article.setContents("test body");
+        article.setCreatedBy("yelly");
+        article.setCreatedAt(LocalDateTime.parse("2024-04-12T00:00:00"));
+        article.softDelete();
+
+        articleRepository.save(article);
+
+        // when
+        articleRepository.restore(1L);
+        Article findArticle = articleRepository.findById(1L).get();
+
+        // then
+        assertThat(findArticle.isDeleted()).isFalse();
+    }
 }

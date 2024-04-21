@@ -136,4 +136,45 @@ class ArticleRepositoryH2Test {
         assertThat(findArticle.getCreatedBy()).isEqualTo("yelly");
         assertThat(findArticle.getContents()).isEqualTo("success contents");
     }
+
+    @DisplayName("게시물을 soft delete 하면 deleted 상태가 true 가 된다")
+    @Test
+    void softDelete() {
+        // given
+        Article article = new Article();
+        article.setTitle("test");
+        article.setContents("test body");
+        article.setCreatedBy("yelly");
+        article.setCreatedAt(LocalDateTime.parse("2024-04-12T00:00:00"));
+
+        repository.save(article);
+
+        // when
+        repository.softDelete(1L);
+        Article findArticle = repository.findById(1L).get();
+
+        // then
+        assertThat(findArticle.isDeleted()).isTrue();
+    }
+
+    @DisplayName("delete 상태인 게시물을 복원하면 deleted 상태가 false 가 된다")
+    @Test
+    void restore() {
+        // given
+        Article article = new Article();
+        article.setTitle("test");
+        article.setContents("test body");
+        article.setCreatedBy("yelly");
+        article.setCreatedAt(LocalDateTime.parse("2024-04-12T00:00:00"));
+        article.softDelete();
+
+        repository.save(article);
+
+        // when
+        repository.restore(1L);
+        Article findArticle = repository.findById(1L).get();
+
+        // then
+        assertThat(findArticle.isDeleted()).isFalse();
+    }
 }
