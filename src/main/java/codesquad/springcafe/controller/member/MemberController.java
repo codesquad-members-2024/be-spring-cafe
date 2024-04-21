@@ -1,6 +1,7 @@
 package codesquad.springcafe.controller.member;
 
 import codesquad.springcafe.controller.SessionConst;
+import codesquad.springcafe.controller.argumentresolver.LoginId;
 import codesquad.springcafe.domain.member.Member;
 import codesquad.springcafe.service.exception.ResourceNotFoundException;
 import codesquad.springcafe.service.exception.UnauthorizedException;
@@ -74,7 +75,7 @@ public class MemberController {
     }
 
     @GetMapping("/{loginId}/update")
-    public String updateForm(@SessionAttribute(name = SessionConst.SESSION_ID, required = false) String sessionMemberId,
+    public String updateForm(@LoginId String sessionMemberId,
                              @PathVariable("loginId") String loginId, @ModelAttribute("form") UpdateMember form) {
         /* 로그인 검증 */
         validateLoginId(sessionMemberId, loginId);

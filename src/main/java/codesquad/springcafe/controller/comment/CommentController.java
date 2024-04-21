@@ -1,6 +1,6 @@
 package codesquad.springcafe.controller.comment;
 
-import codesquad.springcafe.controller.SessionConst;
+import codesquad.springcafe.controller.argumentresolver.LoginId;
 import codesquad.springcafe.domain.comment.Comment;
 import codesquad.springcafe.service.comment.CommentManager;
 import java.time.LocalDateTime;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Controller
 @RequestMapping("/questions/{articleId}/comments")
@@ -28,8 +27,7 @@ public class CommentController {
     }
 
     @PostMapping
-    public String publishComment(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
-                                 @PathVariable("articleId") long articleId,
+    public String publishComment(@LoginId String loginId, @PathVariable("articleId") long articleId,
                                  @ModelAttribute("commentForm") CommentForm form) {
         Comment comment = createComment(loginId, articleId, form);
 
@@ -39,8 +37,8 @@ public class CommentController {
     }
 
     @GetMapping("/{commentId}/edit")
-    public String editForm(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
-                           @PathVariable("commentId") long commentId, @PathVariable("articleId") long articleId,
+    public String editForm(@LoginId String loginId, @PathVariable("commentId") long commentId,
+                           @PathVariable("articleId") long articleId,
                            @ModelAttribute("form") CommentUpdateForm form) {
         Comment comment = commentManager.findComment(commentId);
 
@@ -54,8 +52,8 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public String edit(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
-                       @PathVariable("commentId") long commentId, @PathVariable("articleId") long articleId,
+    public String edit(@LoginId String loginId, @PathVariable("commentId") long commentId,
+                       @PathVariable("articleId") long articleId,
                        @Validated @ModelAttribute("form") CommentUpdateForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "qna/commentUpdateForm";
@@ -67,8 +65,8 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public String delete(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
-                         @PathVariable("commentId") long commentId, @PathVariable("articleId") long articleId) {
+    public String delete(@LoginId String loginId, @PathVariable("commentId") long commentId,
+                         @PathVariable("articleId") long articleId) {
         Comment comment = commentManager.findComment(commentId);
 
         /* 작성자 검증 */
