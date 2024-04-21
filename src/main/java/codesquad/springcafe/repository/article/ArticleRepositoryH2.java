@@ -65,8 +65,12 @@ public class ArticleRepositoryH2 implements ArticleRepository {
 
     @Override
     public List<Article> findAll() {
-        String sql = "select ARTICLE_ID, TITLE, CONTENTS, CREATED_BY, CREATED_AT, DELETED from ARTICLE where DELETED is false and CREATED_AT >= dateadd(day, -3, current_date) order by CREATED_AT desc ";
-        return template.query(sql, articleRowMapper());
+        String sql = "select A.ARTICLE_ID, A.TITLE, A.CREATED_BY, A.CREATED_AT, COALESCE(COUNT(C.DELETED), 0) AS comment_size "
+                + "from ARTICLE A LEFT JOIN COMMENT C ON A.ARTICLE_ID = C.ARTICLE_ID AND C.DELETED = false "
+                + "where A.DELETED is false and A.CREATED_AT >= dateadd(day, -3, current_date) "
+                + "group by A.ARTICLE_ID, A.TITLE, A.CREATED_BY, A.CREATED_AT "
+                + "order by A.CREATED_AT desc ";
+        return template.query(sql, articleRowMapperForList());
     }
 
     @Override
@@ -111,6 +115,19 @@ public class ArticleRepositoryH2 implements ArticleRepository {
             article.setCreatedBy(rs.getString("created_by"));
             article.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
             article.setDeleted(rs.getBoolean("deleted"));
+            return article;
+        };
+    }
+
+    private RowMapper<Article> articleRowMapperForList() {
+        return (rs, rowNum) -> {
+            Article article = new Article();
+            article.setId(rs.getLong("article_id"));
+            article.setTitle(rs.getString("title"));
+            article.setCreatedBy(rs.getString("created_by"));
+            article.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+            article.setCommentSize(rs.getInt("comment_size"));
+
             return article;
         };
     }

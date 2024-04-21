@@ -10,6 +10,7 @@ public class Article {
     private String createdBy;
     private LocalDateTime createdAt;
     private boolean deleted = false;
+    private int commentSize;
 
     public Article() {
     }
@@ -75,6 +76,15 @@ public class Article {
 
     public Article softDelete() {
         this.deleted = true;
+        return this;
+    }
+
+    public int getCommentSize() {
+        return commentSize;
+    }
+
+    public Article setCommentSize(int commentSize) {
+        this.commentSize = commentSize;
         return this;
     }
 
