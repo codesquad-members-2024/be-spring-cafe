@@ -1,6 +1,6 @@
 package codesquad.springcafe.controller.article;
 
-import codesquad.springcafe.controller.SessionConst;
+import codesquad.springcafe.controller.argumentresolver.LoginId;
 import codesquad.springcafe.controller.comment.CommentForm;
 import codesquad.springcafe.domain.article.Article;
 import codesquad.springcafe.domain.comment.Comment;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Controller
 @RequestMapping("/questions")
@@ -35,8 +34,7 @@ public class ArticleController {
     }
 
     @GetMapping
-    public String publish(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
-                          @ModelAttribute("article") ArticleForm form) {
+    public String publish(@LoginId String loginId, @ModelAttribute("article") ArticleForm form) {
         form.setCreatedBy(loginId);
 
         return "qna/form";
@@ -87,8 +85,8 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}/edit")
-    public String editForm(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
-                           @PathVariable("articleId") long articleId, @ModelAttribute("form") UpdateArticle form) {
+    public String editForm(@LoginId String loginId, @PathVariable("articleId") long articleId,
+                           @ModelAttribute("form") UpdateArticle form) {
         Article findArticle = articleManager.findArticle(articleId);
 
         /* 작성자 검증 */
@@ -108,9 +106,8 @@ public class ArticleController {
     }
 
     @PutMapping("/{articleId}")
-    public String edit(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
-                       @PathVariable("articleId") long articleId, @Validated @ModelAttribute("form") UpdateArticle form,
-                       BindingResult bindingResult) {
+    public String edit(@LoginId String loginId, @PathVariable("articleId") long articleId,
+                       @Validated @ModelAttribute("form") UpdateArticle form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "qna/updateForm";
         }
@@ -121,8 +118,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}/delete")
-    public String confirmUnpublish(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
-                                  @PathVariable("articleId") long articleId) {
+    public String confirmUnpublish(@LoginId String loginId, @PathVariable("articleId") long articleId) {
         Article findArticle = articleManager.findArticle(articleId);
 
         /* 작성자 검증 */
@@ -132,8 +128,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{articleId}")
-    public String unpublish(@SessionAttribute(name = SessionConst.SESSION_ID) String loginId,
-                            @PathVariable("articleId") long articleId) {
+    public String unpublish(@LoginId String loginId, @PathVariable("articleId") long articleId) {
         Article findArticle = articleManager.findArticle(articleId);
 
         /* 작성자 검증 */
