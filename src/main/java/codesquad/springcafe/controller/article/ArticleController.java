@@ -1,9 +1,13 @@
 package codesquad.springcafe.controller.article;
 
 import codesquad.springcafe.controller.SessionConst;
+import codesquad.springcafe.controller.comment.CommentForm;
 import codesquad.springcafe.domain.article.Article;
+import codesquad.springcafe.domain.comment.Comment;
 import codesquad.springcafe.service.article.ArticleManager;
+import codesquad.springcafe.service.comment.CommentManager;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,10 +26,12 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 @RequestMapping("/questions")
 public class ArticleController {
     private final ArticleManager articleManager;
+    private final CommentManager commentManager;
 
     @Autowired
-    public ArticleController(ArticleManager articleManager) {
+    public ArticleController(ArticleManager articleManager, CommentManager commentManager) {
         this.articleManager = articleManager;
+        this.commentManager = commentManager;
     }
 
     @GetMapping
@@ -51,14 +57,20 @@ public class ArticleController {
 
     @GetMapping("/{articleId}")
     public String detail(@PathVariable("articleId") long articleId, Model model) {
-        Article findArticle = articleManager.findArticle(articleId);
-
         /* 줄바꿈 문자 추가 */
         String lineSeparator = System.lineSeparator();
         model.addAttribute("lineSeparator", lineSeparator);
 
-        /* 모델 속성 추가 */
+        /* 게시글 추가 */
+        Article findArticle = articleManager.findArticle(articleId);
         model.addAttribute("article", findArticle);
+
+        /* 댓글 리스트 추가 */
+        List<Comment> comments = commentManager.findAllComment(articleId);
+        model.addAttribute("comments", comments);
+
+        /* 댓글 폼 추가 */
+        model.addAttribute("commentForm", new CommentForm());
 
         return "qna/detail";
     }
