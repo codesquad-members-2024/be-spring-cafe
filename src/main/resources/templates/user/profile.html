@@ -99,7 +99,7 @@
                 </tr>
                 </tbody>
             </table>
-            <div style="text-align: center; margin-top: 20px;">
+            <div th:if="${loginUser.nickname == user.nickname}" style="text-align: center; margin-top: 20px;">
                 <a th:href="@{/users/edit/{nickname}(nickname=${user.nickname})}" class="black-component">수정하기</a>
             </div>
         </div>
