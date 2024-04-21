@@ -1,5 +1,6 @@
 package codesquad.springcafe.controller.advice;
 
+import codesquad.springcafe.service.exception.DataDeletionException;
 import codesquad.springcafe.service.exception.ResourceNotFoundException;
 import codesquad.springcafe.service.exception.UnauthorizedException;
 import org.slf4j.Logger;
@@ -22,9 +23,16 @@ public class ExceptionControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler
+    @ExceptionHandler(UnauthorizedException.class)
     public String unauthorizedHandler(UnauthorizedException e) {
         log.error("[UnauthorizedException] {}" , e.getMessage());
         return "error/403";
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(DataDeletionException.class)
+    public String dataDeletionHandler(DataDeletionException e) {
+        log.error("[DataDeletionException] {}", e.getMessage());
+        return "error/delete-failed";
     }
 }

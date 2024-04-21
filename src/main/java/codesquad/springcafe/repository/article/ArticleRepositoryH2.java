@@ -10,6 +10,7 @@ import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -75,7 +76,7 @@ public class ArticleRepositoryH2 implements ArticleRepository {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(long id) throws DataIntegrityViolationException {
         String sql = "delete from ARTICLE where ARTICLE_ID = ?";
         template.update(sql, id);
     }

@@ -58,6 +58,10 @@ public class Comment {
         return this;
     }
 
+    public boolean isSameAuthor(String author) {
+        return createdBy.equals(author);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
