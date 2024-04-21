@@ -9,6 +9,7 @@ public class Article {
     private String contents;
     private String createdBy;
     private LocalDateTime createdAt;
+    private boolean deleted = false;
 
     public Article() {
     }
@@ -55,6 +56,20 @@ public class Article {
 
     public Article setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+        return this;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public Article restore() {
+        this.deleted = false;
+        return this;
+    }
+
+    public Article softDelete() {
+        this.deleted = true;
         return this;
     }
 
