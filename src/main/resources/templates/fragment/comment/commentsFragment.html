@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="kr">
+
+<th:block th:fragment="commentList (comments, lineSeparator)">
+    <article th:each="comment, commentStat : ${comments}" class="article" id="answer-1405">
+        <div class="article-header">
+            <div class="article-header-thumb">
+                <img src="https://graph.facebook.com/v2.3/1324855987/picture"
+                     class="article-author-thumb" alt="">
+            </div>
+            <div class="article-header-text">
+                <a th:href="@{|/members/${comment.createdBy}|}" class="article-author-name">
+                    <span th:text="${comment.createdBy}"></span>
+                </a>
+                <div class="article-header-time">
+                    <span th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}">2016-01-12 14:06</span>
+                    <i class="icon-link"></i>
+                </div>
+            </div>
+        </div>
+        <div class="article-doc comment-doc">
+            <p th:utext="${#strings.replace(comment.content, lineSeparator, '&lt;br /&gt;')}">이 글만으로는 원인 파악하기 힘들겠다. 소스 코드와 설정을 단순화해서 공유해 주면 같이 디버깅해줄 수도 있겠다.</p>
+        </div>
+        <div class="article-util">
+            <ul class="article-util-list">
+                <li>
+                    <a class="link-modify-article" th:href="@{|/questions/${articleId}/comments/${comment.id}/edit|}">
+                        수정
+                    </a>
+                </li>
+                <li>
+                    <form class="delete-answer-form" th:action="@{|/questions/${articleId}/comments/${comment.id}|}"
+                          th:method="delete" method="post">
+                        <button type="submit" class="delete-answer-button">삭제</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </article>
+</th:block>
+</html>

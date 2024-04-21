@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="kr">
+<head th:replace="~{fragment/layout/header :: header(~{::title})}">
+    <title>Update Your Article</title>
+</head>
+
+<body th:replace="~{fragment/layout/content :: content(~{::contentBody})}">
+<div th:fragment="contentBody" class="container" id="main">
+    <div class="col-md-12 col-sm-12 col-lg-10 col-lg-offset-1">
+        <div class="panel panel-default content-main">
+            <form th:action="@{|/questions/*{articleId}/comments/*{id}|}" action="" th:object="${form}" method="post" th:method="put">
+                <div th:if="${#fields.hasGlobalErrors()}">
+                    <p class="field-error" th:each="err : ${#fields.globalErrors()}"
+                       th:text="${err}">오류 메시지</p>
+                </div>
+                <div class="form-group">
+                    <label for="comment-id">댓글 번호</label>
+                    <input class="form-control" id="comment-id" name="comment-id" th:field="*{id}" placeholder="댓글 번호" readonly/>
+                    <input hidden="hidden" th:field="*{articleId}" readonly>
+                    <input hidden="hidden" th:field="*{author}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="content">댓글 내용</label>
+                    <textarea id="content" name="content" class="form-control" rows="5" th:field="*{content}" placeholder="내용">
+                    </textarea>
+                    <div class="field-error" th:errors="*{content}" />
+                </div>
+                <button type="submit" class="btn btn-success clearfix pull-right">
+                    게시물 수정
+                </button>
+                <div class="clearfix"/>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
