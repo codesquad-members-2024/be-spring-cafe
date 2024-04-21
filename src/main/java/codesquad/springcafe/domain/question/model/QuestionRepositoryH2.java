@@ -73,6 +73,18 @@ public class QuestionRepositoryH2 implements QuestionRepository{
     }
 
     @Override
+    public void viewCntUp(Long questionId, Question question) {
+        final String sql = "UPDATE question SET viewCnt = ? WHERE id = ?";
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, question.getViewCnt());
+            ps.setLong(2, questionId);
+            return ps;
+        });
+    }
+
+    @Override
     public Collection<Question> findAll() {
         final String sql = "select * from question";
         return jdbcTemplate.query(sql, questionRowMapper);

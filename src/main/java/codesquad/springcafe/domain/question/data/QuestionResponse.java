@@ -8,8 +8,9 @@ public class QuestionResponse {
     private final String content;
     private final String createdAt;
     private final Integer viewCnt;
+    private final boolean isMy;
 
-    public QuestionResponse(Long questionId, String userName, String userLoginId, String title, String content, String createdAt, Integer viewCnt) {
+    public QuestionResponse(Long questionId, String userName, String userLoginId, String title, String content, String createdAt, Integer viewCnt, boolean isMy) {
         this.questionId = questionId;
         this.userName = userName;
         this.userLoginId = userLoginId;
@@ -17,6 +18,7 @@ public class QuestionResponse {
         this.content = content;
         this.createdAt = createdAt;
         this.viewCnt = viewCnt;
+        this.isMy = isMy;
     }
 
     public Long getQuestionId() {
@@ -45,5 +47,9 @@ public class QuestionResponse {
 
     public Integer getViewCnt() {
         return viewCnt;
+    }
+
+    public boolean isMy() {
+        return isMy;
     }
 }

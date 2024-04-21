@@ -38,4 +38,10 @@ public class QuestionRepositoryLocal implements QuestionRepository{
     public void update(Long questionId, Question updateQuestion) {
         questions.put(questionId, updateQuestion);
     }
+
+    @Override
+    public void viewCntUp(Long questionId, Question question) {
+        question.viewCntUp();
+        update(questionId, question);
+    }
 }

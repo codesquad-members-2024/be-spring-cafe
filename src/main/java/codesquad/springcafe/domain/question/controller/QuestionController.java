@@ -36,8 +36,9 @@ public class QuestionController {
 
     // 게시글 목록 조회
     @GetMapping({"/", "/questions"})
-    public String getQuestions(Model model) {
-        QuestionListResponse questionListResponse = questionService.getQuestions();
+    public String getQuestions(HttpSession httpSession, Model model) {
+        Object userId = httpSession.getAttribute("userId");
+        QuestionListResponse questionListResponse = questionService.getQuestions(userId);
 
         model.addAttribute("totalQuestionCnt", questionListResponse.getTotalQuestionCnt());
         model.addAttribute("questions", questionListResponse.getQuestions());
