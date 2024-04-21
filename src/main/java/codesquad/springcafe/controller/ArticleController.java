@@ -1,6 +1,6 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.dto.RegisterArticle;
+import codesquad.springcafe.dto.ArticleForm;
 import codesquad.springcafe.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,8 +24,8 @@ public class ArticleController {
     }
 
     @PostMapping("/qna")
-    public String register(RegisterArticle registerArticle) {
-        articleService.registerArticle(registerArticle);
+    public String register(ArticleForm articleForm) {
+        articleService.register(articleForm);
         return "redirect:/";
     }
 

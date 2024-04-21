@@ -3,7 +3,7 @@ package codesquad.springcafe.service;
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.dto.UpdateUser;
 import codesquad.springcafe.exception.InvalidAccessException;
-import codesquad.springcafe.repository.UserRepository;
+import codesquad.springcafe.domain.repository.UserRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 

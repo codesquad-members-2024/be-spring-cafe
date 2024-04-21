@@ -1,6 +1,7 @@
 package codesquad.springcafe.repository;
 
 import codesquad.springcafe.domain.Article;
+import codesquad.springcafe.domain.repository.ArticleRepository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,17 +17,21 @@ import org.springframework.stereotype.Repository;
 @Primary
 @Repository
 public class H2ArticleRepository implements ArticleRepository {
-
+    private final static String WRITER_KEY = "writer";
+    private final static String TITLE_KEY = "title";
+    private final static String CONTENTS_KEY = "contents";
+    private final static String TIME_KEY = "time";
+    private final static String ID_KEY = "id";
     private final Logger logger = LoggerFactory.getLogger(H2ArticleRepository.class);
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Article> articleRowMapper = (resultSet, rowNum) -> {
         Article article = new Article(
-                resultSet.getString("writer"),
-                resultSet.getString("title"),
-                resultSet.getString("contents"),
-                resultSet.getTimestamp("time").toLocalDateTime()
+                resultSet.getString(WRITER_KEY),
+                resultSet.getString(TITLE_KEY),
+                resultSet.getString(CONTENTS_KEY),
+                resultSet.getTimestamp(TIME_KEY).toLocalDateTime()
         );
-        article.setId(resultSet.getLong("id"));
+        article.setId(resultSet.getLong(ID_KEY));
         return article;
     };
 
@@ -38,13 +43,13 @@ public class H2ArticleRepository implements ArticleRepository {
     public void add(Article article) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("Articles")
-                .usingGeneratedKeyColumns("id");
+                .usingGeneratedKeyColumns(ID_KEY);
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("writer", article.getWriter());
-        parameters.put("title", article.getTitle());
-        parameters.put("contents", article.getContents());
-        parameters.put("time", article.getTime());
+        parameters.put(WRITER_KEY, article.getWriter());
+        parameters.put(TITLE_KEY, article.getTitle());
+        parameters.put(CONTENTS_KEY, article.getContents());
+        parameters.put(TIME_KEY, article.getTime());
 
         Long key = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
         article.setId(key);

@@ -1,7 +1,8 @@
 package codesquad.springcafe.repository;
 
-import codesquad.springcafe.DB.UserDatabase;
+import codesquad.springcafe.domain.db.UserDatabase;
 import codesquad.springcafe.domain.User;
+import codesquad.springcafe.domain.repository.UserRepository;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
