@@ -9,6 +9,7 @@ public class Comment {
     private String content;
     private String createdBy;
     private LocalDateTime createdAt;
+    private boolean deleted = false;
 
     public Comment() {
     }
@@ -60,6 +61,25 @@ public class Comment {
 
     public boolean isSameAuthor(String author) {
         return createdBy.equals(author);
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public Comment setDeleted(boolean deleted) {
+        this.deleted = deleted;
+        return this;
+    }
+
+    public Comment restore() {
+        this.deleted = false;
+        return this;
+    }
+
+    public Comment softDelete() {
+        this.deleted = true;
+        return this;
     }
 
     @Override
