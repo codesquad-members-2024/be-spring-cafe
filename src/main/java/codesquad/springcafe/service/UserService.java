@@ -52,6 +52,6 @@ public class UserService {
                     user.setEmail(updatedUser.getEmail());
                 }
         );
-        userRepository.userUpdate(updatedUser);
+        userRepository.userUpdate(optionalUser.get());
     }
 }

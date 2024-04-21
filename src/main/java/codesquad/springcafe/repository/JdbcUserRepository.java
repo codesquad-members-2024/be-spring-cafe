@@ -49,7 +49,7 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public void userUpdate(User user) {
-        jdbcTemplate.update("update users set password = ?, name = ?, email = ? where id = ?",
+        jdbcTemplate.update("update users set password = ?, name = ?, email = ? where id= ?",
                 user.getPassword(), user.getName(), user.getEmail(), user.getId());
     }
 
