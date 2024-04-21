@@ -2,7 +2,6 @@ package codesquad.springcafe.service.impl;
 
 import codesquad.springcafe.exception.db.ArticleNotFoundException;
 import codesquad.springcafe.exception.service.DuplicateArticleIdException;
-import codesquad.springcafe.exception.service.DuplicateUserIdException;
 import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.ListArticle;
 import codesquad.springcafe.model.UpdatedArticle;
@@ -29,14 +28,14 @@ public class ArticleManagementService implements ArticleService {
     }
 
     @Override
-    public void addArticle(Article article) throws DuplicateUserIdException {
+    public void addArticle(Article article) throws DuplicateArticleIdException {
         try {
             validateDuplicateArticleId(article); // 중복 검증
             articleRepository.addArticle(article);
             logger.info("[게시글 생성 완료] - " + article);
         } catch (DuplicateArticleIdException e) {
             logger.error("이미 중복된 ID를 가진 게시글이 존재합니다.");
-            throw new DuplicateUserIdException(article.getUserId());
+            throw new DuplicateArticleIdException(article.getId());
         }
     }
 
@@ -77,7 +76,7 @@ public class ArticleManagementService implements ArticleService {
     @Override
     public void increaseViewCount(long id) {
         long increasedViewCount = articleRepository.increaseViewCount(id);
-        logger.info("[{}번째 게시글 조회수 증가] - 현재 조회수 : {}", id, increasedViewCount);
+        logger.info("[{}번째 게시글 조회수 증가]", id);
     }
 
     @Override
