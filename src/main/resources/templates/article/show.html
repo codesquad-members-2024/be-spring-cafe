@@ -6,9 +6,7 @@
     <title>SLiPP Java Web Programming</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link th:href="@{/css/bootstrap.min.css}" href="../../static/css/bootstrap.min.css" rel="stylesheet">
-    <!--[if lt IE 9]>
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
     <link th:href="@{/css/styles.css}" href="../../static/css/styles.css" rel="stylesheet">
 </head>
 <body>
@@ -120,7 +118,7 @@
 
               <div class="qna-comment">
                   <div class="qna-comment-slipp">
-                      <p class="qna-comment-count"><strong th:text="${comments.size()}">2</strong>개의 의견</p>
+                      <p class="qna-comment-count"><strong th:text="${comments.size()}">2</strong>개의 댓글</p>
                       <div class="qna-comment-slipp-articles" th:each="comment: ${comments}">
                           <article class="article">
                               <div class="article-header">
@@ -149,12 +147,17 @@
                                               <button type="submit" class="delete-answer-button">삭제</button>
                                           </form>
                                       </li>
+                                      <li>
+                                          <a class="link-modify-article" href="/">
+                                              추천하기
+                                          </a>
+                                      </li>
                                   </ul>
                               </div>
                           </article>
                       </div>
                           <div class="form-group" style="padding: 14px">
-                              <a th:href="@{/comment/create/{writtenArticle}(writtenArticle=${article.identifier})}" class="btn btn-success pull-right">답변하기</a>
+                              <a th:href="@{/comment/create/{writtenArticle}(writtenArticle=${article.identifier})}" class="btn btn-success pull-right">댓글 달기</a>
                           </div>
                       </div>
                   </div>

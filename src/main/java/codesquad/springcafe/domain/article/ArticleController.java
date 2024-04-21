@@ -59,6 +59,7 @@ public class ArticleController {
         if (!articleService.userHasPermission((UserIdentity) session.getAttribute(Constant.SESSION_LOGIN), nowArticle)) {
             throw new NotAuthenticationException();
         }
+        model.addAttribute("article", nowArticle);
         model.addAttribute("articleId", articleId);
 
         return "article/updateForm";

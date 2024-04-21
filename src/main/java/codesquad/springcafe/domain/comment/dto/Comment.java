@@ -1,5 +1,7 @@
 package codesquad.springcafe.domain.comment.dto;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,7 +19,7 @@ public class Comment {
         if (identifier != null) this.identifier = UUID.fromString(identifier);
         else this.identifier = UUID.randomUUID();
 
-        this.writer = writer;
+        this.writer = URLDecoder.decode(writer, StandardCharsets.UTF_8);
         this.writtenArticle = UUID.fromString(writtenArticle);
 
         if (createTime != null )this.createTime = createTime;
