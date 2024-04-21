@@ -1,16 +1,15 @@
 package codesquad.springcafe.domain;
 
 public class User {
-    private final String userId;
+    private String userId;
     private String name;
     private String email;
     private String password;
 
-    public User(String userId, String name, String email, String password) {
+    public User(){}
+
+    public void setUserId(String userId) {
         this.userId = userId;
-        this.name = name;
-        this.email = email;
-        this.password = password;
     }
 
     public void setName(String name) {
