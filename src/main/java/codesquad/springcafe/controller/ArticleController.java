@@ -2,13 +2,17 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.dto.ArticleUpdateDto;
 import codesquad.springcafe.dto.ArticleWriteDto;
-import codesquad.springcafe.exception.service.DuplicateUserIdException;
+import codesquad.springcafe.dto.CommentWriteDto;
+import codesquad.springcafe.exception.service.DuplicateArticleIdException;
 import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.Comment;
 import codesquad.springcafe.model.SessionUser;
 import codesquad.springcafe.model.UpdatedArticle;
 import codesquad.springcafe.service.ArticleService;
+import codesquad.springcafe.service.CommentService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +33,12 @@ public class ArticleController {
     private static final Logger logger = LoggerFactory.getLogger(ArticleController.class);
 
     private final ArticleService articleService;
+    private final CommentService commentService;
 
     @Autowired
-    public ArticleController(ArticleService articleService) {
+    public ArticleController(ArticleService articleService, CommentService commentService) {
         this.articleService = articleService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/write")
@@ -54,22 +60,24 @@ public class ArticleController {
             articleService.addArticle(article);
             sessionUser.addArticleId(article.getId()); // 세션 유저에 작성한 게시글 Id 추가
             return "redirect:/";
-        } catch (DuplicateUserIdException e) {
+        } catch (DuplicateArticleIdException e) {
             bindingResult.reject("errorAid");
             return "article/form";
         }
     }
 
-    @GetMapping("/show/{articleId}")
-    public String showDetailPage(@PathVariable long articleId, Model model, HttpSession httpSession) {
+    @GetMapping("/{articleId}")
+    public String showDetailPage(@PathVariable long articleId, Model model, HttpSession httpSession,
+                                 @ModelAttribute("commentWriteDto") CommentWriteDto commentWriteDto) {
         articleService.increaseViewCount(articleId);
         Article article = articleService.findArticleById(articleId);
-
         SessionUser sessionUser = (SessionUser) httpSession.getAttribute("sessionUser");
-        boolean isWriter = sessionUser.getArticleIds().contains(articleId);
+        List<Comment> comments = commentService.findCommentsByAid(articleId);
 
         model.addAttribute("article", article);
-        model.addAttribute("isWriter", isWriter);
+        model.addAttribute("isWriter", sessionUser.getArticleIds().contains(articleId));
+        model.addAttribute("writer", sessionUser.getUserId());
+        model.addAttribute("commentList", comments);
         return "article/show";
     }
 
@@ -96,10 +104,25 @@ public class ArticleController {
         return "redirect:/";
     }
 
-    @DeleteMapping("/delete/{articleId}")
+    @DeleteMapping("/update/{articleId}")
     public String processDelete(@PathVariable long articleId) {
         articleService.deleteArticle(articleId);
         return "redirect:/";
+    }
+
+    @PostMapping("/{articleId}/comments")
+    public String processAnswerForm(@PathVariable long articleId, HttpSession httpSession,
+                                    @Valid @ModelAttribute CommentWriteDto commentWriteDto,
+                                    BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "article/show";
+        }
+
+        SessionUser sessionUser = (SessionUser) httpSession.getAttribute("sessionUser");
+        String userId = sessionUser.getUserId();
+        Comment comment = commentWriteDto.createComment(articleId, userId);
+        commentService.addComment(comment);
+        return "redirect:/article/{articleId}";
     }
 
     @GetMapping("/invalid-modify")
