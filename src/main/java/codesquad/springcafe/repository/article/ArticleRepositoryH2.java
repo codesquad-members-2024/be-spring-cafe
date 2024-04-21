@@ -82,7 +82,10 @@ public class ArticleRepositoryH2 implements ArticleRepository {
 
     @Override
     public void clear() {
-        String sql = "alter table if exists article drop constraint if exists fk_created_by; TRUNCATE TABLE ARTICLE; ALTER TABLE ARTICLE ALTER COLUMN ARTICLE_ID RESTART WITH 1";
+        String sql = "alter table if exists article drop constraint if exists fk_created_by;"
+                + "alter table if exists comment drop constraint if exists fk_comment_created_by;"
+                + "alter table if exists comment drop constraint if exists fk_comment_article_id;"
+                + "TRUNCATE TABLE ARTICLE; ALTER TABLE ARTICLE ALTER COLUMN ARTICLE_ID RESTART WITH 1";
         template.update(sql);
     }
 
