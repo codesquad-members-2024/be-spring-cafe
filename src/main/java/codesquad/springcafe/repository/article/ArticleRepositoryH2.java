@@ -30,7 +30,7 @@ public class ArticleRepositoryH2 implements ArticleRepository {
 
     @Override
     public Article save(Article article) {
-        String sql = "INSERT INTO ARTICLE(TITLE, CONTENTS, CREATED_BY, CREATED_AT, DELETED) VALUES(?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO ARTICLE(TITLE, CONTENTS, CREATED_BY, CREATED_AT) VALUES(?, ?, ?, ?)";
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -40,7 +40,6 @@ public class ArticleRepositoryH2 implements ArticleRepository {
             ps.setString(2, article.getContents());
             ps.setString(3, article.getCreatedBy());
             ps.setTimestamp(4, Timestamp.valueOf(article.getCreatedAt()));
-            ps.setBoolean(5, article.isDeleted());
             return ps;
         }, keyHolder);
 

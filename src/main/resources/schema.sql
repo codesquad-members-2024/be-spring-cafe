@@ -23,6 +23,7 @@ create table article
     contents   longvarchar,
     created_by varchar(255),
     created_at timestamp,
+    deleted boolean default false,
     constraint fk_created_by foreign key (created_by) references member(login_id) on delete cascade
 );
 
@@ -35,6 +36,7 @@ create table comment
     content   varchar(255),
     created_by varchar(255),
     created_at timestamp,
+    deleted boolean default false,
     constraint fk_comment_created_by foreign key (created_by) references member(login_id),
     constraint fk_comment_article_id foreign key (article_id) references article(article_id) on delete restrict
 );
