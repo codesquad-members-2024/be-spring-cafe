@@ -22,6 +22,7 @@ class ArticleTest {
         assertThat(article.getTitle()).isEqualTo("test");
         assertThat(article.getCreatedBy()).isEqualTo("guest");
         assertThat(article.getContents()).isEqualTo("test body");
+        assertThat(article.isDeleted()).isFalse();
     }
 
     @DisplayName("같은 제목, 작성자, 본문 내용, 작성시간 이더라도 발급된 id가 다르면 다른 게시물이다")
@@ -50,5 +51,31 @@ class ArticleTest {
 
         // then
         assertThat(article1).isNotEqualTo(article2);
+    }
+
+    @DisplayName("게시글에 대해 soft delete 를 할 수 있다")
+    @Test
+    void softDelete() {
+        // given
+        Article article = new Article();
+
+        // when
+        article.softDelete();
+
+        // then
+        assertThat(article.isDeleted()).isTrue();
+    }
+
+    @DisplayName("게시글에 대해 삭제 상태를 복원할 수 있다")
+    @Test
+    void restore() {
+        // given
+        Article article = new Article();
+
+        // when
+        article.restore();
+
+        // then
+        assertThat(article.isDeleted()).isFalse();
     }
 }
