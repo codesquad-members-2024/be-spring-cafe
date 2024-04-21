@@ -1,10 +1,13 @@
 package codesquad.springcafe.controller;
 
+import codesquad.springcafe.dto.user.LoginDTO;
 import codesquad.springcafe.dto.user.SignUpDTO;
 import codesquad.springcafe.dto.user.UserInfoDTO;
 import codesquad.springcafe.dto.user.UserUpdateDTO;
 import codesquad.springcafe.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -59,5 +62,15 @@ public class UserController {
         UserInfoDTO updatedUser = userService.updateInfo(userId, updateInfo);
         model.addAttribute("user", updatedUser);
         return "redirect:/users";
+    }
+
+    @PostMapping("/login")
+    public String login(@ModelAttribute("user") LoginDTO loginDTO, HttpSession session) {
+        Optional<UserInfoDTO> loggedInUser = userService.login(loginDTO);
+        if (loggedInUser.isEmpty()) {
+            return "/user/login_failed";
+        }
+        session.setAttribute("user", loggedInUser.get());
+        return "redirect:/";
     }
 }

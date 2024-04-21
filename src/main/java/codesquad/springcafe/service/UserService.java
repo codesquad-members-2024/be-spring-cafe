@@ -1,5 +1,6 @@
 package codesquad.springcafe.service;
 
+import codesquad.springcafe.dto.user.LoginDTO;
 import codesquad.springcafe.dto.user.SignUpDTO;
 import codesquad.springcafe.dto.user.UserInfoDTO;
 import codesquad.springcafe.dto.user.UserUpdateDTO;
@@ -44,5 +45,14 @@ public class UserService {
         User modifiedUser = updateInfo.toUser(userId);
         userRepository.modify(modifiedUser);
         return modifiedUser.toDTO();
+    }
+
+    public Optional<UserInfoDTO> login(LoginDTO loginDTO) {
+        Optional<User> targetUser = userRepository.getById(loginDTO.getUserId());
+
+        if (targetUser.isPresent() && targetUser.get().isPasswordCorrect(loginDTO.getPassword())) {
+            return Optional.of(targetUser.get().toDTO());
+        }
+        return Optional.empty();
     }
 }
