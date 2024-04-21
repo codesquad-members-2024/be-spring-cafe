@@ -60,6 +60,19 @@ public class QuestionRepositoryH2 implements QuestionRepository{
     }
 
     @Override
+    public void update(Long questionId, Question updateQuestion) {
+        final String sql = "UPDATE question SET title = ?, content = ? WHERE id = ?";
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, updateQuestion.getTitle());
+            ps.setString(2, updateQuestion.getContent());
+            ps.setLong(3, questionId);
+            return ps;
+        });
+    }
+
+    @Override
     public Collection<Question> findAll() {
         final String sql = "select * from question";
         return jdbcTemplate.query(sql, questionRowMapper);

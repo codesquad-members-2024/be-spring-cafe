@@ -83,7 +83,7 @@ public class UserRepositoryH2 implements UserRepository{
     }
 
     @Override
-    public User update(Long userId, User updateUser) {
+    public void update(Long userId, User updateUser) {
         final String sql ="UPDATE users SET name = ?, email = ? WHERE id = ?";
 
         jdbcTemplate.update(con -> {
@@ -93,8 +93,6 @@ public class UserRepositoryH2 implements UserRepository{
             ps.setLong(3, userId);
             return ps;
         });
-
-        return updateUser;
     }
 
     @Override

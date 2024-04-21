@@ -48,4 +48,10 @@ public class Question extends BaseTime {
     public void viewCntUp() {
         viewCnt++;
     }
+
+    public Question update(String title, String content) {
+        this.title = title;
+        this.content = content;
+        return this;
+    }
 }

@@ -54,8 +54,7 @@ public class UserRepositoryLocal implements UserRepository{
     }
 
     @Override
-    public User update(Long userId, User updateUser) {
+    public void update(Long userId, User updateUser) {
         users.put(userId, updateUser);
-        return updateUser;
     }
 }

@@ -9,5 +9,5 @@ public interface UserRepository extends BasicRepository<User, Long> {
 
     Boolean existsById(Long userId);
 
-    User update(Long userId, User updateUser);
+    void update(Long userId, User updateUser);
 }

@@ -28,6 +28,8 @@
                                     작성일자 : <span th:text="${question.getCreatedAt()}"></span>
                                 </p>
                                 <p class="article-content">조회 <span th:text = "${question.getViewCnt()}">0</span></p>
+                                <a class="article-content" th:href="'/question/' + ${question.getQuestionId()} + '/edit'">수정</a>
+                                <a class="article-content" th:href="'/question/' + ${question.getQuestionId()} + '/delete'">삭제</a>
                             </div>
                         </div>
                         <div class="article-doc">

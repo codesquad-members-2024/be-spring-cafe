@@ -33,4 +33,9 @@ public class QuestionRepositoryLocal implements QuestionRepository{
     public void deleteAll() {
         questions.clear();
     }
+
+    @Override
+    public void update(Long questionId, Question updateQuestion) {
+        questions.put(questionId, updateQuestion);
+    }
 }
