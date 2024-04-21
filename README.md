@@ -11,6 +11,24 @@
 - [x] 로그아웃 상태에서 로그인 권한이 필요한 페이지에 접근하는 경우 차단
 - [x] 프로필 수정 시 본인의 프로필만 수정 가능하도록 제한하는 기능
 
+### ✍️ 메소드 convention
+
+| url                               | 기능                              |
+|-----------------------------------|---------------------------------|
+| GET /user/register                | 회원가입 화면 제공                      |
+| POST /user/register               | 새로운 유저 회원가입 진행                  |
+| GET /user/list                    | 전체 회원 리스트 화면 제공                 |
+| GET /user/profile/:userId         | userId에 해당되는 유저의 프로필 화면 제공      |
+| GET /qna                          | 질문을 작성할 수 있는 작성 폼 화면 제공         |
+| POST /qna                         | 새로운 질문 등록                       |
+| GET /article/:articleId           | articleId에 해당되는 질문의 상세 내용 화면 제공 |
+| GET /user/profile/:userId/update  | 회원정보 수정 폼 화면 제공                 |
+| POST /user/profile/:userId/update | 회원정보 수정 요청                      |
+| GET /login                        | 로그인 화면 제공                       |
+| POST /login                       | 로그인 진행                          |
+| POST /logout                      | 로그아웃 진행                         |
+| GET /  | 홈 화면 - 전체 글 목록 표기               |
+
 ### 🤔 설계 및 고민
 
 #### - modelAndView는 Redirection 시에 URL에 쿼리 파라미터가 표시된다 🥲
@@ -41,8 +59,8 @@
     }
     
         @PostMapping("/qna")
-    public String register(RegisterArticle registerArticle, ModelAndView model) {
-        articleService.registerArticle(registerArticle);
+    public String register(RegisterArticle articleForm, ModelAndView model) {
+        articleService.articleForm(articleForm);
         // 여기서 추가하는 경우에는 보이지 않는다.
         model.addObject("test",10);
         return "redirect:/";
@@ -68,6 +86,9 @@
                     <li th:if="${session.sessionUser}"><a href="#" role="button"
                                               onclick="document.getElementById('logout').submit()">로그아웃</a></li> 
 ```
+#### RowMapper 생성하는 또 다른 방법
+- `BeanPropertyRowMapper.newInstance`를 이용해서 특정 클래스의 RowMapper를 한 줄로 가져올 수 있다.
+- 다만 해당 클래스에 자동으로 매핑해주기 위해서 빈 생성자와 모든 setter가 필요하다.
 
 ### 📚 학습 중
 
