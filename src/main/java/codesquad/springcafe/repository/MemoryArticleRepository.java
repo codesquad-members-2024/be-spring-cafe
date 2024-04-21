@@ -1,15 +1,15 @@
 package codesquad.springcafe.repository;
 
-import codesquad.springcafe.DB.Database;
+import codesquad.springcafe.DB.ArticleDatabase;
 import codesquad.springcafe.domain.Article;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class MemoryArticleRepository implements ArticleRepository {
-    private final Database database;
+    private final ArticleDatabase database;
 
-    public MemoryArticleRepository(Database database) {
+    public MemoryArticleRepository(ArticleDatabase database) {
         this.database = database;
     }
 
