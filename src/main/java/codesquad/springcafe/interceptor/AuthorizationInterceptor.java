@@ -12,21 +12,12 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             throws Exception {
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
+            // 현재 URL을 redirectUrl로 지정하여 세션에 저장
             String redirectUrl = request.getRequestURI();
-            response.sendRedirect("/users/login?redirectUrl=" + redirectUrl);
-            return false;
+            request.getSession().setAttribute("redirectUrl", redirectUrl);
+            // 로그인 페이지로 redirect
+            response.sendRedirect("/users/login");
         }
         return true;
     }
-
-//    @Override
-//    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-//        String requestURI = request.getRequestURI();
-//        HttpSession session = request.getSession(false);
-//        if (session == null || session.getAttribute(LOGIN_USER_ID) == null) {
-//            response.sendRedirect("/users/login?redirectURL=" + requestURI);
-//            return false;
-//        }
-//        return true;
-//    }
 }

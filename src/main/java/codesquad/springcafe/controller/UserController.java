@@ -104,7 +104,14 @@ public class UserController {
 
         User user = optionalUser.get();
         session.setAttribute("user", user);
-        logger.debug("로그인 성공: {}", user);
+        logger.debug("로그인 성공: {}", user.toDto());
+
+        String redirectUrl = (String) session.getAttribute("redirectUrl");
+        if (redirectUrl != null) {
+            session.removeAttribute("redirectUrl");
+            return "redirect:" + redirectUrl;
+        }
+
         return "redirect:/";
     }
 
