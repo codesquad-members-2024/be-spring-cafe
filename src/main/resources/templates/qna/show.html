@@ -66,7 +66,9 @@
                 <li class="active"><a href="/">Posts</a></li>
                 <li><a href="/users/login/form" role="button">로그인</a></li>
                 <li><a href="/users/signup/form" role="button">회원가입</a></li>
-                <li><a href="#" role="button">로그아웃</a></li>
+                <li><a href="#" onclick="document.getElementById('logoutForm').submit();" role="button">
+                    <form action="/users/logout" method="post" id="logoutForm">로그아웃</form>
+                </a></li>
                 <li><a href="/users/{userId}/form" role="button">개인정보수정</a></li>
             </ul>
         </div>

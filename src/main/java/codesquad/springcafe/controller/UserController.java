@@ -73,4 +73,10 @@ public class UserController {
         session.setAttribute("user", loggedInUser.get());
         return "redirect:/";
     }
+
+    @PostMapping("/logout")
+    public String logout(HttpSession session) {
+        session.removeAttribute("user");
+        return "redirect:/";
+    }
 }
