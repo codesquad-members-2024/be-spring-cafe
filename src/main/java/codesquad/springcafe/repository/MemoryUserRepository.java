@@ -1,15 +1,15 @@
 package codesquad.springcafe.repository;
 
-import codesquad.springcafe.DB.Database;
+import codesquad.springcafe.DB.UserDatabase;
 import codesquad.springcafe.domain.User;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class MemoryUserRepository implements UserRepository {
-    private final Database database;
+    private final UserDatabase database;
 
-    public MemoryUserRepository(Database database) {
+    public MemoryUserRepository(UserDatabase database) {
         this.database = database;
     }
 

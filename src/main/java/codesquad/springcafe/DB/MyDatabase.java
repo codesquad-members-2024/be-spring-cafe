@@ -10,7 +10,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MyDatabase implements Database {
+public class MyDatabase implements ArticleDatabase, UserDatabase {
     private static final List<Article> articles = new ArrayList<>();
     private static final Map<String, User> users = new HashMap<>();
 
