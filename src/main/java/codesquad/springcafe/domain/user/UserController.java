@@ -3,6 +3,7 @@ package codesquad.springcafe.domain.user;
 import codesquad.springcafe.domain.user.DTO.Alert;
 import codesquad.springcafe.domain.user.DTO.SimpleUserInfo;
 import codesquad.springcafe.domain.user.DTO.UserListRes;
+import codesquad.springcafe.exception.AuthorizationException;
 import codesquad.springcafe.exception.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -122,9 +123,10 @@ public class UserController {
     }
 
     @GetMapping("{id}/form")
-    public String updateForm(@PathVariable("id") String id, Model model) {
-        model.addAttribute("user", userService.getUser(id));
+    public String updateForm(@PathVariable("id") String id, Model model ,@SessionAttribute("loginUser") SimpleUserInfo loginUser) {
+        if(!userService.canModify(id, loginUser)) throw new AuthorizationException("다른 유저의 정보를 수정할 수 없습니다!");
 
+        model.addAttribute("user", userService.getUser(id));
         return "user/update_form";
     }
 
