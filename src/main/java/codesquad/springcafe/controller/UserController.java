@@ -4,7 +4,9 @@ import codesquad.springcafe.domain.User;
 import codesquad.springcafe.dto.UserDto;
 import codesquad.springcafe.dto.UserUpdateDto;
 import codesquad.springcafe.repository.user.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,15 +78,21 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam("userId") String userId, @RequestParam("password") String password) {
-        User loginedUser = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 조회 실패"));
-
-        if (!loginedUser.getPassword().equals(password)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
+    public String login(HttpSession session, @RequestParam String userId, @RequestParam String password, Model model) {
+        Optional<User> optionalUser = userRepository.findByUserId(userId);
+        if (optionalUser.isEmpty() || !optionalUser.get().matchPassword(password)) {
+            model.addAttribute("errorMessage", "아이디 또는 비밀번호가 올바르지 않습니다.");
+            return "user/login";
         }
 
-        logger.debug("로그인 사용자: {}", loginedUser.toDto());
+        User user = optionalUser.get();
+        session.setAttribute("user", user);
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
         return "redirect:/";
     }
 }

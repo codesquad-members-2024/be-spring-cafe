@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -45,7 +46,11 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public Optional<User> findByUserId(String userId) {
         String SQL = "SELECT * FROM users WHERE user_id = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(SQL, rowMapper(), userId));
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SQL, rowMapper(), userId));
+        } catch (EmptyResultDataAccessException ex) {
+            return Optional.empty();
+        }
     }
 
     private RowMapper<User> rowMapper() {

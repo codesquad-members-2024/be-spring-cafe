@@ -20,6 +20,7 @@ public class JdbcArticleRepository implements ArticleRepository {
     }
 
     //update article set point = article.point+1 where id = ?
+
     @Override
     public void createArticle(ArticleDto articleDto) {
         Article article = articleDto.toEntity();

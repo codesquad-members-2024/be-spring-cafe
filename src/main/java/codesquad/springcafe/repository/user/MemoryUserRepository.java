@@ -25,6 +25,10 @@ public class MemoryUserRepository implements UserRepository {
     @Override
     public void updateUser(String userId, UserUpdateDto userUpdateDto) {
         User user = findByUserId(userId).get();
+        if (!user.matchPassword(userUpdateDto.getPassword())) {
+            logger.debug("비밀번호 오류");
+        }
+
         user.update(userUpdateDto);
         logger.debug("정보 업데이트: {}", user.toDto());
     }
