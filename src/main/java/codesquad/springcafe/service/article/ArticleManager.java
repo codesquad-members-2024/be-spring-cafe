@@ -74,11 +74,11 @@ public class ArticleManager implements ArticleService {
         }
 
         /* 모든 댓글 먼저 삭제 */
-        comments.forEach(comment -> commentRepository.delete(comment.getId())); // TODO: bulk update 메서드 만들기
+        comments.forEach(comment -> commentRepository.softDelete(comment.getId())); // TODO: bulk update 메서드 만들기
 
         /* 삭제 트랜잭션 */
         try {
-            articleRepository.delete(id);
+            articleRepository.softDelete(id);
         } catch (DataIntegrityViolationException e) {
             throw new DataDeletionException("데이터를 삭제 할 수 없습니다. 제약조건을 확인해야 합니다. 게시물 아이디: " + id, e);
         }
