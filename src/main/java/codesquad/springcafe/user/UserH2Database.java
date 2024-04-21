@@ -48,6 +48,12 @@ public class UserH2Database implements UserDatabase {
     }
 
     @Override
+    public void updateUser(User user) {
+        String sql = "UPDATE MAIN.USERS SET password = ?, name = ?, email = ? WHERE userid = ?";
+        jdbcTemplate.update(sql, user.getPassword(), user.getName(), user.getEmail(), user.getUserId());
+    }
+
+    @Override
     public boolean isExistUser(String userId) {
         return getUser(userId) != null;
     }
