@@ -38,7 +38,7 @@
                     <tbody>
                     <tr th:each="article: ${articleList}">
                         <td>
-                            <a th:href="@{/article/show/{articleId}(articleId=${article.getId()})}"
+                            <a th:href="@{/article/{articleId}(articleId=${article.getId()})}"
                                th:text="${article.getTitle()}">Title
                             </a>
                         </td>
