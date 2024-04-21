@@ -1,0 +1,99 @@
+package codesquad.springcafe.repository.comment;
+
+import codesquad.springcafe.controller.comment.CommentUpdateForm;
+import codesquad.springcafe.domain.comment.Comment;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Optional;
+import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class CommentRepositoryH2 implements CommentRepository {
+    private final JdbcTemplate template;
+
+    @Autowired
+    public CommentRepositoryH2(DataSource dataSource) {
+        this.template = new JdbcTemplate(dataSource);
+    }
+
+    @Override
+    public Comment save(Comment comment) {
+        String sql = "INSERT INTO COMMENT (ARTICLE_ID, CONTENT, CREATED_BY, CREATED_AT) VALUES (?, ?, ?, ?)";
+
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+
+        template.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setLong(1, comment.getArticleId());
+            ps.setString(2, comment.getContent());
+            ps.setString(3, comment.getCreatedBy());
+            ps.setTimestamp(4, Timestamp.valueOf(comment.getCreatedAt()));
+            return ps;
+        }, keyHolder);
+
+        Number key = keyHolder.getKey();
+
+        if (key == null) {
+            throw new IllegalStateException("pk를 생성하지 못했습니다");
+        }
+
+        comment.setId(key.longValue());
+        return comment;
+    }
+
+    @Override
+    public Optional<Comment> findById(long id) {
+        String sql = "SELECT COMMENT_ID, ARTICLE_ID, CONTENT, CREATED_BY, CREATED_AT FROM COMMENT WHERE COMMENT_ID = ?";
+        try {
+            return Optional.ofNullable(template.queryForObject(sql, replyRowMapper(), id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public List<Comment> findAllByArticleId(long articleId) {
+        String sql = "SELECT COMMENT_ID, ARTICLE_ID, CONTENT, CREATED_BY, CREATED_AT FROM COMMENT WHERE ARTICLE_ID = ? ORDER BY CREATED_AT";
+        return template.query(sql, replyRowMapper(), articleId);
+    }
+
+    private RowMapper<Comment> replyRowMapper() {
+        return (rs, rowNum) -> {
+            Comment comment = new Comment();
+            comment.setId(rs.getLong("comment_id"));
+            comment.setArticleId(rs.getLong("article_id"));
+            comment.setContent(rs.getString("content"));
+            comment.setCreatedBy(rs.getString("created_by"));
+            comment.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+            return comment;
+        };
+    }
+
+    @Override
+    public void update(CommentUpdateForm updateParam) {
+        String sql = "update COMMENT set CONTENT = ? where COMMENT_ID = ?";
+        template.update(sql, updateParam.getContent(), updateParam.getId());
+    }
+
+    @Override
+    public void delete(long id) {
+        String sql = "delete from COMMENT where COMMENT_ID = ?";
+        template.update(sql, id);
+    }
+
+    @Override
+    public void clear() {
+        String sql = "alter table if exists comment drop constraint if exists fk_comment_created_by;"
+                + "alter table if exists comment drop constraint if exists fk_comment_article_id;"
+                + "TRUNCATE TABLE COMMENT; ALTER TABLE COMMENT ALTER COLUMN COMMENT_ID RESTART WITH 1";
+        template.update(sql);
+    }
+}
