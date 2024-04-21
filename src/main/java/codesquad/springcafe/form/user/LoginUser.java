@@ -3,7 +3,7 @@ package codesquad.springcafe.form.user;
 import java.util.Set;
 
 public class LoginUser {
-    private final String nickname;
+    private String nickname;
     private final Set<Long> ownArticleIds;
 
     public LoginUser(String nickname, Set<Long> ownArticleIds) {
@@ -11,8 +11,8 @@ public class LoginUser {
         this.ownArticleIds = ownArticleIds;
     }
 
-    public LoginUser updateNickname(String nickname) {
-        return new LoginUser(nickname, ownArticleIds);
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public boolean hasSameNickname(String nickname) {

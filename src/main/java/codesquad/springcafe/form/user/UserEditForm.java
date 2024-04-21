@@ -5,9 +5,9 @@ import org.hibernate.validator.constraints.Length;
 
 public class UserEditForm {
     @NotBlank
-    private final String email;
+    private String email;
     @Length(min = 2, max = 10)
-    private final String nickname;
+    private String nickname;
     @Length(min = 3, max = 10)
     private final String currentPassword;
     @Length(min = 3, max = 10)
@@ -36,4 +36,11 @@ public class UserEditForm {
         return newPassword;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }

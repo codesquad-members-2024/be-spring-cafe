@@ -1,15 +1,13 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.database.user.UserDatabase;
 import codesquad.springcafe.form.user.LoginUser;
 import codesquad.springcafe.form.user.UserAddForm;
 import codesquad.springcafe.form.user.UserEditForm;
 import codesquad.springcafe.model.User;
-import jakarta.servlet.http.HttpSession;
+import codesquad.springcafe.service.UserService;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -22,15 +20,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Controller
 @RequestMapping("/users")
 public class UserController {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
-    private final UserDatabase userDatabase;
+    private final UserService userService;
 
-    public UserController(UserDatabase userDatabase) {
-        this.userDatabase = userDatabase;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     /**
@@ -38,7 +37,7 @@ public class UserController {
      */
     @GetMapping
     public String userList(Model model) {
-        List<User> users = userDatabase.findAll();
+        List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
         return "user/list";
     }
@@ -62,10 +61,7 @@ public class UserController {
             logger.error("errors={}", bindingResult);
             return "user/form";
         }
-
-        User user = new User(userAddForm.getEmail(), userAddForm.getNickname(), userAddForm.getPassword());
-        userDatabase.add(user);
-        logger.info("새로운 유저가 생성되었습니다. {}", user);
+        userService.join(userAddForm);
         return "redirect:/users";
     }
 
@@ -77,11 +73,8 @@ public class UserController {
      */
     @GetMapping("/profile/{nickname}")
     public String userProfile(@PathVariable String nickname, Model model) {
-        Optional<User> optionalUser = userDatabase.findByNickname(nickname);
-        if (optionalUser.isEmpty()) {
-            return "redirect:/users";
-        }
-        model.addAttribute("user", optionalUser.get());
+        User user = userService.getUserByNickname(nickname);
+        model.addAttribute("user", user);
         return "user/profile";
     }
 
@@ -89,19 +82,13 @@ public class UserController {
      * 유저 변경 폼을 사용자에게 보여줍니다.
      *
      * @param nickname 사용자가 수정을 원하는 유저의 닉네임입니다.
-     * @param model    데이터 베이스에 찾은 유저를 담습니다.
      * @return 데이터베이스에 일치하는 유저가 없으면 유저 리스트 화면으로 리다이렉트하고, 아니라면 업데이트 폼 화면을 보여줍니다.
      */
     @GetMapping("/edit/{nickname}")
-    public String updateForm(@PathVariable String nickname, Model model) {
-        Optional<User> optionalUser = userDatabase.findByNickname(nickname);
-        if (optionalUser.isEmpty()) {
-            return "redirect:/users";
-        }
-        User user = optionalUser.get();
-        String email = user.getEmail();
-        UserEditForm userEditForm = new UserEditForm(email, nickname, "", "");
-        model.addAttribute("userEditForm", userEditForm);
+    public String updateForm(@PathVariable String nickname, @ModelAttribute UserEditForm userEditForm) {
+        User user = userService.getUserByNickname(nickname);
+        userService.showEmailAndNickname(user, userEditForm);
+
         return "user/update";
     }
 
@@ -114,60 +101,47 @@ public class UserController {
      */
     @PutMapping("/edit/{nickname}")
     public String updateUser(@PathVariable String nickname, @Validated @ModelAttribute UserEditForm userEditForm,
-                             BindingResult bindingResult, HttpSession session) {
-        Optional<User> optionalUser = userDatabase.findByNickname(nickname);
-        if (optionalUser.isEmpty()) {
-            return "redirect:/users";
-        }
-        User targetUser = optionalUser.get();
-
+                             BindingResult bindingResult,
+                             @SessionAttribute(LoginController.LOGIN_SESSION_NAME) LoginUser loginUser) {
+        User targetUser = userService.getUserByNickname(nickname);
         validateUpdateForm(userEditForm, bindingResult, targetUser);
+
         if (bindingResult.hasErrors()) {
             logger.error("errors={}", bindingResult);
             return "user/update";
         }
 
-        User updateUser = targetUser.update(userEditForm.getNickname(), userEditForm.getNewPassword());
-        userDatabase.update(updateUser);
+        User updatedUser = userService.update(targetUser, userEditForm);// 유저 정보 업데이트
+        updateLoginUserNickname(loginUser, updatedUser); // 세션 정보 업데이트
 
-        updateSession(session, updateUser);
-
-        logger.info("유저정보가 업데이트 되었습니다. {}", updateUser);
-        String newNickname = updateUser.getNickname(); // 유저 닉네임이 수정될 경우를 반영
+        String newNickname = updatedUser.getNickname(); // 유저 닉네임이 수정될 경우를 반영
         return "redirect:/users/profile/" + URLEncoder.encode(newNickname, StandardCharsets.UTF_8);
     }
 
     private void validateAddForm(UserAddForm userAddForm, BindingResult bindingResult) {
-        if (isPresentNickname(userAddForm.getNickname())) {
+        String newNickname = userAddForm.getNickname();
+        if (userService.isDuplicateNickname(newNickname)) {
             bindingResult.rejectValue("nickname", "Duplicate");
         }
-
-        if (isPresentEmail(userAddForm.getEmail())) {
+        String newEmail = userAddForm.getEmail();
+        if (userService.isDuplicateEmail(newEmail)) {
             bindingResult.rejectValue("email", "Duplicate");
         }
     }
 
     private void validateUpdateForm(UserEditForm userEditForm, BindingResult bindingResult, User user) {
-        if (isPresentNickname(userEditForm.getNickname()) && !user.hasSameNickname(userEditForm.getNickname())) {
+        String newNickname = userEditForm.getNickname();
+        if (!userService.isUpdatableNickname(user, newNickname)) {
             bindingResult.rejectValue("nickname", "Duplicate");
         }
 
-        if (!user.hasSamePassword(userEditForm.getCurrentPassword())) {
+        String currentPassword = userEditForm.getCurrentPassword();
+        if (!userService.isCorrectPassword(user, currentPassword)) {
             bindingResult.rejectValue("currentPassword", "Wrong");
         }
     }
 
-    private boolean isPresentNickname(String nickname) {
-        return userDatabase.findByNickname(nickname).isPresent();
-    }
-
-    private boolean isPresentEmail(String email) {
-        return userDatabase.findByEmail(email).isPresent();
-    }
-
-    private void updateSession(HttpSession session, User updateUser) {
-        LoginUser loginUser = (LoginUser) session.getAttribute(LoginController.LOGIN_SESSION_NAME);
-        LoginUser updateLoginUser = loginUser.updateNickname(updateUser.getNickname());
-        session.setAttribute(LoginController.LOGIN_SESSION_NAME, updateLoginUser);
+    private void updateLoginUserNickname(LoginUser loginUser, User updatedUser) {
+        loginUser.updateNickname(updatedUser.getNickname());
     }
 }
