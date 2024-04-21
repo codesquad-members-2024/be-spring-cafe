@@ -11,6 +11,7 @@ import codesquad.springcafe.repository.member.MemberRepositoryH2;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.LongStream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -196,5 +197,29 @@ class CommentRepositoryH2Test {
 
         // then
         assertThat(findComment.isDeleted()).isFalse();
+    }
+
+    @DisplayName("아아디 1번 부터 10번까지 벌크 연산으로 삭제할 수 있다")
+    @Test
+    void bulkSoftDelete() {
+        // given
+        Comment comment = new Comment();
+        comment.setArticleId(1L);
+        comment.setContent("테스트 댓글");
+        comment.setCreatedBy("yelly");
+        comment.setCreatedAt(NOW);
+
+        for (int i = 0; i < 10; i++) {
+            commentRepository.save(comment);
+        }
+
+        List<Long> commentIds = LongStream.rangeClosed(1L, 10L).boxed().toList();
+
+        // when
+        commentRepository.bulkSoftDelete(commentIds);
+        List<Comment> comments = commentRepository.findAllByArticleId(1L);
+
+        // then
+        assertThat(comments).hasSize(0);
     }
 }

@@ -97,6 +97,15 @@ public class CommentRepositoryH2 implements CommentRepository {
     }
 
     @Override
+    public void bulkSoftDelete(List<Long> commentIds) {
+        String sql = "update COMMENT set DELETED = ? where COMMENT_ID = ?";
+        template.batchUpdate(sql, commentIds, commentIds.size(), (ps, commentId) -> {
+            ps.setBoolean(1, true);
+            ps.setLong(2, commentId);
+        });
+    }
+
+    @Override
     public void restore(long id) {
         String sql = "update COMMENT set DELETED = ? where COMMENT_ID = ?";
         template.update(sql, false, id);
