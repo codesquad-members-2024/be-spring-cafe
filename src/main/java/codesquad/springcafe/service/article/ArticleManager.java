@@ -74,7 +74,11 @@ public class ArticleManager implements ArticleService {
         }
 
         /* 모든 댓글 먼저 삭제 */
-        comments.forEach(comment -> commentRepository.softDelete(comment.getId())); // TODO: bulk update 메서드 만들기
+        List<Long> commentIds = comments.stream()
+                .map(Comment::getId)
+                .toList();
+
+        commentRepository.bulkSoftDelete(commentIds);
 
         /* 삭제 트랜잭션 */
         try {
