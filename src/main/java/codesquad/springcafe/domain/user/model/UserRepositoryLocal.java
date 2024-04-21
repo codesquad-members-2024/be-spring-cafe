@@ -57,4 +57,9 @@ public class UserRepositoryLocal implements UserRepository{
     public void update(Long userId, User updateUser) {
         users.put(userId, updateUser);
     }
+
+    @Override
+    public void softDeleteById(Long userId, User withdrawUser) {
+        update(userId, withdrawUser);
+    }
 }

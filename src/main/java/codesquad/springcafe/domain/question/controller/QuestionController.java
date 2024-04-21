@@ -59,20 +59,20 @@ public class QuestionController {
     }
 
     // 게시글 수정 페이지 접근
-    @GetMapping("/question/{questionId}/edit")
+    @GetMapping("/question/edit/{questionId}")
     public String getQuestionEditForm(HttpSession httpSession,
                                       @PathVariable("questionId") Long questionId,
                                       Model model) {
         Long userId = getSessionUserId(httpSession);
 
-        QuestionResponse questionResponse = questionService.getQuestion(userId, questionId);
+        QuestionResponse questionResponse = questionService.getEditQuestion(userId, questionId);
         model.addAttribute("question", questionResponse);
 
         return "/post/edit";
     }
 
     // 게시글 수정
-    @PutMapping("/question/{questionId}/edit")
+    @PutMapping("/question/edit/{questionId}")
     public String editQuestion(HttpSession httpSession,
                                @PathVariable("questionId") Long questionId,
                                QuestionRequest questionUpdateRequest,
@@ -82,6 +82,32 @@ public class QuestionController {
 
         redirectAttributes.addAttribute("questionId", questionId);
         return "redirect:/question/{questionId}";
+    }
+
+    // 게시글 삭제 페이지 접근
+    @GetMapping("/question/delete/{questionId}")
+    public String getQuestionDeleteForm(HttpSession httpSession,
+                                      @RequestHeader("referer") String referer,
+                                      @PathVariable("questionId") Long questionId,
+                                      Model model) {
+        Long userId = getSessionUserId(httpSession);
+        Long deleteQuestionId = questionService.getDeleteQuestion(userId, questionId);
+
+        model.addAttribute("goBack", referer);
+        model.addAttribute("questionId", deleteQuestionId);
+
+        return "/post/delete";
+    }
+
+    // 게시글 삭제
+    // TODO: 댓글 soft 삭제
+    @DeleteMapping("/question/delete/{questionId}")
+    public String deleteQuestion(HttpSession httpSession,
+                                 @PathVariable("questionId") Long questionId) {
+        Long userId = getSessionUserId(httpSession);
+        questionService.deleteQuestion(userId, questionId);
+
+        return "redirect:/questions";
     }
 
     private Long getSessionUserId(HttpSession httpSession) {

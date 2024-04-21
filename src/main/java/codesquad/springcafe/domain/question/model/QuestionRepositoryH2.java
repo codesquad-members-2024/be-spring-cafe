@@ -55,7 +55,7 @@ public class QuestionRepositoryH2 implements QuestionRepository{
 
     @Override
     public Optional<Question> findById(Long questionId) {
-        final String sql = "select * from question where id = ?";
+        final String sql = "select * from question where id = ? and deleted = false";
         List<Question> questions = jdbcTemplate.query(sql, questionRowMapper, questionId);
 
         if (questions.size() > 1) {
@@ -98,9 +98,21 @@ public class QuestionRepositoryH2 implements QuestionRepository{
 
     @Override
     public Collection<Question> findAll() {
-        final String sql = "select * from question";
+        final String sql = "select * from question where deleted = false";
         logger.info("Find All Questions | query : {}", sql);
         return jdbcTemplate.query(sql, questionRowMapper);
+    }
+
+    @Override
+    public void softDeleteById(Long questionId, Question deleteQuestion) {
+        final String sql = "UPDATE question SET deleted = ? where id = ?";
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setBoolean(1, deleteQuestion.getDeleted());
+            ps.setLong(2, questionId);
+            return ps;
+        });
+        logger.info("Soft Delete Question | questionId : {} | query : {}", questionId, sql);
     }
 
     @Override

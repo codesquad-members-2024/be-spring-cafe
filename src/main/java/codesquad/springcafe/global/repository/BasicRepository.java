@@ -10,5 +10,7 @@ public interface BasicRepository<T, ID> {
 
     Collection<T> findAll();
 
+    void softDeleteById(ID id, T entity);
+
     void deleteAll();
 }

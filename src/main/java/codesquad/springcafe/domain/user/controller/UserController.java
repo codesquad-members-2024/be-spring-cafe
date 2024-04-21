@@ -2,7 +2,6 @@ package codesquad.springcafe.domain.user.controller;
 
 import codesquad.springcafe.domain.user.data.*;
 import codesquad.springcafe.domain.user.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,15 +54,43 @@ public class UserController {
 
     // 로그아웃
     @PostMapping("/user/logout")
-    public String logout(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-
-        Object userId = session.getAttribute("userId");
-        if (!userService.logout(request.getParameter("userId"), userId)) {
+    public String logout(HttpSession httpSession,
+                         @RequestParam("loginId") String loginId) {
+        Object sessionUserId = httpSession.getAttribute("userId");
+        if (!userService.logout(loginId, sessionUserId)) {
             throw new IllegalStateException("로그아웃 할 수 없습니다.");  // TODO : exception 추가
         }
 
-        session.invalidate();
+        httpSession.invalidate();
+        return "redirect:/";
+    }
+
+    // 회원 탈퇴 페이지 접근
+    @GetMapping("/user/withdraw/{loginId}")
+    public String getWithdrawForm(HttpSession httpSession,
+                                  @PathVariable("loginId") String loginId,
+                                  @RequestHeader("referer") String referer,
+                                  Model model) {
+        Long sessionUserId = getSessionUserId(httpSession);
+
+        userService.getWithdrawForm(loginId, sessionUserId);
+        model.addAttribute("loginId", loginId);
+        model.addAttribute("goBack", referer);
+
+        return "/user/delete";
+    }
+
+    // 회원 탈퇴
+    @DeleteMapping("/user/withdraw/{loginId}")
+    public String withdraw(HttpSession httpSession,
+                           @PathVariable("loginId") String userId) {
+
+        Long sessionUserId = getSessionUserId(httpSession);
+        if(!userService.withdraw(userId, sessionUserId)){
+            throw new IllegalStateException("탈퇴할 수 없습니다.");
+        }
+
+        httpSession.invalidate();
         return "redirect:/";
     }
 

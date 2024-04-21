@@ -8,6 +8,7 @@ public class Question extends BaseTime {
     private String title;
     private String content;
     private Integer viewCnt;
+    private Boolean deleted;
 
     public Question() {
 
@@ -49,9 +50,18 @@ public class Question extends BaseTime {
         viewCnt++;
     }
 
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
     public Question update(String title, String content) {
         this.title = title;
         this.content = content;
+        return this;
+    }
+
+    public Question delete() {
+        this.deleted = true;
         return this;
     }
 }

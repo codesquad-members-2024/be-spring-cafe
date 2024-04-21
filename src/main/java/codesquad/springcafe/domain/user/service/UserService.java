@@ -59,13 +59,40 @@ public class UserService {
     }
 
     // 로그아웃
-    public boolean logout(String requestUserId, Object sessionUserId) {
-        if(sessionUserId == null || requestUserId == null) return true;
+    public boolean logout(String loginId, Object sessionUserId) {
+        if(sessionUserId == null) return true;
 
-        Long ruid = Long.parseLong(requestUserId);
+        User user = findUserByLoginId(loginId);
         Long suid = (Long) sessionUserId;
 
-        return ruid.equals(suid) && userRepository.existsById(suid);
+        return user.getId().equals(suid) && userRepository.existsById(suid);
+    }
+
+    // 회원 탈퇴 페이지 접근
+    public void getWithdrawForm(String loginId, Long sessionUserId) {
+        if (sessionUserId == null) {
+            throw new IllegalStateException("세션 또는 요청 사용자 ID가 없습니다.");
+        }
+
+        if (!findUserByLoginId(loginId).getId().equals(sessionUserId)) {
+            throw new IllegalStateException("본인이 아니면 탈퇴할 수 없습니다.");
+        }
+    }
+
+    // 회원 탈퇴
+    public boolean withdraw(String loginId, Long sessionUserId) {
+        if(sessionUserId == null || loginId == null) return false;
+
+        User user = findUserByLoginId(loginId);
+        if (!user.getId().equals(sessionUserId)) {
+            return false;
+        }
+
+        // 유저 정보 지우기
+        User withdraw = user.withdraw();
+        userRepository.softDeleteById(sessionUserId, withdraw);
+
+        return true;
     }
 
     // 회원 목록 조회
@@ -92,7 +119,7 @@ public class UserService {
         return new UserResponse(user.getLoginId(), user.getEmail(), user.getName(), DateUtils.convertCreatedAt(user.getCreatedAt()));
     }
 
-    // 내 프로필 수정 TODO : 테스트 가능하도록 수정
+    // 내 프로필 수정
     public void updateMyProfile(Long userId, UserUpdateRequest userUpdateRequest) {
         User user = findUserById(userId);
         User updateUser = user.update(userUpdateRequest.getName(), userUpdateRequest.getEmail());

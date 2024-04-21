@@ -9,6 +9,7 @@ public class User extends BaseTime {
     private String name;
     private String email;
     private String password;
+    private Boolean deleted;    // for soft deletion
 
     public User() {
 
@@ -47,9 +48,20 @@ public class User extends BaseTime {
         return password;
     }
 
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
     public User update(String name, String email) {
         this.name = name;
         this.email = email;
+        return this;
+    }
+
+    public User withdraw() {
+        this.email = null;
+        this.deleted = true;
+        this.password = null;
         return this;
     }
 }

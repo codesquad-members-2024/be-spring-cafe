@@ -74,6 +74,22 @@ public class QuestionService {
                 question.getUserId().equals(userId));
     }
 
+    // 수정할 게시글 조회
+    public QuestionResponse getEditQuestion(Long userId, Long questionId) {
+        // 사용자 인증
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+
+        // 질문 게시글 조회
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문 게시글입니다."));
+
+        if (!question.getUserId().equals(userId)) {
+            throw new IllegalStateException("다른 사람의 글을 수정할 수 없습니다.");
+        }
+
+        return new QuestionResponse(questionId, user.getName(), user.getLoginId(), question.getTitle(), question.getContent(),
+                DateUtils.convertCreatedAt(question.getCreatedAt()), question.getViewCnt(), true);
+    }
+
     // 질문 수정
     public void editQuestion(Long userId, Long questionId, QuestionRequest questionUpdateRequest) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
@@ -85,5 +101,33 @@ public class QuestionService {
 
         Question updateQuestion = question.update(questionUpdateRequest.getTitle(), questionUpdateRequest.getContent());
         questionRepository.update(questionId, updateQuestion);
+    }
+
+    // 삭제할 게시글 조회
+    public Long getDeleteQuestion(Long userId, Long questionId) {
+        // 사용자 인증
+        userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+
+        // 질문 게시글 조회
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문 게시글입니다."));
+
+        if (!question.getUserId().equals(userId)) {
+            throw new IllegalStateException("다른 사람의 글을 삭제할 수 없습니다.");
+        }
+
+        return question.getId();
+    }
+
+    // 질문 삭제
+    public void deleteQuestion(Long userId, Long questionId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문 게시글입니다."));
+
+        if (!question.getUserId().equals(user.getId())) {
+            throw new IllegalStateException("다른 사람의 글을 삭제할 수 없습니다.");
+        }
+
+        Question deleteQuestion = question.delete();
+        questionRepository.softDeleteById(userId, deleteQuestion);
     }
 }

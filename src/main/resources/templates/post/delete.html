@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>kakao Java Web Programming</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="/css/reset.css" rel="stylesheet">
+    <link href="/css/user/login_success.css" rel="stylesheet">
+    <script src="/js/global.js"></script>
+</head>
+<body>
+<div class="background">
+    <div th:replace="~{base/part/navbar :: navbar}"></div>
+
+    <div class="container" id="main">
+        <header class="post-header">
+            <p class="title">게시글 삭제</p>
+        </header>
+        <p class="delete-question">정말 삭제하시겠습니까?</p>
+        <form id="delete-post" th:action="'/question/delete/' + ${questionId}" method="post" style="display: none">
+            <input type="hidden" name="_method" value="DELETE" />
+            <button type="submit" style="display: none">삭제하기</button>
+        </form>
+        <a class="btn" th:href="${goBack}">취소</a>
+        <a class="btn" href="#" onclick="document.getElementById('delete-post').submit(); return false;" role="button">삭제하기</a>
+    </div>
+</div>
+</body>
+</html>

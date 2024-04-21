@@ -17,7 +17,7 @@
         <header class="post-header">
             <p class="title">게시글 수정</p>
         </header>
-        <form class="submit-write" method="post" th:action="'/question/' + ${question.getQuestionId()} + '/edit'">
+        <form class="submit-write" method="post" th:action="'/question/edit/' + ${question.getQuestionId()}">
             <input type="hidden" name="CSRF_TOKEN" th:value="${session.CSRF_TOKEN}">
             <input type="hidden" name="_method" value="PUT"/>
             <div class="text-box">

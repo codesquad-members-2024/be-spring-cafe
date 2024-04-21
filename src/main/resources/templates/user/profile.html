@@ -34,7 +34,7 @@
             </div>
             <div th:fragment="profile" class="buttons">
                 <a th:if="${my}" class="edit-button" href="/profile/my/edit">정보 수정</a>
-                <a th:if="${my}" class="delete-button">회원 탈퇴</a>
+                <a th:if="${my}" class="delete-button" th:href="'/user/withdraw/' + ${user.getLoginId()}">회원 탈퇴</a>
             </div>
         </div>
     </div>

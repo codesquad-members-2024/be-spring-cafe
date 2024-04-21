@@ -30,6 +30,11 @@ public class QuestionRepositoryLocal implements QuestionRepository{
         return questions.values();
     }
 
+    @Override
+    public void softDeleteById(Long questionId, Question deleteQuestion) {
+        update(questionId, deleteQuestion);
+    }
+
     public void deleteAll() {
         questions.clear();
     }

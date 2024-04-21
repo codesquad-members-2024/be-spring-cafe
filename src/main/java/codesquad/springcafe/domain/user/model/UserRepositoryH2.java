@@ -54,7 +54,7 @@ public class UserRepositoryH2 implements UserRepository{
 
     @Override
     public Optional<User> findById(Long userId) {
-        final String sql = "select * from users where id = ?";
+        final String sql = "select * from users where id = ? and deleted = false";
         List<User> users = jdbcTemplate.query(sql, userRowMapper, userId);
 
         if (users.size() > 1) {
@@ -68,14 +68,14 @@ public class UserRepositoryH2 implements UserRepository{
 
     @Override
     public List<User> findAll() {
-        final String sql = "select * from users";
+        final String sql = "select * from users where deleted = false";
         logger.info("Find All Users | query : {}", sql);
         return jdbcTemplate.query(sql, userRowMapper);
     }
 
     @Override
     public Optional<User> findByLoginId(String loginId) {
-        final String sql = "select * from users where loginId = ?";
+        final String sql = "select * from users where loginId = ? and deleted = false";
         List<User> users = jdbcTemplate.query(sql, userRowMapper, loginId);
 
         if (users.size() > 1) {
@@ -89,7 +89,7 @@ public class UserRepositoryH2 implements UserRepository{
 
     @Override
     public Boolean existsById(Long userId) {
-        final String sql = "SELECT EXISTS(SELECT 1 FROM users WHERE id = ?)";
+        final String sql = "SELECT EXISTS(SELECT 1 FROM users WHERE id = ? and deleted = false)";
         logger.info("User exists by Id | userId: {} | query : {}", userId, sql);
         return jdbcTemplate.queryForObject(sql, Boolean.class, userId);
     }
@@ -114,5 +114,21 @@ public class UserRepositoryH2 implements UserRepository{
         final String sql = "DELETE FROM users";
         logger.info("Delete All Users | query : {}", sql);
         jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public void softDeleteById(Long userId, User withdrawUser) {
+        final String sql = "UPDATE users SET email = ?, password = ?, deleted = ? where id = ?";
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, withdrawUser.getEmail());
+            ps.setString(2, withdrawUser.getPassword());
+            ps.setBoolean(3, withdrawUser.getDeleted());
+            ps.setLong(4, userId);
+            return ps;
+        });
+
+        logger.info("User soft delete | userId : {} | query : {}", userId, sql);
     }
 }
