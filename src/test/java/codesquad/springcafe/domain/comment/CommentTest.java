@@ -26,5 +26,33 @@ class CommentTest {
         assertThat(comment.getArticleId()).isEqualTo(1L);
         assertThat(comment.getContent()).isEqualTo("댓글 테스트");
         assertThat(comment.getCreatedAt()).isEqualTo(createdAt);
+        assertThat(comment.isDeleted()).isFalse();
+    }
+
+    @DisplayName("댓글에 대해 soft delete 를 할 수 있다")
+    @Test
+    void softDelete() {
+        // given
+        Comment comment = new Comment();
+
+        // when
+        comment.softDelete();
+
+        // then
+        assertThat(comment.isDeleted()).isTrue();
+    }
+
+    @DisplayName("댓글에 대해 삭제 상태를 복원할 수 있다")
+    @Test
+    void restore() {
+        // given
+        Comment comment = new Comment();
+        comment.softDelete();
+
+        // when
+        comment.restore();
+
+        // then
+        assertThat(comment.isDeleted()).isFalse();
     }
 }
