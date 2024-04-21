@@ -55,7 +55,7 @@ public class ArticleRepositoryH2 implements ArticleRepository {
 
     @Override
     public Optional<Article> findById(long id) {
-        String sql = "select ARTICLE_ID, TITLE, CONTENTS, CREATED_BY, CREATED_AT, DELETED from ARTICLE where ARTICLE_ID = ?";
+        String sql = "select ARTICLE_ID, TITLE, CONTENTS, CREATED_BY, CREATED_AT, DELETED from ARTICLE where ARTICLE_ID = ? and DELETED is false";
         try {
             return Optional.ofNullable(template.queryForObject(sql, articleRowMapper(), id));
         } catch (EmptyResultDataAccessException e) {
@@ -65,7 +65,7 @@ public class ArticleRepositoryH2 implements ArticleRepository {
 
     @Override
     public List<Article> findAll() {
-        String sql = "select ARTICLE_ID, TITLE, CONTENTS, CREATED_BY, CREATED_AT, DELETED from ARTICLE where CREATED_AT >= dateadd(day, -3, current_date) order by CREATED_AT desc ";
+        String sql = "select ARTICLE_ID, TITLE, CONTENTS, CREATED_BY, CREATED_AT, DELETED from ARTICLE where DELETED is false and CREATED_AT >= dateadd(day, -3, current_date) order by CREATED_AT desc ";
         return template.query(sql, articleRowMapper());
     }
 
