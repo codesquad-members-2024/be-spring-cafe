@@ -73,4 +73,8 @@ public class Article {
         this.articleId = articleId;
     }
 
+    public boolean checkWriter(String userId) {
+        return this.writer.equals(userId);
+    }
+
 }

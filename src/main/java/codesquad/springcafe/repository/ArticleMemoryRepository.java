@@ -1,5 +1,6 @@
 package codesquad.springcafe.repository;
 
+import codesquad.springcafe.dto.ArticleRequestDto;
 import codesquad.springcafe.model.Article;
 import org.springframework.stereotype.Repository;
 
@@ -33,5 +34,9 @@ public class ArticleMemoryRepository implements ArticleRepository {
     public void clear() {
         articles.clear();
         sequence.set(0L);
+    }
+
+    @Override
+    public void update(Long articleId, ArticleRequestDto articleRequestDto) {
     }
 }

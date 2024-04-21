@@ -1,5 +1,6 @@
 package codesquad.springcafe.repository;
 
+import codesquad.springcafe.dto.ArticleRequestDto;
 import codesquad.springcafe.model.Article;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -56,6 +57,12 @@ public class ArticleJdbcRepository implements ArticleRepository {
     public void clear() {
         String sql = "DELETE FROM articles";
         jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public void update(Long articleId, ArticleRequestDto articleRequestDto) {
+        String sql = "UPDATE articles SET title = ?, contents = ? WHERE article_id = ?";
+        jdbcTemplate.update(sql, articleRequestDto.getTitle(), articleRequestDto.getContents(), articleId);
     }
 
     private RowMapper<Article> articleRowMapper() {

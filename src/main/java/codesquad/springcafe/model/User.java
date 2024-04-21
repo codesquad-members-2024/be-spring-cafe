@@ -1,7 +1,5 @@
 package codesquad.springcafe.model;
 
-import codesquad.springcafe.dto.UserUpdateDto;
-
 public class User {
 
     private String userId;
