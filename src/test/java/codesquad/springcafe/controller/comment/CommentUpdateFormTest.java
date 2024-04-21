@@ -29,6 +29,7 @@ class CommentUpdateFormTest {
         CommentUpdateForm form = new CommentUpdateForm();
         form.setId(1L);
         form.setArticleId(1L);
+        form.setAuthor("tester1");
         form.setContent("test title");
 
         // when
@@ -55,6 +56,33 @@ class CommentUpdateFormTest {
         CommentUpdateForm form = new CommentUpdateForm();
         form.setId(1L);
         form.setArticleId(1L);
+        form.setAuthor("tester1");
+
+        // when
+        Set<ConstraintViolation<CommentUpdateForm>> violations = validator.validate(form);
+
+        Iterator<ConstraintViolation<CommentUpdateForm>> iterator = violations.iterator();
+
+        List<String> message = new ArrayList<>();
+
+        while (iterator.hasNext()) {
+            ConstraintViolation<CommentUpdateForm> next = iterator.next();
+            message.add(next.getMessage());
+        }
+
+        // then
+        assertThat(message).contains("비어 있을 수 없습니다");
+    }
+
+    @DisplayName("작성자가 비어있으면 검증에 실패하고 에러 메시지가 추가된다")
+    @Test
+    void validate_fail_when_empty_author() {
+        // given
+        /* 작성자가 없는 경우 */
+        CommentUpdateForm form = new CommentUpdateForm();
+        form.setId(1L);
+        form.setArticleId(1L);
+        form.setContent("test title");
 
         // when
         Set<ConstraintViolation<CommentUpdateForm>> violations = validator.validate(form);

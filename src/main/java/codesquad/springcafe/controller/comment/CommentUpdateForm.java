@@ -9,6 +9,8 @@ public class CommentUpdateForm {
     @NotNull
     private long articleId;
     @NotEmpty
+    private String author;
+    @NotEmpty
     private String content;
 
     public CommentUpdateForm() {
@@ -29,6 +31,15 @@ public class CommentUpdateForm {
 
     public CommentUpdateForm setArticleId(long articleId) {
         this.articleId = articleId;
+        return this;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public CommentUpdateForm setAuthor(String author) {
+        this.author = author;
         return this;
     }
 
