@@ -51,7 +51,7 @@ public class CommentRepositoryH2 implements CommentRepository {
 
     @Override
     public Optional<Comment> findById(long id) {
-        String sql = "SELECT COMMENT_ID, ARTICLE_ID, CONTENT, CREATED_BY, CREATED_AT FROM COMMENT WHERE COMMENT_ID = ?";
+        String sql = "SELECT COMMENT_ID, ARTICLE_ID, CONTENT, CREATED_BY, CREATED_AT, DELETED FROM COMMENT WHERE COMMENT_ID = ? and DELETED is false";
         try {
             return Optional.ofNullable(template.queryForObject(sql, replyRowMapper(), id));
         } catch (EmptyResultDataAccessException e) {
@@ -61,7 +61,7 @@ public class CommentRepositoryH2 implements CommentRepository {
 
     @Override
     public List<Comment> findAllByArticleId(long articleId) {
-        String sql = "SELECT COMMENT_ID, ARTICLE_ID, CONTENT, CREATED_BY, CREATED_AT FROM COMMENT WHERE ARTICLE_ID = ? ORDER BY CREATED_AT";
+        String sql = "SELECT COMMENT_ID, ARTICLE_ID, CONTENT, CREATED_BY, CREATED_AT, DELETED FROM COMMENT WHERE ARTICLE_ID = ? and DELETED is false ORDER BY CREATED_AT";
         return template.query(sql, replyRowMapper(), articleId);
     }
 
@@ -73,6 +73,7 @@ public class CommentRepositoryH2 implements CommentRepository {
             comment.setContent(rs.getString("content"));
             comment.setCreatedBy(rs.getString("created_by"));
             comment.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+            comment.setDeleted(rs.getBoolean("deleted"));
             return comment;
         };
     }
@@ -87,6 +88,18 @@ public class CommentRepositoryH2 implements CommentRepository {
     public void delete(long id) {
         String sql = "delete from COMMENT where COMMENT_ID = ?";
         template.update(sql, id);
+    }
+
+    @Override
+    public void softDelete(long id) {
+        String sql = "update COMMENT set DELETED = ? where COMMENT_ID = ?";
+        template.update(sql, true, id);
+    }
+
+    @Override
+    public void restore(long id) {
+        String sql = "update COMMENT set DELETED = ? where COMMENT_ID = ?";
+        template.update(sql, false, id);
     }
 
     @Override

@@ -156,4 +156,45 @@ class CommentRepositoryH2Test {
         // then
         assertThat(comments).hasSize(0);
     }
+
+    @DisplayName("게시물을 soft delete 하면 deleted 상태가 true 가 되어 조회되지 않는다")
+    @Test
+    void softDelete() {
+        // given
+        Comment comment = new Comment();
+        comment.setArticleId(1L);
+        comment.setContent("테스트 댓글");
+        comment.setCreatedBy("yelly");
+        comment.setCreatedAt(NOW);
+
+        commentRepository.save(comment);
+
+        // when
+        commentRepository.softDelete(1L);
+        Optional<Comment> optionalComment = commentRepository.findById(1L);
+
+        // then
+        assertThat(optionalComment).isEmpty();
+    }
+
+    @DisplayName("delete 상태인 게시물을 복원하면 deleted 상태가 false 가 된다")
+    @Test
+    void restore() {
+        // given
+        Comment comment = new Comment();
+        comment.setArticleId(1L);
+        comment.setContent("테스트 댓글");
+        comment.setCreatedBy("yelly");
+        comment.setCreatedAt(NOW);
+        comment.softDelete();
+
+        commentRepository.save(comment);
+
+        // when
+        commentRepository.restore(1L);
+        Comment findComment = commentRepository.findById(1L).get();
+
+        // then
+        assertThat(findComment.isDeleted()).isFalse();
+    }
 }
