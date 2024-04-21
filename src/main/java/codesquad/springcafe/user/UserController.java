@@ -2,6 +2,7 @@ package codesquad.springcafe.user;
 
 import codesquad.springcafe.user.dto.UserCreationDto;
 import codesquad.springcafe.user.dto.UserViewDto;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
@@ -53,13 +55,20 @@ public class UserController {
     }
 
     @PutMapping("/user/{userId}/form")
-    public String updateUser(@PathVariable String userId, UserCreationDto dto) {
-        service.update(userId, dto);
+    public String updateUser(@PathVariable String userId, @ModelAttribute UserCreationDto dto) {
+        service.updateUser(userId, dto);
         return "redirect:/users";
     }
 
-//    @GetMapping("/user/login")
-//    public String login(@ModelAttribute UserLoginRequestDto dto) {
-//        return service.login(dto);
-//    }
+    @PostMapping("/user/login")
+    public String login(@RequestParam String userId, @RequestParam String password, HttpSession session) {
+        Optional<UserViewDto> optUser = service.doLogin(userId, password);
+        // sessionedUser 가 mustache에 안들어가던지 or 요청된 유저의 세션이 풀리는지
+        return optUser.map(user -> {
+                    log.debug("{} 에 대해 세션을 추가합니다", user);
+                    session.setAttribute("sessionUser", user);
+                    return "redirect:/";
+                })
+                .orElseThrow(() -> new IllegalArgumentException(userId + "는 로그인 할 수 없습니다"));
+    }
 }

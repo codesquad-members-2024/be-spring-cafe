@@ -15,11 +15,8 @@ public class User {
         this.email = email;
     }
 
-    public User(String userId, String nickName, String email) {
-        this.userId = userId;
-        this.nickName = nickName;
-        this.email = email;
-        this.password = "";
+    public boolean has(String password) {
+        return Objects.equals(this.password, password);
     }
 
     public String getUserId() {

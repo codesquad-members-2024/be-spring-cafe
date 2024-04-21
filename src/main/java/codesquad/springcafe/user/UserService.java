@@ -5,6 +5,7 @@ import codesquad.springcafe.user.dto.UserViewDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,8 +34,14 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public void update(String userId, UserCreationDto dto) {
+    public void updateUser(String userId, UserCreationDto dto) {
         User user = dto.toEntity(userId);
         dao.update(user);
+    }
+
+    public Optional<UserViewDto> doLogin(String userId, String password) {
+        return dao.findUser(userId)
+                .filter(user -> user.has(password))
+                .map(UserViewDto::toDto);
     }
 }
