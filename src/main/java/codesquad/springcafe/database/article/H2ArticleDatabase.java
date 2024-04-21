@@ -77,6 +77,7 @@ public class H2ArticleDatabase implements ArticleDatabase {
     }
 
     @Override
+    // 조회수 증가
     public void incrementViewsById(int id) {
         int rowsAffected = jdbcTemplate.update("UPDATE articles SET VIEWS = VIEWS + 1 WHERE ID = ?", id);
 

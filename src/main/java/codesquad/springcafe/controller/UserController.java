@@ -20,6 +20,7 @@ public class UserController {
     private final UserDatabase userDatabase;
 
     @Autowired
+    // 어떤 database를 이용할지 @Qualifier로 선택
     public UserController(@Qualifier("H2UserDatabase") UserDatabase userDatabase) {
         this.userDatabase = userDatabase;
     }
