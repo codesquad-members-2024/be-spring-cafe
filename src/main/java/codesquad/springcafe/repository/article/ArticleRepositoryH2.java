@@ -30,7 +30,7 @@ public class ArticleRepositoryH2 implements ArticleRepository {
 
     @Override
     public Article save(Article article) {
-        String sql = "INSERT INTO ARTICLE(TITLE, CONTENTS, CREATED_BY, CREATED_AT) VALUES(?, ?, ?, ?)";
+        String sql = "INSERT INTO ARTICLE(TITLE, CONTENTS, CREATED_BY, CREATED_AT, DELETED) VALUES(?, ?, ?, ?, ?)";
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -40,6 +40,7 @@ public class ArticleRepositoryH2 implements ArticleRepository {
             ps.setString(2, article.getContents());
             ps.setString(3, article.getCreatedBy());
             ps.setTimestamp(4, Timestamp.valueOf(article.getCreatedAt()));
+            ps.setBoolean(5, article.isDeleted());
             return ps;
         }, keyHolder);
 
@@ -55,7 +56,7 @@ public class ArticleRepositoryH2 implements ArticleRepository {
 
     @Override
     public Optional<Article> findById(long id) {
-        String sql = "select ARTICLE_ID, TITLE, CONTENTS, CREATED_BY, CREATED_AT from ARTICLE where ARTICLE_ID = ?";
+        String sql = "select ARTICLE_ID, TITLE, CONTENTS, CREATED_BY, CREATED_AT, DELETED from ARTICLE where ARTICLE_ID = ?";
         try {
             return Optional.ofNullable(template.queryForObject(sql, articleRowMapper(), id));
         } catch (EmptyResultDataAccessException e) {
@@ -65,7 +66,7 @@ public class ArticleRepositoryH2 implements ArticleRepository {
 
     @Override
     public List<Article> findAll() {
-        String sql = "select ARTICLE_ID, TITLE, CONTENTS, CREATED_BY, CREATED_AT from ARTICLE where CREATED_AT >= dateadd(day, -3, current_date) order by CREATED_AT desc ";
+        String sql = "select ARTICLE_ID, TITLE, CONTENTS, CREATED_BY, CREATED_AT, DELETED from ARTICLE where CREATED_AT >= dateadd(day, -3, current_date) order by CREATED_AT desc ";
         return template.query(sql, articleRowMapper());
     }
 
@@ -79,6 +80,18 @@ public class ArticleRepositoryH2 implements ArticleRepository {
     public void delete(long id) throws DataIntegrityViolationException {
         String sql = "delete from ARTICLE where ARTICLE_ID = ?";
         template.update(sql, id);
+    }
+
+    @Override
+    public void softDelete(long id) {
+        String sql = "update ARTICLE set DELETED = ? where ARTICLE_ID = ?";
+        template.update(sql, true, id);
+    }
+
+    @Override
+    public void restore(long id) {
+        String sql = "update ARTICLE set DELETED = ? where ARTICLE_ID = ?";
+        template.update(sql, false, id);
     }
 
     @Override
@@ -98,6 +111,7 @@ public class ArticleRepositoryH2 implements ArticleRepository {
             article.setContents(rs.getString("contents"));
             article.setCreatedBy(rs.getString("created_by"));
             article.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+            article.setDeleted(rs.getBoolean("deleted"));
             return article;
         };
     }

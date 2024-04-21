@@ -16,5 +16,9 @@ public interface ArticleRepository {
 
     void delete(long id);
 
+    void softDelete(long id);
+
+    void restore(long id);
+
     void clear();
 }
