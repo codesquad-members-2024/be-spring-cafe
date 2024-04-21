@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import codesquad.springcafe.form.user.UserEditForm;
 import codesquad.springcafe.model.User;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +28,7 @@ class UserDatabaseTest {
     @Test
     @DisplayName("데이터베이스에 유저를 저장하면 저장한 유저를 반환한다.")
     void save() {
-        User user = new User("sangchu@gmail.com", "상추", "123");
+        User user = new User("sangchu@gmail.com", "상추", "123", LocalDate.now());
         User saved = userDatabase.add(user);
         assertThat(user).isEqualTo(saved);
     }
@@ -35,7 +36,7 @@ class UserDatabaseTest {
     @Test
     @DisplayName("닉네임과 일치하는 유저를 찾을 수 있다.")
     void findByNickname() {
-        User user = new User("sangchu@gmail.com", "상추", "123");
+        User user = new User("sangchu@gmail.com", "상추", "123", LocalDate.now());
         userDatabase.add(user);
         User find = userDatabase.findByNickname("상추").get();
         assertThat(find).isEqualTo(user);
@@ -44,7 +45,7 @@ class UserDatabaseTest {
     @Test
     @DisplayName("닉네임과 일치하는 유저를 찾을 수 없으면 빈값을 반환한다.")
     void findByNicknameFailed() {
-        User user = new User("sangchu@gmail.com", "상추", "123");
+        User user = new User("sangchu@gmail.com", "상추", "123", LocalDate.now());
         userDatabase.add(user);
         Optional<User> optionalUser = userDatabase.findByNickname("배추");
         assertThat(optionalUser).isEmpty();
@@ -53,8 +54,8 @@ class UserDatabaseTest {
     @Test
     @DisplayName("데이터베이스에 저장된 모든 유저를 찾을 수 있다.")
     void findAll() {
-        User user1 = new User("sangchu@gmail.com", "상추", "123");
-        User user2 = new User("baechu@gmail.com", "배추", "123");
+        User user1 = new User("sangchu@gmail.com", "상추", "123", LocalDate.now());
+        User user2 = new User("baechu@gmail.com", "배추", "123", LocalDate.now());
 
         userDatabase.add(user1);
         userDatabase.add(user2);
@@ -65,7 +66,7 @@ class UserDatabaseTest {
     @Test
     @DisplayName("데이터베이스의 유저를 업데이트할 수 있다.")
     void update() {
-        User user = new User("sangchu@gmail.com", "상추", "123");
+        User user = new User("sangchu@gmail.com", "상추", "123", LocalDate.now());
         Long id = userDatabase.add(user).getId();
 
         UserEditForm form = new UserEditForm("sangchu@gmail.com", "배추", "123", "1234");

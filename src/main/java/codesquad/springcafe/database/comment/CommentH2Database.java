@@ -58,11 +58,23 @@ public class CommentH2Database implements CommentDatabase {
         jdbcTemplate.update(sql, comment.getWriter(), comment.getContent(), comment.getWriteDate(),
                 comment.getArticleId(), comment.isDeleted(), comment.getId());
     }
+
+    @Override
+    public void softDelete(Long id) {
+        String sql = "UPDATE comments SET isDeleted = true WHERE id =?";
+        jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public Long count(Long articleId) {
+        String sql = "SELECT COUNT(*) FROM comments WHERE articleId = ? AND isDeleted = false";
+        return jdbcTemplate.queryForObject(sql, Long.class, articleId);
+    }
 //
 //    @Override
-//    public void delete(Long id) {
+//    public void deleteArticle(Long id) {
 //        String sql = "DELETE FROM comments WHERE id = ?";
-//        jdbcTemplate.update(sql, id);
+//        jdbcTemplate.updateArticle(sql, id);
 //    }
 
     @Override

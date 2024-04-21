@@ -5,6 +5,7 @@ import codesquad.springcafe.exception.UserNotFoundException;
 import codesquad.springcafe.form.user.UserAddForm;
 import codesquad.springcafe.form.user.UserEditForm;
 import codesquad.springcafe.model.User;
+import java.time.LocalDate;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +22,9 @@ public class UserService {
         this.userDatabase = userDatabase;
     }
 
-    public User join(UserAddForm userAddForm) {
-        User user = new User(userAddForm.getEmail(), userAddForm.getNickname(), userAddForm.getPassword());
+    public User createUser(UserAddForm userAddForm) {
+        User user = new User(userAddForm.getEmail(), userAddForm.getNickname(), userAddForm.getPassword(),
+                LocalDate.now());
         userDatabase.add(user);
         logger.info("새로운 유저가 생성되었습니다. {}", user);
         return user;
@@ -32,7 +34,7 @@ public class UserService {
         return userDatabase.findByNickname(nickname).orElseThrow(() -> new UserNotFoundException(nickname));
     }
 
-    public User update(User targetUser, UserEditForm userEditForm) {
+    public User updateUser(User targetUser, UserEditForm userEditForm) {
         User updateUser = targetUser.update(userEditForm.getNickname(), userEditForm.getNewPassword());
         userDatabase.update(updateUser);
         logger.info("유저정보가 업데이트 되었습니다. {}", updateUser);
@@ -63,9 +65,9 @@ public class UserService {
         return userDatabase.findAll();
     }
 
-    public void showEmailAndNickname(User user, UserEditForm userEditForm) {
-        userEditForm.setEmail(user.getEmail());
-        userEditForm.setNickname(user.getNickname());
+    public UserEditForm getUserEditForm(String nickname) {
+        User user = getUserByNickname(nickname);
+        return new UserEditForm(user.getEmail(), user.getNickname(), null, null);
     }
 
     private boolean isOwnNickname(User user, String nickname) {

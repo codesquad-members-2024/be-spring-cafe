@@ -27,12 +27,16 @@ public class ArticleService {
         this.commentDatabase = commentDatabase;
     }
 
-    public Article write(ArticleWriteForm articleWriteForm, String nickname) {
+    public Article writeArticle(ArticleWriteForm articleWriteForm, String nickname) {
         Article article = new Article(nickname, articleWriteForm.getTitle(),
                 articleWriteForm.getContent(), LocalDateTime.now());
         articleDatabase.add(article);
         logger.info("새로운 게시물이 추가되었습니다. {}", article);
         return article;
+    }
+
+    public List<Article> getArticles() {
+        return articleDatabase.findAll();
     }
 
     public Set<Long> getArticleIds(String writer) {
@@ -50,7 +54,7 @@ public class ArticleService {
     }
 
 
-    public Article update(Long id, ArticleWriteForm articleWriteForm) {
+    public Article updateArticle(Long id, ArticleWriteForm articleWriteForm) {
         Article article = getArticle(id);
 
         String newTitle = articleWriteForm.getTitle();
@@ -62,7 +66,7 @@ public class ArticleService {
         return updatedArticle;
     }
 
-    public Article delete(Long id) {
+    public Article deleteArticle(Long id) {
         Article article = getArticle(id);
         if (hasOtherWriterComment(article)) {
             throw new ArticleHasCommentsException(id);
@@ -88,5 +92,4 @@ public class ArticleService {
                 .stream()
                 .anyMatch(comment -> !comment.hasSameWriter(articleWriter)); // 게시물의 작성자가 아닌 다른 유저가 쓴 댓글이 존재하는지 확인
     }
-
 }

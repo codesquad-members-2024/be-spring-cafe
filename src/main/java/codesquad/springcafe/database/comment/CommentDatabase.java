@@ -12,7 +12,11 @@ public interface CommentDatabase {
     List<Comment> findAll(Long articleId);
 
     void update(Comment comment);
-//    void delete(Long id);
+//    void deleteArticle(Long id);
+
+    void softDelete(Long id);
+
+    Long count(Long ArticleId);
 
     void clear();
 }

@@ -80,9 +80,9 @@ public class ArticleH2Database implements ArticleDatabase {
 
 //
 //    @Override
-//    public void delete(Long id) {
+//    public void deleteArticle(Long id) {
 //        String sql = "DELETE FROM articles WHERE id = ?";
-//        jdbcTemplate.update(sql, id);
+//        jdbcTemplate.updateArticle(sql, id);
 //    }
 
 
@@ -90,6 +90,12 @@ public class ArticleH2Database implements ArticleDatabase {
     public void clear() {
         String sql = "delete from articles";
         jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public List<Long> findAllId() {
+        String sql = "SELECT id FROM articles WHERE isDeleted = false";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"));
     }
 
     private RowMapper<Article> articleRowMapper() {

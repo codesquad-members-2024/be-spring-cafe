@@ -1,7 +1,7 @@
 package codesquad.springcafe.database.user;
 
 import codesquad.springcafe.model.User;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,12 +76,9 @@ public class UserH2Database implements UserDatabase {
             String email = rs.getString("email");
             String nickname = rs.getString("nickname");
             String password = rs.getString("password");
-
-            User user = new User(email, nickname, password);
+            LocalDate joinDate = rs.getDate("joindate").toLocalDate();
+            User user = new User(email, nickname, password, joinDate);
             user.setId(rs.getLong("id"));
-            Date joindate = rs.getDate("joindate");
-
-            user.setJoinDate(joindate.toLocalDate());
 
             return user;
         };

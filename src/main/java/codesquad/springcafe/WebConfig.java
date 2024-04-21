@@ -31,6 +31,6 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(new ArticleAccessInterceptor())
                 .order(ARTICLE_ACCESS_ORDER)
-                .addPathPatterns("/articles/edit/*", "/articles/delete/*");
+                .addPathPatterns("/articles/edit/*", "/articles/deleteArticle/*");
     }
 }

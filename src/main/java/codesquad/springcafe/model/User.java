@@ -7,14 +7,14 @@ public class User {
     private final String email;
     private final String nickname;
     private final String password;
-    private LocalDate joinDate;
+    private final LocalDate joinDate;
     private Long id;
 
-    public User(String email, String nickname, String password) {
+    public User(String email, String nickname, String password, LocalDate joinDate) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
-        this.joinDate = LocalDate.now();
+        this.joinDate = joinDate;
     }
 
     public boolean hasSameNickname(String nickname) {
@@ -31,8 +31,7 @@ public class User {
     }
 
     public User update(String nickname, String password) {
-        User updateUser = new User(email, nickname, password);
-        updateUser.setJoinDate(joinDate);
+        User updateUser = new User(email, nickname, password, joinDate);
         updateUser.setId(id);
         return updateUser;
     }
@@ -52,10 +51,6 @@ public class User {
 
     public LocalDate getJoinDate() {
         return joinDate;
-    }
-
-    public void setJoinDate(LocalDate joinDate) {
-        this.joinDate = joinDate;
     }
 
     public Long getId() {

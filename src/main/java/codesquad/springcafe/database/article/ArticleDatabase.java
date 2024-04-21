@@ -18,7 +18,10 @@ public interface ArticleDatabase {
     void increaseViews(Long id);
 
     void softDelete(Long id);
-//    void delete(Long id);
+//    void deleteArticle(Long id);
 
     void clear();
+
+    List<Long> findAllId();
+
 }

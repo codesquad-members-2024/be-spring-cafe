@@ -1,19 +1,15 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.database.comment.CommentDatabase;
 import codesquad.springcafe.form.article.ArticleWriteForm;
 import codesquad.springcafe.form.comment.CommentWriteForm;
 import codesquad.springcafe.form.user.LoginUser;
 import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.Comment;
 import codesquad.springcafe.service.ArticleService;
-import codesquad.springcafe.util.LoginUserProvider;
+import codesquad.springcafe.service.CommentService;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -35,11 +31,11 @@ public class ArticleController {
     private final Logger logger = LoggerFactory.getLogger(ArticleController.class);
 
     private final ArticleService articleService;
-    private final CommentDatabase commentDatabase;
+    private final CommentService commentService;
 
-    public ArticleController(ArticleService articleService, CommentDatabase commentDatabase) {
+    public ArticleController(ArticleService articleService, CommentService commentService) {
         this.articleService = articleService;
-        this.commentDatabase = commentDatabase;
+        this.commentService = commentService;
     }
 
     /**
@@ -61,7 +57,7 @@ public class ArticleController {
             return "article/form";
         }
 
-        Article article = articleService.write(articleWriteForm, loginUser.getNickname()); // 게시글 업데이트
+        Article article = articleService.writeArticle(articleWriteForm, loginUser.getNickname()); // 게시글 업데이트
         loginUser.addOwnArticle(article.getId()); // 세션정보 업데이트
 
         return "redirect:/";
@@ -75,7 +71,7 @@ public class ArticleController {
                               @ModelAttribute("commentWriteForm") CommentWriteForm commentWriteForm) {
 
         Article article = articleService.viewArticle(id);
-        List<Comment> comments = commentDatabase.findAll(id);
+        List<Comment> comments = commentService.getComments(id);
         model.addAttribute("article", article);
         model.addAttribute("comments", comments);
 
@@ -101,7 +97,7 @@ public class ArticleController {
         if (bindingResult.hasErrors()) {
             return "article/update";
         }
-        articleService.update(id, articleWriteForm);
+        articleService.updateArticle(id, articleWriteForm);
 
         return "redirect:/articles/detail/" + id;
     }
@@ -120,9 +116,8 @@ public class ArticleController {
      */
     @DeleteMapping("/delete/{id}")
     public String deleteArticle(@PathVariable Long id) {
-        articleService.delete(id);
-        deleteComments(id);
-//        TODO: 커멘트 서비스로 추출해야함
+        articleService.deleteArticle(id);
+        commentService.deleteComments(id);
 
         return "redirect:/";
     }
@@ -134,20 +129,16 @@ public class ArticleController {
     public String writeComment(@PathVariable Long articleId,
                                @Validated @ModelAttribute CommentWriteForm commentWriteForm,
                                BindingResult bindingResult, Model model,
-                               HttpSession session) {
+                               @SessionAttribute(LoginController.LOGIN_SESSION_NAME) LoginUser loginUser) {
         Article article = articleService.getArticle(articleId);
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("article", article);
-            model.addAttribute("comments", commentDatabase.findAll(articleId));
+            model.addAttribute("comments", commentService.getComments(articleId));
             return "article/show";
         }
-        LoginUser loginUser = LoginUserProvider.provide(session);
-        Comment comment = new Comment(loginUser.getNickname(), commentWriteForm.getContent(), articleId,
-                LocalDateTime.now());
 
-        commentDatabase.add(comment);
-        logger.info("새로운 코멘트가 추가되었습니다. {}", comment);
+        commentService.writeComment(articleId, loginUser.getNickname(), commentWriteForm);
 
         return "redirect:/articles/detail/" + articleId;
     }
@@ -156,31 +147,23 @@ public class ArticleController {
      * 코멘트를 삭제합니다. 아티클 id나 코멘트 id가 유효하지 않으면 홈으로 이동합니다. 로그인 유저가 아닌 사용자가 요청을 보낼 경우 403 응답을 내보냅니다.
      */
     @DeleteMapping("/detail/{articleId}/comments/{id}")
-    public String deleteComment(@PathVariable Long articleId, @PathVariable Long id, HttpSession session,
-                                HttpServletResponse response) throws IOException {
-        Article article = articleService.getArticle(articleId);
-        Optional<Comment> optionalComment = commentDatabase.findBy(id);
-        if (optionalComment.isEmpty()) {
-            return "redirect:/";
-        }
-
-        Comment comment = optionalComment.get();
-        LoginUser loginUser = LoginUserProvider.provide(session);
-        if (!loginUser.hasSameNickname(comment.getWriter())) {
+    public String deleteComment(@PathVariable Long articleId, @PathVariable Long id,
+                                @SessionAttribute(LoginController.LOGIN_SESSION_NAME) LoginUser loginUser,
+                                HttpServletResponse response)
+            throws IOException {
+        articleService.getArticle(articleId);
+        if (isNotWriter(id, loginUser)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return null;
         }
 
-        comment.delete();
-        commentDatabase.update(comment);
-        logger.info("코멘트가 삭제되었습니다. {}", comment);
+        commentService.deleteComment(id);
+
         return "redirect:/articles/detail/" + articleId;
     }
 
-    private void deleteComments(Long id) {
-        commentDatabase.findAll(id)
-                .stream()
-                .peek(Comment::delete)
-                .forEach(commentDatabase::update);
+    private boolean isNotWriter(Long id, LoginUser loginUser) {
+        Comment comment = commentService.getComment(id);
+        return !loginUser.hasSameNickname(comment.getWriter());
     }
 }
