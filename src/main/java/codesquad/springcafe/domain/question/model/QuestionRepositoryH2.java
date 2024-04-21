@@ -1,6 +1,8 @@
 package codesquad.springcafe.domain.question.model;
 
 import codesquad.springcafe.global.rowMapper.SimpleRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,6 +21,7 @@ import java.util.Optional;
 @Primary
 @Repository
 public class QuestionRepositoryH2 implements QuestionRepository{
+    private final Logger logger = LoggerFactory.getLogger(QuestionRepositoryH2.class);
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleRowMapper<Question> questionRowMapper;
@@ -44,6 +47,9 @@ public class QuestionRepositoryH2 implements QuestionRepository{
 
         Long key = (Long) Objects.requireNonNull(keyHolder.getKeys()).get("id");
         question.setId(key);
+
+        logger.info("Question saved successfully! | questionId: {} | query : {}", key, sql);
+
         return question;
     }
 
@@ -55,6 +61,8 @@ public class QuestionRepositoryH2 implements QuestionRepository{
         if (questions.size() > 1) {
             throw new RuntimeException("게시글을 두 개 이상 조회하고 있습니다.");
         }
+
+        logger.info("Question find by Id | questionId: {} | query : {}", questionId, sql);
 
         return questions.stream().findFirst();
     }
@@ -70,6 +78,8 @@ public class QuestionRepositoryH2 implements QuestionRepository{
             ps.setLong(3, questionId);
             return ps;
         });
+
+        logger.info("Question update | questionId: {} | query : {}", questionId, sql);
     }
 
     @Override
@@ -82,17 +92,21 @@ public class QuestionRepositoryH2 implements QuestionRepository{
             ps.setLong(2, questionId);
             return ps;
         });
+
+        logger.info("Question view cnt up! | questionId: {} | viewCnt : {} | query : {}", questionId, question.getViewCnt(), sql);
     }
 
     @Override
     public Collection<Question> findAll() {
         final String sql = "select * from question";
+        logger.info("Find All Questions | query : {}", sql);
         return jdbcTemplate.query(sql, questionRowMapper);
     }
 
     @Override
     public void deleteAll() {
         final String sql = "delete from question";
+        logger.info("Delete All Questions | query : {}", sql);
         jdbcTemplate.update(sql);
     }
 }

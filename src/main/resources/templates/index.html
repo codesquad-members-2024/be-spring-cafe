@@ -34,7 +34,7 @@
                     <tbody>
                     <tr th:each="question : ${questions}">
                         <td><a th:href="@{'/question/' + ${question.getQuestionId()}}" th:text="${question.getTitle()}"></a></td>
-                        <td th:text="${question.getUserLoginId()}"></td>
+                        <td><a th:href="@{'/profile/' + ${question.getUserLoginId}}" th:text="${question.getUserLoginId()}"></a></td>
                         <td th:text="${question.getCreatedAt()}"></td>
                         <td th:text="${question.getViewCnt()}"></td>
                     </tr>

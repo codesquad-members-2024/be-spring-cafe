@@ -1,6 +1,8 @@
 package codesquad.springcafe.domain.user.model;
 
 import codesquad.springcafe.global.rowMapper.SimpleRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,6 +20,7 @@ import java.util.Optional;
 @Primary
 @Repository
 public class UserRepositoryH2 implements UserRepository{
+    private final Logger logger = LoggerFactory.getLogger(UserRepositoryH2.class);
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleRowMapper<User> userRowMapper;
@@ -43,6 +46,9 @@ public class UserRepositoryH2 implements UserRepository{
 
         Long key = (Long) Objects.requireNonNull(keyHolder.getKeys()).get("id");
         user.setId(key);
+
+        logger.info("User saved successfully! | userId: {} | query : {}", key, sql);
+
         return user;
     }
 
@@ -55,12 +61,15 @@ public class UserRepositoryH2 implements UserRepository{
             throw new RuntimeException("사용자를 두 명 이상 조회하고 있습니다.");
         }
 
+        logger.info("User find by Id | userId: {} | query : {}", userId, sql);
+
         return users.stream().findFirst();
     }
 
     @Override
     public List<User> findAll() {
         final String sql = "select * from users";
+        logger.info("Find All Users | query : {}", sql);
         return jdbcTemplate.query(sql, userRowMapper);
     }
 
@@ -73,12 +82,15 @@ public class UserRepositoryH2 implements UserRepository{
             throw new RuntimeException("사용자를 두 명 이상 조회하고 있습니다.");
         }
 
+        logger.info("User find by loginId | userLoginId: {} | query : {}", loginId, sql);
+
         return users.stream().findFirst();
     }
 
     @Override
     public Boolean existsById(Long userId) {
         final String sql = "SELECT EXISTS(SELECT 1 FROM users WHERE id = ?)";
+        logger.info("User exists by Id | userId: {} | query : {}", userId, sql);
         return jdbcTemplate.queryForObject(sql, Boolean.class, userId);
     }
 
@@ -93,11 +105,14 @@ public class UserRepositoryH2 implements UserRepository{
             ps.setLong(3, userId);
             return ps;
         });
+
+        logger.info("User update | userId: {} | query : {}", userId, sql);
     }
 
     @Override
     public void deleteAll() {
         final String sql = "DELETE FROM users";
+        logger.info("Delete All Users | query : {}", sql);
         jdbcTemplate.update(sql);
     }
 }

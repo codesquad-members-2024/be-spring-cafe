@@ -1,0 +1,21 @@
+### 게시글 작성
+POST http://localhost:8080/post
+Content-Type: application/x-www-form-urlencoded
+
+title=This+is+Title.&content=This+is+Content.
+
+### 게시글 상세 조회 - 1번 게시글
+GET http://localhost:8080/question/1
+
+### 게시글 수정 페이지 접근 - 1번 게시글
+GET http://localhost:8080/question/1/edit
+
+### 게시글 수정 - 1번 게시글 수정
+PUT http://localhost:8080/question/1/edit
+Content-Type: application/x-www-form-urlencoded
+
+title=Is+this+title?&content=Is+this+content?
+
+### 게시글 목록 조회
+GET http://localhost:8080/questions
+
