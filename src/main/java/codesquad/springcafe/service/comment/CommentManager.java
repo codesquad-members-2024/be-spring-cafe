@@ -45,7 +45,7 @@ public class CommentManager implements CommentService {
 
     @Override
     public void unpublish(long id) {
-        repository.delete(id);
+        repository.softDelete(id);
     }
 
     @Override
