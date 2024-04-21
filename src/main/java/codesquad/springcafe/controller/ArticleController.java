@@ -53,7 +53,8 @@ public class ArticleController {
             model.addAttribute(ARTICLE_ID, articleId);
             return "qna/update_form";
         }
-        return "errors/update_error";
+        model.addAttribute("errorMessage", "본인의 게시글만 수정할 수 있습니다.");
+        return "errors/error";
     }
 
     @PutMapping("{articleId}")
