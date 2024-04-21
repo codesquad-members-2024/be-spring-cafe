@@ -1,20 +1,21 @@
 package codesquad.springcafe.domain.question.model;
 
-import codesquad.springcafe.domain.user.model.User;
 import codesquad.springcafe.global.model.BaseTime;
-
-import java.time.LocalDateTime;
 
 public class Question extends BaseTime {
     private Long id;
-    private User user;
+    private Long userId;
     private String title;
     private String content;
     private Integer viewCnt;
 
-    public Question(User user, String title, String content, Integer viewCnt, LocalDateTime createdAt, LocalDateTime modifiedAt) {
-        super(createdAt, modifiedAt);
-        this.user = user;
+    public Question() {
+
+    }
+
+    public Question(Long userId, String title, String content, Integer viewCnt) {
+        super();
+        this.userId = userId;
         this.title = title;
         this.content = content;
         this.viewCnt = viewCnt;
@@ -28,8 +29,8 @@ public class Question extends BaseTime {
         return id;
     }
 
-    public User getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
     public String getTitle() {

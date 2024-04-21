@@ -159,10 +159,27 @@
 - 해결 방법:
   - application.properties 파일에 schema.sql을 찾는 경로 정보를 추가해서 해결!
 
-
 ### schema.sql의 첫 번째 구문을 인식하지 못함
 - 문제 상황:
   - 코드 맨 앞줄에 주석을 추가했더니 users 테이블 drop이 되지 않았다
 - 해결 방법:
   - sql의 주석 작성 방식을 착각해서 발생한 문제였다
   - sql의 주석은 '//'가 아니라 '--'이다!!
+
+### 사용자 정보 수정 로직이 적용되지 않음
+- 문제 상황:
+  - 사용자 정보 수정을 시도했으나 전혀 변경되지 않고 이전과 같은 정보를 가지고 있다
+- 해결 방법:
+  - Local 버전에서는 HashMap으로 관리하므로 User 객체를 얻어 정보만 수정하면 수정 로직이 적용되었으나, JdbcTemplate을 사용하는 H2 버전의 경우 User 객체를 얻어 수정해도 해당 내용이 DB에 적용되지 않아 발생
+  - 따라서 UserRepository에 update라는 메서드를 추가해 구현하도록 함으로써 해결
+  - 해당 메서드는 H2버전에서 db에 접근해 update query를 실행함
+
+### SQL 매핑 실패
+- 문제 상황:
+  - Question이라는 Entity 객체는 User라는 필드를 갖는데, 이는 DB 테이블 상에서 외래 키에 해당하며 userId라는 이름으로 저장되고 있다
+  - 하지만 reflection을 활용해 구현한 SimpleRowMapper에서는 userId를 User 객체로 매핑하는 기능이 구현되어 있지 않다
+- 해결 방법:
+  - 처음에는 User 테이블과 조인하는 방법, Question 인스턴스인지 확인하고 userRepository의 findById를 이용해 user 정보를 조회한 뒤 필드를 세팅해주는 방법 등을 생각했다
+  - 하지만 SimpleRowMapper를 만든 이유가 특정 클래스에 의존적이지 않게 만들기 위함이었는데, 이렇게 되면 의존적이 되고, 만약 지금보다 서로 연관관계가 많아진다면 얼마나 더 로직을 수정해야 할 지 모르는 상황이다
+  - 따라서 가장 쉬운 방법으로 Question 객체가 User 타입 필드가 아닌, Long 타입 userId 필드를 갖도록 해 해결했다
+  - 대신 QuestionService에서 사용자 정보와 함께 게시글 정보를 조회해 반환하는 로직에서, userRepository에 접근해 Question 객체에 저장된 userId 필드로 사용자를 한 번 더 조회해 주어야 한다.

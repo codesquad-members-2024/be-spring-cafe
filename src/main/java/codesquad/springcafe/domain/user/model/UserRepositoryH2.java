@@ -1,6 +1,7 @@
 package codesquad.springcafe.domain.user.model;
 
 import codesquad.springcafe.global.rowMapper.SimpleRowMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -21,6 +22,7 @@ public class UserRepositoryH2 implements UserRepository{
     private final JdbcTemplate jdbcTemplate;
     private final SimpleRowMapper<User> userRowMapper;
 
+    @Autowired
     public UserRepositoryH2(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.userRowMapper = new SimpleRowMapper<>(User.class);

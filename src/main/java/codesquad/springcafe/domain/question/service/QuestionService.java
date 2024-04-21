@@ -35,15 +35,18 @@ public class QuestionService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
 
         // 질문 게시글 등록
-        Question question = questionPostRequest.toQuestion(user);
+        Question question = questionPostRequest.toQuestion(user.getId());
         questionRepository.save(question);
     }
 
     // 질문 목록 조회
     public QuestionListResponse getQuestions() {
         List<QuestionResponse> questions = questionRepository.findAll().stream()
-                .map(q -> new QuestionResponse(q.getId(), q.getUser().getName(), q.getUser().getLoginId(), q.getTitle(),
-                        q.getContent(), DateUtils.convertCreatedAt(q.getCreatedAt()), q.getViewCnt()))
+                .map(q -> {
+                    User writer = userRepository.findById(q.getUserId()).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+                    return new QuestionResponse(q.getId(), writer.getName(), writer.getLoginId(), q.getTitle(),
+                            q.getContent(), DateUtils.convertCreatedAt(q.getCreatedAt()), q.getViewCnt());
+                })
                 .toList();
 
         return new QuestionListResponse(questions);
@@ -59,8 +62,9 @@ public class QuestionService {
 
         // 게시글 조회 수 up
         question.viewCntUp();
-        
-        return new QuestionResponse(question.getId(), question.getUser().getName(), question.getUser().getLoginId(), question.getTitle(), question.getContent(),
+
+        User writer = userRepository.findById(question.getUserId()).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        return new QuestionResponse(question.getId(), writer.getName(), writer.getLoginId(), question.getTitle(), question.getContent(),
                 DateUtils.convertCreatedAt(question.getCreatedAt()), question.getViewCnt());
     }
 }
