@@ -46,9 +46,16 @@ public class UserController {
     }
 
     @GetMapping("/user/profile/{userId}/update")
-    public String showEditProfileForm(Model model, @PathVariable("userId") String userId) {
-        model.addAttribute("user", userId);
-        return "user/updateForm";
+    public String showEditProfileForm(Model model, @PathVariable("userId") String userId, HttpSession session) {
+        Object value = session.getAttribute("sessionUser");
+        User actual = (User) value;
+        User expected = userService.getUserById(userId);
+
+        if (userService.isSameUser(expected, actual)) {
+            model.addAttribute("user", userId);
+            return "user/updateForm";
+        }
+        return "redirect:/user/list";
     }
 
     @PutMapping("/user/profile/{userId}/update")
