@@ -13,21 +13,21 @@
 
 ### ✍️ 메소드 convention
 
-| url                               | 기능                              |
-|-----------------------------------|---------------------------------|
-| GET /user/register                | 회원가입 화면 제공                      |
-| POST /user/register               | 새로운 유저 회원가입 진행                  |
-| GET /user/list                    | 전체 회원 리스트 화면 제공                 |
-| GET /user/profile/:userId         | userId에 해당되는 유저의 프로필 화면 제공      |
-| GET /qna                          | 질문을 작성할 수 있는 작성 폼 화면 제공         |
-| POST /qna                         | 새로운 질문 등록                       |
-| GET /article/:articleId           | articleId에 해당되는 질문의 상세 내용 화면 제공 |
-| GET /user/profile/:userId/update  | 회원정보 수정 폼 화면 제공                 |
-| POST /user/profile/:userId/update | 회원정보 수정 요청                      |
-| GET /login                        | 로그인 화면 제공                       |
-| POST /login                       | 로그인 진행                          |
-| POST /logout                      | 로그아웃 진행                         |
-| GET /  | 홈 화면 - 전체 글 목록 표기               |
+| url                              | 기능                              |
+|----------------------------------|---------------------------------|
+| GET /user/register               | 회원가입 화면 제공                      |
+| POST /user/register              | 새로운 유저 회원가입 진행                  |
+| GET /user/list                   | 전체 회원 리스트 화면 제공                 |
+| GET /user/profile/:userId        | userId에 해당되는 유저의 프로필 화면 제공      |
+| GET /qna                         | 질문을 작성할 수 있는 작성 폼 화면 제공         |
+| POST /qna                        | 새로운 질문 등록                       |
+| GET /article/:articleId          | articleId에 해당되는 질문의 상세 내용 화면 제공 |
+| GET /user/profile/:userId/update | 회원정보 수정 폼 화면 제공                 |
+| PUT /user/profile/:userId/update | 회원정보 수정 요청                      |
+| GET /login                       | 로그인 화면 제공                       |
+| POST /login                      | 로그인 진행                          |
+| POST /logout                     | 로그아웃 진행                         |
+| GET /                            | 홈 화면 - 전체 글 목록 표기               |
 
 ### 🤔 설계 및 고민
 
