@@ -48,7 +48,7 @@ public class UserController {
     @PostMapping("/create")
     public String create(@ModelAttribute UserDto userDto) {
         userRepository.createUser(userDto);
-        return "redirect:/users"; // 이 uri로 리다이렉트
+        return "redirect:/users";
     }
 
     @GetMapping("/{userId}")
@@ -64,21 +64,18 @@ public class UserController {
     @GetMapping("/{userId}/update")
     public String updateForm(HttpSession session, @PathVariable("userId") String userId) {
         User loggedInUser = (User) session.getAttribute("user");
+
         if (loggedInUser == null || !loggedInUser.matchUserId(userId)) {
-            // 세션에 로그인한 사용자의 ID가 없거나, 요청된 ID와 일치하지 않으면 권한 없음 페이지로 리다이렉트
+            // 세션에 사용자의 ID가 없거나, 요청 파라미터의 ID와 다르면 /로 리다이렉트
             return "redirect:/";
         }
         return "user/update";
     }
 
-    @PutMapping("/{userId}/update") // 실패하면 어떻게 되는거지?
+    @PutMapping("/{userId}/update")
     public String update(HttpSession session, @PathVariable("userId") String userId,
                          @ModelAttribute UserUpdateDto userUpdateDto, Model model) {
         User loggedInUser = (User) session.getAttribute("user");
-        if (loggedInUser == null || !loggedInUser.matchUserId(userId)) {
-            // 세션에 로그인한 사용자의 ID가 없거나, 요청된 ID와 일치하지 않으면 권한 없음 페이지로 리다이렉트
-            return "redirect:/";
-        }
 
         if (!loggedInUser.matchPassword(userUpdateDto.getPassword())) {
             model.addAttribute("errorMessage", "비밀번호가 일치하지 않습니다.");

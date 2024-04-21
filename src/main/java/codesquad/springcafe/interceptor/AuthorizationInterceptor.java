@@ -12,7 +12,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             throws Exception {
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
-            // 현재 URL을 redirectUrl로 지정하여 세션에 저장
+            // 현재 URL을 redirectUrl로 세션에 저장
             String redirectUrl = request.getRequestURI();
             request.getSession().setAttribute("redirectUrl", redirectUrl);
             // 로그인 페이지로 redirect
