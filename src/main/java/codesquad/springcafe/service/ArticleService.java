@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ArticleService {
-    private final ArticleRepository h2ArticleRepository;
+    private final ArticleRepository articleRepository;
 
     @Autowired
-    public ArticleService(ArticleRepository h2ArticleRepository) {
-        this.h2ArticleRepository = h2ArticleRepository;
+    public ArticleService(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
     }
 
     // 게시글 등록
@@ -21,12 +21,12 @@ public class ArticleService {
                 articleForm.getWriter(), articleForm.getTitle(),
                 articleForm.getContents(), articleForm.getTime()
         );
-        h2ArticleRepository.add(article);
+        articleRepository.add(article);
     }
 
     // 게시글 상세보기
     // e) 해당하는 게시글이 없으면 에러
     public Article getArticleDetail(String articleId) {
-        return h2ArticleRepository.getById(Long.parseLong(articleId));
+        return articleRepository.getById(Long.parseLong(articleId));
     }
 }
