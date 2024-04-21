@@ -24,11 +24,12 @@ public class JdbcArticleRepository implements ArticleRepository {
     @Override
     public void addArticle(Article article) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-        jdbcInsert.withTableName("articles").usingColumns("id");
+        jdbcInsert.withTableName("article").usingGeneratedKeyColumns("id");
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("writer", article.getWriter());
         parameters.put("title", article.getTitle());
         parameters.put("contents", article.getContents());
+        parameters.put("currentTime", article.getCurrentTime());
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         article.setId(key.longValue());
@@ -36,13 +37,14 @@ public class JdbcArticleRepository implements ArticleRepository {
 
     @Override
     public Optional<Article> findById(Long id) {
-        List<Article> result = jdbcTemplate.query("select * from artice where id = ?", articeRowMapper(), id);
-        return Optional.of((Article) result);
+        return jdbcTemplate.query("select * from article where id = ?", articeRowMapper(), id)
+                .stream()
+                .findAny();
     }
 
     @Override
     public List<Article> findAll() {
-        return jdbcTemplate.query("select * from articles", articeRowMapper());
+        return jdbcTemplate.query("select * from article", articeRowMapper());
     }
 
     private RowMapper<Article> articeRowMapper() {
