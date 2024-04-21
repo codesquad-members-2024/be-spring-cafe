@@ -18,6 +18,8 @@ public interface CommentRepository {
 
     void softDelete(long id);
 
+    void bulkSoftDelete(List<Long> commentIds);
+
     void restore(long id);
 
     void clear();
