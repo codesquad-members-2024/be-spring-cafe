@@ -13,7 +13,9 @@ public interface ArticleRepository {
 
     Article get(String identifier) throws NoSuchArticleException;
 
-    void update(Article article) throws NoSuchArticleException;
+    void update(String identifier, String title, String contents) throws NoSuchArticleException;
+
+    void update(String identifier, int viewCount) throws NoSuchArticleException;
 
     void delete(String identifier) throws NoSuchArticleException;
 }

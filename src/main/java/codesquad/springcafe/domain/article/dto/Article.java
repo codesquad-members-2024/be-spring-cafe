@@ -36,10 +36,6 @@ public class Article {
         this.viewCount++;
     }
 
-    public void setIdentifierFromString(String identifier) {
-        this.identifier = UUID.fromString(identifier);
-    }
-
     public String getIdentifier() {
         return this.identifier.toString();
     }

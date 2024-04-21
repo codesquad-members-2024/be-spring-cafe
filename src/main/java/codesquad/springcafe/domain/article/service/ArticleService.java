@@ -1,6 +1,7 @@
 package codesquad.springcafe.domain.article.service;
 
 import codesquad.springcafe.domain.article.dto.Article;
+import codesquad.springcafe.domain.article.dto.UpdateArticle;
 import codesquad.springcafe.exceptions.NoSuchArticleException;
 import codesquad.springcafe.domain.user.dto.UserIdentity;
 
@@ -14,9 +15,11 @@ public interface ArticleService {
 
     List<Article> getArticlesAsList();
 
-    void updateArticle(Article article) throws NoSuchArticleException;
+    void updateArticle(UpdateArticle article) throws NoSuchArticleException;
 
     void deleteArticle(String articleId) throws NoSuchArticleException;
+
+    void addViewCount(Article article);
 
     boolean userHasPermission(UserIdentity userId, Article article) throws NoSuchArticleException;
 }

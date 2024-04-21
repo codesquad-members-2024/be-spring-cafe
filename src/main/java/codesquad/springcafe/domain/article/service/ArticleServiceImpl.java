@@ -1,6 +1,7 @@
 package codesquad.springcafe.domain.article.service;
 
 import codesquad.springcafe.domain.article.dto.Article;
+import codesquad.springcafe.domain.article.dto.UpdateArticle;
 import codesquad.springcafe.domain.article.repository.ArticleRepository;
 import codesquad.springcafe.exceptions.NoSuchArticleException;
 import codesquad.springcafe.domain.user.dto.UserIdentity;
@@ -39,13 +40,19 @@ public class ArticleServiceImpl implements ArticleService{
     }
 
     @Override
-    public void updateArticle(Article article) throws NoSuchArticleException {
-        articleRepository.update(article);
+    public void updateArticle(UpdateArticle article) throws NoSuchArticleException {
+        articleRepository.update(article.getIdentifier(), article.getTitle(), article.getContents());
     }
 
     @Override
     public void deleteArticle(String articleId) throws NoSuchArticleException {
         articleRepository.delete(articleId);
+    }
+
+    @Override
+    public void addViewCount(Article article) {
+        article.addViewCount();
+        articleRepository.update(article.getIdentifier(), article.getViewCount());
     }
 
     @Override

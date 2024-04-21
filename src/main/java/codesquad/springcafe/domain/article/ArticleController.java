@@ -1,6 +1,7 @@
 package codesquad.springcafe.domain.article;
 
 import codesquad.springcafe.domain.article.dto.Article;
+import codesquad.springcafe.domain.article.dto.UpdateArticle;
 import codesquad.springcafe.domain.article.service.ArticleService;
 import codesquad.springcafe.constants.Constant;
 import codesquad.springcafe.domain.comment.service.CommentService;
@@ -43,8 +44,7 @@ public class ArticleController {
         Article article = articleService.getArticle(articleId);
 
         //조회수 추가
-        article.addViewCount();
-        articleService.updateArticle(article);
+        articleService.addViewCount(article);
 
         model.addAttribute("article", article);
 
@@ -65,12 +65,12 @@ public class ArticleController {
         return "article/updateForm";
     }
 
-    @PostMapping("/update/{articleId}")
-    public String updateArticle(@PathVariable String articleId, @ModelAttribute Article article, HttpSession session) throws NoSuchArticleException, NotAuthenticationException {
-        article.setIdentifierFromString(articleId);
-        articleService.updateArticle(article);
+    @PostMapping("/update")
+    public String updateArticle(@ModelAttribute UpdateArticle updateArticle) throws NoSuchArticleException, NotAuthenticationException {
+        System.out.println("ArticleController.updateArticle");
+        articleService.updateArticle(updateArticle);
 
-        return "redirect:/article/show/" + articleId;
+        return "redirect:/article/show/" + updateArticle.getIdentifier();
     }
 
     @PostMapping("/delete")

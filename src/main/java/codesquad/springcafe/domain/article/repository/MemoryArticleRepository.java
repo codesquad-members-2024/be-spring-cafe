@@ -33,9 +33,15 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public void update(Article article) throws NoSuchArticleException {
-        articleDB.replace(article.getIdentifier(), article);
+    public void update(String identifier, String title, String contents) throws NoSuchArticleException {
+
     }
+
+    @Override
+    public void update(String identifier, int viewCount) throws NoSuchArticleException {
+
+    }
+
 
     @Override
     public void delete(String identifier) throws NoSuchArticleException {
