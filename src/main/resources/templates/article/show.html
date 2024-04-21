@@ -144,6 +144,7 @@
                                       <li>
                                           <form class="delete-answer-form" action="/comment/delete" method="POST">
                                               <input type="hidden" name="identifier" th:value="${comment.identifier}" value="DELETE">
+                                              <input type="hidden" name="writtenArticle" th:value="${comment.writtenArticle}">
                                               <button type="submit" class="delete-answer-button">삭제</button>
                                           </form>
                                       </li>

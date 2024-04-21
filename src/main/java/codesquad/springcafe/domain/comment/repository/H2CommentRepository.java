@@ -2,6 +2,7 @@ package codesquad.springcafe.domain.comment.repository;
 
 import codesquad.springcafe.domain.comment.dto.Comment;
 import codesquad.springcafe.domain.comment.repository.util.CommentRowMapper;
+import codesquad.springcafe.exceptions.NoSuchArticleException;
 import codesquad.springcafe.exceptions.NoSuchCommentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,13 +49,22 @@ public class H2CommentRepository implements CommentRepository{
     }
 
     @Override
-    public void update(Comment comment) throws NoSuchCommentException {
+    public void update(String commentId, String contents) throws NoSuchCommentException {
         String sql = "UPDATE COMMENTS SET contents = ? WHERE identifier = ?";
 
-        int update = jdbcTemplate.update(sql, comment.getContents(), comment.getIdentifier());
+        int update = jdbcTemplate.update(sql, contents, commentId);
         if (update == 0) throw new NoSuchCommentException();
 
-        logger.debug("[{}] 댓글 업데이트 완료", comment.getIdentifier());
+        logger.debug("[{}] 댓글 업데이트 완료", commentId);
+    }
+
+    @Override
+    public void delete(String commentId) throws NoSuchCommentException {
+        String sql = "delete from COMMENTS where identifier = ?";
+
+        int update = jdbcTemplate.update(sql, commentId);
+        if (update == 0) throw new NoSuchArticleException();
+        logger.debug("[{}] 댓글 삭제 완료", commentId);
     }
 
 }

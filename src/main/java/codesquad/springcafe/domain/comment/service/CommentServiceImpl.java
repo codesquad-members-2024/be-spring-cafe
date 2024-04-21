@@ -2,6 +2,8 @@ package codesquad.springcafe.domain.comment.service;
 
 import codesquad.springcafe.domain.article.dto.Article;
 import codesquad.springcafe.domain.comment.dto.Comment;
+import codesquad.springcafe.domain.comment.dto.DeleteComment;
+import codesquad.springcafe.domain.comment.dto.UpdateComment;
 import codesquad.springcafe.domain.comment.repository.CommentRepository;
 import codesquad.springcafe.domain.user.dto.UserIdentity;
 import codesquad.springcafe.exceptions.NoSuchCommentException;
@@ -36,12 +38,21 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public void updateComment(Comment comment) throws NoSuchCommentException {
-        commentRepository.update(comment);
+    public String updateComment(UpdateComment comment) throws NoSuchCommentException {
+        commentRepository.update(comment.getIdentifier(), comment.getContents());
+
+        return commentRepository.get(comment.getIdentifier()).getWrittenArticle();
     }
 
     @Override
-    public boolean userHasPermission(UserIdentity userIdentity, Comment comment) throws NoSuchCommentException{
+    public void deleteComment(DeleteComment comment) throws NoSuchCommentException {
+        commentRepository.delete(comment.getIdentifier());
+    }
+
+    @Override
+    public boolean userHasPermission(UserIdentity userIdentity, String commentId) throws NoSuchCommentException{
+        Comment comment = commentRepository.get(commentId);
+
         return userIdentity.getName().contentEquals(comment.getWriter());
     }
 }

@@ -13,5 +13,7 @@ public interface CommentRepository {
 
     Comment get(String id) throws NoSuchCommentException;
 
-    void update(Comment comment) throws NoSuchCommentException;
+    void update(String commentId, String contents) throws NoSuchCommentException;
+
+    void delete(String commentId) throws NoSuchCommentException;
 }

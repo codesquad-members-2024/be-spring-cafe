@@ -3,6 +3,8 @@ package codesquad.springcafe.domain.comment;
 import codesquad.springcafe.domain.article.dto.Article;
 import codesquad.springcafe.domain.article.service.ArticleService;
 import codesquad.springcafe.domain.comment.dto.Comment;
+import codesquad.springcafe.domain.comment.dto.DeleteComment;
+import codesquad.springcafe.domain.comment.dto.UpdateComment;
 import codesquad.springcafe.domain.comment.service.CommentService;
 import codesquad.springcafe.domain.user.dto.UserIdentity;
 import codesquad.springcafe.exceptions.NotAuthenticationException;
@@ -46,7 +48,7 @@ public class CommentController {
     @GetMapping("/update/{commentId}")
     public String showCommentUpdatePage(@PathVariable String commentId, Model model, HttpSession session) throws NotAuthenticationException {
         Comment comment = commentService.getCommentById(commentId);
-        if (!commentService.userHasPermission((UserIdentity) session.getAttribute(SESSION_LOGIN), comment)) {
+        if (!commentService.userHasPermission((UserIdentity) session.getAttribute(SESSION_LOGIN), commentId)) {
             throw new NotAuthenticationException();
         }
 
@@ -59,12 +61,23 @@ public class CommentController {
     }
 
     @PostMapping("/update")
-    public String updateComment(@ModelAttribute Comment comment, HttpSession session) throws NotAuthenticationException {
-        if (!commentService.userHasPermission((UserIdentity) session.getAttribute(SESSION_LOGIN), comment)) {
+    public String updateComment(@ModelAttribute UpdateComment comment, HttpSession session) throws NotAuthenticationException {
+        if (!commentService.userHasPermission((UserIdentity) session.getAttribute(SESSION_LOGIN), comment.getIdentifier())) {
             throw new NotAuthenticationException();
         }
 
-        commentService.updateComment(comment);
+        String written = commentService.updateComment(comment);
+
+        return "redirect:/article/show/" + written;
+    }
+
+    @PostMapping("/delete")
+    public String deleteComment(@ModelAttribute DeleteComment comment, HttpSession session) throws NotAuthenticationException{
+        if (!commentService.userHasPermission((UserIdentity) session.getAttribute(SESSION_LOGIN), comment.getIdentifier())) {
+            throw new NotAuthenticationException();
+        }
+
+        commentService.deleteComment(comment);
 
         return "redirect:/article/show/" + comment.getWrittenArticle();
     }
