@@ -15,6 +15,9 @@ public interface ArticleDatabase {
 
     void update(Article article);
 
+    void increaseViews(Long id);
+
+    void softDelete(Long id);
 //    void delete(Long id);
 
     void clear();

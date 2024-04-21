@@ -10,7 +10,9 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class CommentH2Database implements CommentDatabase {
     private final JdbcTemplate jdbcTemplate;
 

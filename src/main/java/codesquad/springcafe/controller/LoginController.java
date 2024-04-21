@@ -7,6 +7,7 @@ import codesquad.springcafe.service.ArticleService;
 import codesquad.springcafe.service.LoginService;
 import jakarta.servlet.http.HttpSession;
 import java.util.Optional;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -53,7 +54,9 @@ public class LoginController {
         }
         User user = optionalUser.get();
         String nickname = user.getNickname();
-        LoginUser loginUser = new LoginUser(nickname, articleService.getOwnArticleIds(nickname));
+        Set<Long> ownArticleIds = articleService.getArticleIds(nickname);
+
+        LoginUser loginUser = new LoginUser(nickname, ownArticleIds);
         session.setAttribute(LOGIN_SESSION_NAME, loginUser);
 
         logger.info("{} 님이 로그인하셨습니다", loginUser.getNickname());

@@ -10,7 +10,9 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class ArticleH2Database implements ArticleDatabase {
     private final JdbcTemplate jdbcTemplate;
 
@@ -63,6 +65,19 @@ public class ArticleH2Database implements ArticleDatabase {
         jdbcTemplate.update(sql, article.getTitle(), article.getContent(), article.getWriter(), article.getViews()
                 , article.isDeleted(), article.getId());
     }
+
+    @Override
+    public void increaseViews(Long id) {
+        String sql = "UPDATE articles SET views = views + 1 WHERE id =?";
+        jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public void softDelete(Long id) {
+        String sql = "UPDATE articles SET isDeleted = true WHERE id =?";
+        jdbcTemplate.update(sql, id);
+    }
+
 //
 //    @Override
 //    public void delete(Long id) {

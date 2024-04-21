@@ -1,18 +1,18 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.database.article.ArticleDatabase;
 import codesquad.springcafe.database.comment.CommentDatabase;
-import codesquad.springcafe.form.article.ArticleDeleteForm;
 import codesquad.springcafe.form.article.ArticleWriteForm;
 import codesquad.springcafe.form.comment.CommentWriteForm;
 import codesquad.springcafe.form.user.LoginUser;
 import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.Comment;
+import codesquad.springcafe.service.ArticleService;
 import codesquad.springcafe.util.LoginUserProvider;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,17 +27,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
     private final Logger logger = LoggerFactory.getLogger(ArticleController.class);
 
-    private final ArticleDatabase articleDatabase;
+    private final ArticleService articleService;
     private final CommentDatabase commentDatabase;
 
-    public ArticleController(ArticleDatabase articleDatabase, CommentDatabase commentDatabase) {
-        this.articleDatabase = articleDatabase;
+    public ArticleController(ArticleService articleService, CommentDatabase commentDatabase) {
+        this.articleService = articleService;
         this.commentDatabase = commentDatabase;
     }
 
@@ -54,19 +55,15 @@ public class ArticleController {
      */
     @PostMapping("/add")
     public String addArticle(@Validated @ModelAttribute ArticleWriteForm articleWriteForm, BindingResult bindingResult,
-                             HttpSession session) {
+                             @SessionAttribute(LoginController.LOGIN_SESSION_NAME) LoginUser loginUser) {
         if (bindingResult.hasErrors()) {
             logger.error("errors ={}", bindingResult);
             return "article/form";
         }
-        LoginUser loginUser = LoginUserProvider.provide(session);
-        Article article = new Article(loginUser.getNickname(), articleWriteForm.getTitle(),
-                articleWriteForm.getContent(), LocalDateTime.now());
-        articleDatabase.add(article);
 
-        loginUser.addOwnArticle(article.getId());
+        Article article = articleService.write(articleWriteForm, loginUser.getNickname()); // 게시글 업데이트
+        loginUser.addOwnArticle(article.getId()); // 세션정보 업데이트
 
-        logger.info("새로운 게시물이 추가되었습니다. {}", article);
         return "redirect:/";
     }
 
@@ -74,18 +71,13 @@ public class ArticleController {
      * 사용자가 요청한 id의 아티클을 조회수를 올리고 렌더링하여 보여줍니다. 일치하는 id가 데이터베이스에 존재하지 않는다면 홈으로 리다이렉트합니다.
      */
     @GetMapping("/detail/{id}")
-    public String viewArticle(@PathVariable Long id, Model model) {
-        Optional<Article> optionalArticle = articleDatabase.findBy(id);
-        if (optionalArticle.isEmpty()) {
-            return "redirect:/";
-        }
-        Article article = optionalArticle.get();
-        article.increaseViews();
-        articleDatabase.update(article);
+    public String viewArticle(@PathVariable Long id, Model model,
+                              @ModelAttribute("commentWriteForm") CommentWriteForm commentWriteForm) {
 
-        model.addAttribute("commentWriteForm", new CommentWriteForm(""));
+        Article article = articleService.viewArticle(id);
+        List<Comment> comments = commentDatabase.findAll(id);
         model.addAttribute("article", article);
-        model.addAttribute("comments", commentDatabase.findAll(id));
+        model.addAttribute("comments", comments);
 
         return "article/show";
     }
@@ -95,10 +87,8 @@ public class ArticleController {
      */
     @GetMapping("/edit/{id}")
     public String updateForm(@PathVariable Long id, Model model) {
-        Article article = articleDatabase.findBy(id).get();
-        ArticleWriteForm articleWriteForm = new ArticleWriteForm(article.getTitle(), article.getContent());
-
-        model.addAttribute("articleWriteForm", articleWriteForm);
+        ArticleWriteForm articleUpdateForm = articleService.getArticleUpdateForm(id);
+        model.addAttribute("articleWriteForm", articleUpdateForm);
         return "article/update";
     }
 
@@ -111,11 +101,8 @@ public class ArticleController {
         if (bindingResult.hasErrors()) {
             return "article/update";
         }
-        Article targetArticle = articleDatabase.findBy(id).get();
-        Article updateArticle = targetArticle.update(articleWriteForm.getTitle(), articleWriteForm.getContent());
-        articleDatabase.update(updateArticle);
+        articleService.update(id, articleWriteForm);
 
-        logger.info("게시글 정보가 업데이트 되었습니다. {}", updateArticle);
         return "redirect:/articles/detail/" + id;
     }
 
@@ -129,27 +116,15 @@ public class ArticleController {
     }
 
     /**
-     * id와 일치하는 게시글을 찾고 로그인한 유저의 비밀번호와 사용자가 입력한 비밀번호가 동일하면 게시글을 삭제합니다. 게시물의 작성자와 다른 유저가 작성한 코멘트가 존재할 경우 게시물을 삭제할 수
-     * 없습니다.
+     * 게시물의 작성자와 다른 유저가 작성한 코멘트가 존재할 경우 게시물을 삭제할 수 없습니다.
      */
     @DeleteMapping("/delete/{id}")
-    public String deleteArticle(@PathVariable Long id, @Validated @ModelAttribute ArticleDeleteForm articleDeleteForm,
-                                BindingResult bindingResult) {
-        Article targetArticle = articleDatabase.findBy(id).get();
-        validateHasComment(bindingResult, targetArticle);
-        // 여기 수정해야함
-        if (bindingResult.hasErrors()) {
-            logger.error("errors={}", bindingResult);
-            return "article/delete";
-        }
-
-        targetArticle.delete();
-        articleDatabase.update(targetArticle);
-
+    public String deleteArticle(@PathVariable Long id) {
+        articleService.delete(id);
         deleteComments(id);
+//        TODO: 커멘트 서비스로 추출해야함
 
-        logger.info("게시글이 삭제 되었습니다. {}", targetArticle);
-        return "redirect:/articles/detail/" + id;
+        return "redirect:/";
     }
 
     /**
@@ -160,11 +135,7 @@ public class ArticleController {
                                @Validated @ModelAttribute CommentWriteForm commentWriteForm,
                                BindingResult bindingResult, Model model,
                                HttpSession session) {
-        Optional<Article> optionalArticle = articleDatabase.findBy(articleId);
-        if (optionalArticle.isEmpty()) {
-            return "redirect:/";
-        }
-        Article article = optionalArticle.get();
+        Article article = articleService.getArticle(articleId);
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("article", article);
@@ -187,9 +158,9 @@ public class ArticleController {
     @DeleteMapping("/detail/{articleId}/comments/{id}")
     public String deleteComment(@PathVariable Long articleId, @PathVariable Long id, HttpSession session,
                                 HttpServletResponse response) throws IOException {
-        Optional<Article> optionalArticle = articleDatabase.findBy(articleId);
+        Article article = articleService.getArticle(articleId);
         Optional<Comment> optionalComment = commentDatabase.findBy(id);
-        if (optionalArticle.isEmpty() || optionalComment.isEmpty()) {
+        if (optionalComment.isEmpty()) {
             return "redirect:/";
         }
 
@@ -204,19 +175,6 @@ public class ArticleController {
         commentDatabase.update(comment);
         logger.info("코멘트가 삭제되었습니다. {}", comment);
         return "redirect:/articles/detail/" + articleId;
-    }
-
-    private void validateHasComment(BindingResult bindingResult, Article targetArticle) {
-        if (hasComment(targetArticle)) {
-            bindingResult.reject("HasComment");
-        }
-    }
-
-    private boolean hasComment(Article targetArticle) {
-        String articleWriter = targetArticle.getWriter();
-        return commentDatabase.findAll(targetArticle.getId())
-                .stream()
-                .anyMatch(comment -> !comment.getWriter().equals(articleWriter)); // 게시물의 작성자가 아닌 다른 유저가 쓴 댓글이 존재하는지 확인
     }
 
     private void deleteComments(Long id) {
