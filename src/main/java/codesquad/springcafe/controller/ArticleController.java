@@ -54,6 +54,6 @@ public class ArticleController {
         Article article = articleDatabase.getArticleById(id);
         model.addAttribute("article", article); // 해당 id에 맞는 article 반환
 
-        return "/article/show";
+        return "article/show";
     }
 }

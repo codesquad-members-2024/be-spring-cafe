@@ -35,7 +35,7 @@ public class UserController {
             model.addAttribute("nickname", user.getNickname());
         }
 
-        return "/user/login_success";
+        return "user/login_success";
     }
 
     @PostMapping("/user/create")
@@ -53,7 +53,7 @@ public class UserController {
         model.addAttribute("users", userDatabase.getAllUsers()); // 전체 user 반환
         model.addAttribute("totalNumber", Integer.toString(userDatabase.getUsersSize())); //user 개수 반환
 
-        return "/user/list";
+        return "user/list";
     }
 
     @GetMapping("/users/{id}")
@@ -65,7 +65,7 @@ public class UserController {
 
         User user = userOptional.get();
         model.addAttribute("user", user); // profile.html에 user 객체 넘겨주기
-        return "/user/profile";
+        return "user/profile";
     }
 
     @GetMapping("/users/update/{id}")
@@ -78,7 +78,7 @@ public class UserController {
         User user = userOptional.get();
 
         model.addAttribute("user", user);
-        return "/user/update_form";
+        return "user/update_form";
     }
 
     @PutMapping("/users/update/{id}")
@@ -93,7 +93,7 @@ public class UserController {
         if(!user.comparePassword(updatedUser.getPassword())){ // 비밀번호가 일치하지 않는다면
             model.addAttribute("isIncorrectPassword", true); // 올바르지 않는 pw
             model.addAttribute("user", user);
-            return "/user/update_form";
+            return "user/update_form";
         }
 
         userDatabase.updateUser(id, updatedUser);
