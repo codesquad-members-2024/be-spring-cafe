@@ -59,7 +59,7 @@ public class CommentController {
     }
 
     @PostMapping("/update")
-    public String updateArticle(@ModelAttribute Comment comment, HttpSession session) throws NotAuthenticationException{
+    public String updateComment(@ModelAttribute Comment comment, HttpSession session) throws NotAuthenticationException {
         if (!commentService.userHasPermission((UserIdentity) session.getAttribute(SESSION_LOGIN), comment)) {
             throw new NotAuthenticationException();
         }
