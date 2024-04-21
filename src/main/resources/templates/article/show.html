@@ -22,14 +22,14 @@
         <div class="col-md-12 col-sm-12 col-lg-12">
             <div class="panel panel-default">
                 <header class="post-header-main">
-                    <p class="post-title-main">{{ article.getTitle }}</p>
-                    <p class="post-info-main">{{ article.getFormattedTime }}</p>
+                    <p class="post-title-main">{{ getTitle }}</p>
+                    <p class="post-info-main">{{ getFormattedTime }}</p>
                 </header>
                 <div class="content-main">
                     <article class="article">
                         <div class="article-header-main">
                             <div class="article-header-text-main">
-                                <p class="article-content-main">{{ article.getContent }}</p>
+                                <p class="article-content-main">{{ getContent }}</p>
                             </div>
                         </div>
                     </article>
@@ -60,12 +60,12 @@
                                     </div>
                                 </article>
 
-                                <form class="submit-write-main" method="get" action="../home/index.html ">
-                                    <div class="form-group-main">
-                                        <textarea class="form-control-main" id="comment" name="comment" placeholder="내용을 입력하세요"></textarea>
-                                    </div>
-                                    <input class="post-write-btn-main" type="submit" value="등록"/>
-                                </form>
+<!--                                <form class="submit-write-main" method="get" action="../home/index.html ">-->
+<!--                                    <div class="form-group-main">-->
+<!--                                        <textarea class="form-control-main" id="comment" name="comment" placeholder="내용을 입력하세요"></textarea>-->
+<!--                                    </div>-->
+<!--                                    <input class="post-write-btn-main" type="submit" value="등록"/>-->
+<!--                                </form>-->
                             </div>
                         </div>
                     </div>
