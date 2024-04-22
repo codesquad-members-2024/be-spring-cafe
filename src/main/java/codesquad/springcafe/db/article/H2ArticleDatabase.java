@@ -1,6 +1,6 @@
 package codesquad.springcafe.db.article;
 
-import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.article.Article;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
