@@ -33,7 +33,6 @@ public class MemberRepository {
             if (member.getPassword().equals(updatedMember.getPassword())) {
                 member.setName(updatedMember.getName());
                 member.setEmail(updatedMember.getEmail());
-                member.setPassword(updatedMember.getPassword());
                 logger.info("회원 정보 업데이트: {}", memberId);
                 return true;
             } else {
