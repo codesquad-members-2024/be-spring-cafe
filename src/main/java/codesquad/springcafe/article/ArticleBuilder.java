@@ -7,6 +7,7 @@ public class ArticleBuilder {
     private String title;
     private String contents;
     private String userId;
+    private boolean deleted;
 
     public ArticleBuilder articleId(Long articleId) {
         this.articleId = articleId;
@@ -33,8 +34,13 @@ public class ArticleBuilder {
         return this;
     }
 
+    public ArticleBuilder deleted(boolean deleted) {
+        this.deleted = deleted;
+        return this;
+    }
+
     public Article build() {
-        return new Article(articleId, title, author, contents, userId);
+        return new Article(articleId, title, author, contents, userId, deleted);
     }
 
 }

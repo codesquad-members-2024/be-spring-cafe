@@ -17,6 +17,7 @@ public class ReplyRowMapper implements RowMapper<Reply> {
             .userId(resultSet.getString("userId"))
             .articleId(resultSet.getLong("articleId"))
             .createdTime(resultSet.getTimestamp("createdTime"))
+            .deleted(resultSet.getBoolean("deleted"))
             .build();
     }
 }

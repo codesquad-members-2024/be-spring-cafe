@@ -10,6 +10,7 @@ public class ReplyBuilder {
     private String userId;
     private Long articleId;
     private Timestamp createdTime;
+    private boolean deleted;
 
     public ReplyBuilder replyId(Long replyId) {
         this.replyId = replyId;
@@ -41,8 +42,13 @@ public class ReplyBuilder {
         return this;
     }
 
+    public ReplyBuilder deleted(boolean deleted) {
+        this.deleted = deleted;
+        return this;
+    }
+
     public Reply build() {
-        return new Reply(replyId, author, contents, userId, articleId, createdTime);
+        return new Reply(replyId, author, contents, userId, articleId, createdTime, deleted);
     }
 
 }
