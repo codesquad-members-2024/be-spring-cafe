@@ -42,9 +42,9 @@ public class ArticleController {
         return "index";
     }
 
-    @GetMapping("/article/{article_id}")
-    public String articleDetail(@PathVariable int article_id, Model model) {
-        Optional<Article> article = articleRepository.findByIndex(article_id);
+    @GetMapping("/article/{articleId}")
+    public String articleDetail(@PathVariable int articleId, Model model) {
+        Optional<Article> article = articleRepository.findByIndex(articleId);
         article.ifPresent(a -> model.addAttribute("article", a));
 
         return "article/show";
