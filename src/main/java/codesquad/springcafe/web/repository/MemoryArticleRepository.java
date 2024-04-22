@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+
 public class MemoryArticleRepository implements ArticleRepository{
     private static List<Article> articles = new ArrayList<>();
 
@@ -22,10 +22,10 @@ public class MemoryArticleRepository implements ArticleRepository{
         return articles;
     }
 
-    @Override
-    public int articleSize() {
-        return articles.size();
-    }
+//    @Override
+//    public int articleSize() {
+//        return articles.size();
+//    }
 
     @Override
     public Optional<Article> findByIndex(int number) {

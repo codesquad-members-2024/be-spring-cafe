@@ -5,9 +5,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
-@Repository
+
 public class MemoryUserRepository implements UserRepository {
-//    private static List<User> users = new ArrayList<>();
     private static Map<String, User> users = new HashMap<>();
 
     @Override
