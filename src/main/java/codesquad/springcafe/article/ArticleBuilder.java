@@ -1,5 +1,7 @@
 package codesquad.springcafe.article;
 
+import java.sql.Timestamp;
+
 public class ArticleBuilder {
 
     private Long articleId;
@@ -7,6 +9,7 @@ public class ArticleBuilder {
     private String title;
     private String contents;
     private String userId;
+    private Timestamp createdTime;
     private boolean deleted;
 
     public ArticleBuilder articleId(Long articleId) {
@@ -34,13 +37,18 @@ public class ArticleBuilder {
         return this;
     }
 
+    public ArticleBuilder createdTime(Timestamp createdTime) {
+        this.createdTime = createdTime;
+        return this;
+    }
+
     public ArticleBuilder deleted(boolean deleted) {
         this.deleted = deleted;
         return this;
     }
 
     public Article build() {
-        return new Article(articleId, title, author, contents, userId, deleted);
+        return new Article(articleId, title, author, contents, userId, createdTime, deleted);
     }
 
 }
