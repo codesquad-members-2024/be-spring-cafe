@@ -1,3 +1,10 @@
+ALTER TABLE IF EXISTS ARTICLE
+    DROP constraint IF EXISTS FK_ARTICLE_USER;
+ALTER TABLE IF EXISTS REPLY
+    DROP constraint IF EXISTS FK_REPLY_USER;
+ALTER TABLE IF EXISTS REPLY
+    DROP constraint IF EXISTS FK_REPLY_ARTICLE;
+
 DROP TABLE IF EXISTS USERS;
 CREATE TABLE USERS
 (
@@ -32,8 +39,8 @@ CREATE TABLE REPLY
 );
 
 alter table ARTICLE
-    add foreign key (userId) references USERS (userId);
+    add constraint fk_article_user foreign key (userId) references USERS (userId);
 alter table REPLY
-    add foreign key (userId) references USERS (userId);
+    add constraint fk_reply_user foreign key (userId) references USERS (userId);
 alter table REPLY
-    add foreign key (articleId) references ARTICLE (articleId);
+    add constraint fk_reply_article foreign key (articleId) references ARTICLE (articleId);
