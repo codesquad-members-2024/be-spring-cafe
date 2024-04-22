@@ -2,8 +2,10 @@ package codesquad.springcafe.article;
 
 import codesquad.springcafe.article.dto.ArticleCreateDto;
 import codesquad.springcafe.article.dto.ArticleUpdateDto;
+import codesquad.springcafe.reply.ReplyService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,9 +21,12 @@ public class ArticleController {
 
     private final Logger log = org.slf4j.LoggerFactory.getLogger(ArticleController.class);
     private final ArticleService articleService;
+    private final ReplyService replyService;
 
-    public ArticleController(ArticleService articleService) {
+    @Autowired
+    public ArticleController(ArticleService articleService, ReplyService replyService) {
         this.articleService = articleService;
+        this.replyService = replyService;
     }
 
     @GetMapping("/form")
@@ -39,6 +44,7 @@ public class ArticleController {
     @GetMapping("/{articleId}")
     public String showArticle(@PathVariable Long articleId, Model model) {
         model.addAttribute("article", articleService.findById(articleId));
+        model.addAttribute("replies", replyService.findByArticleId(articleId));
         return "article/show";
     }
 
@@ -67,15 +73,15 @@ public class ArticleController {
     }
 
     //게시글 삭제
-    @DeleteMapping("/{articleId}/delete")
-    public String deleteArticle(@PathVariable Long articleId, HttpServletRequest request) {
+    @DeleteMapping("/{replyId}/delete")
+    public String deleteArticle(@PathVariable Long replyId, HttpServletRequest request) {
         String userId = (String) request.getSession().getAttribute("userId");
-        if (!articleService.isAuthenticated(userId, articleId)) {
+        if (!articleService.isAuthenticated(userId, replyId)) {
             return "redirect:/";
         }
-        articleService.delete(articleId);
+        articleService.delete(replyId);
         log.info(
-            request.getSession().getAttribute("nickname") + " deleted article number " + articleId);
+            request.getSession().getAttribute("nickname") + " deleted article number " + replyId);
         return "redirect:/";
     }
 

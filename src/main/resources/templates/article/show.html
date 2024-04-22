@@ -39,7 +39,8 @@
                    th:href="@{/article/{articleId}/update_form(articleId=${article.articleId})}">수정</a>
               </li>
               <li>
-                <button class="link-delete-article" onclick="confirmDelete()">삭제</button>
+                <button onclick="confirmDeleteArticle()" class="link-delete-article">삭제
+                </button>
               </li>
               <li>
                 <a class="link-modify-article" href="/templates/index.html">목록</a>
@@ -50,75 +51,50 @@
 
         <div class="qna-comment">
           <div class="qna-comment-slipp">
-            <p class="qna-comment-count"><strong>2</strong>개의 의견</p>
             <div class="qna-comment-slipp-articles">
-
-              <article class="article" id="answer-1405">
+              <div th:each="reply : ${replies}" class="article">
                 <div class="article-header">
                   <div class="article-header-thumb">
                     <img src="https://graph.facebook.com/v2.3/1324855987/picture"
                          class="article-author-thumb" alt="">
                   </div>
                   <div class="article-header-text">
-                    <a href="/users/1/자바지기" class="article-author-name">자바지기</a>
-                    <a href="#answer-1434" class="article-header-time" title="퍼머링크">
-                      2016-01-12 14:06
-                    </a>
+                    <a th:href="@{/users/{userId}(userId=${reply.userId})}"
+                       th:text="${reply.author}" class="article-author-name"></a>
+                    <a th:href="@{'#answer-'}" class="article-header-time" title="퍼머링크"
+                       th:text="${#dates.format(reply.createdTime, 'yyyy-MM-dd HH:mm')}"></a>
                   </div>
                 </div>
                 <div class="article-doc comment-doc">
-                  <p>이 글만으로는 원인 파악하기 힘들겠다. 소스 코드와 설정을 단순화해서 공유해 주면 같이 디버깅해줄 수도 있겠다.</p>
+                  <p th:text="${reply.contents}"></p>
                 </div>
                 <div class="article-util">
                   <ul class="article-util-list">
                     <li>
-                      <a class="link-modify-article" href="/questions/413/answers/1405/form">수정</a>
+                      <a class="link-modify-article"
+                         th:href="@{/article/{articleId}/update_form(articleId=${article.articleId})}">수정</a>
                     </li>
                     <li>
-                      <form class="delete-answer-form" action="/questions/413/answers/1405"
-                            method="POST">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="delete-answer-button">삭제</button>
-                      </form>
+                      <button class="link-delete-article"
+                              th:onclick="'confirmDeleteReply(' + ${reply.replyId} + ')'">삭제
+                      </button>
+                    </li>
+                    <li>
+                      <a class="link-modify-article" href="/templates/index.html">목록</a>
                     </li>
                   </ul>
                 </div>
-              </article>
-              <article class="article" id="answer-1406">
-                <div class="article-header">
-                  <div class="article-header-thumb">
-                    <img src="https://graph.facebook.com/v2.3/1324855987/picture"
-                         class="article-author-thumb" alt="">
-                  </div>
-                  <div class="article-header-text">
-                    <a href="/users/1/자바지기" class="article-author-name">자바지기</a>
-                    <a href="#answer-1434" class="article-header-time" title="퍼머링크">
-                      2016-01-12 14:06
-                    </a>
-                  </div>
-                </div>
-                <div class="article-doc comment-doc">
-                  <p>이 글만으로는 원인 파악하기 힘들겠다. 소스 코드와 설정을 단순화해서 공유해 주면 같이 디버깅해줄 수도 있겠다.</p>
-                </div>
-                <div class="article-util">
-                  <ul class="article-util-list">
-                    <li>
-                      <a class="link-modify-article" href="/questions/413/answers/1405/form">수정</a>
-                    </li>
-                    <li>
-                      <form class="form-delete" action="/questions/413/answers/1405" method="POST">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="delete-answer-button">삭제</button>
-                      </form>
-                    </li>
-                  </ul>
-                </div>
-              </article>
-              <form class="submit-write">
+              </div>
+              <form class="submit-write" id="replyForm" method="post" action="/reply/create">
                 <div class="form-group" style="padding:14px;">
-                  <textarea class="form-control" placeholder="Update your status"></textarea>
+                  <textarea class="form-control" name="contents" id="contents" rows="5"
+                            placeholder="댓글을 작성해주세요"></textarea>
                 </div>
-                <button class="btn btn-success pull-right" type="button">답변하기</button>
+                <input type="hidden" name="articleId" id="articleId"
+                       th:value="${article.articleId}"/>
+                <input type="hidden" name="author" id="author" th:value="${session.nickname}"/>
+                <input type="hidden" name="userId" id="userId" th:value="${session.userId}"/>
+                <button class="btn btn-success pull-right" type="submit">답변하기</button>
                 <div class="clearfix"/>
               </form>
             </div>
@@ -129,49 +105,19 @@
   </div>
 </div>
 
-<script type="text/template" id="answerTemplate">
-  <article class="article">
-    <div class="article-header">
-      <div class="article-header-thumb">
-        <img src="https://graph.facebook.com/v2.3/1324855987/picture" class="article-author-thumb"
-             alt="">
-      </div>
-      <div class="article-header-text">
-        <a href="#" class="article-author-name">{0}</a>
-        <div class="article-header-time">{1}</div>
-      </div>
-    </div>
-    <div class="article-doc comment-doc">
-      {2}
-    </div>
-    <div class="article-util">
-      <ul class="article-util-list">
-        <li>
-          <a class="link-modify-article" href="/api/qna/updateAnswer/{3}">수정</a>
-        </li>
-        <li>
-          <form class="delete-answer-form" action="/api/questions/{3}/answers/{4}" method="POST">
-            <input type="hidden" name="_method" value="DELETE">
-            <button type="submit" class="delete-answer-button">삭제</button>
-          </form>
-        </li>
-      </ul>
-    </div>
-  </article>
-</script>
 
 <!-- script references -->
 <script src="../js/jquery-2.2.0.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/scripts.js"></script>
 <script th:inline="javascript">
-  function confirmDelete() {
+  function confirmDeleteArticle() {
     if (confirm("정말 지울거야?")) {
       var form = document.createElement("form");
       form.method = "POST";
       var articleId = [[${article.articleId}]];
       form.action = "/article/" + articleId + "/delete";
-      console.log(form.action)
+      console.log(form.action);
       var hiddenField = document.createElement("input");
       hiddenField.type = "hidden";
       hiddenField.name = "_method";
@@ -179,7 +125,22 @@
       form.appendChild(hiddenField);
       document.body.appendChild(form);
       form.submit();
-    } else {
+    }
+  }
+</script>
+<script th:inline="javascript">
+  function confirmDeleteReply(reply) {
+    if (confirm("정말 지우시겠습니까?")) {
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = "/reply/" + reply + "/delete";
+      const hiddenField = document.createElement("input");
+      hiddenField.type = "hidden";
+      hiddenField.name = "_method";
+      hiddenField.value = "DELETE";
+      form.appendChild(hiddenField);
+      document.body.appendChild(form);
+      form.submit();
     }
   }
 </script>
