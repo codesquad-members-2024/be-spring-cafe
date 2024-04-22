@@ -50,7 +50,7 @@ public class JdbcTemplateArticleRepository implements ArticleRepository{
 
     @Override
     public Optional<Article> findByIndex(int articleId) {
-        String sql = "SELECT * FROM articles WHERE articleId = ?";
+        String sql = "SELECT * FROM articles WHERE ARTICLEID = ?";
         List<Article> articles = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Article.class), articleId);
         return articles.isEmpty() ? Optional.empty() : Optional.of(articles.get(0));
     }
