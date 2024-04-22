@@ -78,7 +78,9 @@
                                                readonly/>
                                     </div>
                                     <span class="error-message" style="margin-top: 10px; margin-left: 25px; color:red"
-                                          th:errors="*{content}"></span>
+                                          th:if="${IsCommentBlank}">
+                                        댓글은 비어있을 수 없습니다.
+                                    </span>
                                     <div class="form-group"
                                          th:classappend="${#fields.hasErrors('content')} ? 'has-error'">
                                         <textarea class="form-control" id="content" th:field="*{content}"

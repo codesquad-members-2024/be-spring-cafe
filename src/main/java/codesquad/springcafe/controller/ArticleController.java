@@ -69,10 +69,10 @@ public class ArticleController {
     @GetMapping("/{articleId}")
     public String showDetailPage(@PathVariable long articleId, Model model, HttpSession httpSession,
                                  @ModelAttribute("commentWriteDto") CommentWriteDto commentWriteDto) {
-        articleService.increaseViewCount(articleId);
-        Article article = articleService.findArticleById(articleId);
+        canIncreaseViewCount(httpSession, articleId);
         SessionUser sessionUser = (SessionUser) httpSession.getAttribute("sessionUser");
         String userId = sessionUser.getUserId();
+        Article article = articleService.findArticleById(articleId);
         List<Comment> comments = commentService.findCommentsByAid(articleId);
         boolean canDelete = comments.stream().allMatch(comment -> comment.getUserId().equals(userId));
 
@@ -81,7 +81,23 @@ public class ArticleController {
         model.addAttribute("canDelete", canDelete);
         model.addAttribute("writer", sessionUser.getUserId());
         model.addAttribute("commentList", comments);
+
+        Object commentBlankError = httpSession.getAttribute("commentBlankError");
+        if (commentBlankError != null && (boolean) commentBlankError) {
+            model.addAttribute("IsCommentBlank", true);
+        }
+        httpSession.removeAttribute("commentBlankError");
+        httpSession.removeAttribute("commentAddFlag");
         return "article/show";
+    }
+
+    private void canIncreaseViewCount(HttpSession httpSession, long articleId) {
+        Object commentBlankError = httpSession.getAttribute("commentBlankError");
+        Object commentAddFlag = httpSession.getAttribute("commentAddFlag");
+
+        if (commentBlankError == null && commentAddFlag == null) {
+            articleService.increaseViewCount(articleId);
+        }
     }
 
     @GetMapping("/update/{articleId}")
@@ -121,28 +137,18 @@ public class ArticleController {
     }
 
     @PostMapping("/{articleId}/comments")
-    public String processAnswerForm(@PathVariable long articleId, HttpSession httpSession, Model model,
+    public String processAnswerForm(@PathVariable long articleId, HttpSession httpSession,
                                     @Valid @ModelAttribute CommentWriteDto commentWriteDto,
                                     BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) { // TODO: AJAX로 바꿀 예정
-            Article article = articleService.findArticleById(articleId);
-            SessionUser sessionUser = (SessionUser) httpSession.getAttribute("sessionUser");
-            String userId = sessionUser.getUserId();
-            List<Comment> comments = commentService.findCommentsByAid(articleId);
-            boolean canDelete = comments.stream().allMatch(comment -> comment.getUserId().equals(userId));
-
-            model.addAttribute("article", article);
-            model.addAttribute("isWriter", sessionUser.getArticleIds().contains(articleId));
-            model.addAttribute("canDelete", canDelete);
-            model.addAttribute("writer", sessionUser.getUserId());
-            model.addAttribute("commentList", comments);
-            return "article/show";
+        if (bindingResult.hasErrors()) {
+            httpSession.setAttribute("commentBlankError", true);
+            return "redirect:/article/{articleId}";
         }
-
         SessionUser sessionUser = (SessionUser) httpSession.getAttribute("sessionUser");
         String userId = sessionUser.getUserId();
         Comment comment = commentWriteDto.createComment(articleId, userId);
         commentService.addComment(comment);
+        httpSession.setAttribute("commentAddFlag", true);
         return "redirect:/article/{articleId}";
     }
 
