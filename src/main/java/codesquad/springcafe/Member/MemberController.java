@@ -41,7 +41,7 @@ public class MemberController {
 
     @GetMapping("/users/{memberId}")
     public String showProfile(Model model, @PathVariable("memberId") String memberId) {
-        Optional<Member> optionalMember = memberRepository.getMember(memberId);
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
         if (optionalMember.isPresent()) {
             model.addAttribute("user", optionalMember.get());
             logger.info("회원 프로필 조회: {}", memberId);
@@ -49,26 +49,21 @@ public class MemberController {
             logger.warn("회원 프로필 조회 실패: {}", memberId);
         }
         return "user/profile";
+
     }
     @GetMapping("/users/{memberId}/form")
     public String updateForm(@PathVariable String memberId, Model model) {
-        Optional<Member> member = memberRepository.getMember(memberId);
+        Optional<Member> member = memberRepository.findById(memberId);
         member.ifPresent(m -> model.addAttribute("member", m));
         return member.isPresent() ? "user/updateForm" : "redirect:/user/list";
     }
     @PutMapping("/user/update/{memberId}")
     public String updateMember(@PathVariable String memberId, @ModelAttribute Member updatedMember) {
-        boolean updateResult = memberRepository.updateMemberInfo(
-                memberId,
-                updatedMember.getPassword(),
-                updatedMember.getName(),
-                updatedMember.getEmail(),
-                updatedMember.getPassword());
-
-        if (!updateResult) {
+        if (memberRepository.updateMemberInfo(memberId, updatedMember)) {
+            logger.info("회원 정보 수정 성공: {}", memberId);
+        } else {
             logger.warn("회원 정보 수정 실패: {}", memberId);
         }
-
         return "redirect:/user/list";
     }
 }

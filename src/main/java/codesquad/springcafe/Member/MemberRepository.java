@@ -22,28 +22,27 @@ public class MemberRepository {
         return members;
     }
 
-    public Optional<Member> getMember(String memberId) {
+    public Optional<Member> findById(String memberId) {
         return members.stream()
-                .filter(user -> user.getMemberId().equals(memberId))
+                .filter(member -> member.getMemberId().equals(memberId))
                 .findFirst();
     }
-    public boolean updateMemberInfo(String memberId, String currentPassword, String newName, String newEmail, String newPassword) {
-        Optional<Member> memberOptional = getMember(memberId);
-        if (memberOptional.isPresent()) {
-            Member member = memberOptional.get();
-            if (member.getPassword().equals(currentPassword)) {
-                member.setName(newName);
-                member.setEmail(newEmail);
-                member.setPassword(newPassword);
+
+    public boolean updateMemberInfo(String memberId, Member updatedMember) {
+        return findById(memberId).map(member -> {
+            if (member.getPassword().equals(updatedMember.getPassword())) {
+                member.setName(updatedMember.getName());
+                member.setEmail(updatedMember.getEmail());
+                member.setPassword(updatedMember.getPassword());
                 logger.info("회원 정보 업데이트: {}", memberId);
                 return true;
             } else {
                 logger.warn("비밀번호 불일치: {}", memberId);
                 return false;
             }
-        } else {
+        }).orElseGet(() -> {
             logger.warn("해당 회원을 찾을 수 없음: {}", memberId);
             return false;
-        }
+        });
     }
 }
