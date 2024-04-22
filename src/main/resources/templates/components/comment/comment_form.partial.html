@@ -8,42 +8,6 @@
     <div class="clearfix"/>
 </form>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(".submit-write button[type=submit]").click(addAnswer);
-
-    function addAnswer(e) {
-        // console.log("addAnswer")
-        e.preventDefault();
-
-        var queryString = $(".submit-write").serialize();
-
-        var url = $(".submit-write").attr("action");
-        // console.log("url : " + url);
-
-
-        $.ajax({
-            type: 'post',
-            url: url,
-            data: queryString,
-            dataType: 'json',
-            error: function () {
-                alert("error");
-            },
-            success: function (data, status) {
-                console.log(data);
-                var answerTemplate = $("#comment_template").html();
-                var template = answerTemplate.format(data)
-
-                // console.log(template)
-                $(".qna-comment-slipp-articles").prepend(template);
-                $("textarea[name=contents]").val("");
-            }
-        });
-
-    }
-</script>
-
 <article class="article" id="comment_template" style="display: none">
     <div class="article-header">
         <div class="article-header-thumb">
