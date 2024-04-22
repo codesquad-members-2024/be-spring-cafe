@@ -70,13 +70,13 @@ public class UserController {
         if (loggedInUser.isEmpty()) {
             return "/user/login_failed";
         }
-        session.setAttribute("user", loggedInUser.get());
+        session.setAttribute("loggedInUser", loggedInUser.get());
         return "redirect:/";
     }
 
     @PostMapping("/logout")
     public String logout(HttpSession session) {
-        session.removeAttribute("user");
+        session.removeAttribute("loggedInUser");
         return "redirect:/";
     }
 }
