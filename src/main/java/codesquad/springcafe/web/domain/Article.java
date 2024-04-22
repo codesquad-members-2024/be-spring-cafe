@@ -22,12 +22,12 @@ public class Article {
     }
 
 
-    public Long getArticle_id() {
+    public Long getArticleId() {
         return articleId;
     }
 
-    public void setArticle_id(Long article_id) {
-        this.articleId = article_id;
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
     }
 
     public String getWriter() {
