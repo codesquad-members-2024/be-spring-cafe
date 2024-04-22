@@ -35,6 +35,11 @@ public class ArticleMemoryRepository implements ArticleRepository {
     }
 
     @Override
+    public boolean isArticleDeleted(long id) throws ArticleNotFoundException {
+        return false;
+    }
+
+    @Override
     public long modifyArticle(long id, UpdatedArticle article) throws ArticleNotFoundException {
         return id;
     }

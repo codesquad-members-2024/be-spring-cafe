@@ -103,6 +103,10 @@ public class Comment {
         return creationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
+    public String getFormattedModifiedTime() {
+        return modifiedTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
     @Override
     public String toString() {
         return String.format(TO_STRING_FORMAT, id, userId, content, creationTime);

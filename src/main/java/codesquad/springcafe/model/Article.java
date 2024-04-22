@@ -11,7 +11,10 @@ public class Article {
     private String userId;
     private String title;
     private String content;
+    private boolean isModified;
+    private boolean isDeleted;
     private LocalDateTime creationTime;
+    private LocalDateTime modifiedTime;
     private long viewCount;
 
     public Article(String userId, String title, String content) {
@@ -19,15 +22,18 @@ public class Article {
         this.title = title;
         this.content = content;
         this.creationTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-        this.viewCount = 0;
     }
 
-    public Article(long id, String userId, String title, String content, LocalDateTime creationTime, long viewCount) {
+    public Article(long id, String userId, String title, String content, boolean isModified, boolean isDeleted,
+                   LocalDateTime creationTime, LocalDateTime modifiedTime, long viewCount) {
         this.id = id;
         this.userId = userId;
         this.title = title;
         this.content = content;
+        this.isModified = isModified;
+        this.isDeleted = isDeleted;
         this.creationTime = creationTime;
+        this.modifiedTime = modifiedTime;
         this.viewCount = viewCount;
     }
 
@@ -63,6 +69,22 @@ public class Article {
         this.content = content;
     }
 
+    public boolean isModified() {
+        return isModified;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public LocalDateTime getCreationTime() {
+        return creationTime;
+    }
+
+    public LocalDateTime getModifiedTime() {
+        return modifiedTime;
+    }
+
     public long getViewCount() {
         return viewCount;
     }
@@ -71,12 +93,12 @@ public class Article {
         this.viewCount = viewCount;
     }
 
-    public LocalDateTime getCreationTime() {
-        return creationTime;
-    }
-
     public String getFormattedCreationTime() {
         return creationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public String getFormattedModifiedTime() {
+        return modifiedTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     @Override

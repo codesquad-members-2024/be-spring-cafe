@@ -25,7 +25,7 @@ public class ArticleUpdateDto {
         this.content = content;
     }
 
-    public UpdatedArticle createUpdatedArticle(String userId) {
-        return new UpdatedArticle(userId, title, content);
+    public UpdatedArticle createUpdatedArticle() {
+        return new UpdatedArticle(title, content);
     }
 }

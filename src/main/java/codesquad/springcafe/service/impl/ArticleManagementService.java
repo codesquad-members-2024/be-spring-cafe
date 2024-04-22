@@ -53,17 +53,30 @@ public class ArticleManagementService implements ArticleService {
     @Override
     public Article findArticleById(long id) {
         Optional<Article> optArticle = articleRepository.findArticleById(id);
-        return optArticle.orElseThrow(() -> new ArticleNotFoundException(id));
+        if (optArticle.isPresent()) {
+            Article article = optArticle.get();
+            if (article.isDeleted()) {
+                throw new ArticleNotFoundException(id);
+            }
+            return article;
+        }
+        throw new ArticleNotFoundException(id);
     }
 
     @Override
     public void updateArticle(long id, UpdatedArticle article) {
+        if (articleRepository.isArticleDeleted(id)) {
+            throw new ArticleNotFoundException(id);
+        }
         articleRepository.modifyArticle(id, article);
         logger.info("[{} 게시글 수정 성공]", id);
     }
 
     @Override
     public void deleteArticle(long id) {
+        if (articleRepository.isArticleDeleted(id)) {
+            throw new ArticleNotFoundException(id);
+        }
         long deletedArticleId = articleRepository.deleteArticle(id);
         logger.info("[{} 게시글 삭제 성공]", deletedArticleId);
     }
@@ -75,7 +88,7 @@ public class ArticleManagementService implements ArticleService {
 
     @Override
     public void increaseViewCount(long id) {
-        long increasedViewCount = articleRepository.increaseViewCount(id);
+        articleRepository.increaseViewCount(id);
         logger.info("[{}번째 게시글 조회수 증가]", id);
     }
 

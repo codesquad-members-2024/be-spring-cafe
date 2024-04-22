@@ -43,7 +43,12 @@
                             </a>
                         </td>
                         <td th:text="${article.getUserId()}"></td>
-                        <td th:text="${article.getFormattedCreationTime()}"></td>
+                        <td th:if="${article.isModified()}"
+                            th:text="${article.getFormattedModifiedTime()}">>
+                        </td>
+                        <td th:unless="${article.isModified()}"
+                            th:text="${article.getFormattedCreationTime()}">>
+                        </td>
                         <td th:text="${article.getViewCount()}"></td>
                     </tr>
                     </tbody>

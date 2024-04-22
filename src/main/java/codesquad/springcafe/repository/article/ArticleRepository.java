@@ -12,6 +12,8 @@ public interface ArticleRepository {
 
     Optional<Article> findArticleById(long id) throws ArticleNotFoundException;
 
+    boolean isArticleDeleted(long id) throws ArticleNotFoundException;
+
     long modifyArticle(long id, UpdatedArticle article) throws ArticleNotFoundException;
 
     long deleteArticle(long id);

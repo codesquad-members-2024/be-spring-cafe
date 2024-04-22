@@ -72,10 +72,13 @@ public class ArticleController {
         articleService.increaseViewCount(articleId);
         Article article = articleService.findArticleById(articleId);
         SessionUser sessionUser = (SessionUser) httpSession.getAttribute("sessionUser");
+        String userId = sessionUser.getUserId();
         List<Comment> comments = commentService.findCommentsByAid(articleId);
+        boolean canDelete = comments.stream().allMatch(comment -> comment.getUserId().equals(userId));
 
         model.addAttribute("article", article);
         model.addAttribute("isWriter", sessionUser.getArticleIds().contains(articleId));
+        model.addAttribute("canDelete", canDelete);
         model.addAttribute("writer", sessionUser.getUserId());
         model.addAttribute("commentList", comments);
         return "article/show";
@@ -91,23 +94,30 @@ public class ArticleController {
     }
 
     @PutMapping("/update/{articleId}")
-    public String processUpdateForm(@PathVariable long articleId, HttpSession httpSession,
+    public String processUpdateForm(@PathVariable long articleId,
                                     @Valid @ModelAttribute ArticleUpdateDto articleUpdateDto,
                                     BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "article/update";
         }
 
-        SessionUser sessionUser = (SessionUser) httpSession.getAttribute("sessionUser");
-        UpdatedArticle updatedArticle = articleUpdateDto.createUpdatedArticle(sessionUser.getUserId());
+        UpdatedArticle updatedArticle = articleUpdateDto.createUpdatedArticle();
         articleService.updateArticle(articleId, updatedArticle);
         return "redirect:/";
     }
 
     @DeleteMapping("/update/{articleId}")
-    public String processDelete(@PathVariable long articleId) {
-        articleService.deleteArticle(articleId);
-        return "redirect:/";
+    public String processDelete(@PathVariable long articleId, HttpSession httpSession) {
+        SessionUser sessionUser = (SessionUser) httpSession.getAttribute("sessionUser");
+        String userId = sessionUser.getUserId();
+        List<Comment> otherComments = commentService.findCommentsByAid(articleId)
+                .stream().filter(comment -> !comment.getUserId().equals(userId)).toList();
+
+        if (otherComments.isEmpty()) { // 다른 사용자의 댓글이 없는 경우만 게시글 삭제가 가능하다.
+            articleService.deleteArticle(articleId);
+            return "redirect:/";
+        }
+        return "redirect:/article/invalid-delete";
     }
 
     @PostMapping("/{articleId}/comments")
@@ -128,6 +138,12 @@ public class ArticleController {
     @GetMapping("/invalid-modify")
     public String showInvalidModifyPage(Model model) {
         model.addAttribute("errorMsg", "다른 사람의 게시글은 수정할 수 없습니다.");
+        return "error/form";
+    }
+
+    @GetMapping("/invalid-delete")
+    public String showInvalidDeletePage(Model model) {
+        model.addAttribute("errorMsg", "댓글이 없는 경우만 삭제가 가능합니다.");
         return "error/form";
     }
 }
