@@ -3,6 +3,7 @@ package codesquad.springcafe.repository;
 import codesquad.springcafe.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository {
 
@@ -10,7 +11,7 @@ public interface UserRepository {
 
     List<User> findAllUsers();
 
-    User findUserById(String userId);
+    Optional<User> findUserById(String userId);
 
     void clear();
 

@@ -24,7 +24,7 @@ class ArticleMemoryRepositoryTest {
         Article article = new Article(articleId, "cori", "안녕하세요", "오늘은 날씨가 흐립니다.");
         articleRepository.save(article);
 
-        Article findArticle = articleRepository.findById(articleId);
+        Article findArticle = articleRepository.findById(articleId).get();
 
         assertThat(findArticle).usingRecursiveComparison().isEqualTo(article);
     }
