@@ -28,9 +28,9 @@ public class ReplyController {
     @DeleteMapping("/{replyId}/delete")
     public String deleteReply(@PathVariable Long replyId, HttpSession httpSession) {
         String userId = httpSession.getAttribute("userId").toString();
-//        if (!replyService.isAutehnticated(userId, replyId)) {
-//            return "redirect:/";
-//        }
+        if (!replyService.isAutehnticated(userId, replyId)) {
+            return "redirect:/";
+        }
         replyService.delete(replyId);
         return "redirect:/";
     }
