@@ -14,6 +14,7 @@ public class ArticleRowMapper implements RowMapper<Article> {
             .title(resultSet.getString("title"))
             .contents(resultSet.getString("contents"))
             .userId(resultSet.getString("userId"))
+            .deleted(resultSet.getBoolean("deleted"))
             .build();
     }
 

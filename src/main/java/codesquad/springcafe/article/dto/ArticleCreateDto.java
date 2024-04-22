@@ -9,17 +9,19 @@ public class ArticleCreateDto {
     private String author;
     private String contents;
     private String userId;
+    private boolean deleted;
 
     public ArticleCreateDto(String title, String author, String contents, String userId) {
         this.title = title;
         this.author = author;
         this.contents = contents;
         this.userId = userId;
+        this.deleted = false;
     }
 
     public Article toEntity() {
         return new ArticleBuilder().author(author).title(title)
-            .contents(contents).userId(userId).build();
+            .contents(contents).userId(userId).deleted(deleted).build();
     }
 
     public String getTitle() {
@@ -36,5 +38,9 @@ public class ArticleCreateDto {
 
     public String getUserId() {
         return userId;
+    }
+
+    public boolean getDeleted() {
+        return deleted;
     }
 }

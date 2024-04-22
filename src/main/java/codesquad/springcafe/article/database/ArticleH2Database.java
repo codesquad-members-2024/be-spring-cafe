@@ -32,7 +32,7 @@ public class ArticleH2Database implements ArticleDatabase {
 
     @Override
     public List<Article> findAll() {
-        String sql = "SELECT * FROM article";
+        String sql = "SELECT * FROM article WHERE deleted = false";
         return jdbcTemplate.query(sql, new ArticleRowMapper());
     }
 
@@ -49,7 +49,7 @@ public class ArticleH2Database implements ArticleDatabase {
 
     @Override
     public void delete(Long articleId) {
-        String sql = "DELETE FROM article WHERE articleid = ?";
+        String sql = "UPDATE article SET deleted = true WHERE articleId = ?";
         jdbcTemplate.update(sql, articleId);
     }
 }

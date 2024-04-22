@@ -25,15 +25,14 @@ public class ReplyH2Database implements ReplyDatabase {
 
     @Override
     public List<Reply> findByArticleId(Long articleId) {
-        String sql = "SELECT * FROM reply WHERE articleId = ?";
+        String sql = "SELECT * FROM reply WHERE articleId = ? AND deleted = false";
         return jdbcTemplate.query(sql, new ReplyRowMapper(), articleId);
     }
 
     @Override
     public void delete(Long replyId) {
-        String sql = "DELETE FROM reply WHERE replyId = ?";
+        String sql = "UPDATE reply SET deleted = true WHERE replyId = ?";
         jdbcTemplate.update(sql, replyId);
-
     }
 
     @Override
