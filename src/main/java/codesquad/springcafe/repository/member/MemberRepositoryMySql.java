@@ -77,9 +77,9 @@ public class MemberRepositoryMySql implements MemberRepository {
     @Override
     public void clear() {
         String sql = "set foreign_key_checks = 0;"
-                + "alter table article drop foreign key fk_created_by;"
-                + "alter table comment drop foreign key fk_comment_created_by;"
-                + "alter table comment drop foreign key fk_comment_article_id;"
+                + "alter table ARTICLE drop foreign key fk_created_by;"
+                + "alter table COMMENT drop foreign key fk_comment_created_by;"
+                + "alter table COMMENT drop foreign key fk_comment_article_id;"
                 + "truncate table MEMBER; alter table MEMBER AUTO_INCREMENT = 1;"
                 + "set foreign_key_checks = 1;";
 
