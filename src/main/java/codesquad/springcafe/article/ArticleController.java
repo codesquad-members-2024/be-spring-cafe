@@ -1,5 +1,6 @@
 package codesquad.springcafe.article;
 
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -20,7 +21,12 @@ public class ArticleController {
 
     // 아티클 id를 가지고 해당 아티클 보여주기 없으면 기본 홈페이지 보여주기
     @GetMapping("/article/{id}")
-    public String showArticle(@PathVariable int id, Model model) {
+    public String showArticle(@PathVariable int id, Model model, HttpSession session) {
+        String value = (String) session.getAttribute("sessionUserId");
+        if (value == null) {
+            throw new IllegalArgumentException("접근 불가입니다.");
+        }
+
         return service.findArticle(id)
                 .map(article -> {
                     model.addAttribute("article", article);
