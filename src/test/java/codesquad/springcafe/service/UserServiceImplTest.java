@@ -40,6 +40,16 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("중복된 아이디로 회원가입 시, 가입이 되지 않는다.")
+    void testDuplicateUser(){
+        // given
+
+        // when
+
+        // then
+    }
+
+    @Test
     void testFindUserById() {
         // given
         User user = new User("username", "password", "name", "email@example.com");
