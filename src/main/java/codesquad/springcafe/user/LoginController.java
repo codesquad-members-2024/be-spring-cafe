@@ -18,6 +18,7 @@ public class LoginController {
     @Autowired
     public LoginController(UserDatabase userDatabase, UserCrednetialService userCrednetialService) {
         this.userDatabase = userDatabase;
+        this.userCrednetialService = userCrednetialService;
     }
 
     @PostMapping("/user/login")
