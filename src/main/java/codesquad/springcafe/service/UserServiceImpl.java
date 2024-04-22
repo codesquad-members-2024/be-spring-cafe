@@ -22,7 +22,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User signup(User user) {
+        validateDuplicateUser(user); // 중복되는 아이디가 있는지 검증
         return userRepository.save(user);
+    }
+
+    private void validateDuplicateUser(User user){
+        userRepository.findByUserId(user.getUserId())
+                .ifPresent(m -> {
+                    throw new IllegalStateException("아이디가 이미 존재합니다. 다시 입력해주세요.");
+                });
     }
 
     @Override
