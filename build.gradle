@@ -24,7 +24,7 @@ dependencies {
 
     // DB
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	runtimeOnly 'com.h2database:h2'
+	implementation 'com.h2database:h2'
 
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -32,4 +32,8 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-parameters"
 }
