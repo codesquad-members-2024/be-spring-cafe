@@ -52,9 +52,10 @@ public class ArticleH2Database implements ArticleDatabase {
         return articleList;
     }
 
+    // 인덱스가 있는 PrimaryKey인 ArticleID를 통해 정렬한 뒤 가져오도록 했습니다.
     @Override
     public List<Article> getReversedArticleList() {
-        String sql = "SELECT * FROM MAIN.ARTICLES ORDER BY CREATEDTIME DESC";
+        String sql = "SELECT * FROM MAIN.ARTICLES ORDER BY ARTICLEID DESC LIMIT 10";
         return jdbcTemplate.query(sql, articleRowMapper);
     }
 

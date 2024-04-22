@@ -59,9 +59,9 @@ public class Article {
     public LocalDateTime getCreatedTime() {
         return createdTime;
     }
+
     public String getFormattedTime() {
-        String formattedTime = this.createdTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
-        return formattedTime;
+        return this.createdTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
     }
 
     public void setCreatedTime(LocalDateTime createdTime) {
