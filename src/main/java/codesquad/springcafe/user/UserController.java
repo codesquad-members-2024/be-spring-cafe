@@ -71,5 +71,4 @@ public class UserController {
         logger.info("update user : {}", editedUser.getUserId());
         return "redirect:/users";
     }
-
 }

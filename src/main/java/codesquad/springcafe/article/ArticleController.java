@@ -1,5 +1,6 @@
 package codesquad.springcafe.article;
 
+import codesquad.springcafe.user.UserDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +16,21 @@ public class ArticleController {
 
     private final static Logger logger = LoggerFactory.getLogger(ArticleController.class);
 
-    ArticleDatabase articleDatabase;
+    private final ArticleDatabase articleDatabase;
+
+    private final UserDatabase userDatabase;
 
     @Autowired
-    public ArticleController(ArticleDatabase articleDatabase) {
+    public ArticleController(ArticleDatabase articleDatabase, UserDatabase userDatabase) {
         this.articleDatabase = articleDatabase;
+        this.userDatabase = userDatabase;
     }
 
     @PostMapping("/questions")
     public String createQuestion(@ModelAttribute Article article) {
+        if (!userDatabase.isExistUser(article.getWriter())) {
+            return "redirect:/qna/form";
+        }
         articleDatabase.addArticle(article);
         logger.debug("add article : {}", article);
         return "redirect:/";
