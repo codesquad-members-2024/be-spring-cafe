@@ -73,7 +73,7 @@ public class UserController {
         return "user/form";
     }
 
-    @GetMapping("/{userId}/form")
+    @GetMapping("update/{userId}")
     public String getUserUpdateForm(@PathVariable String userId, Model model) {
         model.addAttribute("userId", userId);
         return "user/updateForm";
