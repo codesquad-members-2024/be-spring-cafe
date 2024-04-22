@@ -9,7 +9,7 @@ import java.util.List;
 public interface CommentRepository {
 
 
-    void add(CommentPostReq commentPostReq, SimpleUserInfo simpleUserInfo) throws IllegalArgumentException;
+    Comment add(CommentPostReq commentPostReq, SimpleUserInfo simpleUserInfo) throws IllegalArgumentException;
 
     List<Comment> findByArticleId(int id);
 

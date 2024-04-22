@@ -20,7 +20,7 @@
                         </div>
                     </div>
                     <div class="article-doc">
-                        <p>{{article.content}}</p>
+                        <p id="article-content">{{article.content}}</p>
                     </div>
                     <div class="article-util">
                         <ul class="article-util-list">
@@ -41,16 +41,10 @@
                     <div class="qna-comment-slipp">
                         <p class="qna-comment-count"><strong>{{numberOfComments}}</strong>개의 의견</p>
                         <div class="qna-comment-slipp-articles">
+                            {{#comments}}
                             {{> components/article/comment.partial}}
-                            <form class="submit-write" action="/comment" method="post">
-                                <input type="hidden" name = "articleId" value="{{article.id}}">
-                                <div class="form-group" style="padding:14px;">
-                                    <textarea class="form-control" name="content" placeholder="Update your status"></textarea>
-                                </div>
-                                <button class="btn btn-success pull-right" type="submit">답변하기
-                                </button>
-                                <div class="clearfix"/>
-                            </form>
+                            {{/comments}}
+                            {{> components/comment/comment_form.partial}}
                         </div>
                     </div>
                 </div>

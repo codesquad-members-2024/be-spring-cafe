@@ -19,10 +19,9 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    public void postComment(CommentPostReq commentPostReq, SimpleUserInfo author) {
+    public Comment postComment(CommentPostReq commentPostReq, SimpleUserInfo author) {
         if (author == null) author = new SimpleUserInfo("guest", "익명");
-        commentRepository.add(commentPostReq, author);
-
+        return commentRepository.add(commentPostReq, author);
     }
 
     public List<Comment> findByUserId(String id) {
@@ -39,11 +38,11 @@ public class CommentService {
 
     public boolean canModify(int id, SimpleUserInfo loginUser) {
         if(loginUser == null) return false;
-        return commentRepository.findById(id).authorId().equals(loginUser.id());
+        return commentRepository.findById(id).getAuthorId().equals(loginUser.id());
     }
 
     public int getArticleId(int id) {
-        return commentRepository.findById(id).articleId();
+        return commentRepository.findById(id).getArticleId();
     }
 
     public List<Comment> findByArticleId(int articleId) {

@@ -18,27 +18,29 @@ public class MemoryCommentRepository implements CommentRepository{
     private int nowIndex = 1;
 
     @Override
-    public void add(CommentPostReq commentPostReq, SimpleUserInfo simpleUserInfo) throws IllegalArgumentException {
-        comments.put(nowIndex, new Comment(nowIndex, commentPostReq.articleId() , commentPostReq.content(),
-                Timestamp.valueOf(LocalDateTime.now()), simpleUserInfo.name(), simpleUserInfo.id()));
+    public Comment add(CommentPostReq commentPostReq, SimpleUserInfo simpleUserInfo) throws IllegalArgumentException {
+        Comment comment = new Comment(nowIndex, commentPostReq.articleId(), commentPostReq.content(),
+                Timestamp.valueOf(LocalDateTime.now()), simpleUserInfo.name(), simpleUserInfo.id());
 
+        comments.put(nowIndex, comment);
         nowIndex ++;
+        return comment;
     }
 
     @Override
     public List<Comment> findByArticleId(int id) {
-        return comments.values().stream().filter(c-> c.articleId() == id).toList();
+        return comments.values().stream().filter(c-> c.getArticleId() == id).toList();
     }
 
     @Override
     public List<Comment> findByUserId(String id) {
-        return comments.values().stream().filter(c-> c.authorId().equals(id)).toList();
+        return comments.values().stream().filter(c-> c.getAuthorId().equals(id)).toList();
     }
 
     @Override
     public void modify(int id, CommentPostReq commentPostReq) {
         Comment prev = comments.remove(id);
-        SimpleUserInfo author = new SimpleUserInfo(prev.authorId(), prev.author());
+        SimpleUserInfo author = new SimpleUserInfo(prev.getAuthor(), prev.getAuthor());
         add(commentPostReq, author);
     }
 

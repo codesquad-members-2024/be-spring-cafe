@@ -1,0 +1,73 @@
+<form class="submit-write" action="/api/comment" method="post">
+    <input type="hidden" name="articleId" value="{{article.id}}">
+    <div class="form-group" style="padding:14px;">
+        <textarea class="form-control" name="content" placeholder="Update your status"></textarea>
+    </div>
+    <button class="btn btn-success pull-right" type="submit">답변하기
+    </button>
+    <div class="clearfix"/>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(".submit-write button[type=submit]").click(addAnswer);
+
+    function addAnswer(e) {
+        // console.log("addAnswer")
+        e.preventDefault();
+
+        var queryString = $(".submit-write").serialize();
+
+        var url = $(".submit-write").attr("action");
+        // console.log("url : " + url);
+
+
+        $.ajax({
+            type: 'post',
+            url: url,
+            data: queryString,
+            dataType: 'json',
+            error: function () {
+                alert("error");
+            },
+            success: function (data, status) {
+                console.log(data);
+                var answerTemplate = $("#comment_template").html();
+                var template = answerTemplate.format(data)
+
+                // console.log(template)
+                $(".qna-comment-slipp-articles").prepend(template);
+                $("textarea[name=contents]").val("");
+            }
+        });
+
+    }
+</script>
+
+<article class="article" id="comment_template" style="display: none">
+    <div class="article-header">
+        <div class="article-header-thumb">
+            <img src="https://graph.facebook.com/v2.3/1324855987/picture"
+                 class="article-simpleUserInfo-thumb" alt="">
+        </div>
+        <div class="article-header-text">
+            <a href="/user/{authorId}" class="article-simpleUserInfo-name">{author}</a>
+            <a href="#" class="article-header-time" title="퍼머링크">
+                {formedTime}
+            </a>
+        </div>
+    </div>
+    <div class="article-doc comment-doc">
+        <p id="comment-content">{content}</p>
+    </div>
+    <div class="article-util">
+        <ul class="article-util-list">
+            <li>
+                <a class="link-modify-article" href="/comment/{id}/form">수정</a>
+            </li>
+            <li>
+                <a class="link-modify-article" href="/comment/{id}/delete">삭제</a>
+            </li>
+        </ul>
+    </div>
+</article>
