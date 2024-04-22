@@ -36,6 +36,13 @@ public class User {
         this.email = email;
     }
 
+    public User(String userId, String nickname, String email, LocalDateTime registerTime) {
+        this.userId = userId;
+        this.nickname = nickname;
+        this.email = email;
+        this.registerTime = registerTime;
+    }
+
     public String getUserId() {
         return userId;
     }
