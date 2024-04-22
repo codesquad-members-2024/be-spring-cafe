@@ -1,7 +1,8 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.db.user.UserDatabase;
-import codesquad.springcafe.model.User;
+import codesquad.springcafe.model.user.User;
+import codesquad.springcafe.model.user.dto.UserCreationDto;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,8 +25,8 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public String createUser(@ModelAttribute User user) {
-        userDatabase.addUser(user);
+    public String createUser(@ModelAttribute UserCreationDto userCreationDto) {
+        userDatabase.addUser(userCreationDto.toEntity());
         return "redirect:/";
     }
 

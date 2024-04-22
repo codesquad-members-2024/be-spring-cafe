@@ -1,4 +1,4 @@
-package codesquad.springcafe.model;
+package codesquad.springcafe.model.user;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,6 +14,14 @@ public class User {
 
     public User(){
         this.registerTime = LocalDateTime.now();
+    }
+
+    public User(String userId, String nickname, String password, String email, LocalDateTime registerTime) {
+        this.userId = userId;
+        this.nickname = nickname;
+        this.password = password;
+        this.email = email;
+        this.registerTime = registerTime;
     }
 
     public String getUserId() {
