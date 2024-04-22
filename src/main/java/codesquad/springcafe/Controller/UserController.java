@@ -2,6 +2,7 @@ package codesquad.springcafe.Controller;
 
 import codesquad.springcafe.Domain.User;
 import codesquad.springcafe.Service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -104,7 +105,9 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@RequestParam("email") String email,
-        @RequestParam("password") String password, HttpSession httpSession) {
+        @RequestParam("password") String password,
+        HttpSession httpSession) {
+
         try {
             String loginUserId = userService.login(email, password);
 
