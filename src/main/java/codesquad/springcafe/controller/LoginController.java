@@ -57,7 +57,7 @@ public class LoginController {
             response.sendRedirect(redirectURL);
             return null;
         }
-        return "redirect:" + redirectURL;
+        return "redirect:/";
     }
 
     @PostMapping("/logout")
