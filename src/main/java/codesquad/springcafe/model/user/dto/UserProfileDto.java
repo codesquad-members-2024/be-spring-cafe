@@ -3,6 +3,7 @@ package codesquad.springcafe.model.user.dto;
 import codesquad.springcafe.model.user.User;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class UserProfileDto {
 
@@ -10,6 +11,7 @@ public class UserProfileDto {
     private final String nickname;
     private final String email;
     private final LocalDateTime registerTime;
+    private final String TIME_FORMATTING_PATTERN = "yyyy년 MM월 dd일";
 
     public UserProfileDto(String userId, String nickname, String email, LocalDateTime registerTime) {
         this.userId = userId;
@@ -32,6 +34,10 @@ public class UserProfileDto {
 
     public LocalDateTime getRegisterTime() {
         return registerTime;
+    }
+
+    public String getFormattedRegisterTime(){
+        return registerTime.format(DateTimeFormatter.ofPattern(TIME_FORMATTING_PATTERN));
     }
 
     public User toEntity(){
