@@ -77,13 +77,13 @@
                                         <input class="comment-writer" id="userId" name="userId" th:value="${writer}"
                                                readonly/>
                                     </div>
+                                    <span class="error-message" style="margin-top: 10px; margin-left: 25px; color:red"
+                                          th:errors="*{content}"></span>
                                     <div class="form-group"
                                          th:classappend="${#fields.hasErrors('content')} ? 'has-error'">
                                         <textarea class="form-control" id="content" th:field="*{content}"
-                                                  placeholder="내용을 입력하세요"></textarea>
+                                                  placeholder="댓글을 남겨보세요."></textarea>
                                     </div>
-                                    <span class="error-message" style="margin-top: 10px; color:red"
-                                          th:errors="*{content}"></span>
                                     <input class="post-write-btn" type="submit" value="등록"/>
                                 </form>
                             </div>
