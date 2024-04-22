@@ -65,7 +65,7 @@ public class UserController {
     @PutMapping("/user/{userId}/form")
     public String updateUser(@PathVariable String userId, @Valid @ModelAttribute UserInfoEditRequestDto dto,
                              BindingResult bindingResult) {
-        // 개인정보 수정 폼에 이상한 입력값이 들어오면 에러
+        // 개인정보 수정 폼에 입력값이 들어오지 않으면 에러
         if (bindingResult.hasErrors()) {
             return "../static/user/updateFailed";
         }
@@ -76,13 +76,12 @@ public class UserController {
 
     @PostMapping("/user/login")
     public String login(@RequestParam String userId, @RequestParam String password, HttpSession session) {
-        Optional<UserViewDto> optUser = service.doLogin(userId, password);
-
-        return optUser.map(user -> {
-                    log.debug("{} 에 대해 세션을 추가합니다", user.getUserId());
-                    session.setAttribute("sessionUserId", user.getUserId());
-                    return "redirect:/";
-                })
-                .orElseThrow(() -> new IllegalArgumentException(userId + "는 로그인 할 수 없습니다"));
+        boolean isLogin = service.canLogin(userId, password);
+        if (isLogin) {
+            log.debug("{} 에 대해 세션을 추가합니다", userId);
+            session.setAttribute("sessionUserId", userId);
+            return "redirect:/";
+        }
+        return "redirect:/form/login";
     }
 }

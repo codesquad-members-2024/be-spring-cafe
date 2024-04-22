@@ -49,9 +49,9 @@ public class UserService {
                 });
     }
 
-    public Optional<UserViewDto> doLogin(String userId, String password) {
+    public boolean canLogin(String userId, String password) {
         return dao.findUser(userId)
-                .filter(user -> user.has(password))
-                .map(UserViewDto::toDto);
+                .map(user -> user.has(password))
+                .orElseThrow(() -> new IllegalArgumentException(userId + "는 로그인 할 수 없습니다."));
     }
 }
