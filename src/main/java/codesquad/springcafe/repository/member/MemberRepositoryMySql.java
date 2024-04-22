@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,12 +16,13 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MemberRepositoryH2 implements MemberRepository {
+@Primary
+public class MemberRepositoryMySql implements MemberRepository {
 
     private final JdbcTemplate template;
 
     @Autowired
-    public MemberRepositoryH2(DataSource dataSource) {
+    public MemberRepositoryMySql(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
     }
 
@@ -74,10 +76,13 @@ public class MemberRepositoryH2 implements MemberRepository {
 
     @Override
     public void clear() {
-        String sql = "alter table if exists article drop constraint if exists fk_created_by;"
-                + "alter table if exists comment drop constraint if exists fk_comment_created_by;"
-                + "alter table if exists comment drop constraint if exists fk_comment_article_id;"
-                + "truncate table MEMBER; alter table MEMBER alter column MEMBER_ID restart with 1";
+        String sql = "set foreign_key_checks = 0;"
+                + "alter table article drop foreign key fk_created_by;"
+                + "alter table comment drop foreign key fk_comment_created_by;"
+                + "alter table comment drop foreign key fk_comment_article_id;"
+                + "truncate table MEMBER; alter table MEMBER AUTO_INCREMENT = 1;"
+                + "set foreign_key_checks = 1;";
+
         template.update(sql);
     }
 

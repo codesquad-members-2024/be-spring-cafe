@@ -1,7 +1,9 @@
 -- article 외래키 제약조건 먼저 제거
-alter table if exists article drop constraint if exists fk_created_by;
-alter table if exists comment drop constraint if exists fk_comment_created_by;
-alter table if exists comment drop constraint if exists fk_comment_article_id;
+SET foreign_key_checks = 0;
+alter table article drop foreign key fk_created_by;
+alter table comment drop foreign key fk_comment_created_by;
+alter table comment drop foreign key fk_comment_article_id;
+SET foreign_key_checks = 1;
 
 -- member
 drop table if exists member;
@@ -20,7 +22,7 @@ create table article
 (
     article_id bigint primary key auto_increment,
     title      varchar(255),
-    contents   longvarchar,
+    contents   varchar(1000),
     created_by varchar(255),
     created_at timestamp,
     deleted boolean default false,

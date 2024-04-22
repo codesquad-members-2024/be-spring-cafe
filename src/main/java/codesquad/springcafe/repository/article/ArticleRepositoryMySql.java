@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,12 +18,13 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ArticleRepositoryH2 implements ArticleRepository {
+@Primary
+public class ArticleRepositoryMySql implements ArticleRepository {
 
     private final JdbcTemplate template;
 
     @Autowired
-    public ArticleRepositoryH2(DataSource dataSource) {
+    public ArticleRepositoryMySql(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
     }
 
@@ -65,7 +67,7 @@ public class ArticleRepositoryH2 implements ArticleRepository {
     public List<Article> findAll() {
         String sql = "select A.ARTICLE_ID, A.TITLE, A.CREATED_BY, A.CREATED_AT, COALESCE(COUNT(C.DELETED), 0) AS comment_size "
                 + "from ARTICLE A LEFT JOIN COMMENT C ON A.ARTICLE_ID = C.ARTICLE_ID AND C.DELETED = false "
-                + "where A.DELETED is false and A.CREATED_AT >= dateadd(day, -3, current_date) "
+                + "where A.DELETED is false and A.CREATED_AT >= DATE_ADD(NOW(), INTERVAL -3 DAY) "
                 + "group by A.ARTICLE_ID, A.TITLE, A.CREATED_BY, A.CREATED_AT "
                 + "order by A.CREATED_AT desc ";
         return template.query(sql, articleRowMapperForList());
@@ -97,10 +99,12 @@ public class ArticleRepositoryH2 implements ArticleRepository {
 
     @Override
     public void clear() {
-        String sql = "alter table if exists article drop constraint if exists fk_created_by;"
-                + "alter table if exists comment drop constraint if exists fk_comment_created_by;"
-                + "alter table if exists comment drop constraint if exists fk_comment_article_id;"
-                + "TRUNCATE TABLE ARTICLE; ALTER TABLE ARTICLE ALTER COLUMN ARTICLE_ID RESTART WITH 1";
+        String sql = "set foreign_key_checks = 0;"
+                + "alter table article drop foreign key fk_created_by;"
+                + "alter table comment drop foreign key fk_comment_created_by;"
+                + "alter table comment drop foreign key fk_comment_article_id;"
+                + "TRUNCATE TABLE ARTICLE; ALTER TABLE ARTICLE AUTO_INCREMENT = 1;"
+                + "set foreign_key_checks = 1;";
         template.update(sql);
     }
 
