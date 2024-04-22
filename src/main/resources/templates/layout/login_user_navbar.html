@@ -7,7 +7,8 @@
         </div>
         <ul class="nav navbar-nav navbar-right">
             <li class="active"><a href="/">메인 페이지</a></li>
-            <li><a class="black-component" href="/users/{userId}/update" role="button">개인정보수정</a></li>
+            <li class="active">{{userId}}</li>
+            <li><a class="black-component active" href="/users/detail/{{userId}}/update" role="button">개인정보수정</a></li>
             <li>
                 <form action="/logout" method="post">
                     <button class="active black-component">로그아웃</button>
