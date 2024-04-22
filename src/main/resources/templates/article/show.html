@@ -56,23 +56,23 @@
 
                     <div class="post-comment">
                         <div class="post-comment-slipp">
-                            <p class="post-comment-count">댓글 2개</p>
+                            <p class="post-comment-count">댓글 {{totalReplies}}개</p>
                             <div class="post-comment-slipp-articles">
 
-                                <!--댓글 시작-->
+                                {{#replies}}
                                 <article class="comment">
                                     <div class="article-text">
-                                        <p class="comment-content comment-author-name">닉네임</p>
+                                        <p class="comment-content comment-author-name">{{getUserId}}</p>
                                         <div class="comment-content comment-doc">
-                                            <p>이 글만으로는 원인 파악하기 힘들겠다. 소스 코드와 설정을 단순화해서 공유해 주면 같이 디버깅해줄 수도 있겠다.</p>
+                                            <p>{{getComment}}</p>
                                         </div>
                                         <p class="comment-content comment-time">
-                                            2016-01-12 14:06
+                                            {{getCreationDate}}
                                         </p>
                                     </div>
                                 </article>
+                                {{/replies}}
 
-                                <!--댓글 끝-->
 
                                 <form class="submit-write" method="post"
                                       action="/articles/{{article.getArticleId}}/answers">
@@ -93,5 +93,6 @@
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

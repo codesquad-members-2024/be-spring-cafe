@@ -30,6 +30,7 @@ public class H2ArticleRepository implements ArticleRepository {
     private static final String CONTENT = "CONTENT";
     private static final String CREATIONDATE = "CREATIONDATE";
     private static final String PAGEVIEWS = "PAGEVIEWS";
+    private static final String COMMENT = "COMMENT";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -76,25 +77,6 @@ public class H2ArticleRepository implements ArticleRepository {
     }
 
 
-    private static class ArticleRowMapper implements RowMapper<Article> {
-        @Override
-        public Article mapRow(ResultSet rs, int rowNum) throws SQLException {
-            long articleId = rs.getLong(ARTICLEID);
-            String userId = rs.getString(USERID);
-            String title = rs.getString(TITLE);
-            String content = rs.getString(CONTENT);
-            String creationDate = rs.getString(CREATIONDATE);
-            long pageViews = rs.getLong(PAGEVIEWS);
-
-            Article article = new Article(userId, title, content);
-            article.setArticleId(articleId);
-            article.setCreationDate(LocalDate.parse(creationDate));
-            article.setPageViews(pageViews);
-            return article;
-        }
-    }
-
-
     @Override
     public void incrementPageView(long articleId) {
         String sql = "UPDATE ARTICLES SET PAGEVIEWS = PAGEVIEWS + 1 WHERE ARTICLEID = ?";
@@ -122,4 +104,49 @@ public class H2ArticleRepository implements ArticleRepository {
 
         logger.debug("Reply Comment : '{}' Updated At H2 Database", reply.getComment());
     }
+
+    @Override
+    public Optional<ArrayList<Reply>> getReplies(long articleId) {
+        String sql = "SELECT ARTICLEID, USERID, COMMENT, CREATIONDATE FROM REPLIES WHERE ARTICLEID = ?";
+        Object[] params = new Object[]{articleId};
+
+        ArrayList<Reply> replies = (ArrayList<Reply>) jdbcTemplate.query(sql, params, new ReplyRowMapper());
+        return Optional.of(replies);
+    }
+
+
+    private static class ArticleRowMapper implements RowMapper<Article> {
+        @Override
+        public Article mapRow(ResultSet rs, int rowNum) throws SQLException {
+            long articleId = rs.getLong(ARTICLEID);
+            String userId = rs.getString(USERID);
+            String title = rs.getString(TITLE);
+            String content = rs.getString(CONTENT);
+            String creationDate = rs.getString(CREATIONDATE);
+            long pageViews = rs.getLong(PAGEVIEWS);
+
+            Article article = new Article(userId, title, content);
+            article.setArticleId(articleId);
+            article.setCreationDate(LocalDate.parse(creationDate));
+            article.setPageViews(pageViews);
+            return article;
+        }
+    }
+
+    private static class ReplyRowMapper implements RowMapper<Reply> {
+        @Override
+        public Reply mapRow(ResultSet rs, int rowNum) throws SQLException {
+            long articleId = rs.getLong(ARTICLEID);
+            String userId = rs.getString(USERID);
+            String comment = rs.getString(COMMENT);
+            String creationDate = rs.getString(CREATIONDATE);
+
+            Reply reply = new Reply(articleId, userId, comment);
+
+            reply.setCreationDate(LocalDate.parse(creationDate));
+
+            return reply;
+        }
+    }
+
 }

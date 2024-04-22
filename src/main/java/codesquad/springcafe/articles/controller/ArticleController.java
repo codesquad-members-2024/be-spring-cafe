@@ -1,6 +1,7 @@
 package codesquad.springcafe.articles.controller;
 
 
+import codesquad.springcafe.articles.model.Reply;
 import codesquad.springcafe.articles.model.dto.ArticleUpdateDto;
 import codesquad.springcafe.articles.model.dto.ReplyCreationRequest;
 import codesquad.springcafe.articles.service.ArticleService;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/articles")
@@ -38,7 +41,13 @@ public class ArticleController {
 
         Article article = articleService.findArticleById(articleId);
 
+        ArrayList<Reply> replies = articleService.getReplies(articleId);
+
         model.addAttribute("article", article);
+
+        model.addAttribute("totalReplies", replies.size());
+
+        model.addAttribute("replies", replies);
 
         return "article/show";
     }

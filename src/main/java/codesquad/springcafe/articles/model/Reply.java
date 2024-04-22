@@ -7,7 +7,7 @@ public class Reply {
     private final long articleId;
     private final String userId;
     private final String comment;
-    private final LocalDate creationDate;
+    private LocalDate creationDate;
 
     public Reply(long articleId, String userId, String comment) {
         this.articleId = articleId;
@@ -18,6 +18,10 @@ public class Reply {
 
     public void setReplyId(long replyId) {
         this.replyId = replyId;
+    }
+
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
     }
 
     public long getReplyId() {

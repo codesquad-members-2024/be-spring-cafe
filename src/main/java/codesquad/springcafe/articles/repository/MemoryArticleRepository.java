@@ -60,6 +60,11 @@ public class MemoryArticleRepository implements ArticleRepository {
     public void createReply(Reply reply) {
 
     }
+
+    @Override
+    public Optional<ArrayList<Reply>> getReplies(long articleId) {
+        return Optional.empty();
+    }
 }
 
 

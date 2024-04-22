@@ -7,6 +7,7 @@ import codesquad.springcafe.articles.repository.ArticleRepository;
 import codesquad.springcafe.exception.ArticleNotFoundException;
 import codesquad.springcafe.articles.model.Article;
 import codesquad.springcafe.articles.model.dto.ArticleCreationRequest;
+import codesquad.springcafe.exception.ReplyNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,4 +60,10 @@ public class ArticleService {
 
         articleRepository.createReply(reply);
     }
+
+    public ArrayList<Reply> getReplies(long articleId) {
+        Optional<ArrayList<Reply>> replies = articleRepository.getReplies(articleId);
+        return replies.orElseThrow(() -> new ReplyNotFoundException("게시글을 찾을 수 없습니다."));
+    }
+
 }
