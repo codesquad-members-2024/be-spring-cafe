@@ -84,9 +84,7 @@ public class UserController {
             model.addAttribute("passwordError", true);
             return "users/updateForm";
         }
-        user.setNickname(userProfileEditDto.getNickname());
-        user.setEmail(userProfileEditDto.getEmail());
-        userDatabase.update(user.getUserId(), user);
+        userDatabase.update(user.getUserId(), userProfileEditDto);
         return "redirect:/users";
     }
 

@@ -1,6 +1,7 @@
 package codesquad.springcafe.db.user;
 
 import codesquad.springcafe.model.user.User;
+import codesquad.springcafe.model.user.dto.UserProfileEditDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,7 +9,7 @@ import java.util.Optional;
 public interface UserDatabase {
     public void addUser(User user);
 
-    public void update(String userId, User updatedUser);
+    public void update(String userId, UserProfileEditDto userProfileEditDto);
 
     public List<User> findAllUsers();
 
