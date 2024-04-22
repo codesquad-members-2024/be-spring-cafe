@@ -15,5 +15,26 @@ public class UserInfoEditRequestDto {
 
     public UserInfoEditRequestDto(String password, String newPassword, String nickName, String email) {
         this.password = password;
+        this.newPassword = newPassword;
+        this.nickName = nickName;
+        this.email = email;
+    }
+
+    public User toEditedEntity(String userId) {
+        return new User(userId, newPassword, nickName, email);
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String toString() {
+        return "UserInfoEditRequestDto{" +
+                "originPassword='" + password + '\'' +
+                ", newPassword='" + newPassword + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

@@ -23,8 +23,4 @@ public class UserCreationDto {
     public User toEntity() {
         return new User(userId, password, name, email);
     }
-
-    public User toEntity(String userId) {
-        return new User(userId, password, name, email);
-    }
 }

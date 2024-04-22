@@ -1,12 +1,15 @@
 package codesquad.springcafe.user;
 
 import codesquad.springcafe.user.dto.UserCreationDto;
+import codesquad.springcafe.user.dto.UserInfoEditRequestDto;
 import codesquad.springcafe.user.dto.UserViewDto;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,13 +52,24 @@ public class UserController {
     }
 
     @GetMapping("/user/{userId}/form")
-    public String showUpdateForm(@PathVariable String userId, Model model) {
+    public String showUpdateForm(@PathVariable String userId, Model model, HttpSession session) {
+        // 세션이 없는 사용자가 접근한 경우 에러
+        String value = (String) session.getAttribute("sessionUserId");
+        if (!userId.equals(value)) {
+            return "../static/user/updateFailed";
+        }
         model.addAttribute("userId", userId);
         return "user/updateForm";
     }
 
     @PutMapping("/user/{userId}/form")
-    public String updateUser(@PathVariable String userId, @ModelAttribute UserCreationDto dto) {
+    public String updateUser(@PathVariable String userId, @Valid @ModelAttribute UserInfoEditRequestDto dto,
+                             BindingResult bindingResult) {
+        // 개인정보 수정 폼에 이상한 입력값이 들어오면 에러
+        if (bindingResult.hasErrors()) {
+            return "../static/user/updateFailed";
+        }
+        log.debug("유저 편집 정보 : {}", dto.toString());
         service.updateUser(userId, dto);
         return "redirect:/users";
     }
@@ -63,7 +77,7 @@ public class UserController {
     @PostMapping("/user/login")
     public String login(@RequestParam String userId, @RequestParam String password, HttpSession session) {
         Optional<UserViewDto> optUser = service.doLogin(userId, password);
-        // sessionedUser 가 mustache에 안들어가던지 or 요청된 유저의 세션이 풀리는지
+
         return optUser.map(user -> {
                     log.debug("{} 에 대해 세션을 추가합니다", user.getUserId());
                     session.setAttribute("sessionUserId", user.getUserId());
