@@ -2,6 +2,7 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.db.user.UserDatabase;
 import codesquad.springcafe.model.user.User;
+import codesquad.springcafe.model.user.dto.UserLoginDto;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -35,21 +37,21 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(
-            @RequestParam String userId,
-            @RequestParam String password,
+            @ModelAttribute UserLoginDto userLoginDto,
             @RequestParam(required = false) String redirectURL,
             HttpServletResponse response,
             HttpSession session,
             Model model
     ) throws IOException
     {
-        Optional<User> userCandidate = userDatabase.findUserByUserId(userId);
-        if(userCandidate.isEmpty() || !userCandidate.get().isPasswordInputCorrect(password)){
+        User user = userLoginDto.toEntity();
+        Optional<User> userCandidate = userDatabase.findUserByUserId(user.getUserId());
+        if(userCandidate.isEmpty() || !userCandidate.get().isPasswordInputCorrect(user.getPassword())){
             model.addAttribute("validationError", true);
             return "users/login";
         }
         session.setAttribute("springCafeMember", userCandidate.get());
-        logger.info("로그인 성공! id = {} , session = {}", userId, session.getId());
+        logger.info("로그인 성공! id = {} , session = {}", user.getUserId(), session.getId());
         if(redirectURL != null && !redirectURL.isBlank()){
             response.sendRedirect(redirectURL);
             return null;
