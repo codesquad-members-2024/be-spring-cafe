@@ -1,4 +1,4 @@
-package codesquad.springcafe.model;
+package codesquad.springcafe.model.article;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,11 +9,18 @@ public class Article {
     private LocalDateTime publishTime;
     private String title;
     private String content;
-    private String TIME_FORMATTING_PATTERN = "yyyy년 MM월 dd일 HH:mm";
+    private final String TIME_FORMATTING_PATTERN = "yyyy년 MM월 dd일 HH:mm";
 
     public Article() {
         this.writer = "익명";
         this.publishTime = LocalDateTime.now();
+    }
+
+    public Article(String writer, LocalDateTime publishTime, String title, String content) {
+        this.writer = writer;
+        this.publishTime = publishTime;
+        this.title = title;
+        this.content = content;
     }
 
     public long getSequence() {

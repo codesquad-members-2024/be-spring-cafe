@@ -1,7 +1,8 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.db.article.ArticleDatabase;
-import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.article.Article;
+import codesquad.springcafe.model.article.dto.ArticleCreationDto;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,9 +30,8 @@ public class ArticleController {
     }
 
     @PostMapping("/add")
-    public String createArticle(
-            @ModelAttribute Article article
-    ) {
+    public String createArticle(@ModelAttribute ArticleCreationDto articleCreationDto) {
+        Article article = articleCreationDto.toEntity();
         long seq = sequence.incrementAndGet();
         article.setSequence(seq);
         articleDatabase.addArticle(article);

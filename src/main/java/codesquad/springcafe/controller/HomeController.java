@@ -1,7 +1,7 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.db.article.ArticleDatabase;
-import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.article.Article;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
