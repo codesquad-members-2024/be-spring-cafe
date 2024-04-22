@@ -34,4 +34,7 @@ public class ArticleService {
         articleRepository.edit(articleId, editArticleForm);
     }
 
+    public void delete(String articleId) {
+        articleRepository.delete(articleId);
+    }
 }

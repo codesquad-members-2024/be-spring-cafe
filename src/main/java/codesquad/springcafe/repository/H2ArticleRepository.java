@@ -2,6 +2,7 @@ package codesquad.springcafe.repository;
 
 import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.domain.repository.ArticleRepository;
+import codesquad.springcafe.dto.EditArticleForm;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,5 +66,17 @@ public class H2ArticleRepository implements ArticleRepository {
     public Article getById(Long articleId) {
         final String SELECT_ARTICLE = "SELECT * FROM Articles WHERE id= ?";
         return jdbcTemplate.queryForObject(SELECT_ARTICLE, articleRowMapper, articleId);
+    }
+
+    @Override
+    public void edit(String articleId, EditArticleForm editArticleForm) {
+        final String UPDATE_ARTICLE = "UPDATE Articles SET title=?, contents=? WHERE id=?";
+        jdbcTemplate.update(UPDATE_ARTICLE, editArticleForm.getTitle(), editArticleForm.getContents(), articleId);
+        logger.debug("{} 번글 수정 완료", articleId);
+    }
+
+    public void delete(String articleId) {
+        final String DELETE_ARTICLE = "DELETE FROM Articles WHERE id=?";
+        jdbcTemplate.update(DELETE_ARTICLE, articleId);
     }
 }

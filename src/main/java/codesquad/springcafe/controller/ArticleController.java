@@ -101,4 +101,18 @@ public class ArticleController {
         return "redirect:/";
     }
 
+    /**
+     * 게시글을 삭제한다. 로그인한 사용자 본인의 게시글이 아닌 경우 403 예외가 발생한다.
+     *
+     * @param articleId
+     * @param session
+     * @return
+     */
+    @DeleteMapping("/article/delete/{articleId}")
+    public String deleteArticle(@PathVariable("articleId") String articleId, HttpSession session) {
+        User writer = (User) session.getAttribute("sessionUser");
+        articleValidator.validWriter(writer, articleId);
+        articleService.delete(articleId);
+        return "redirect:/";
+    }
 }
