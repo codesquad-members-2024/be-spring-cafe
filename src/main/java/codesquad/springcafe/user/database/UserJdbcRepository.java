@@ -1,6 +1,7 @@
 package codesquad.springcafe.user.database;
 
 import codesquad.springcafe.user.User;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -30,7 +31,11 @@ public class UserJdbcRepository implements UserRepository {
     @Override
     public User findByUserId(String userId) {
         String sql = "SELECT * FROM users WHERE USER_ID = ?";
-        return jdbcTemplate.queryForObject(sql, userRowMapper(), userId);
+        try {
+            return jdbcTemplate.queryForObject(sql, userRowMapper(), userId);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
@@ -41,7 +46,6 @@ public class UserJdbcRepository implements UserRepository {
 
     private RowMapper<User> userRowMapper() {
         return (rs, rowNum) -> new User(
-                rs.getLong("id"),
                 rs.getString("user_id"),
                 rs.getString("user_password"),
                 rs.getString("user_name"),
