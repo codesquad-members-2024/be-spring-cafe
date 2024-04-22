@@ -16,4 +16,6 @@ public interface ArticleRepository {
     public void clear();
 
     void update(Long articleId, ArticleRequestDto articleRequestDto);
+
+    void delete(Long articleId);
 }

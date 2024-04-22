@@ -39,4 +39,10 @@ public class ArticleMemoryRepository implements ArticleRepository {
     @Override
     public void update(Long articleId, ArticleRequestDto articleRequestDto) {
     }
+
+    @Override
+    public void delete(Long articleId) {
+        articles.remove(articleId);
+    }
+
 }

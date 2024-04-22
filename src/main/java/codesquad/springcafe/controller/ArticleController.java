@@ -62,4 +62,15 @@ public class ArticleController {
         articleService.update(articleId, articleRequestDto);
         return "redirect:/question/" + articleId;
     }
+
+    @DeleteMapping("{articleId}")
+    public String deleteArticle(@PathVariable Long articleId, HttpSession session, Model model) {
+        String userId = (String) session.getAttribute(LOGIN_USER_ID);
+        if (articleService.checkArticleWriter(articleId, userId)) {
+            articleService.delete(articleId);
+            return "redirect:/";
+        }
+        model.addAttribute("errorMessage", "본인의 게시글만 삭제할 수 있습니다.");
+        return "errors/error";
+    }
 }
