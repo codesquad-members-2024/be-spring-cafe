@@ -14,12 +14,12 @@
                 </tr>
               </thead>
               <tbody>
-                <tr th:each="user: ${users}">
-                    <th scope="row" th:text="${user.getId()}"></th>
+              <tr th:each="user, iterStat : ${users}">
+                    <th scope="row" th:text="${iterStat.count}"></th>
                     <td> <a th:href="@{/users/{userId}/profile(userId=${user.getUserId()})}" th:text="${user.getUserId()}"></a></td>>
                     <td th:text="${user.getName()}"></td>
                     <td th:text="${user.getEmail()}"></td>
-                    <td><a th:href="@{/users/{userId}/update(userId=${user.getUserId()})}" class="btn btn-success" role="button">수정</a></td>
+                    <td><a th:if="${session.loggedUser == user.getUserId()}" th:href="@{/users/{userId}/update(userId=${user.getUserId()})}" class="btn btn-success" role="button">수정</a></td>
                 </tr>
               </tbody>
           </table>

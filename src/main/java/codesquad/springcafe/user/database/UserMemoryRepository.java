@@ -7,7 +7,6 @@ import java.util.List;
 
 public class UserMemoryRepository implements UserRepository {
     private final List<User> users = new ArrayList<>();
-    private long nextId = 1;
 
     @Override
     public List<User> findAll(){
@@ -16,9 +15,6 @@ public class UserMemoryRepository implements UserRepository {
 
     @Override
     public void save(User user){
-        if(user.getId() == null){
-            user.setId(nextId++);
-        }
         users.add(user);
     }
 
