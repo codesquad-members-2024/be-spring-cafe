@@ -1,8 +1,10 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.WebConfig;
+import codesquad.springcafe.advice.UserAdvice;
 import codesquad.springcafe.db.user.UserDatabase;
 import codesquad.springcafe.model.user.User;
+import codesquad.springcafe.model.user.dto.UserProfileDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -36,29 +39,29 @@ class UserControllerTest {
 
     @BeforeEach
     void setUp(){
-        User user1 = new User();
-        user1.setUserId("test1");
-        user1.setEmail("test1@email.com");
-        user1.setPassword("password1");
-        user1.setNickname("nickname1");
+        UserProfileDto user1 = new UserProfileDto(
+                "test1",
+                "nickname1",
+                "test1@email.com",
+                LocalDateTime.now());
 
-        User user2 = new User();
-        user2.setUserId("test2");
-        user2.setEmail("test2@email.com");
-        user2.setPassword("password2");
-        user2.setNickname("nickname2");
+        UserProfileDto user2 = new UserProfileDto(
+                "test2",
+                "nickname2",
+                "test2@email.com",
+                LocalDateTime.now());
 
-        List<User> users = Arrays.asList(user1, user2);
+        List<UserProfileDto> users = Arrays.asList(user1, user2);
 
         willDoNothing().given(userDatabase).addUser(any(User.class));
-        given(userDatabase.findAllUsers()).willReturn(users);
+        given(userDatabase.getAllUsers()).willReturn(users);
         given(userDatabase.getTotalUserNumber()).willReturn(users.size());
         given(userDatabase.findUserByUserId("test1")).willReturn(Optional.of(user1));
         given(userDatabase.findUserByUserId("test2")).willReturn(Optional.of(user2));
     }
 
 
-    @DisplayName("회원가입에 성공하면 '/users'로 리다이렉트 된다")
+    @DisplayName("회원가입에 성공하면 '/'로 리다이렉트 된다")
     @Test
     void createUserRedirectionTest() throws Exception {
         String userId = "userId";
@@ -66,7 +69,7 @@ class UserControllerTest {
         String password = "password";
         String nickname = "nickname";
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/users")
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/users/add")
                 .param("userId", userId)
                 .param("email", email)
                 .param("nickname", nickname)
@@ -74,7 +77,7 @@ class UserControllerTest {
 
         mockMvc.perform(request)
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/users"));
+                .andExpect(redirectedUrl("/"));
     }
 
 
@@ -97,10 +100,10 @@ class UserControllerTest {
     }
 
 
-    @DisplayName("존재하는 userId로 '/users/{userId}' 요청을 보낼 경우 'users/profile' 뷰 템플릿을 반환한다")
+    @DisplayName("존재하는 userId로 '/users/detail/{userId}' 요청을 보낼 경우 'users/profile' 뷰 템플릿을 반환한다")
     @Test
     void profileRequestSuccessTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/users/test1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/detail/test1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("users/profile"));
     }
