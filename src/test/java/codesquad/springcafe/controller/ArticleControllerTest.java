@@ -59,7 +59,7 @@ class ArticleControllerTest {
         String title = "test_title";
         String content = "test_content";
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/articles")
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/articles/add")
                 .param("title", title)
                 .param("content", content);
 
@@ -72,7 +72,7 @@ class ArticleControllerTest {
     @DisplayName("존재하지 않는 게시물 sequence로 GET '/articles/{sequence}' 요청을 보내면 NoSuchElementException을 반환한다")
     @Test
     void loadArticleContentExceptionTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/articles/3"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/articles/detail/3"))
                 .andExpect(status().is4xxClientError());
     }
 
@@ -80,7 +80,7 @@ class ArticleControllerTest {
     @DisplayName("존재하는 sequence로 GET '/articles/{sequence}' 요청할 경우 post/show 뷰 템플릿을 반환한다")
     @Test
     void loadArticleContentSuccessTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/articles/1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/articles/detail/1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("article/show"));
     }
