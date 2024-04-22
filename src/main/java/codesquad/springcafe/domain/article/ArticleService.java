@@ -67,7 +67,7 @@ public class ArticleService {
 
         List<Comment> byArticleId = commentService.findByArticleId(id);
         for (Comment comment : byArticleId){
-            if (!commentService.canModify(comment.id(), loginUser)) return false;
+            if (!commentService.canModify(comment.getId(), loginUser)) return false;
         }
 
         return true;

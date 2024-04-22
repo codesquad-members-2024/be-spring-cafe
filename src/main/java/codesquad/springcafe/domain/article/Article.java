@@ -12,6 +12,7 @@ public class Article {
     private String title;
     private String content;
     private int point;
+    private String formedTime;
 
     public Article(int id, Timestamp createdAt, SimpleUserInfo simpleUserInfo, String title, String content, int point) {
         this.id = id;
@@ -20,6 +21,7 @@ public class Article {
         this.title = title;
         this.content = content;
         this.point = point;
+        this.formedTime = formedTime(createdAt);
     }
 
     public void addPoint() {
@@ -46,9 +48,9 @@ public class Article {
         return point;
     }
 
-    public String formedTime(){
+    private String formedTime(Timestamp createdAt){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return this.createdAt.toLocalDateTime().format(formatter);
+        return createdAt.toLocalDateTime().format(formatter);
     }
 
     @Override

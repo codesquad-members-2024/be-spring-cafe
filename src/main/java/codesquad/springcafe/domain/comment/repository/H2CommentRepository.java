@@ -8,8 +8,12 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDateTime;
@@ -31,7 +35,7 @@ public class H2CommentRepository implements CommentRepository {
     }
 
     @Override
-    public void add(CommentPostReq commentPostReq, SimpleUserInfo simpleUserInfo) throws IllegalArgumentException {
+    public Comment add(CommentPostReq commentPostReq, SimpleUserInfo simpleUserInfo) throws IllegalArgumentException {
         Timestamp createdDateTime = Timestamp.valueOf(LocalDateTime.now());
         Object[] args = new Object[]{
                 commentPostReq.articleId(),
@@ -40,7 +44,21 @@ public class H2CommentRepository implements CommentRepository {
                 commentPostReq.content()
         };
 
-        jdbcTemplate.update(ADD_COMMENT, args);
+//        int[] paramTypes = new int[]{Types.INTEGER, Types.TIMESTAMP, Types.VARCHAR, Types.VARCHAR};
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+//        jdbcTemplate.update(ADD_COMMENT, args, paramTypes, keyHolder);
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(ADD_COMMENT, Statement.RETURN_GENERATED_KEYS);
+            for (int i = 0; i < args.length; i++) {
+                ps.setObject(i + 1, args[i]);
+            }
+            return ps;
+        }, keyHolder);
+
+        System.out.println(keyHolder.getKey().intValue());
+        return findById(keyHolder.getKey().intValue());
     }
 
     @Override
@@ -79,7 +97,7 @@ public class H2CommentRepository implements CommentRepository {
         int[] pramTypes = new int[]{Types.VARCHAR};
         try {
             return jdbcTemplate.query(sql, args, pramTypes, commentRowMapper()).get(0);
-        }catch (IndexOutOfBoundsException commentNotFound){
+        } catch (IndexOutOfBoundsException commentNotFound) {
             return null;
         }
     }
