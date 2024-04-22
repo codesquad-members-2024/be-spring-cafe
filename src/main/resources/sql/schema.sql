@@ -18,12 +18,13 @@ CREATE TABLE USERS
 DROP TABLE IF EXISTS ARTICLE;
 CREATE TABLE ARTICLE
 (
-    articleId INT PRIMARY KEY AUTO_INCREMENT,
-    author    VARCHAR(100) NOT NULL,
-    title     VARCHAR(100) NOT NULL,
-    contents  TEXT         NOT NULL,
-    userId    VARCHAR(100) NOT NULL,
-    deleted   BOOLEAN DEFAULT FALSE
+    articleId   INT PRIMARY KEY AUTO_INCREMENT,
+    author      VARCHAR(100) NOT NULL,
+    title       VARCHAR(100) NOT NULL,
+    contents    TEXT         NOT NULL,
+    userId      VARCHAR(100) NOT NULL,
+    createdTime TIMESTAMP,
+    deleted     BOOLEAN DEFAULT FALSE
 );
 
 DROP TABLE IF EXISTS REPLY;
