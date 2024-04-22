@@ -81,7 +81,7 @@
                         <div class="main">
                             <strong class="subject">
                                 <tr th:each="article : ${articleList}">
-                                <a th:href="@{/article/{articleId}(articleId=${article.getId()})}"
+                                <a th:href="@{/posts/{articleId}(articleId=${article.getId()})}"
                                    th:text="${article.getContent()}">게시글 제목</a>
                             </strong>
                             <div class="auth-info">
