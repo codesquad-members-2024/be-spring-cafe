@@ -58,4 +58,13 @@ public class MyDatabase implements ArticleDatabase, UserDatabase {
         target.setName(user.getName());
         target.setPassword(user.getPassword());
     }
+
+    public void deleteArticle(Long index) {
+        if (index >= Integer.MIN_VALUE && index <= Integer.MAX_VALUE) {
+            int intValue = index.intValue();
+            articles.remove(intValue);
+        } else {
+            throw new NumberFormatException();
+        }
+    }
 }

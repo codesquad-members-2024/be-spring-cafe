@@ -11,4 +11,6 @@ public interface ArticleDatabase {
     public Article getArticle(Long index);
 
     public int articlesSize();
+
+    public void deleteArticle(Long index);
 }
