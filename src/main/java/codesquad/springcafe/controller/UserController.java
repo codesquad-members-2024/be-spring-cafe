@@ -59,11 +59,16 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String userId, @RequestParam String password, HttpSession httpSession) {
+    public String login(
+            @RequestParam String userId,
+            @RequestParam String password,
+            @RequestParam(defaultValue = "/") String redirectUri,
+            HttpSession httpSession) {
+
         if (userService.isValidUser(userId, password)) {
             httpSession.setAttribute(LOGIN_USER_ID, userId);
             log.debug("로그인 성공: {}", userId);
-            return "redirect:/";
+            return "redirect:" + redirectUri;
         }
         return "redirect:/users/login";
     }
