@@ -34,14 +34,7 @@ public class UserService {
 
     // 유저정보 수정
     // e) 해당되는 유저가 없으면 에러
-    public boolean editUserProfile(UpdateUser updateUser, User expected, User actual) {
-        if (isSameUser(expected, actual)) {
-            return editProcess(updateUser, actual);
-        }
-        return false;
-    }
-
-    private boolean editProcess(UpdateUser updateUser, User target) {
+    public boolean editUserProfile(UpdateUser updateUser, User target) {
         String password = updateUser.getPassword();
 
         if (target.checkPassword(password)) {
@@ -52,13 +45,5 @@ public class UserService {
             return true;
         }
         return false;
-    }
-
-    public boolean isSameUser(User expected, User actual) {
-        if (!expected.getUserId().equals(actual.getUserId())) {
-            throw new InvalidAccessException("다른 사용자의 정보는 변경할 수 없습니다");
-        } else {
-            return true;
-        }
     }
 }
