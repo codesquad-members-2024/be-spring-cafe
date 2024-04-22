@@ -16,7 +16,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
@@ -42,11 +42,19 @@ class UserServiceImplTest {
     @Test
     @DisplayName("중복된 아이디로 회원가입 시, 가입이 되지 않는다.")
     void testDuplicateUser(){
-        // given
+        // given - 데이터 준비
+        User user = new User("username2", "password", "name", "email@example.com");
 
-        // when
+        // when - 상황
+        when(userRepository.findByUserId("username2")).thenReturn(Optional.of(user));
 
-        // then
+        // then - 결과
+        assertThrows(IllegalStateException.class, () -> {
+            userService.signup(user);
+        });
+
+        // userRepository.save 가 호출되지 않았음을 확인
+        verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
