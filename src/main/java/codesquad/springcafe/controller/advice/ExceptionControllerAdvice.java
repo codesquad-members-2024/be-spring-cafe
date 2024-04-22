@@ -1,5 +1,8 @@
 package codesquad.springcafe.controller.advice;
 
+import codesquad.springcafe.controller.article.ArticleController;
+import codesquad.springcafe.controller.comment.CommentController;
+import codesquad.springcafe.controller.member.MemberController;
 import codesquad.springcafe.service.exception.DataDeletionException;
 import codesquad.springcafe.service.exception.ResourceNotFoundException;
 import codesquad.springcafe.service.exception.UnauthorizedException;
@@ -10,7 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ControllerAdvice
+@ControllerAdvice(assignableTypes = {MemberController.class, CommentController.class, ArticleController.class})
 public class ExceptionControllerAdvice {
 
     private static final Logger log = LoggerFactory.getLogger(ExceptionControllerAdvice.class);
