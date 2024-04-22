@@ -29,23 +29,22 @@ public class MemberControllerTest {
     private MemberRepository memberRepository;
 
     @Test
-    @DisplayName("회원 등록 후 /users로 리다이렉트한다")
+    @DisplayName("회원 등록 후 /user/list로 리다이렉트한다")
     void registerTest() throws Exception {
         // MockMvc를 사용하여 /user에 POST 요청을 보내고, 리다이렉션을 확인합니다.
-        mockMvc.perform(post("/user")
-                        .param("userId", "test_user")
+        mockMvc.perform(post("/user/add")
+                        .param("memberId", "test_user")
                         .param("password", "test")
-                        .param("name", "테스트 유저")
                         .param("email", "test@test  "))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/users"));
+                .andExpect(redirectedUrl("/user/list"));
     }
 
     @Test
-    @DisplayName("/users 요청 시 user/list 뷰로 이동")
+    @DisplayName("/user/list 요청 시 user/list 뷰로 이동")
     void showListTest() throws Exception {
-        // MockMvc를 사용하여 /users에 GET 요청을 보내고, 뷰 이름을 확인합니다
-        mockMvc.perform(get("/users"))
+        // MockMvc를 사용하여 /user/list에 GET 요청을 보내고, 뷰 이름을 확인합니다
+        mockMvc.perform(get("/user/list"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("user/list"));
     }
@@ -58,7 +57,7 @@ public class MemberControllerTest {
         given(memberRepository.getMember(memberId)).willReturn(Optional.of(new Member("test_user", "테스트 유저", "test@test", "test")));
 
         // MockMvc를 사용하여 /users/{userId}에 GET 요청을 보내고, 뷰 이름을 확인합니다.
-        mockMvc.perform(get("/users/{userId}", memberId))
+        mockMvc.perform(get("/users/{memberId}", memberId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("user/profile"));
     }

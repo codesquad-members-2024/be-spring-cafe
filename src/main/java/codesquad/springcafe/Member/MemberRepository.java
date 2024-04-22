@@ -19,14 +19,31 @@ public class MemberRepository {
     }
 
     public List<Member> getAllMembers() {
-        logger.info("모든 회원 정보 조회");
         return members;
     }
 
-    public Optional<Member> getMember(String userId) {
-        logger.info("회원 정보 조회: {}", userId);
+    public Optional<Member> getMember(String memberId) {
         return members.stream()
-                .filter(user -> user.getMemberId().equals(userId))
+                .filter(user -> user.getMemberId().equals(memberId))
                 .findFirst();
+    }
+    public boolean updateMemberInfo(String memberId, String currentPassword, String newName, String newEmail, String newPassword) {
+        Optional<Member> memberOptional = getMember(memberId);
+        if (memberOptional.isPresent()) {
+            Member member = memberOptional.get();
+            if (member.getPassword().equals(currentPassword)) {
+                member.setName(newName);
+                member.setEmail(newEmail);
+                member.setPassword(newPassword);
+                logger.info("회원 정보 업데이트: {}", memberId);
+                return true;
+            } else {
+                logger.warn("비밀번호 불일치: {}", memberId);
+                return false;
+            }
+        } else {
+            logger.warn("해당 회원을 찾을 수 없음: {}", memberId);
+            return false;
+        }
     }
 }

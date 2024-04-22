@@ -1,10 +1,10 @@
 package codesquad.springcafe.Member;
 
 public class Member {
-    private String memberId;
-    private final String name;
-    private final String email;
-    private final String password;
+    private final String memberId;
+    private String name;
+    private String email;
+    private String password;
 
     public Member(String memberId, String name, String email, String password) {
         this.memberId = memberId;
@@ -12,6 +12,9 @@ public class Member {
         this.email = email;
         this.password = password;
     }
+
+    public void setName(String name) {this.name = name;}
+
     public String getName() {
         return name;
     }
@@ -19,8 +22,15 @@ public class Member {
     public String getMemberId() {
         return memberId;
     }
+
+    public void setEmail(String email) {this.email = email;}
+
     public String getEmail() {
         return email;
     }
+
+    public void setPassword(String password) {this.password = password;}
+
     public String getPassword(){ return password;}
+
 }

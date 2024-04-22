@@ -5,10 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -52,5 +49,26 @@ public class MemberController {
             logger.warn("회원 프로필 조회 실패: {}", memberId);
         }
         return "user/profile";
+    }
+    @GetMapping("/users/{memberId}/form")
+    public String updateForm(@PathVariable String memberId, Model model) {
+        Optional<Member> member = memberRepository.getMember(memberId);
+        member.ifPresent(m -> model.addAttribute("member", m));
+        return member.isPresent() ? "user/updateForm" : "redirect:/user/list";
+    }
+    @PutMapping("/user/update/{memberId}")
+    public String updateMember(@PathVariable String memberId, @ModelAttribute Member updatedMember) {
+        boolean updateResult = memberRepository.updateMemberInfo(
+                memberId,
+                updatedMember.getPassword(),
+                updatedMember.getName(),
+                updatedMember.getEmail(),
+                updatedMember.getPassword());
+
+        if (!updateResult) {
+            logger.warn("회원 정보 수정 실패: {}", memberId);
+        }
+
+        return "redirect:/user/list";
     }
 }
