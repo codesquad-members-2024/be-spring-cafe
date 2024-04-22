@@ -24,7 +24,7 @@ public class ArticleController {
     public String showArticle(@PathVariable int id, Model model, HttpSession session) {
         String value = (String) session.getAttribute("sessionUserId");
         if (value == null) {
-            throw new IllegalArgumentException("접근 불가입니다.");
+            return "redirect:/form/login";
         }
 
         return service.findArticle(id)
@@ -33,7 +33,6 @@ public class ArticleController {
                     return "qna/show";
                 }).orElseThrow(() -> new IllegalArgumentException(id + "는 찾을 수 없습니다"));
     }
-
 
     // 아티클 등록
     @PostMapping("/article")
@@ -47,5 +46,14 @@ public class ArticleController {
     public String showArticle(Model model) {
         model.addAttribute("articles", service.getAllArticles());
         return "index";
+    }
+
+    @GetMapping("/qna/form")
+    public String showArticleRegisterForm(HttpSession session) {
+        String value = (String) session.getAttribute("sessionUserId");
+        if (value == null) {
+            return "redirect:/form/login";
+        }
+        return "qna/form";
     }
 }
