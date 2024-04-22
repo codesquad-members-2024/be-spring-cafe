@@ -24,6 +24,11 @@ public class User {
         this.registerTime = registerTime;
     }
 
+    public User(String userId, String password) {
+        this.userId = userId;
+        this.password = password;
+    }
+
     public String getUserId() {
         return userId;
     }
