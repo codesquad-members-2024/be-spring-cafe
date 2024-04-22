@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Article {
-    private Long article_id;
+    private Long articleId;
     private String writer;
     private String title;
     private String contents;
@@ -14,8 +14,8 @@ public class Article {
     public Article() {
         // 기본 생성자
     }
-    public Article(Long article_id, String writer, String title, String contents, LocalDateTime createdAt) {
-        this.article_id = article_id;
+    public Article(Long articleId, String writer, String title, String contents, LocalDateTime createdAt) {
+        this.articleId = articleId;
         this.writer = writer;
         this.contents = contents;
         this.createdAt = createdAt;
@@ -23,11 +23,11 @@ public class Article {
 
 
     public Long getArticle_id() {
-        return article_id;
+        return articleId;
     }
 
     public void setArticle_id(Long article_id) {
-        this.article_id = article_id;
+        this.articleId = article_id;
     }
 
     public String getWriter() {
