@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(String userId, User updatedUser) {
+    public User update(String userId, User updatedUser) {
         // 1. 사용자 존재하는지 확인하기
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(()-> new IllegalArgumentException("User not found : " + userId));

@@ -79,7 +79,7 @@ public class UserController {
     // 회원 정보 수정 처리
     @PutMapping("{id}/edit")
     public String updateUser(@PathVariable("id") String id, @ModelAttribute User user, RedirectAttributes redirectAttributes) {
-        User updatedUser = userService.updateUser(id, user);
+        User updatedUser = userService.update(id, user);
         logger.info("updated user={}", updatedUser);
         redirectAttributes.addAttribute("id", updatedUser.getUserId());
         return "redirect:/users/{id}";
