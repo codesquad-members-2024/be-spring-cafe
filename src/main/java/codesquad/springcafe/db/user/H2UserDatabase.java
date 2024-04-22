@@ -1,14 +1,14 @@
 package codesquad.springcafe.db.user;
 
 import codesquad.springcafe.model.user.User;
+import codesquad.springcafe.model.user.dto.UserCredentialDto;
+import codesquad.springcafe.model.user.dto.UserProfileDto;
 import codesquad.springcafe.model.user.dto.UserProfileEditDto;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import javax.sql.DataSource;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,15 +42,46 @@ public class H2UserDatabase implements UserDatabase {
     }
 
     @Override
-    public List<User> findAllUsers() {
-        return jdbcTemplate.query("SELECT * FROM users", userRowMapper());
+    public List<UserProfileDto> getAllUsers() {
+        String sql = "SELECT userId, nickname, email, registerTime FROM users";
+        return jdbcTemplate.query(
+                sql, (rs, rowNum) -> new UserProfileDto(
+                        rs.getString("userId"),
+                        rs.getString("nickname"),
+                        rs.getString("email"),
+                        rs.getTimestamp("registerTime").toLocalDateTime())
+                );
     }
 
     @Override
-    public Optional<User> findUserByUserId(String userId) {
-        List<User> result = jdbcTemplate.query("select * from users where userId = ?",
-                userRowMapper(), userId);
-        return result.stream().findAny();
+    public Optional<UserProfileDto> findUserByUserId(String userId) {
+        String sql = "select * from users where userId = ?";
+        return jdbcTemplate.query(
+                sql, new Object[]{userId}, rs -> {
+                    if(rs.next()){
+                        return Optional.of(new UserProfileDto(
+                                userId,
+                                rs.getString("nickname"),
+                                rs.getString("email"),
+                                rs.getTimestamp("registerTime").toLocalDateTime()));
+                    }
+                    return Optional.empty();
+                });
+    }
+
+    @Override
+    public Optional<UserCredentialDto> getUserCredential(String userId) {
+        String sql = "select userId, password from users where userId = ?";
+        return jdbcTemplate.query(
+                sql, new Object[]{userId}, rs -> {
+                    if (rs.next()) {
+                        return Optional.of(new UserCredentialDto(
+                                userId,
+                                rs.getString("password")
+                        ));
+                    }
+                    return Optional.empty();
+                });
     }
 
     @Override
@@ -63,21 +94,4 @@ public class H2UserDatabase implements UserDatabase {
         return jdbcTemplate.queryForObject("select count(*) from users", Integer.class);
     }
 
-    private RowMapper<User> userRowMapper() {
-        return (rs, rowNum) -> {
-            String userId = rs.getString("userId");
-            String nickname = rs.getString("nickname");
-            String password = rs.getString("password");
-            String email = rs.getString("email");
-            LocalDateTime registerTime = rs.getTimestamp("registerTime").toLocalDateTime();
-
-            User user = new User();
-            user.setUserId(userId);
-            user.setEmail(email);
-            user.setNickname(nickname);
-            user.setPassword(password);
-            user.setRegisterTime(registerTime);
-            return user;
-        };
-    }
 }

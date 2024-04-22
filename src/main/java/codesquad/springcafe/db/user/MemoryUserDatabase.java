@@ -1,6 +1,8 @@
 package codesquad.springcafe.db.user;
 
 import codesquad.springcafe.model.user.User;
+import codesquad.springcafe.model.user.dto.UserCredentialDto;
+import codesquad.springcafe.model.user.dto.UserProfileDto;
 import codesquad.springcafe.model.user.dto.UserProfileEditDto;
 
 import java.util.ArrayList;
@@ -23,14 +25,26 @@ public class MemoryUserDatabase implements UserDatabase {
                 .ifPresent(i -> userDatabase.set(i, userProfileEditDto.toEntity()));
     }
 
-    public List<User> findAllUsers(){
-        return userDatabase;
+    public List<UserProfileDto> getAllUsers(){
+        return userDatabase.stream()
+                .map(user -> new UserProfileDto(
+                user.getUserId(), user.getNickname(), user.getEmail(), user.getRegisterTime())
+                ).toList();
     }
 
-    public Optional<User> findUserByUserId(String userId){
+    public Optional<UserProfileDto> findUserByUserId(String userId){
         return userDatabase.stream()
                 .filter(user -> user.getUserId().equals(userId))
+                .map(user -> new UserProfileDto(userId, user.getNickname(), user.getEmail(), user.getRegisterTime()))
                 .findFirst();
+    }
+
+    @Override
+    public Optional<UserCredentialDto> getUserCredential(String userId) {
+        return userDatabase.stream()
+                .filter(user -> user.getUserId().equals(userId))
+                .map(user -> new UserCredentialDto(userId, user.getPassword()))
+                .findAny();
     }
 
     public void clearDatabase(){

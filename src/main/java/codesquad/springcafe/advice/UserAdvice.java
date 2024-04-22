@@ -16,8 +16,8 @@ public class UserAdvice {
         boolean isLoggedIn = session != null && session.getAttribute("springCafeMember") != null;
         model.addAttribute("loginUser", isLoggedIn);
         if(isLoggedIn){
-            User user = (User) session.getAttribute("springCafeMember");
-            model.addAttribute("userId", user.getUserId());
+            String userId = (String) session.getAttribute("springCafeMember");
+            model.addAttribute("userId", userId);
         }
     }
 }

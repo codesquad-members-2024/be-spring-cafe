@@ -1,6 +1,8 @@
 package codesquad.springcafe.db.user;
 
 import codesquad.springcafe.model.user.User;
+import codesquad.springcafe.model.user.dto.UserCredentialDto;
+import codesquad.springcafe.model.user.dto.UserProfileDto;
 import codesquad.springcafe.model.user.dto.UserProfileEditDto;
 
 import java.util.List;
@@ -11,9 +13,11 @@ public interface UserDatabase {
 
     public void update(String userId, UserProfileEditDto userProfileEditDto);
 
-    public List<User> findAllUsers();
+    public List<UserProfileDto> getAllUsers();
 
-    public Optional<User> findUserByUserId(String userId);
+    public Optional<UserProfileDto> findUserByUserId(String userId);
+
+    public Optional<UserCredentialDto> getUserCredential(String userId);
 
     public void clearDatabase();
 
