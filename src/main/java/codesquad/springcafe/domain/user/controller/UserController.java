@@ -39,7 +39,7 @@ public class UserController {
 
         model.addAttribute("user", myProfile);
 
-        return "/user/registration_success";
+        return "user/registration_success";
     }
 
     // 로그인
@@ -77,7 +77,7 @@ public class UserController {
         model.addAttribute("loginId", loginId);
         model.addAttribute("goBack", referer);
 
-        return "/user/delete";
+        return "user/delete";
     }
 
     // 회원 탈퇴
@@ -135,7 +135,7 @@ public class UserController {
         UserResponse userInfo = userService.getMyProfile(userId);
         model.addAttribute("user", userInfo);
 
-        return "/user/edit_form";
+        return "user/edit_form";
     }
 
     // 내 프로필 수정 (이름, 이메일만 수정 가능)

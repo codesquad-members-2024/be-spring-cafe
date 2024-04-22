@@ -18,9 +18,9 @@ public class AppConfig implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE); // 다른 빈들보다 우선순위 위로
 
-        registry.addViewController("/login").setViewName("/user/login");
-        registry.addViewController("/join").setViewName("/user/form");
-        registry.addViewController("/question").setViewName("/post/form");
+        registry.addViewController("/login").setViewName("user/login");
+        registry.addViewController("/join").setViewName("user/form");
+        registry.addViewController("/question").setViewName("post/form");
     }
 
     @Override
@@ -38,7 +38,7 @@ public class AppConfig implements WebMvcConfigurer {
 
         // CSRF 토큰 인터셉터
         registry.addInterceptor(new CsrfTokenIntercetor())
-                .addPathPatterns("post", "user/logout", "/question/edit/**", "/question/delete/**", "user/withdraw/**")
+                .addPathPatterns("/post", "/user/logout", "/question/edit/**", "/question/delete/**", "/user/withdraw/**")
                 .excludePathPatterns("/user", "/user/login");
 
         // 인가 이후 인터셉터

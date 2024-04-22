@@ -55,7 +55,7 @@ public class QuestionController {
 
         model.addAttribute("question", questionResponse);
 
-        return "/post/show";
+        return "post/show";
     }
 
     // 게시글 수정 페이지 접근
@@ -68,7 +68,7 @@ public class QuestionController {
         QuestionResponse questionResponse = questionService.getEditQuestion(userId, questionId);
         model.addAttribute("question", questionResponse);
 
-        return "/post/edit";
+        return "post/edit";
     }
 
     // 게시글 수정
@@ -96,7 +96,7 @@ public class QuestionController {
         model.addAttribute("goBack", referer);
         model.addAttribute("questionId", deleteQuestionId);
 
-        return "/post/delete";
+        return "post/delete";
     }
 
     // 게시글 삭제
