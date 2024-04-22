@@ -5,11 +5,30 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Article {
+    private Long article_id;
     private String writer;
     private String title;
     private String contents;
     private LocalDateTime createdAt;
-    private int articleNumber;
+
+    public Article() {
+        // 기본 생성자
+    }
+    public Article(Long article_id, String writer, String title, String contents, LocalDateTime createdAt) {
+        this.article_id = article_id;
+        this.writer = writer;
+        this.contents = contents;
+        this.createdAt = createdAt;
+    }
+
+
+    public Long getArticle_id() {
+        return article_id;
+    }
+
+    public void setArticle_id(Long article_id) {
+        this.article_id = article_id;
+    }
 
     public String getWriter() {
         return writer;
@@ -35,20 +54,16 @@ public class Article {
         this.contents = contents;
     }
 
-    public String getCreatedAtFormatted() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        return createdAt.format(formatter);
+//    public String getCreatedAtFormatted() {
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+//        return createdAt.format(formatter);
+//    }
+
+    public LocalDateTime getCreatedAtFormatted() {
+        return createdAt;
     }
 
-    public void setCreateAt(LocalDateTime createAt) {
-        this.createdAt = createAt;
-    }
-
-    public int getArticleNumber() {
-        return articleNumber;
-    }
-
-    public void setArticleNumber(int articleNumber) {
-        this.articleNumber = articleNumber;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }
