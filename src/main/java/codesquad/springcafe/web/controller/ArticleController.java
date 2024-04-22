@@ -23,21 +23,14 @@ public class ArticleController {
         this.articleRepository = articleRepository;
     }
 
-    @GetMapping("/qua/index.html")
+    @GetMapping("/questions")
     public String articleForm() {
         return "article/form";
     }
 
     @PostMapping("/questions")
     public String createArticle(@ModelAttribute Article article) {
-        // 현재 시간 설정
-        article.setCreateAt(LocalDateTime.now());
-
-        // article 인덱스 부여
-        article.setArticleNumber(articleRepository.articleSize() + 1);
-
         articleRepository.save(article);
-
         return "redirect:/";
     }
 
@@ -49,9 +42,9 @@ public class ArticleController {
         return "index";
     }
 
-    @GetMapping("/article/{articleNumber}")
-    public String articleDetail(@PathVariable int articleNumber, Model model) {
-        Optional<Article> article = articleRepository.findByIndex(articleNumber);
+    @GetMapping("/article/{article_id}")
+    public String articleDetail(@PathVariable int article_id, Model model) {
+        Optional<Article> article = articleRepository.findByIndex(article_id);
         article.ifPresent(a -> model.addAttribute("article", a));
 
         return "article/show";
