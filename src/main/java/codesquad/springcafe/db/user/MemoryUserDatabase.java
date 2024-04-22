@@ -1,6 +1,7 @@
 package codesquad.springcafe.db.user;
 
 import codesquad.springcafe.model.user.User;
+import codesquad.springcafe.model.user.dto.UserProfileEditDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +16,11 @@ public class MemoryUserDatabase implements UserDatabase {
     }
 
     @Override
-    public void update(String userId, User updateUser) {
+    public void update(String userId, UserProfileEditDto userProfileEditDto) {
         IntStream.range(0, userDatabase.size())
                 .filter(i -> userDatabase.get(i).getUserId().equals(userId))
                 .findFirst()
-                .ifPresent(i -> userDatabase.set(i, updateUser));
+                .ifPresent(i -> userDatabase.set(i, userProfileEditDto.toEntity()));
     }
 
     public List<User> findAllUsers(){

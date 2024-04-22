@@ -1,6 +1,7 @@
 package codesquad.springcafe.db.user;
 
 import codesquad.springcafe.model.user.User;
+import codesquad.springcafe.model.user.dto.UserProfileEditDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -31,13 +32,13 @@ public class H2UserDatabase implements UserDatabase {
     }
 
     @Override
-    public void update(String userId, User updatedUser) {
+    public void update(String userId, UserProfileEditDto userProfileEditDto) {
         String sql = "update users set nickname=?, email=? where userid=?";
         jdbcTemplate.update(
                 sql,
-                updatedUser.getNickname(),
-                updatedUser.getEmail(),
-                updatedUser.getUserId());
+                userProfileEditDto.getNickname(),
+                userProfileEditDto.getEmail(),
+                userProfileEditDto.getUserId());
     }
 
     @Override
