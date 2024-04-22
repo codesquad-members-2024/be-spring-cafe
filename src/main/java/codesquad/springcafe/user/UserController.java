@@ -31,7 +31,7 @@ public class UserController {
 
     // 회원가입 기능
     @PostMapping("/user")
-    public String create(@ModelAttribute UserCreationDto userCreationDto) {
+    public String create(@Valid @ModelAttribute UserCreationDto userCreationDto) {
         service.save(userCreationDto);
         return "redirect:/users";
     }
