@@ -19,8 +19,6 @@ public class ApiCommentController {
 
     @PostMapping("")
     public Comment create(@ModelAttribute CommentPostReq commentPostReq, HttpSession session) {
-//        System.out.println("API call");
-
         SimpleUserInfo user = (SimpleUserInfo) session.getAttribute("loginUser");
         return commentService.postComment(commentPostReq, user);
     }
