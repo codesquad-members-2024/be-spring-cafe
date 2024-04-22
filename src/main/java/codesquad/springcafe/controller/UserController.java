@@ -1,8 +1,9 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.db.user.UserDatabase;
-import codesquad.springcafe.model.user.User;
 import codesquad.springcafe.model.user.dto.UserCreationDto;
+import codesquad.springcafe.model.user.dto.UserCredentialDto;
+import codesquad.springcafe.model.user.dto.UserProfileDto;
 import codesquad.springcafe.model.user.dto.UserProfileEditDto;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class UserController {
 
     @GetMapping
     public String userList(Model model){
-        List<User> users = userDatabase.findAllUsers();
+        List<UserProfileDto> users = userDatabase.getAllUsers();
         model.addAttribute("users", users);
         model.addAttribute("totalUserNumber", userDatabase.getTotalUserNumber());
         return "users/list";
@@ -44,12 +45,12 @@ public class UserController {
             @PathVariable String userId,
             HttpServletResponse response,
             Model model) throws IOException {
-        Optional<User> user = userDatabase.findUserByUserId(userId);
-        if(user.isEmpty()){
+        Optional<UserProfileDto> dto = userDatabase.findUserByUserId(userId);
+        if(dto.isEmpty()){
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return null;
         }
-        model.addAttribute("user", user.get());
+        model.addAttribute("user", dto.get());
         return "users/profile";
     }
 
@@ -58,12 +59,12 @@ public class UserController {
             @PathVariable String userId,
             Model model,
             HttpServletResponse response) throws IOException {
-        Optional<User> user = userDatabase.findUserByUserId(userId);
-        if(user.isEmpty()){
+        Optional<UserProfileDto> dto = userDatabase.findUserByUserId(userId);
+        if(dto.isEmpty()){
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return null;
         }
-        model.addAttribute("user", user.get());
+        model.addAttribute("user", dto.get());
         return "users/updateForm";
     }
 
@@ -73,18 +74,18 @@ public class UserController {
             @ModelAttribute UserProfileEditDto userProfileEditDto,
             Model model,
             HttpServletResponse response) throws IOException {
-        Optional<User> tmpUser = userDatabase.findUserByUserId(userId);
-        if(tmpUser.isEmpty()){
+        Optional<UserCredentialDto> userCredentialDto = userDatabase.getUserCredential(userId);
+        if(userCredentialDto.isEmpty()){
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return null;
         }
-        User user = tmpUser.get();
-        if(!user.isPasswordInputCorrect(userProfileEditDto.getPassword())){
-            model.addAttribute("user", user);
+        UserCredentialDto userCredential = userCredentialDto.get();
+        if(!userProfileEditDto.getPassword().equals(userCredential.getPassword())){
+            model.addAttribute("user", userProfileEditDto);
             model.addAttribute("passwordError", true);
             return "users/updateForm";
         }
-        userDatabase.update(user.getUserId(), userProfileEditDto);
+        userDatabase.update(userProfileEditDto.getUserId(), userProfileEditDto);
         return "redirect:/users";
     }
 

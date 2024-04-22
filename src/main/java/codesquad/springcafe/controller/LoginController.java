@@ -2,6 +2,7 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.db.user.UserDatabase;
 import codesquad.springcafe.model.user.User;
+import codesquad.springcafe.model.user.dto.UserCredentialDto;
 import codesquad.springcafe.model.user.dto.UserLoginDto;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -45,18 +46,18 @@ public class LoginController {
     ) throws IOException
     {
         User user = userLoginDto.toEntity();
-        Optional<User> userCandidate = userDatabase.findUserByUserId(user.getUserId());
-        if(userCandidate.isEmpty() || !userCandidate.get().isPasswordInputCorrect(user.getPassword())){
+        Optional<UserCredentialDto> userCredential = userDatabase.getUserCredential(user.getUserId());
+        if(userCredential.isEmpty() || !userCredential.get().getPassword().equals(user.getPassword())){
             model.addAttribute("validationError", true);
             return "users/login";
         }
-        session.setAttribute("springCafeMember", userCandidate.get());
+        session.setAttribute("springCafeMember", user.getUserId());
         logger.info("로그인 성공! id = {} , session = {}", user.getUserId(), session.getId());
         if(redirectURL != null && !redirectURL.isBlank()){
             response.sendRedirect(redirectURL);
             return null;
         }
-        return "redirect:/";
+        return "redirect:" + redirectURL;
     }
 
     @PostMapping("/logout")
