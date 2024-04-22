@@ -25,4 +25,8 @@ public class UserViewDto {
     public void numbering(Long index) {
         this.index = index;
     }
+
+    public String getUserId() {
+        return userId;
+    }
 }

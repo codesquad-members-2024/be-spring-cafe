@@ -65,8 +65,8 @@ public class UserController {
         Optional<UserViewDto> optUser = service.doLogin(userId, password);
         // sessionedUser 가 mustache에 안들어가던지 or 요청된 유저의 세션이 풀리는지
         return optUser.map(user -> {
-                    log.debug("{} 에 대해 세션을 추가합니다", user);
-                    session.setAttribute("sessionUser", user);
+                    log.debug("{} 에 대해 세션을 추가합니다", user.getUserId());
+                    session.setAttribute("sessionUserId", user.getUserId());
                     return "redirect:/";
                 })
                 .orElseThrow(() -> new IllegalArgumentException(userId + "는 로그인 할 수 없습니다"));
