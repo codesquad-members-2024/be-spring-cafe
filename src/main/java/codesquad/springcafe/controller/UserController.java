@@ -3,6 +3,7 @@ package codesquad.springcafe.controller;
 import codesquad.springcafe.db.user.UserDatabase;
 import codesquad.springcafe.model.user.User;
 import codesquad.springcafe.model.user.dto.UserCreationDto;
+import codesquad.springcafe.model.user.dto.UserProfileEditDto;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -69,9 +70,7 @@ public class UserController {
     @PutMapping("detail/{userId}/update")
     public String updateProfile(
             @PathVariable String userId,
-            @RequestParam String nickname,
-            @RequestParam String email,
-            @RequestParam String password,
+            @ModelAttribute UserProfileEditDto userProfileEditDto,
             Model model,
             HttpServletResponse response) throws IOException {
         Optional<User> tmpUser = userDatabase.findUserByUserId(userId);
@@ -80,13 +79,13 @@ public class UserController {
             return null;
         }
         User user = tmpUser.get();
-        if(!user.isPasswordInputCorrect(password)){
+        if(!user.isPasswordInputCorrect(userProfileEditDto.getPassword())){
             model.addAttribute("user", user);
             model.addAttribute("passwordError", true);
             return "users/updateForm";
         }
-        user.setNickname(nickname);
-        user.setEmail(email);
+        user.setNickname(userProfileEditDto.getNickname());
+        user.setEmail(userProfileEditDto.getEmail());
         userDatabase.update(user.getUserId(), user);
         return "redirect:/users";
     }
