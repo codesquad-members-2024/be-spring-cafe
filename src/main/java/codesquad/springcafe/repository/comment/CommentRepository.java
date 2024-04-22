@@ -15,7 +15,9 @@ public interface CommentRepository {
 
     List<Comment> findCommentsByUserId(String userId);
 
-    long modifyComment(long id, UpdatedComment comment) throws CommentNotFoundException;
+    void modifyComment(long id, UpdatedComment comment) throws CommentNotFoundException;
 
-    long deleteComment(long id);
+    void deleteComment(long commentId);
+
+    void deleteArticlesComment(long articleId);
 }

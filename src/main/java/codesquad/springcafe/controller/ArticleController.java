@@ -87,13 +87,13 @@ public class ArticleController {
             model.addAttribute("IsCommentBlank", true);
         }
         httpSession.removeAttribute("commentBlankError");
-        httpSession.removeAttribute("commentAddFlag");
+        httpSession.removeAttribute("commentControlFlag");
         return "article/show";
     }
 
     private void canIncreaseViewCount(HttpSession httpSession, long articleId) {
         Object commentBlankError = httpSession.getAttribute("commentBlankError");
-        Object commentAddFlag = httpSession.getAttribute("commentAddFlag");
+        Object commentAddFlag = httpSession.getAttribute("commentControlFlag");
 
         if (commentBlankError == null && commentAddFlag == null) {
             articleService.increaseViewCount(articleId);
@@ -131,15 +131,16 @@ public class ArticleController {
 
         if (otherComments.isEmpty()) { // 다른 사용자의 댓글이 없는 경우만 게시글 삭제가 가능하다.
             articleService.deleteArticle(articleId);
+            commentService.deleteArticlesComment(articleId);
             return "redirect:/";
         }
         return "redirect:/article/invalid-delete";
     }
 
     @PostMapping("/{articleId}/comments")
-    public String processAnswerForm(@PathVariable long articleId, HttpSession httpSession,
-                                    @Valid @ModelAttribute CommentWriteDto commentWriteDto,
-                                    BindingResult bindingResult) {
+    public String processCommentForm(@PathVariable long articleId, HttpSession httpSession,
+                                     @Valid @ModelAttribute CommentWriteDto commentWriteDto,
+                                     BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             httpSession.setAttribute("commentBlankError", true);
             return "redirect:/article/{articleId}";
@@ -148,13 +149,26 @@ public class ArticleController {
         String userId = sessionUser.getUserId();
         Comment comment = commentWriteDto.createComment(articleId, userId);
         commentService.addComment(comment);
-        httpSession.setAttribute("commentAddFlag", true);
+        httpSession.setAttribute("commentControlFlag", true);
+        return "redirect:/article/{articleId}";
+    }
+
+    @DeleteMapping("/{articleId}/{userId}/comments/{commentId}")
+    public String deleteComment(@PathVariable long articleId, @PathVariable String userId, @PathVariable long commentId,
+                                HttpSession httpSession) {
+        SessionUser sessionUser = (SessionUser) httpSession.getAttribute("sessionUser");
+        String sessionUserId = sessionUser.getUserId();
+        if (!userId.equals(sessionUserId)) {
+            return "redirect:/article/invalid-modify";
+        }
+        httpSession.setAttribute("commentControlFlag", true);
+        commentService.deleteComment(commentId);
         return "redirect:/article/{articleId}";
     }
 
     @GetMapping("/invalid-modify")
     public String showInvalidModifyPage(Model model) {
-        model.addAttribute("errorMsg", "다른 사람의 게시글은 수정할 수 없습니다.");
+        model.addAttribute("errorMsg", "다른 사용자의 게시글과 댓글은 수정할 수 없습니다.");
         return "error/form";
     }
 

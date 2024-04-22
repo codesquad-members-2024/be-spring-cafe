@@ -54,8 +54,14 @@ public class CommentManagementService implements CommentService {
     }
 
     @Override
-    public void deleteComment(long id) {
-        commentRepository.deleteComment(id);
-        logger.info("[{} 댓글 삭제 성공]", id);
+    public void deleteComment(long commentId) {
+        commentRepository.deleteComment(commentId);
+        logger.info("[{} 댓글 삭제 성공]", commentId);
+    }
+
+    @Override
+    public void deleteArticlesComment(long articleId) {
+        commentRepository.deleteArticlesComment(articleId);
+        logger.info("[{} 게시글의 댓글 삭제 성공]", articleId);
     }
 }

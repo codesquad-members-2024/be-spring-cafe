@@ -13,7 +13,9 @@ public interface CommentService {
 
     List<Comment> findCommentsByUserId(String userId);
 
-    void updateComment(long id, UpdatedComment comment); // FIXME
+    void updateComment(long id, UpdatedComment comment);
 
-    void deleteComment(long id); // FIXME
+    void deleteComment(long commentId);
+
+    void deleteArticlesComment(long articleId);
 }

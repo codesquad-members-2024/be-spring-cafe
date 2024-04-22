@@ -1,5 +1,6 @@
 package codesquad.springcafe.repository.comment;
 
+import codesquad.springcafe.exception.db.ArticleNotFoundException;
 import codesquad.springcafe.exception.db.CommentNotFoundException;
 import codesquad.springcafe.model.Comment;
 import codesquad.springcafe.model.UpdatedComment;
@@ -40,7 +41,10 @@ public class CommentJdbcRepository implements CommentRepository {
         parameters.put("article_id", comment.getArticleId());
         parameters.put("user_id", comment.getUserId());
         parameters.put("content", comment.getContent());
+        parameters.put("is_modified", comment.isModified());
+        parameters.put("is_deleted", comment.isModified());
         parameters.put("creation_time", Timestamp.valueOf(comment.getCreationTime()));
+        parameters.put("modified_time", null);
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         comment.setId(key.longValue());
@@ -64,7 +68,7 @@ public class CommentJdbcRepository implements CommentRepository {
 
     @Override
     public List<Comment> findCommentsByAid(long articleId) {
-        String sql = "SELECT id, article_id, user_id, content, is_modified, is_deleted, creation_time, modified_time FROM comment WHERE article_id = ?";
+        String sql = "SELECT id, article_id, user_id, content, is_modified, is_deleted, creation_time, modified_time FROM comment WHERE article_id = ? and is_deleted = FALSE";
         Long[] params = new Long[]{articleId};
         int[] paramTypes = new int[]{Types.BIGINT};
 
@@ -77,7 +81,7 @@ public class CommentJdbcRepository implements CommentRepository {
 
     @Override
     public List<Comment> findCommentsByUserId(String userId) {
-        String sql = "SELECT id, article_id, user_id, content, is_modified, is_deleted, creation_time, modified_time FROM comment WHERE userId = ?";
+        String sql = "SELECT id, article_id, user_id, content, is_modified, is_deleted, creation_time, modified_time FROM comment WHERE userId = ? and is_deleted = FALSE";
         String[] params = new String[]{userId};
         int[] paramTypes = new int[]{Types.VARCHAR};
 
@@ -89,13 +93,31 @@ public class CommentJdbcRepository implements CommentRepository {
     }
 
     @Override
-    public long modifyComment(long id, UpdatedComment comment) {
-        return 0; // TODO
+    public void modifyComment(long id, UpdatedComment comment) {
     }
 
     @Override
-    public long deleteComment(long id) {
-        return 0; // TODO
+    public void deleteComment(long commentId) {
+        String sql = "UPDATE comment SET is_deleted = TRUE WHERE id = ?";
+        Long[] params = new Long[]{commentId};
+        int[] paramTypes = new int[]{Types.BIGINT};
+
+        int rowsUpdated = jdbcTemplate.update(sql, params, paramTypes);
+        if (rowsUpdated == 0) {
+            throw new CommentNotFoundException(commentId); // 댓글을 찾지 못한 경우 예외 처리
+        }
+    }
+
+    @Override
+    public void deleteArticlesComment(long articleId) {
+        String sql = "UPDATE comment SET is_deleted = TRUE WHERE article_id = ?";
+        Long[] params = new Long[]{articleId};
+        int[] paramTypes = new int[]{Types.BIGINT};
+
+        int rowsUpdated = jdbcTemplate.update(sql, params, paramTypes);
+        if (rowsUpdated == 0) {
+            throw new ArticleNotFoundException(articleId); // 게시글을 찾지 못한 경우 예외 처리
+        }
     }
 
     private RowMapper<Comment> commentRowMapper() {

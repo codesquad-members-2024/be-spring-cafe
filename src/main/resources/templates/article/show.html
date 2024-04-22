@@ -26,23 +26,29 @@
                             <div class="article-header-text"
                                  style="display: flex; justify-content: space-between; align-items: center;">
                                 <div>
-                                    <p class="article-content" th:text="${article.getUserId()}"></p>
-                                    <p class="article-content" th:if="${article.isModified()}">
+                                    <p class="article-content" th:text="${article.getUserId()}"
+                                       style="display: inline-block;"></p>
+                                    <p class="article-content" th:if="${article.isModified()}"
+                                       style="display: inline-block;">
                                         <span th:text="${article.getFormattedModifiedTime()}"></span> (수정됨)
                                     </p>
                                     <p class="article-content" th:unless="${article.isModified()}"
-                                       th:text="${article.getFormattedCreationTime()}"></p>
-                                    <p class="article-content" th:text="${article.getViewCount()}"></p>
+                                       th:text="${article.getFormattedCreationTime()}"
+                                       style="display: inline-block;"></p>
+                                    <p class="article-content" th:text="${article.getViewCount()}"
+                                       style="display: inline-block;"></p>
                                 </div>
-                                <div>
-                                    <a class="black-component" th:if="${isWriter}" style="margin-left: 10px"
-                                       th:href="@{/article/update/{articleId}(articleId=${articleId})}">수정하기
-                                    </a>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div style="display: inline-block;">
+                                        <a class="black-component" th:if="${isWriter}"
+                                           style="text-align: center; margin-right: 4px"
+                                           th:href="@{/article/update/{articleId}(articleId=${articleId})}">수정하기</a>
+                                    </div>
                                     <form method="post"
-                                          th:action="@{/article/update/{articleId}(articleId=${articleId})}">
-                                        <button th:if="${isWriter and canDelete}" type="submit"
-                                                class="black-component"
-                                                style="margin-left: 10px; display: flex; align-items: center; justify-content: center;">
+                                          th:action="@{/article/update/{articleId}(articleId=${articleId})}"
+                                          style="display: inline-block;">
+                                        <button th:if="${isWriter and canDelete}" type="submit" class="black-component"
+                                                style="display: flex; justify-content: center; align-items: center; text-align: center;">
                                             삭제하기
                                         </button>
                                         <input type="hidden" name="_method" value="DELETE">
@@ -59,15 +65,28 @@
                             <p class="post-comment-count">댓글 <span th:text="${commentList.size()}"></span>개</p>
                             <div class="post-comment-slipp-articles">
                                 <article class="comment" th:each="comment: ${commentList}">
-                                    <div class="article-text">
-                                        <p class="comment-content comment-author-name"
-                                           th:text="${comment.getUserId()}"></p>
+                                    <div class="article-text" th:inline="text">
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <p class="comment-content comment-author-name"
+                                               th:text="${comment.getUserId()}"></p>
+                                            <div>
+                                                <form method="post"
+                                                      th:action="@{/article/{articleId}/{userId}/comments/{commentId}(articleId=${articleId}, userId=${comment.getUserId()}, commentId=${comment.getId()})}"
+                                                      style="display: inline-block;">
+                                                    <button type="submit" th:if="${writer == comment.getUserId()}"
+                                                            class="black-component"
+                                                            style="display: flex; justify-content: center; align-items: center; text-align: center;">
+                                                        삭제하기
+                                                    </button>
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                </form>
+                                            </div>
+                                        </div>
                                         <div class="comment-content comment-doc">
                                             <p th:text="${comment.getContent()}"></p>
                                         </div>
                                         <p class="comment-content comment-time"
-                                           th:text="${comment.getFormattedCreationTime()}">
-                                        </p>
+                                           th:text="${comment.getFormattedCreationTime()}"></p>
                                     </div>
                                 </article>
                                 <form class="submit-write" method="post"
