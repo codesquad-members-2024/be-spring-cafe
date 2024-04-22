@@ -1,20 +1,25 @@
 package codesquad.springcafe.controller.login;
 
 import codesquad.springcafe.controller.SessionConst;
+import codesquad.springcafe.controller.argumentresolver.LoginId;
 import codesquad.springcafe.domain.member.Member;
 import codesquad.springcafe.service.member.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class LoginController {
@@ -65,5 +70,13 @@ public class LoginController {
         }
 
         return "redirect:/";
+    }
+
+    @GetMapping("/api/currentUser")
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> getLoginUserId(@LoginId String loginId) {
+        Map<String, String> data = Collections.singletonMap("username", loginId);
+
+        return ResponseEntity.ok(data);
     }
 }
