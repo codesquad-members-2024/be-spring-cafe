@@ -1,11 +1,9 @@
 package codesquad.springcafe.Service;
 
 import codesquad.springcafe.Domain.User;
-import codesquad.springcafe.Domain.UserCredential;
 import codesquad.springcafe.Repository.UserRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service; //스프링 컨테이너에 등록
 

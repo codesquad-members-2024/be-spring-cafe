@@ -57,4 +57,5 @@ public class PostRepositoryJDBC implements PostRepository {
             return post;
         };
     }
+
 }

@@ -114,9 +114,6 @@ public class UserController {
             //로그인 성공시 httpSession에 정보를 넣는다
             httpSession.setAttribute("loginUserId", loginUserId);
 
-            //사용자가 서버에 최근에 요청한 시간을 기준으로 30분 후 세션 timeout
-            httpSession.setMaxInactiveInterval(60 * 30);
-
             return "redirect:/";
         } catch (NoSuchElementException e) { //에러 발생하면
             logger.error("User login failed: {}", e.getMessage());
