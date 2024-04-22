@@ -30,4 +30,11 @@ public class UserService {
     public void updateUser(String userId, User user) {
         userRepository.updateUser(user,userId);
     }
+
+    public boolean checkUserExists(String userId, String password) {
+        User user = userRepository.findByUserId(userId);
+        if (user == null){
+            return false;
+        } else return user.getPassword().equals(password);
+    }
 }

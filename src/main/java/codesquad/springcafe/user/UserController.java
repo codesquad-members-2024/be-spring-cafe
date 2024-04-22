@@ -1,6 +1,7 @@
 package codesquad.springcafe.user;
 
 import codesquad.springcafe.post.PostController;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,19 +26,24 @@ public class UserController {
         return "users/form";
     }
 
+    @PostMapping("/create")
+    public String createUser(User user, Model model)
+    {
+        if (userService.checkUserExists(user.getUserId(), user.getPassword()))
+        {
+            model.addAttribute("errorMessage", true);
+            return "users/form";
+        }
+        userService.createUser(user);
+        logger.info("User created {}", user);
+        return "redirect:/users/list";
+    }
+
     @GetMapping("/list")
     public String showUserListForm(Model model){
         model.addAttribute("users",userService.findAll());
         logger.info("Showing user list");
         return "users/list";
-    }
-
-    @PostMapping("/create")
-    public String createUser(User user)
-    {
-        userService.createUser(user);
-        logger.info("User created {}", user);
-        return "redirect:/users/list";
     }
 
     @GetMapping("/{userId}/profile")
@@ -75,10 +81,38 @@ public class UserController {
             logger.info("User updated {}", user);
             return "redirect:/users/list";
         }else{
-            model.addAttribute("error", true);
+            model.addAttribute("errorMessage", true);
             model.addAttribute("user", currentUser);
             logger.info("CurrentPassword is different");
             return "users/updateform";
         }
+    }
+
+    @GetMapping("/login")
+    public String showLoginForm(HttpSession session) {
+        if (session.getAttribute("loggedUser") != null) {
+            return "redirect:/";
+        }
+        return "users/login";
+    }
+
+    @PostMapping("/login")
+    public String loginUser(@ModelAttribute("user") User user, HttpSession session, Model model) {
+        if(userService.checkUserExists(user.getUserId(), user.getPassword())) {
+            session.setAttribute("loggedUser", user.getUserId());
+            session.setMaxInactiveInterval(60);
+            logger.info("User log-in success {}", user);
+            return "redirect:/";
+        }
+        model.addAttribute("errorMessage", true);
+        logger.info("User log-in fail in {}", user);
+        return "users/login";
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpSession httpSession) {
+        httpSession.invalidate();
+        logger.info("User log-out success");
+        return "redirect:/";
     }
 }
