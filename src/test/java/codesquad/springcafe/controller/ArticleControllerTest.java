@@ -1,6 +1,6 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.repository.ArticleRepository;
+import codesquad.springcafe.service.ArticleService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ArticleController.class)
@@ -22,7 +21,7 @@ class ArticleControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    ArticleRepository articleRepository;
+    ArticleService articleService;
 
     @Test
     @DisplayName("글 작성 폼으로 이동")
@@ -42,12 +41,12 @@ class ArticleControllerTest {
         MockHttpSession session = new MockHttpSession();
         session.setAttribute("loginUserId", "cori123");
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/users")
-                .param("writer", "cori")
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/question")
                 .param("title", "1234")
-                .param("contents", "hello world");
+                .param("contents", "hello world")
+                .session(session);
 
-        mockMvc.perform(post("/question").session(session))
+        mockMvc.perform(request)
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
