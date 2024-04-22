@@ -38,5 +38,3 @@ CREATE TABLE REPLIES (
 
 - [ ] 댓글을 작성할 떄에는, 내용만 작성할 수 있다.
     - 작성자 란은 ```sessionedUser```값의 ```userId``` 필드를 이용한다.
-
----

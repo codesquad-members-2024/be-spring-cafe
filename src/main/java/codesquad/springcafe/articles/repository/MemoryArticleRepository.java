@@ -2,7 +2,6 @@ package codesquad.springcafe.articles.repository;
 
 import codesquad.springcafe.articles.model.Reply;
 import codesquad.springcafe.articles.model.dto.ArticleUpdateDto;
-import codesquad.springcafe.articles.model.dto.ReplyCreationRequest;
 import codesquad.springcafe.db.ArticleDatabase;
 import codesquad.springcafe.articles.model.Article;
 import org.slf4j.Logger;
@@ -14,12 +13,12 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Optional;
 
+
 @Repository
 public class MemoryArticleRepository implements ArticleRepository {
     private static final Logger logger = LoggerFactory.getLogger(MemoryArticleRepository.class);
 
     private final ArticleDatabase articleDatabase;
-
     @Autowired
     public MemoryArticleRepository(ArticleDatabase articleDatabase) {
         this.articleDatabase = articleDatabase;
@@ -58,12 +57,12 @@ public class MemoryArticleRepository implements ArticleRepository {
 
     @Override
     public void createReply(Reply reply) {
-
+        articleDatabase.addReply(reply);
     }
 
     @Override
     public Optional<ArrayList<Reply>> getReplies(long articleId) {
-        return Optional.empty();
+        return Optional.of(articleDatabase.getReplies(articleId));
     }
 }
 

@@ -1,6 +1,7 @@
 package codesquad.springcafe.db;
 
 import codesquad.springcafe.articles.model.Article;
+import codesquad.springcafe.articles.model.Reply;
 import codesquad.springcafe.articles.model.dto.ArticleUpdateDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -17,8 +19,27 @@ public class ArticleDatabase {
 
     private Map<Long, Article> articles = new LinkedHashMap<>();
 
+    private Map<Long, Reply> replies = new LinkedHashMap<>();
+
+    public long getReplyId() {   // Article에 ID를 주기 위한 메소드
+        return replies.size() + 1;    // index는 1번부터 시작하도록 +1
+    }
+
     public long getArticleID() {   // Article에 ID를 주기 위한 메소드
         return articles.size() + 1;    // index는 1번부터 시작하도록 +1
+    }
+
+    public void addReply(Reply reply) {
+        long replyId = getReplyId();
+        reply.setReplyId(replyId);
+        replies.put(replyId, reply);
+        logger.debug("Reply # {} ,[{}] Added at Memory DB", replyId, reply.getComment());
+    }
+
+    public ArrayList<Reply> getReplies(long articleId) {
+        return replies.values().stream()
+                .filter(reply -> reply.getArticleId() == articleId)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public void addArticle(Article article) {
@@ -54,5 +75,6 @@ public class ArticleDatabase {
 
     public void deleteArticle(long articleId) {
         articles.remove(articleId);
+        logger.debug("Article ID '{}' Deleted", articleId);
     }
 }
