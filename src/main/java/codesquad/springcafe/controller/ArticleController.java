@@ -1,6 +1,7 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.dto.ArticleRequestDto;
+import codesquad.springcafe.exception.UnauthorizedAccessException;
 import codesquad.springcafe.model.Article;
 import codesquad.springcafe.service.ArticleService;
 import jakarta.servlet.http.HttpSession;
@@ -50,11 +51,12 @@ public class ArticleController {
     public String getArticleUpdateForm(@PathVariable Long articleId, HttpSession session, Model model) {
         String userId = (String) session.getAttribute(LOGIN_USER_ID);
         if (articleService.checkArticleWriter(articleId, userId)) {
+            log.debug("게시물 수정 성공 {}", userId);
             model.addAttribute(ARTICLE_ID, articleId);
             return "qna/update_form";
         }
-        model.addAttribute("errorMessage", "본인의 게시글만 수정할 수 있습니다.");
-        return "errors/error";
+        log.debug("게시물 수정 실패 {}", userId);
+        throw new UnauthorizedAccessException("본인의 게시글만 수정할 수 있습니다.");
     }
 
     @PutMapping("{articleId}")
@@ -64,13 +66,14 @@ public class ArticleController {
     }
 
     @DeleteMapping("{articleId}")
-    public String deleteArticle(@PathVariable Long articleId, HttpSession session, Model model) {
+    public String deleteArticle(@PathVariable Long articleId, HttpSession session){
         String userId = (String) session.getAttribute(LOGIN_USER_ID);
         if (articleService.checkArticleWriter(articleId, userId)) {
+            log.debug("게시물 삭제 성공 {}", userId);
             articleService.delete(articleId);
             return "redirect:/";
         }
-        model.addAttribute("errorMessage", "본인의 게시글만 삭제할 수 있습니다.");
-        return "errors/error";
+        log.debug("게시물 삭제 실패 {}", userId);
+        throw new UnauthorizedAccessException("본인의 게시글만 삭제할 수 있습니다.");
     }
 }
