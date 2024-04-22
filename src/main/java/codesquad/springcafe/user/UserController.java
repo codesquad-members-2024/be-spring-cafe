@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -23,9 +24,12 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public String createUser(@ModelAttribute User user) {
+    public String createUser(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
         if (userDatabase.isExistUser(user.getUserId()) == true) {
-            return "redirect:/users/form/" + user.getUserId();
+            redirectAttributes.addFlashAttribute("existId", true);
+            redirectAttributes.addFlashAttribute("prevName", user.getName());
+            redirectAttributes.addFlashAttribute("prevEmail", user.getEmail());
+            return "redirect:/users/form";
         }
         userDatabase.addUser(user);
         logger.debug("add user : {}", user.getUserId());
@@ -61,10 +65,11 @@ public class UserController {
     @PutMapping("/users/{userid}")
     public String updateUser(@ModelAttribute UserLoginDTO userLoginDTO, // userid, pwd
                              @ModelAttribute User editedUser, // userid, pwd, name, email
-                             Model model) {
+                             RedirectAttributes redirectAttributes) {
         if (!userCrednetialService.checkValidCredential(userLoginDTO)) {
-            model.addAttribute("invalidInput", true);
-            System.out.println("invalidINput");
+            redirectAttributes.addFlashAttribute("invalidInput", true);
+            redirectAttributes.addFlashAttribute("prevName", editedUser.getName());
+            redirectAttributes.addFlashAttribute("prevEmail", editedUser.getEmail());
             return "redirect:/users/" + userLoginDTO.getUserid() + "/form";
         }
         userDatabase.updateUser(editedUser);

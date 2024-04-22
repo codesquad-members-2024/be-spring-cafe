@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class ArticleController {
@@ -27,8 +29,10 @@ public class ArticleController {
     }
 
     @PostMapping("/questions")
-    public String createQuestion(@ModelAttribute Article article) {
+    public String createQuestion(@ModelAttribute Article article, RedirectAttributes redirectAttributes) {
         if (!userDatabase.isExistUser(article.getWriter())) {
+            redirectAttributes.addFlashAttribute("prevTitle", article.getTitle());
+            redirectAttributes.addAttribute("prevContent", article.getContent());
             return "redirect:/qna/form";
         }
         articleDatabase.addArticle(article);
