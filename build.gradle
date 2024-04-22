@@ -22,6 +22,11 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+
+	// MySQL
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// H2
 	runtimeOnly 'com.h2database:h2'
 }
 
