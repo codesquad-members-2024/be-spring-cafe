@@ -12,6 +12,7 @@ public class Config implements WebMvcConfigurer {
         registry.addInterceptor(new AccessInterceptor())
                 .addPathPatterns("/user/**")
                 .addPathPatterns("/qna")
+                .addPathPatterns("/article/**")
                 .excludePathPatterns("/user/register");
     }
 }
