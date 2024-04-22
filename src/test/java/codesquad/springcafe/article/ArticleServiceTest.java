@@ -31,7 +31,7 @@ public class ArticleServiceTest {
 
     @BeforeEach
     void setUp() {
-        article1 = new Article(1L, "title", "author", "contents", "userId");
+        article1 = new Article(1L, "title", "author", "contents", "userId", false);
     }
 
 
