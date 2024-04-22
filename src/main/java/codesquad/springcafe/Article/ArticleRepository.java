@@ -39,4 +39,5 @@ public class ArticleRepository {
     public int articleSize() {
         return articles.size();
     }
+    public void clear() {articles.clear();}
 }

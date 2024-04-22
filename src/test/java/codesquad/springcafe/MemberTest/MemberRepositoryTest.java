@@ -20,10 +20,7 @@ public class MemberRepositoryTest {
     }
 
     @AfterEach
-    void tearDown() {
-        memberRepository = null;
-    }
-
+    void tearDown() { memberRepository.clear();}
     @Test
     @DisplayName("유저 추가 테스트")
     void addMemberTest() {

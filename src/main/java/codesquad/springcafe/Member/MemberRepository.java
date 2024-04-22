@@ -27,6 +27,7 @@ public class MemberRepository {
                 .filter(member -> member.getMemberId().equals(memberId))
                 .findFirst();
     }
+    public void clear() {members.clear();}
 
     public boolean updateMemberInfo(String memberId, Member updatedMember) {
         return findById(memberId).map(member -> {

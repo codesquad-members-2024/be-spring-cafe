@@ -36,4 +36,5 @@ public class Article {
     public int getArticleNum() { return articleNum; }
 
     public void setArticleNum(int articleNum) { this.articleNum = articleNum; }
+
 }

@@ -2,6 +2,7 @@ package codesquad.springcafe.ArticleTest;
 
 import codesquad.springcafe.Article.Article;
 import codesquad.springcafe.Article.ArticleRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,9 +17,9 @@ public class ArticleRepositoryTest {
     private ArticleRepository articleRepository;
 
     @BeforeEach
-    void setUp() {
-        articleRepository = new ArticleRepository();
-    }
+    void setUp() {articleRepository = new ArticleRepository();}
+    @AfterEach
+    void tearDown() { articleRepository.clear();}
 
     @Test
     @DisplayName("새 글 추가 테스트")
