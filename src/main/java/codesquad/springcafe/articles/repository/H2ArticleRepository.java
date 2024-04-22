@@ -1,8 +1,10 @@
 package codesquad.springcafe.articles.repository;
 
 import codesquad.springcafe.articles.model.Article;
+import codesquad.springcafe.articles.model.Reply;
 import codesquad.springcafe.articles.model.dto.ArticleCreationRequest;
 import codesquad.springcafe.articles.model.dto.ArticleUpdateDto;
+import codesquad.springcafe.articles.model.dto.ReplyCreationRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,7 @@ public class H2ArticleRepository implements ArticleRepository {
     public H2ArticleRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
 
     @Override
     public void createArticle(Article article) {
@@ -108,5 +111,15 @@ public class H2ArticleRepository implements ArticleRepository {
     public void deleteArticle(long articleId) {
         String sql = "DELETE FROM ARTICLES WHERE ARTICLEID = ?";
         jdbcTemplate.update(sql, articleId);
+    }
+
+
+    @Override
+    public void createReply(Reply reply) {
+        String sql = "INSERT INTO REPLIES (ARTICLEID, USERID, COMMENT, CREATIONDATE) VALUES (?, ?, ?, ?)";
+
+        jdbcTemplate.update(sql, reply.getArticleId(), reply.getUserId(), reply.getComment(), reply.getCreationDate().toString());
+
+        logger.debug("Reply Comment : '{}' Updated At H2 Database", reply.getComment());
     }
 }

@@ -1,6 +1,8 @@
 package codesquad.springcafe.articles.repository;
 
+import codesquad.springcafe.articles.model.Reply;
 import codesquad.springcafe.articles.model.dto.ArticleUpdateDto;
+import codesquad.springcafe.articles.model.dto.ReplyCreationRequest;
 import codesquad.springcafe.db.ArticleDatabase;
 import codesquad.springcafe.articles.model.Article;
 import org.slf4j.Logger;
@@ -52,4 +54,12 @@ public class MemoryArticleRepository implements ArticleRepository {
     public void deleteArticle(long articleId) {
         articleDatabase.deleteArticle(articleId);
     }
+
+
+    @Override
+    public void createReply(Reply reply) {
+
+    }
 }
+
+

@@ -44,9 +44,9 @@
                                     <input type="hidden" name="_method" value="DELETE">
                                     <button type="submit" class="article-button delete-btn-color">삭제</button>
                                 </form>
-<!--                                <button class="article-button delete-btn-color"-->
-<!--                                        onclick=window.location.href='/articles/delete/{{article.getArticleId}}'>삭제-->
-<!--                                </button>-->
+                                <!--                                <button class="article-button delete-btn-color"-->
+                                <!--                                        onclick=window.location.href='/articles/delete/{{article.getArticleId}}'>삭제-->
+                                <!--                                </button>-->
                             </div>
                         </div>
                         <div class="article-doc">
@@ -59,9 +59,10 @@
                             <p class="post-comment-count">댓글 2개</p>
                             <div class="post-comment-slipp-articles">
 
+                                <!--댓글 시작-->
                                 <article class="comment">
                                     <div class="article-text">
-                                        <p class="comment-content comment-author-name">자바지기</p>
+                                        <p class="comment-content comment-author-name">닉네임</p>
                                         <div class="comment-content comment-doc">
                                             <p>이 글만으로는 원인 파악하기 힘들겠다. 소스 코드와 설정을 단순화해서 공유해 주면 같이 디버깅해줄 수도 있겠다.</p>
                                         </div>
@@ -71,21 +72,13 @@
                                     </div>
                                 </article>
 
-                                <article class="comment" id="answer-1405">
-                                    <div class="article-text">
-                                        <p class="comment-content comment-author-name">자바지기</p>
-                                        <div class="comment-content comment-doc">
-                                            <p>이 글만으로는 원인 파악하기 힘들겠다. 소스 코드와 설정을 단순화해서 공유해 주면 같이 디버깅해줄 수도 있겠다.</p>
-                                        </div>
-                                        <p class="comment-content comment-time">
-                                            2016-01-12 14:06
-                                        </p>
-                                    </div>
-                                </article>
+                                <!--댓글 끝-->
 
-                                <form class="submit-write" method="get" action="../index.html ">
+                                <form class="submit-write" method="post"
+                                      action="/articles/{{article.getArticleId}}/answers">
                                     <div class="comment-writer-container">
-                                        <input class="comment-writer" id="writer" name="writer" value="멋진상" readonly/>
+                                        <input class="comment-writer" id="writer" name="writer"
+                                               value="{{ sessionedUser.getUserId}}" readonly/>
                                     </div>
                                     <div class="form-group">
                                         <textarea class="form-control" id="comment" name="comment"

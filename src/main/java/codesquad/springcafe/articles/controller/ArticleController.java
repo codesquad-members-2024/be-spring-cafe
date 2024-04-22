@@ -2,6 +2,7 @@ package codesquad.springcafe.articles.controller;
 
 
 import codesquad.springcafe.articles.model.dto.ArticleUpdateDto;
+import codesquad.springcafe.articles.model.dto.ReplyCreationRequest;
 import codesquad.springcafe.articles.service.ArticleService;
 import codesquad.springcafe.articles.model.Article;
 import codesquad.springcafe.articles.model.dto.ArticleCreationRequest;
@@ -75,5 +76,12 @@ public class ArticleController {
 
         articleService.deleteArticle(articleId);
         return "redirect:/";
+    }
+
+    @PostMapping("/{articleId}/answers")
+    public String createReply(@PathVariable long articleId, ReplyCreationRequest replyCreationRequest) {
+        articleService.createReply(articleId, replyCreationRequest);
+
+        return "redirect:/articles/{articleId}";
     }
 }

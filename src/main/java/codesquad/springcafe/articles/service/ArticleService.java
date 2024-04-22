@@ -1,6 +1,8 @@
 package codesquad.springcafe.articles.service;
 
+import codesquad.springcafe.articles.model.Reply;
 import codesquad.springcafe.articles.model.dto.ArticleUpdateDto;
+import codesquad.springcafe.articles.model.dto.ReplyCreationRequest;
 import codesquad.springcafe.articles.repository.ArticleRepository;
 import codesquad.springcafe.exception.ArticleNotFoundException;
 import codesquad.springcafe.articles.model.Article;
@@ -50,5 +52,11 @@ public class ArticleService {
 
     public void deleteArticle(long articleId) {
         articleRepository.deleteArticle(articleId);
+    }
+
+    public void createReply(long articleId, ReplyCreationRequest replyCreationRequest) {
+        Reply reply = new Reply(articleId, replyCreationRequest.getWriter(), replyCreationRequest.getComment());
+
+        articleRepository.createReply(reply);
     }
 }
