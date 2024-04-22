@@ -16,7 +16,7 @@ public class ArticleRepository {
 
     public Article add(Article article) {
         articles.add(article);
-        logger.info("Added Article: {}", article);
+        logger.info("글 추가: {}", article);
         return article;
     }
 
