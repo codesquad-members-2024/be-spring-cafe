@@ -52,6 +52,6 @@ public class UserService {
     public boolean canLogin(String userId, String password) {
         return dao.findUser(userId)
                 .map(user -> user.has(password))
-                .orElseThrow(() -> new IllegalArgumentException(userId + "는 로그인 할 수 없습니다."));
+                .orElse(false);
     }
 }

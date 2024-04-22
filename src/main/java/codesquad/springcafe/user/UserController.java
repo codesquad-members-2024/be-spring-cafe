@@ -65,7 +65,7 @@ public class UserController {
     @PutMapping("/user/{userId}/form")
     public String updateUser(@PathVariable String userId, @Valid @ModelAttribute UserInfoEditRequestDto dto,
                              BindingResult bindingResult) {
-        // 개인정보 수정 폼에 이상한 입력값이 들어오면 에러
+        // 개인정보 수정 폼에 입력값이 들어오지 않으면 에러
         if (bindingResult.hasErrors()) {
             return "../static/user/updateFailed";
         }
@@ -83,5 +83,11 @@ public class UserController {
             return "redirect:/";
         }
         return "redirect:/form/login";
+    }
+
+    @GetMapping("/user/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/";
     }
 }
