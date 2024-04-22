@@ -1,10 +1,9 @@
 package codesquad.springcafe.db.user;
 
-import codesquad.springcafe.model.User;
+import codesquad.springcafe.model.user.User;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
 public interface UserDatabase {
     public void addUser(User user);

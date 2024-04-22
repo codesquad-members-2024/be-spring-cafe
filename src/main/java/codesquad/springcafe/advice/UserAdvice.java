@@ -1,6 +1,6 @@
 package codesquad.springcafe.advice;
 
-import codesquad.springcafe.model.User;
+import codesquad.springcafe.model.user.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.ui.Model;
