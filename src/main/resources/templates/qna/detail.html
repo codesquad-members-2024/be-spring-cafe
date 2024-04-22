@@ -34,7 +34,7 @@
                         <p th:utext="${#strings.replace(article.contents, lineSeparator, '&lt;br /&gt;')}"></p>
                     </div>
                     <div class="article-util">
-                        <ul class="article-util-list">
+                        <ul class="article-util-list" th:data-user-id="*{createdBy}">
                             <li>
                                 <a class="link-modify-article"
                                    href="/questions/423/form" th:href="@{|/questions/*{id}/edit|}">수정</a>
@@ -53,10 +53,11 @@
                 <div class="qna-comment">
                     <div class="qna-comment-slipp">
                         <p class="qna-comment-count"><strong th:text="${comments.size()}">0</strong>개의 의견</p>
-                        <div class="qna-comment-slipp-articles">
-                            <article th:replace="~{fragment/comment/commentsFragment :: commentList(${comments}, ${lineSeparator})}" class="article" id="answer-1405">
-                            </article>
-                            <form class="submit-write" th:action="@{|/questions/${article.id}/comments|}"
+                        <div id="comment-list" class="qna-comment-slipp-articles">
+                            <!-- 댓글이 추가되는 곳 -->
+                        </div>
+                        <div id="comment-form" class="qna-comment-slipp-articles">
+                            <form class="submit-write" th:action="@{|/api/questions/${article.id}/comments|}"
                                   th:object="${commentForm}" method="POST">
                                 <div class="form-group" style="padding:14px;">
                                     <textarea class="form-control" th:field="${commentForm.content}" placeholder="의견을 나눠 보세요"></textarea>
