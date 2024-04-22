@@ -4,6 +4,7 @@ package codesquad.springcafe.articles.controller;
 import codesquad.springcafe.articles.model.Reply;
 import codesquad.springcafe.articles.model.dto.ArticleUpdateDto;
 import codesquad.springcafe.articles.model.dto.ReplyCreationRequest;
+import codesquad.springcafe.articles.model.dto.ReplyViewDto;
 import codesquad.springcafe.articles.service.ArticleService;
 import codesquad.springcafe.articles.model.Article;
 import codesquad.springcafe.articles.model.dto.ArticleCreationRequest;
@@ -36,12 +37,16 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}")
-    public String showArticle(@PathVariable long articleId, Model model) {
+    public String showArticle(@PathVariable long articleId, HttpServletRequest request, Model model) {
         articleService.incrementPageViews(articleId);
 
         Article article = articleService.findArticleById(articleId);
 
-        ArrayList<Reply> replies = articleService.getReplies(articleId);
+        HttpSession session = request.getSession();
+        UserPreviewDto user = (UserPreviewDto) session.getAttribute("sessionedUser");
+        String sessionedUserId = user.getUserId();
+
+        ArrayList<ReplyViewDto> replies = articleService.getReplies(sessionedUserId, articleId);
 
         model.addAttribute("article", article);
 

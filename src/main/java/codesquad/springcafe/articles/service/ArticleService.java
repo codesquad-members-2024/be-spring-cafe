@@ -3,6 +3,7 @@ package codesquad.springcafe.articles.service;
 import codesquad.springcafe.articles.model.Reply;
 import codesquad.springcafe.articles.model.dto.ArticleUpdateDto;
 import codesquad.springcafe.articles.model.dto.ReplyCreationRequest;
+import codesquad.springcafe.articles.model.dto.ReplyViewDto;
 import codesquad.springcafe.articles.repository.ArticleRepository;
 import codesquad.springcafe.exception.ArticleNotFoundException;
 import codesquad.springcafe.articles.model.Article;
@@ -61,9 +62,18 @@ public class ArticleService {
         articleRepository.createReply(reply);
     }
 
-    public ArrayList<Reply> getReplies(long articleId) {
-        Optional<ArrayList<Reply>> replies = articleRepository.getReplies(articleId);
-        return replies.orElseThrow(() -> new ReplyNotFoundException("게시글을 찾을 수 없습니다."));
+    public ArrayList<ReplyViewDto> getReplies(String sessionedUserId, long articleId) {
+        ArrayList<Reply> replies = articleRepository.getReplies(articleId).orElseThrow(() -> new ReplyNotFoundException("댓글을 찾을 수 없습니다."));
+
+        ArrayList<ReplyViewDto> replyViews = new ArrayList<>(replies.size());
+
+        for (Reply reply : replies) {
+            boolean editRight = reply.getUserId().equals(sessionedUserId);
+            ReplyViewDto replyViewDto = new ReplyViewDto(reply, editRight);
+            replyViews.add(replyViewDto);
+        }
+
+        return replyViews;
     }
 
 }

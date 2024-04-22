@@ -44,9 +44,6 @@
                                     <input type="hidden" name="_method" value="DELETE">
                                     <button type="submit" class="article-button delete-btn-color">삭제</button>
                                 </form>
-                                <!--                                <button class="article-button delete-btn-color"-->
-                                <!--                                        onclick=window.location.href='/articles/delete/{{article.getArticleId}}'>삭제-->
-                                <!--                                </button>-->
                             </div>
                         </div>
                         <div class="article-doc">
@@ -59,20 +56,7 @@
                             <p class="post-comment-count">댓글 {{totalReplies}}개</p>
                             <div class="post-comment-slipp-articles">
 
-                                {{#replies}}
-                                <article class="comment">
-                                    <div class="article-text">
-                                        <p class="comment-content comment-author-name">{{getUserId}}</p>
-                                        <div class="comment-content comment-doc">
-                                            <p>{{getComment}}</p>
-                                        </div>
-                                        <p class="comment-content comment-time">
-                                            {{getCreationDate}}
-                                        </p>
-                                    </div>
-                                </article>
-                                {{/replies}}
-
+                                {{ >base/replyList}}
 
                                 <form class="submit-write" method="post"
                                       action="/articles/{{article.getArticleId}}/answers">
