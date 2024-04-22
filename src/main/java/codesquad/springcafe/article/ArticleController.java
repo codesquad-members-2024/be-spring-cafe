@@ -9,22 +9,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
-
 @Controller
 public class ArticleController {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final ArticleDao articleDao;
+    private final ArticleService service;
 
-    public ArticleController(ArticleDao articleDao) {
-        this.articleDao = articleDao;
+    public ArticleController(ArticleService service) {
+        this.service = service;
     }
 
     // 아티클 id를 가지고 해당 아티클 보여주기 없으면 기본 홈페이지 보여주기
     @GetMapping("/article/{id}")
     public String showArticle(@PathVariable int id, Model model) {
-        return articleDao.findBy(id)
+        return service.findArticle(id)
                 .map(article -> {
                     model.addAttribute("article", article);
                     return "qna/show";
@@ -35,23 +32,14 @@ public class ArticleController {
     // 아티클 등록
     @PostMapping("/article")
     public String storeArticle(@ModelAttribute ArticleCraetionDto articleCraetionDto) {
-        final String writer = articleCraetionDto.getWriter();
-        final String title = articleCraetionDto.getTitle();
-        final String contents = articleCraetionDto.getContents();
-        final LocalDateTime createAt = LocalDateTime.now();
-
-        Article article = new Article(writer, title, contents, createAt);
-
-        log.debug("들어온 게시글 : {}", article);
-        articleDao.save(article);
+        service.save(articleCraetionDto);
         return "redirect:/articles";
     }
 
     // 모든 아티클 보여주기
     @GetMapping("/articles")
     public String showArticle(Model model) {
-        Collection<Article> allArticles = articleDao.findAll();
-        model.addAttribute("articles", allArticles);
+        model.addAttribute("articles", service.getAllArticles());
         return "index";
     }
 }
