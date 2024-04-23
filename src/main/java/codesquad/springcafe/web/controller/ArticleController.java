@@ -43,7 +43,7 @@ public class ArticleController {
     }
 
     @GetMapping("/article/{articleId}")
-    public String articleDetail(@PathVariable int articleId, Model model) {
+    public String articleDetail(@PathVariable Long articleId, Model model) {
         Optional<Article> article = articleRepository.findByIndex(articleId);
         article.ifPresent(a -> model.addAttribute("article", a));
 
