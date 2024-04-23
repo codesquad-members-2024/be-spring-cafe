@@ -3,7 +3,9 @@ package codesquad.springcafe.controller;
 import codesquad.springcafe.dto.ArticleRequestDto;
 import codesquad.springcafe.exception.UnauthorizedAccessException;
 import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.Reply;
 import codesquad.springcafe.service.ArticleService;
+import codesquad.springcafe.service.ReplyService;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,19 +13,23 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+import static codesquad.springcafe.controller.UserController.LOGIN_USER_ID;
+
 @Controller
 @RequestMapping("/question")
 public class ArticleController {
 
-    public static final String LOGIN_USER_ID = "loginUserId";
     public static final String ARTICLE_ID = "articleId";
 
     private final Logger log = LoggerFactory.getLogger(ArticleController.class);
     private final ArticleService articleService;
+    private final ReplyService replyService;
 
-
-    public ArticleController(ArticleService articleService) {
+    public ArticleController(ArticleService articleService, ReplyService replyService) {
         this.articleService = articleService;
+        this.replyService = replyService;
     }
 
     @GetMapping
@@ -41,9 +47,11 @@ public class ArticleController {
 
     @GetMapping("/{articleId}")
     public String getArticle(@PathVariable Long articleId, Model model) {
+        log.debug("getArticle : {}", articleId);
         Article article = articleService.findById(articleId);
-        log.debug("getArticle : {}", article);
+        List<Reply> replies = replyService.findRepliesByArticle(articleId);
         model.addAttribute("article", article);
+        model.addAttribute("replies", replies);
         return "qna/show";
     }
 

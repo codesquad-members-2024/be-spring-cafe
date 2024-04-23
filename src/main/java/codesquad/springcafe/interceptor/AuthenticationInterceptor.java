@@ -5,9 +5,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-public class AuthenticationInterceptor implements HandlerInterceptor {
+import static codesquad.springcafe.controller.UserController.LOGIN_USER_ID;
 
-    public static final String LOGIN_USER_ID = "loginUserId";
+public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
