@@ -5,6 +5,7 @@ import codesquad.springcafe.domain.User;
 import codesquad.springcafe.service.UserService;
 import codesquad.springcafe.service.validator.UserValidator;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +29,13 @@ public class UserController {
     }
 
     @PostMapping("/user/register")
-    public String register(User user) {
-        userService.addNewUser(user);
+    public String register(User user, Model model) {
+        try {
+            userService.addNewUser(user);
+        } catch (DuplicateKeyException e) {
+            model.addAttribute("error", true);
+            return "user/register/form";
+        }
         return "redirect:/user/list";
     }
 

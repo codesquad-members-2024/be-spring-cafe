@@ -16,7 +16,6 @@ public class UserService {
     }
 
     // 유저 회원가입
-    // e) 중복되는 유저는 가입 불가
     public void addNewUser(User user) {
         userRepository.add(user);
     }
