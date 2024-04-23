@@ -13,7 +13,7 @@ public class ArticleCraetionDto {
         this.contents = contents;
     }
 
-    public Article toEntity() {
+    public Article toEntity(String writer) {
         return new Article(writer, title, contents, LocalDateTime.now());
     }
 }

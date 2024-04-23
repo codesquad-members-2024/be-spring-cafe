@@ -35,8 +35,9 @@ public class ArticleController {
 
     // 아티클 등록
     @PostMapping("/article")
-    public String storeArticle(@ModelAttribute ArticleCraetionDto articleCraetionDto) {
-        service.save(articleCraetionDto);
+    public String saveArticle(@ModelAttribute ArticleCraetionDto articleCraetionDto, HttpSession session) {
+        String writer = (String) session.getAttribute("sessionUserId");
+        service.save(articleCraetionDto, writer);
         return "redirect:/articles";
     }
 

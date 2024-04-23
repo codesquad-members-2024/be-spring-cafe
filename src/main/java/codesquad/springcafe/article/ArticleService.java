@@ -21,8 +21,8 @@ public class ArticleService {
         return articleDao.findBy(id);
     }
 
-    public void save(ArticleCraetionDto dto) {
-        Article article = dto.toEntity();
+    public void save(ArticleCraetionDto dto, String writer) {
+        Article article = dto.toEntity(writer);
         log.debug("들어온 게시글 : {}", article);
         articleDao.save(article);
     }
