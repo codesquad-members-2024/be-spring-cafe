@@ -18,16 +18,16 @@ function addAnswer(e) {
         success: function (data, status) {
             console.log(data);
             var answerTemplate = $("#comment_template").html();
-            var template = answerTemplate.format(data)
+            var template = answerTemplate.format(data);
 
-            $(".qna-comment-slipp-articles").prepend(template);
-            $("textarea[name=contents]").val("");
+            $(".qna-comment-slipp-articles").prepend(template); // 추가
+            $("textarea[name=content]").val("");  // 비운다
         }
     });
 
 }
 
-$("#delete-answer-form").on("click", deleteAnswer);
+$(document).on("click", "#delete-answer-form", deleteAnswer);
 
 function deleteAnswer(e) {
     e.preventDefault();
@@ -45,7 +45,7 @@ function deleteAnswer(e) {
         success: function (data, status) {
             console.log(data);
             if (data.valid) {
-                deleteBtn.closest("article").remove();
+                deleteBtn.closest(".article").remove();
             }
             alert(data.message);
         }

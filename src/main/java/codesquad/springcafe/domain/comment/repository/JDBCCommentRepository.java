@@ -21,7 +21,7 @@ import java.util.List;
 
 @Primary
 @Repository
-public class H2CommentRepository implements CommentRepository {
+public class JDBCCommentRepository implements CommentRepository {
 
     private final String ADD_COMMENT = "INSERT INTO comment (ARTICLEID, CREATEDAT, AUTHORID, CONTENT) VALUES (?, ?, ?, ?);";
     private final String FIND_BY_ARTICLE_ID = "SELECT * FROM comment WHERE ArticleId = ? AND STATUS = 'OPEN' ORDER BY createdAt DESC;";
@@ -30,7 +30,7 @@ public class H2CommentRepository implements CommentRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public H2CommentRepository(JdbcTemplate jdbcTemplate) {
+    public JDBCCommentRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -44,11 +44,7 @@ public class H2CommentRepository implements CommentRepository {
                 commentPostReq.content()
         };
 
-//        int[] paramTypes = new int[]{Types.INTEGER, Types.TIMESTAMP, Types.VARCHAR, Types.VARCHAR};
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
-//        jdbcTemplate.update(ADD_COMMENT, args, paramTypes, keyHolder);
-
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(ADD_COMMENT, Statement.RETURN_GENERATED_KEYS);
             for (int i = 0; i < args.length; i++) {
@@ -57,7 +53,6 @@ public class H2CommentRepository implements CommentRepository {
             return ps;
         }, keyHolder);
 
-        System.out.println(keyHolder.getKey().intValue());
         return findById(keyHolder.getKey().intValue());
     }
 

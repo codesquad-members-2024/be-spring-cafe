@@ -15,7 +15,7 @@ import java.util.List;
 
 @Repository
 @Primary
-public class H2UserRepository implements UserRepository {
+public class JDBCUserRepository implements UserRepository {
     private final String FIND_ALL_USER = "SELECT * FROM USERS";
     private final String FIND_BY_ID_USER = "SELECT * FROM USERS WHERE UserId = ?";
     private final String UPDATE_USER = "UPDATE Users SET name = ?, email = ?, password = ? WHERE userId = ?;";
@@ -24,7 +24,7 @@ public class H2UserRepository implements UserRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public H2UserRepository(JdbcTemplate jdbcTemplate) {
+    public JDBCUserRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

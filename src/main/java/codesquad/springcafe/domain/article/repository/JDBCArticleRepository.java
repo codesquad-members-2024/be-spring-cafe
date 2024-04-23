@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,12 +20,12 @@ import static java.sql.Types.VARCHAR;
 
 @Repository
 @Primary
-public class H2ArticleRepository implements ArticleRepository {
+public class JDBCArticleRepository implements ArticleRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public H2ArticleRepository(JdbcTemplate jdbcTemplate) {
+    public JDBCArticleRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
