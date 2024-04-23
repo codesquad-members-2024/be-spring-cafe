@@ -8,7 +8,8 @@
     <div class="clearfix"/>
 </form>
 
-<article class="article" id="comment_template" style="display: none">
+<div id="comment_template" style="display: none">
+<article class="article">
     <div class="article-header">
         <div class="article-header-thumb">
             <img src="https://graph.facebook.com/v2.3/1324855987/picture"
@@ -30,8 +31,9 @@
                 <a class="link-modify-article" href="/comment/{id}/form">수정</a>
             </li>
             <li>
-                <a class="link-modify-article" href="/comment/{id}/delete">삭제</a>
+                <a id="delete-answer-form" class="link-modify-article" href="/api/comment/{id}">삭제</a>
             </li>
         </ul>
     </div>
 </article>
+</div>
