@@ -191,7 +191,7 @@ label {
     width: 25%;
 }
 
-.delete-question p{
+.delete-question{
     display: flex;
     align-items: center;
     justify-content: center;

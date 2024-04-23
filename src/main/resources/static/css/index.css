@@ -122,6 +122,7 @@ td {
 .post-btn-container {
     display: flex;
     justify-content: end;
+    margin-bottom: 50px;
 }
 
 .post-write-btn:hover {

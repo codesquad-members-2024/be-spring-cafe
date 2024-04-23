@@ -165,3 +165,9 @@ li {
 body{
     font-family: NeoDunggeunMo Code;
 }
+
+input.form-control {
+    border: 1px solid #013368; /* 테두리 스타일 및 색상 설정 */
+    border-radius: 5px; /* 테두리의 모서리를 둥글게 만듭니다. */
+    padding: 5px; /* 입력란 내부 여백 설정 */
+}
