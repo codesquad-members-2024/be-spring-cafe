@@ -22,4 +22,10 @@ public interface UserDatabase {
     public void clearDatabase();
 
     public int getTotalUserNumber();
+
+    public boolean existsByUserId(String userId);
+
+    public boolean existsByEmail(String email);
+
+    public boolean existsByNickname(String nickname);
 }
