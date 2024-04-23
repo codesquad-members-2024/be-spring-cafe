@@ -100,7 +100,6 @@ public class QuestionController {
     }
 
     // 게시글 삭제
-    // TODO: 댓글 soft 삭제
     @DeleteMapping("/question/delete/{questionId}")
     public String deleteQuestion(HttpSession httpSession,
                                  @PathVariable("questionId") Long questionId) {

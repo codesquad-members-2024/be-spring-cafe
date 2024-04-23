@@ -10,9 +10,8 @@ public class QuestionResponse {
     private final Integer viewCnt;
     private final boolean isModified;
     private final boolean isMy;
-    private final boolean isUserWithdrawn;
 
-    public QuestionResponse(Long questionId, String userName, String userLoginId, String title, String content, String createdAt, Integer viewCnt, boolean isModified, boolean isMy, boolean isUserWithdrawn) {
+    public QuestionResponse(Long questionId, String userName, String userLoginId, String title, String content, String createdAt, Integer viewCnt, boolean isModified, boolean isMy) {
         this.questionId = questionId;
         this.userName = userName;
         this.userLoginId = userLoginId;
@@ -22,7 +21,6 @@ public class QuestionResponse {
         this.viewCnt = viewCnt;
         this.isModified = isModified;
         this.isMy = isMy;
-        this.isUserWithdrawn = isUserWithdrawn;
     }
 
     public Long getQuestionId() {
@@ -59,9 +57,5 @@ public class QuestionResponse {
 
     public boolean isMy() {
         return isMy;
-    }
-
-    public boolean isUserWithdrawn() {
-        return isUserWithdrawn;
     }
 }
