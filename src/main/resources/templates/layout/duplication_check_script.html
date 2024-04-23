@@ -1,0 +1,72 @@
+<script>
+    // 중복 검사 상태를 추적하는 객체
+    const verificationStatus = {
+        userId: false,
+        email: false,
+        nickname: false
+    };
+
+    // 각 input에서 '중복 검사' 버튼 누르면 실행되는 이벤트
+    function checkDuplicate(fieldId) {
+        let value = document.getElementById(fieldId).value;
+        if (!value) {
+            alert(fieldId + ' 입력칸을 채워주세요');
+            return;
+        }
+
+        // AJAX 요청 설정
+        let httpRequest = new XMLHttpRequest();
+        httpRequest.open('POST', '/users/add/duplication-check', true);
+        httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        httpRequest.onreadystatechange = function() {
+            if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+                let response = JSON.parse(httpRequest.responseText);
+                if (response.status === "pass") {
+                    alert("중복 검사를 통과하였습니다");
+                    // 중복 검사가 통과되었다면 해당 field 값 변경
+                    verificationStatus[fieldId] = true;
+                    checkAllVerified();
+                } else {
+                    alert("중복 검사를 통과하지 못했습니다. 다른 값을 입력해주세요");
+                    verificationStatus[fieldId] = false;
+                    checkAllVerified();
+                }
+            }
+        };
+
+        // 서버에 데이터 전송
+        let encodedData = 'field=' + encodeURIComponent(fieldId) + '&value=' + encodeURIComponent(value);
+        httpRequest.send(encodedData);
+    }
+
+    function setup() {
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.addEventListener('click', function(event) {
+            if (this.classList.contains('disabled')) {
+                alert('모든 필드가 채워지고, 중복 검사를 완료해야 합니다.');
+                event.preventDefault();  // 폼 제출 방지
+            }
+        });
+    }
+
+    // 모든 필드가 검증되었는지, 채워졌는지 확인
+    function checkAllVerified() {
+        const submitBtn = document.getElementById('submitBtn');
+        const passwordInput = document.getElementById('password').value;
+
+        if (verificationStatus.userId && verificationStatus.email && verificationStatus.nickname && passwordInput) {
+            submitBtn.classList.remove('disabled');
+        } else {
+            submitBtn.classList.add('disabled');
+        }
+    }
+
+
+    // 이벤트 리스너 설정
+    document.addEventListener('DOMContentLoaded', function () {
+        setup();
+        document.querySelectorAll('#registrationForm input').forEach(input => {
+            input.addEventListener('input', checkAllVerified);
+        });
+    });
+</script>
