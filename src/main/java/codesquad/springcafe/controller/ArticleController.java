@@ -23,7 +23,7 @@ public class ArticleController {
 
     @GetMapping("/form")
     public String qnaForm() {
-        return "/qna/form";
+        return "qna/form";
     }
 
     @PostMapping("/questions")
