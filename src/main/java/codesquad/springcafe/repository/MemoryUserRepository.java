@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Repository
+//@Repository
 public class MemoryUserRepository implements UserRepository{
     private static final Logger logger = LoggerFactory.getLogger(MemoryUserRepository.class);
     private final Map<String, User> store = new ConcurrentHashMap<>();
