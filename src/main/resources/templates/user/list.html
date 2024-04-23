@@ -72,7 +72,7 @@
         <li><a href="#" onclick="document.getElementById('logoutForm').submit();" role="button">
           <form action="/users/logout" method="post" id="logoutForm">로그아웃</form>
         </a></li>
-        <li><a href="/users/{userId}/form" role="button">개인정보수정</a></li>
+        <li><a href="/users/authenticate" role="button">개인정보수정</a></li>
         {{/loggedInUser}}
       </ul>
     </div>
@@ -95,7 +95,7 @@
           <td style="vertical-align: middle;"><a href="/users/{{userId}}">{{userId}}</a></td>
           <td style="vertical-align: middle;">{{name}}</td>
           <td style="vertical-align: middle;">{{email}}</td>
-          <td style="vertical-align: middle;"><a href="/users/{{userId}}/form" class="btn btn-success" role="button">수정</a></td>
+          <td style="vertical-align: middle;"><a href="/users/{{userId}}/update" class="btn btn-success" role="button">수정</a></td>
         </tr>
         {{/users}}
         </tbody>

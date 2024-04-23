@@ -47,7 +47,7 @@ public class UserService {
         return modifiedUser.toDTO();
     }
 
-    public Optional<UserInfoDTO> login(LoginDTO loginDTO) {
+    public Optional<UserInfoDTO> authenticate(LoginDTO loginDTO) {
         Optional<User> targetUser = userRepository.getById(loginDTO.getUserId());
 
         if (targetUser.isPresent() && targetUser.get().isPasswordCorrect(loginDTO.getPassword())) {

@@ -57,8 +57,30 @@ public class UserController {
         return "/user/updateForm";
     }
 
+    @GetMapping("/{userId}/update")
+    public String tryUpdateInfo(@PathVariable String userId, HttpSession session, Model model) {
+        Object loggedInUser = session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "/user/login_needed";
+        }
+        UserInfoDTO user = (UserInfoDTO) loggedInUser;
+        if (!user.getUserId().equals(userId)) {
+            return "/user/update_failed";
+        }
+        return "/user/authenticate";
+    }
+
+    @PostMapping("/{userId}/authenticate")
+    public String authenticate(@ModelAttribute("user") LoginDTO loginDTO, @PathVariable String userId) {
+        Optional<UserInfoDTO> loggedInUser = userService.authenticate(loginDTO);
+        if (loggedInUser.isEmpty()) {
+            return "/user/login_needed";
+        }
+        return "redirect:/users/" + userId + "/form";
+    }
+
     @PutMapping("/{userId}/update")
-    public String updateInfo(@PathVariable String userId, @ModelAttribute("user") UserUpdateDTO updateInfo, Model model) {
+    public String updateInfo(@ModelAttribute("user") UserUpdateDTO updateInfo, @PathVariable String userId, Model model) {
         UserInfoDTO updatedUser = userService.updateInfo(userId, updateInfo);
         model.addAttribute("user", updatedUser);
         return "redirect:/users";
@@ -66,7 +88,7 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@ModelAttribute("user") LoginDTO loginDTO, HttpSession session) {
-        Optional<UserInfoDTO> loggedInUser = userService.login(loginDTO);
+        Optional<UserInfoDTO> loggedInUser = userService.authenticate(loginDTO);
         if (loggedInUser.isEmpty()) {
             return "/user/login_failed";
         }
