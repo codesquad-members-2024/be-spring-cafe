@@ -69,6 +69,11 @@ public class MemoryArticleRepository implements ArticleRepository {
     public void deleteReply(long replyId) {
         articleDatabase.deleteReply(replyId);
     }
+
+    @Override
+    public Optional<Reply> findReplyById(long replyId) {
+        return Optional.empty();
+    }
 }
 
 

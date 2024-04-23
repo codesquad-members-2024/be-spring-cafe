@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Primary
@@ -124,6 +125,15 @@ public class H2ArticleRepository implements ArticleRepository {
     public void deleteReply(long replyId) {
         String sql = "UPDATE REPLIES SET DELETED = TRUE WHERE REPLYID = ?";
         jdbcTemplate.update(sql, replyId);
+    }
+
+    @Override
+    public Optional<Reply> findReplyById(long replyId) {
+        String sql = "SELECT REPLYID, ARTICLEID, USERID, COMMENT, CREATIONDATE FROM REPLIES WHERE REPLYID = ? AND DELETED = FALSE";
+        Object[] params = new Object[]{replyId};
+
+        List<Reply> replies = jdbcTemplate.query(sql, params, new ReplyRowMapper());
+        return Optional.of(replies.get(0));
     }
 
     private static class ArticleRowMapper implements RowMapper<Article> {

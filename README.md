@@ -52,7 +52,7 @@
 | URL                                   |        접근 권한        |
 |:--------------------------------------|:-------------------:|
 | GET / , GET /main                     |         ⭕️          |
-| GET /users                            |          ❌          |
+| GET /users                            |         ⭕️          |
 | GET /users/join                       |          ❌          |
 | GET /users/login                      |          ❌          |
 | GET /users/profile/{{userId}}         |         ⭕️          |
@@ -206,55 +206,6 @@
 
 ---
 
-## ```VO, DTO```객체의 사용 대신 ```Data```객체로 다루자!
-
-- 아직 헷갈리는 용어 대신에, ```UserData```, ```ArticleData```객체로 request값을 갖도록 수정
-
----
-
-## ```@Configuration``` 과 ```WebMvcConfigurer```을 사용하여 URL과 HTML 매핑
-
-- ```회원가입 페이지```, ```로그인 페이지```, ```게시글 작성 페이지```의 경우에는 동적으로 생성해주지 않고, 정적으로 생성해주어도 된다.
-    - 따라서, 굳이 ```Controller```을 통해 ```@GetMapping```을 해 줄 필요가 없다!
-
-### ```WebMvcConfigurer``` 인터페이스를 통해 구현
-
-- 컨트롤러 클래스 없이, 특정 view에 대한 컨트롤러를 추가할 수 있다!
-- ```addViewControllers(ViewControllerRegistry registry)```메소드를 오버라이딩!
-
-```java
-
-@Configuration
-public class MvcConfig implements WebMvcConfigurer {
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        /* Main Redirect */
-        registry.addRedirectViewController("/", "main");    // URL에 /을 입력하면 항상 /main 으로 접속된다
-        registry.addRedirectViewController("/articles", "main");    // URL에 /articles을 입력하면 /main 으로 접속된다
-
-
-        /* User */
-        registry.addViewController("/users/join").setViewName("user/form"); // 유저 회원가입
-        registry.addViewController("/users/login").setViewName("user/login");   // 유저 로그인
-
-        /* Article */
-        registry.addViewController("/articles/write").setViewName("article/form");  // 게시글 작성
-
-        /* 우선순위를 가장 높게 설정 */
-        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
-    }
-}
-
-```
-
-- ```registry.addRedirectViewController(접속 URL, 리다이렉트 URL);```
-    - 접속 URL로 접속하면, 항상 리다이렉트 URL로 접속
-- ``` registry.addViewController(접속 URL).setViewName(보여줄 HTML 경로);```
-    - 접속 URL로 접속하면,보여줄 HTML 경로를 보여준다.
-    - 이를 통해 Controller 없이도 정적 페이지 제공 가능
-
----
-
 ## Custom Exception 구현
 
 ### 사용자를 못찾은 경우 : ```UserNotFoundException```
@@ -265,32 +216,26 @@ public class MvcConfig implements WebMvcConfigurer {
 
 ### 사용자의 비밀번호가 틀린 경우 : ```PasswordMisMatchException```
 
+### 게시글 삭제를 할 수 없는 경우 : ```ArticleAccessException```
+
+### 게시글을 찾을 수 없는 경우 : ```ArticleNotFoundException```
+
+### 댓글을 찾을 수 없는 경우 : ```ReplyNotFoundException```
+
+### 사용자를 수정할 권한이 없는 경우 : ```UserAccessException```
+
 ---
 
 ## DB 모델링
 
-![img.png](docs/img/img_3.png)
-
-- Article 객체의 userId는 FK로, User 객체의 userId를 참조합니다.
-- 위와 같이 구성을 하여서, Article을 작성하려면 **무조건** userId가 있어야 합니다.
-    - 따라서, USER 테이블에 User row를 하나 추가하여 구현하였습니다.
-
-> 위와 같이 구현한 이유는, 로그인을 해야만 게시글을 쓸 수 있는 기능을 구현하고 싶어서 FK를 가지도록 구현하였습니다.
->
-> 그러다보니, User가 없는 경우에는 Article이 생성되지 않는 문제가 있어 User 를 하나 추가하여 구현하였습니다.
+![img_2.png](img_2.png)
 
 ---
 
-## Password Salt & Hash
+## Password Hash
 
-- 유저를 생성하거나, 업데이트, 비밀번호 검증을 할 때 ```String password```값을 가지고 비교롤 한다.
-- 하지만, 이러한 raw password는 탈취 위험성과 보안적인 측면에서, 보호하고 싶었다.
-    - 따라서, ```UserCredentialDto```를 사용하였으나, 결과적으로 ```String inputPassword```값으로 비교하는 것은 별 효과가 없다고 생각하였다.
-
-### Salt, Hash 기능 추가
-
-- ```User```객체가 생성될 때, Salt를 랜덤으로 생성하고, 생성된 값과 함께 ```HashedPassword```를 만들어 저장하였다.
-- 이를 통해 보안적인 측면에서 서버측에서도 사용자의 비밀번호를 알 수 없게 구현하였다.
-
+- 사용자 비밀번호를 평문으로 저장하지 않기 위해 구현
+- sha256 해시 알고리즘을 이용하여 구현
+- ```SHA256HashService```를 구현
 
 

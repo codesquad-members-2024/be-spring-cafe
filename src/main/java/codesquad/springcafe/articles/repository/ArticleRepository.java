@@ -26,5 +26,7 @@ public interface ArticleRepository {
 
     Optional<ArrayList<Reply>> getReplies(long articleId);
 
+    Optional<Reply> findReplyById(long replyId);
+
     void deleteReply(long replyId);
 }
