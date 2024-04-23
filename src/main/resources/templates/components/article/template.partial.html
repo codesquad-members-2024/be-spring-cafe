@@ -39,13 +39,14 @@
 
                 <div class="qna-comment">
                     <div class="qna-comment-slipp">
-                        <p class="qna-comment-count"><strong>{{numberOfComments}}</strong>개의 의견</p>
-                        <div class="qna-comment-slipp-articles">
+                        <p class="qna-comment-count"><strong id="numberOfComments">{{numberOfComments}}</strong>개의 의견</p>
+                        <div class="qna-comment-slipp-articles" id="comments_block">
                             {{#comments}}
                             {{> components/article/comment.partial}}
                             {{/comments}}
-                            {{> components/comment/comment_form.partial}}
+
                         </div>
+                        {{> components/comment/comment_form.partial}}
                     </div>
                 </div>
             </div>
