@@ -41,6 +41,12 @@ public class JdbcArticleRepository implements ArticleRepository {
         return Optional.ofNullable(jdbcTemplate.queryForObject(SQL, rowMapper(), id));
     }
 
+    @Override
+    public void increaseViews(long id) {
+        String SQL = "UPDATE article SET views = views+1 WHERE id = ?";
+        jdbcTemplate.update(SQL, id);
+    }
+
     private RowMapper<Article> rowMapper() {
         return (rs, rowNum) -> {
             long id = rs.getLong("id");

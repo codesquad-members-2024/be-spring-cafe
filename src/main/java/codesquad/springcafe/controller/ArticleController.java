@@ -40,11 +40,10 @@ public class ArticleController {
 
     @GetMapping("/{id}")
     public String showArticle(@PathVariable long id, Model model) {
+        articleRepository.increaseViews(id);
         Article findedArticle = articleRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글 조회 실패"));
-
         logger.debug("게시글 상세: {}", findedArticle.toDto());
-        findedArticle.increaseViews();
         model.addAttribute("article", findedArticle);
         return "article/show";
     }

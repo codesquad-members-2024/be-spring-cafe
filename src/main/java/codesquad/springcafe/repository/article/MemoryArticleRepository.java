@@ -30,6 +30,11 @@ public class MemoryArticleRepository implements ArticleRepository {
 
     @Override
     public Optional<Article> findById(long id) {
-        return findAllArticles().stream().filter(article -> article.getId()==id).findFirst();
+        return findAllArticles().stream().filter(article -> article.getId() == id).findFirst();
+    }
+
+    @Override
+    public void increaseViews(long id) {
+        articles.get((int) id).increaseViews();
     }
 }

@@ -11,4 +11,6 @@ public interface ArticleRepository {
     List<Article> findAllArticles();
 
     Optional<Article> findById(long id);
+
+    void increaseViews(long id);
 }
