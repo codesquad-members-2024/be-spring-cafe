@@ -1,10 +1,10 @@
 package codesquad.springcafe.service;
 
 import codesquad.springcafe.domain.Article;
-import codesquad.springcafe.domain.User;
 import codesquad.springcafe.dto.ArticleForm;
 import codesquad.springcafe.domain.repository.ArticleRepository;
 import codesquad.springcafe.dto.EditArticleForm;
+import codesquad.springcafe.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +25,8 @@ public class ArticleService {
         articleRepository.add(article);
     }
 
-    // e) 해당하는 게시글이 없으면 에러
     public Article getArticleDetail(String articleId) {
-        return articleRepository.getById(Long.parseLong(articleId));
+        return articleRepository.getById(Long.parseLong(articleId)).orElseThrow(() -> new NotFoundException("존재하는 게시글이 없습니다."));
     }
 
     public void update(String articleId, EditArticleForm editArticleForm) {

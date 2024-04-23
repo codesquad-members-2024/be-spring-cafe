@@ -6,10 +6,12 @@ import codesquad.springcafe.dto.EditArticleForm;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -63,9 +65,13 @@ public class H2ArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Article getById(Long articleId) {
+    public Optional<Article> getById(Long articleId) {
         final String SELECT_ARTICLE = "SELECT * FROM Articles WHERE id= ?";
-        return jdbcTemplate.queryForObject(SELECT_ARTICLE, articleRowMapper, articleId);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_ARTICLE, articleRowMapper, articleId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

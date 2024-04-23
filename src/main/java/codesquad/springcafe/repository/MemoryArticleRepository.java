@@ -5,6 +5,7 @@ import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.domain.repository.ArticleRepository;
 import codesquad.springcafe.dto.EditArticleForm;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -26,8 +27,8 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Article getById(Long id) {
-        return database.getArticle(id);
+    public Optional<Article> getById(Long id) {
+        return Optional.ofNullable(database.getArticle(id));
     }
 
     @Override
