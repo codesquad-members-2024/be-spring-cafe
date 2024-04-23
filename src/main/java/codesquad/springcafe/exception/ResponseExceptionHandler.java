@@ -14,4 +14,11 @@ public class ResponseExceptionHandler {
         ModelAndView modelAndView = new ModelAndView("error/invalidAccess");
         return modelAndView;
     }
+
+    @ExceptionHandler(value = {UserNotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    private ModelAndView userNotFoundHandler() {
+        ModelAndView modelAndView = new ModelAndView("error/404");
+        return modelAndView;
+    }
 }

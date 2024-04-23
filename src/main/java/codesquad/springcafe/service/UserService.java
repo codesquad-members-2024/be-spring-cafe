@@ -4,7 +4,9 @@ import codesquad.springcafe.domain.User;
 import codesquad.springcafe.dto.UpdateUser;
 import codesquad.springcafe.exception.InvalidAccessException;
 import codesquad.springcafe.domain.repository.UserRepository;
+import codesquad.springcafe.exception.UserNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,24 +17,18 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    // 유저 회원가입
     public void addNewUser(User user) {
         userRepository.add(user);
     }
 
-    // 모든 유저 반환
     public List<User> getAllUsers() {
         return userRepository.getAll();
     }
 
-    // 유저 찾기
-    // e) 해당되는 유저가 없으면 에러
     public User getUserById(String userId) {
-        return userRepository.getById(userId);
+        return userRepository.getById(userId).orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
     }
 
-    // 유저정보 수정
-    // e) 해당되는 유저가 없으면 에러
     public boolean editUserProfile(UpdateUser updateUser, User target) {
         String password = updateUser.getPassword();
 

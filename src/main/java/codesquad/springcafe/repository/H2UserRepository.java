@@ -3,10 +3,12 @@ package codesquad.springcafe.repository;
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.domain.repository.UserRepository;
 import java.util.List;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -37,9 +39,14 @@ public class H2UserRepository implements UserRepository {
     }
 
     @Override
-    public User getById(String userId) {
-        final String SELECT_USER = "SELECT * FROM USERS WHERE userId= ?";
-        return jdbcTemplate.queryForObject(SELECT_USER, userRowMapper, userId);
+    public Optional<User> getById(String userId) {
+        final String SELECT_USER = "SELECT * FROM USERS WHERE userId = ?";
+        try {
+            User user = jdbcTemplate.queryForObject(SELECT_USER, userRowMapper, userId);
+            return Optional.ofNullable(user);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
