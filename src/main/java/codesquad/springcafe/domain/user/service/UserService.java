@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static codesquad.springcafe.global.utils.DateUtils.convertCreatedAt;
+import static codesquad.springcafe.global.utils.DateUtils.convertLocalDateTimeToString;
 
 /**
  * UserRepository와 통신하며 회원 관련 비즈니스 로직을 구현하는 클래스
@@ -98,7 +98,7 @@ public class UserService {
     public UserListResponse getUsers() {
         List<UserResponse> users = userRepository.findAll().stream()
                 .map(u -> new UserResponse(u.getLoginId(), u.getEmail(), u.getName(),    // loginId, email, name, createAt만 매핑
-                        convertCreatedAt(u.getCreatedAt())))
+                        convertLocalDateTimeToString(u.getCreatedAt())))
                 .toList();
 
         // UserData 목록을 UserListData에 담아 반환
@@ -109,13 +109,13 @@ public class UserService {
     public UserResponse getUser(String loginId) {
         // loginId로 회원 조회
         User user = findUserByLoginId(loginId);
-        return new UserResponse(user.getLoginId(), user.getEmail(), user.getName(), convertCreatedAt(user.getCreatedAt()));
+        return new UserResponse(user.getLoginId(), user.getEmail(), user.getName(), convertLocalDateTimeToString(user.getCreatedAt()));
     }
 
     // 내 프로필 조회
     public UserResponse getMyProfile(Long userId) {
         User user = findUserById(userId);
-        return new UserResponse(user.getLoginId(), user.getEmail(), user.getName(), DateUtils.convertCreatedAt(user.getCreatedAt()));
+        return new UserResponse(user.getLoginId(), user.getEmail(), user.getName(), DateUtils.convertLocalDateTimeToString(user.getCreatedAt()));
     }
 
     // 내 프로필 수정

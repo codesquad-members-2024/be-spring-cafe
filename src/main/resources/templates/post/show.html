@@ -26,7 +26,8 @@
                                 <p th:if="${question.isUserWithdrawn()}" class="article-content" th:text = "${question.getUserName()}"></p>
                                 <a th:unless="${question.isUserWithdrawn()}" th:href = "@{'/profile/' + ${question.getUserLoginId}}" class="article-content" th:text = "${question.getUserName() + ' • ' + question.getUserLoginId()}"></a>
                                 <p class="article-content">
-                                    작성일자 : <span th:text="${question.getCreatedAt()}"></span>
+                                    <span th:if="${question.isModified()}" th:text="${question.getCreatedAt()} + ' (수정됨)'"></span>
+                                    <span th:unless="${question.isModified()}" th:text="${question.getCreatedAt()}"></span>
                                 </p>
                                 <p class="article-content">조회 <span th:text = "${question.getViewCnt()}">0</span></p>
                                 <a th:if="${question.isMy()}" class="article-content" th:href="'/question/edit/' + ${question.getQuestionId()}">수정</a>

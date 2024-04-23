@@ -69,13 +69,14 @@ public class QuestionRepositoryH2 implements QuestionRepository{
 
     @Override
     public void update(Long questionId, Question updateQuestion) {
-        final String sql = "UPDATE question SET title = ?, content = ? WHERE id = ?";
+        final String sql = "UPDATE question SET title = ?, content = ?, modified = ? WHERE id = ?";
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, updateQuestion.getTitle());
             ps.setString(2, updateQuestion.getContent());
-            ps.setLong(3, questionId);
+            ps.setBoolean(3, updateQuestion.getModified());
+            ps.setLong(4, questionId);
             return ps;
         });
 

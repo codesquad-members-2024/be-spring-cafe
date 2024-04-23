@@ -1,6 +1,5 @@
 package codesquad.springcafe.global.repository;
 
-import java.util.Collection;
 import java.util.Optional;
 
 public interface BasicRepository<T, ID> {
@@ -8,9 +7,7 @@ public interface BasicRepository<T, ID> {
 
     Optional<T> findById(ID id);
 
-    Collection<T> findAll();
+    void softDeleteById(ID id, T deletedEntity);
 
-    void softDeleteById(ID id, T entity);
-
-    void deleteAll();
+    void update(ID id, T updatedEntity);
 }

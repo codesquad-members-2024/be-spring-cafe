@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 /**
  * QuestionRepository와 통신하며 질문 게시글 관련 비즈니스 로직을 구현하는 클래스
@@ -50,8 +49,8 @@ public class QuestionService {
 
                     return new QuestionResponse(q.getId(), writer.getDeleted() ? "탈퇴한 사용자" : writer.getName(),
                             writer.getDeleted() ? "탈퇴한 사용자" : writer.getLoginId(), q.getTitle(),
-                            q.getContent(), DateUtils.convertCreatedAt(q.getCreatedAt()), q.getViewCnt(),
-                            q.getUserId().equals(userId), writer.getDeleted());
+                            q.getContent(), DateUtils.convertLocalDateTimeToString(q.getCreatedAt()), q.getViewCnt(),
+                            q.getModified(), q.getUserId().equals(userId), writer.getDeleted());
                 })
                 .toList();
 
@@ -74,8 +73,8 @@ public class QuestionService {
 
         return new QuestionResponse(question.getId(), writer.getDeleted() ? "탈퇴한 사용자" : writer.getName(),
                 writer.getDeleted() ? "탈퇴한 사용자" : writer.getLoginId(), question.getTitle(),
-                question.getContent(), DateUtils.convertCreatedAt(question.getCreatedAt()), question.getViewCnt(),
-                question.getUserId().equals(userId), writer.getDeleted());
+                question.getContent(), DateUtils.convertLocalDateTimeToString(question.getCreatedAt()), question.getViewCnt(),
+                question.getModified(), question.getUserId().equals(userId), writer.getDeleted());
     }
 
     // 수정할 게시글 조회
@@ -91,7 +90,8 @@ public class QuestionService {
         }
 
         return new QuestionResponse(questionId, user.getName(), user.getLoginId(), question.getTitle(), question.getContent(),
-                DateUtils.convertCreatedAt(question.getCreatedAt()), question.getViewCnt(), true, false);
+                DateUtils.convertLocalDateTimeToString(question.getCreatedAt()), question.getViewCnt(), question.getModified(),
+                true, false);
     }
 
     // 질문 수정
