@@ -50,11 +50,6 @@ public class CommentService {
     }
 
     public List<Comment> findByArticleId(int articleId, int page) {
-        int COMMENTS_PER_PAGE = 15;
-        int START_INDEX = COMMENTS_PER_PAGE * (page - 1);
-        int LAST_INDEX = COMMENTS_PER_PAGE * (page);
-
-        List<Comment> byArticleId = findByArticleId(articleId);
-        return byArticleId.subList(START_INDEX, Math.min(LAST_INDEX, byArticleId.size()));
+        return commentRepository.findByArticleId(articleId, page);
     }
 }

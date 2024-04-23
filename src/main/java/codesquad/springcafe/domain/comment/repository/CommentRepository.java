@@ -13,6 +13,8 @@ public interface CommentRepository {
 
     List<Comment> findByArticleId(int id);
 
+    List<Comment> findByArticleId(int articleId, int page);
+
     List<Comment> findByUserId(String id);
     void modify(int id, CommentPostReq commentPostReq);
     void delete(int id);
