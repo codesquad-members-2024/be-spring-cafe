@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="kr">
 {{>layout/header}}
+{{>layout/form_duplication_check_script}}
+<script>
+    const verificationStatus = {
+        email: false,
+        nickname: false
+    };
+</script>
 <link href="/css/user/form.css" rel="stylesheet">
 <link href="/css/user/profile.css" rel="stylesheet">
 <body>
@@ -24,16 +31,18 @@
             <div class="form-group">
                 <label for="email">이메일</label>
                 <input type="email" class="form-control" id="email" name="email" placeholder="이메일을 입력하세요">
+                <button type="button", onclick="checkDuplicate('email')">중복 검사</button>
             </div>
             <div class="form-group">
                 <label for="nickname">닉네임</label>
                 <input type="nickname" class="form-control" id="nickname" name="nickname" placeholder="닉네임을 입력하세요">
+                <button type="button", onclick="checkDuplicate('nickname')">중복 검사</button>
             </div>
             <div class="form-group">
                 <label for="password">비밀번호</label>
                 <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요">
             </div>
-            <button type="submit" class="btn btn-success clearfix pull-right">완료</button>
+            <button type="submit" id="submitBtn" class="btn btn-success clearfix pull-right disabled">완료</button>
         </form>
     </div>
 </div>
