@@ -1,11 +1,7 @@
 package codesquad.springcafe.model;
 
 import codesquad.springcafe.dto.article.ArticleInfoDTO;
-import codesquad.springcafe.dto.user.UserInfoDTO;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Article {
     private final Long index;
