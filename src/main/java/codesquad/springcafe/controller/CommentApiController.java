@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 @RestController
-@RequestMapping("/api/articles/{articleId}/detail/comments")
+@RequestMapping("/api/articles/detail/{articleId}/comments")
 public class CommentApiController {
     private final ArticleService articleService;
     private final CommentService commentService;

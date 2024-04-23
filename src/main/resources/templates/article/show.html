@@ -84,7 +84,7 @@
                                     return;
                                 }
                                 $.ajax({
-                                    url: '/api/articles/' + articleId + '/comments',
+                                    url: '/api/articles/detail/' + articleId + '/comments',
                                     type: 'POST',
                                     contentType: 'application/json',
                                     data: JSON.stringify({content: content}),
@@ -112,7 +112,7 @@
                                 var commentId = $(this).data('comment-id');
                                 var commentElement = $(this).closest('.comment'); // 삭제할 댓글의 부모 요소
                                 $.ajax({
-                                    url: `/api/articles/${articleId}/comments/${commentId}`,
+                                    url: `/api/articles/detail/${articleId}/comments/${commentId}`,
                                     type: 'DELETE',
                                     success: function () {
                                         commentElement.remove(); // DOM에서 요소 제거
