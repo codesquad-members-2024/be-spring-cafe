@@ -19,7 +19,7 @@ public class HomeController {
     @GetMapping("/index.html")
     public String home(Model model) {
         List<Article> articles = articleRepository.findAll();
-        model.addAttribute(articles.reversed());
+        model.addAttribute(articles);
         return "/index";
     }
 }
