@@ -35,4 +35,8 @@ public class ArticleService {
         Article article = dto.toEntity(id, writer);
         articleDao.update(article);
     }
+
+    public void deleteArticle(String writer, Long id) {
+        articleDao.delete(writer, id);
+    }
 }

@@ -17,6 +17,13 @@ public class Article {
         this.createAt = createAt;
     }
 
+    public Article(String writer, String title, String contents, LocalDateTime createAt) {
+        this.writer = writer;
+        this.title = title;
+        this.contents = contents;
+        this.createAt = createAt;
+    }
+
     public String getWriter() {
         return writer;
     }
@@ -35,11 +42,6 @@ public class Article {
 
     public Long getId() {
         return id;
-    }
-
-    // DB에서 꺼내올때만 사용
-    public void setId(Long id) {
-        this.id = id;
     }
 
     @Override

@@ -36,7 +36,10 @@ public class ArticleMemoryDao implements ArticleDao {
     }
 
     @Override
-    public void update(Article article) {
+    public void update(Article article) {}
+
+    @Override
+    public void delete(String writer, Long id) {
 
     }
 }

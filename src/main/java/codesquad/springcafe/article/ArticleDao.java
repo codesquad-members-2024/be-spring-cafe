@@ -12,4 +12,6 @@ public interface ArticleDao {
     Optional<Article> findBy(int id);
 
     void update(Article article);
+
+    void delete(String writer, Long id);
 }

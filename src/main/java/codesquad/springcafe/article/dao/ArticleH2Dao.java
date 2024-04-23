@@ -48,6 +48,12 @@ public class ArticleH2Dao implements ArticleDao {
                 sql, article.getTitle(), article.getContents(), article.getCreateAt(), article.getWriter(), article.getId());
     }
 
+    @Override
+    public void delete(String writer, Long id) {
+        final String sql = "DELETE FROM ARTICLE WHERE writer=? AND id=?";
+        jdbcTemplate.update(sql, writer, id);
+    }
+
     private RowMapper<Article> articleRowMapper() {
         return (rs, rowNum) -> {
             Long id = rs.getLong("id");
@@ -55,9 +61,7 @@ public class ArticleH2Dao implements ArticleDao {
             String title = rs.getString("title");
             String contents = rs.getString("contents");
             LocalDateTime createAt = rs.getTimestamp("createAt").toLocalDateTime();
-            Article article = new Article(writer, title, contents, createAt);
-            article.setId(id);
-            return article;
+            return new Article(id, writer, title, contents, createAt);
         };
     }
 
