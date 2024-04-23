@@ -63,4 +63,10 @@ public class JdbcArticleRepository implements ArticleRepository {
         jdbcTemplate.update(sql,
             modifiedArticle.getTitle(), modifiedArticle.getContent(), modifiedArticle.getIndex());
     }
+
+    @Override
+    public void remove(Long index) {
+        String sql = "DELETE FROM `article` WHERE index = ?";
+        jdbcTemplate.update(sql, index);
+    }
 }

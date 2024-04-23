@@ -52,6 +52,10 @@ public class ArticleService {
         return modifiedArticle.toDTO();
     }
 
+    public void delete(Long index) {
+        articleRepository.remove(index);
+    }
+
     private Long initTotalIndex() {
         OptionalLong maxIndex = articleRepository.getAll().stream().mapToLong(Article::getIndex).max();
         if (maxIndex.isEmpty()) {

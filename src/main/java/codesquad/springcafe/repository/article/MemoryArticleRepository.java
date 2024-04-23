@@ -33,4 +33,9 @@ public class MemoryArticleRepository implements ArticleRepository {
     public void modify(Article modifiedArticle) {
         articles.put(modifiedArticle.getIndex(), modifiedArticle);
     }
+
+    @Override
+    public void remove(Long index) {
+        articles.remove(index);
+    }
 }

@@ -71,4 +71,15 @@ public class ArticleController {
         model.addAttribute("article", updatedArticle);
         return "redirect:/";
     }
+
+    @DeleteMapping("articles/{index}")
+    public String delete(@PathVariable Long index, HttpSession session) {
+        ArticleInfoDTO article = articleService.findByIndex(index);
+        UserInfoDTO user = (UserInfoDTO) session.getAttribute("loggedInUser");
+        if (!article.isWriter(user.getUserId())) {
+            return "/article/delete_failed";
+        }
+        articleService.delete(index);
+        return "redirect:/";
+    }
 }

@@ -12,4 +12,6 @@ public interface ArticleRepository {
     List<Article> getAll();
 
     void modify(Article modifiedArticle);
+
+    void remove(Long index);
 }
