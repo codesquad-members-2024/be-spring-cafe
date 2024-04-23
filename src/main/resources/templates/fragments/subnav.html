@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <div class="navbar navbar-default" id="subnav" th:fragment="subnav">
     <div class="col-md-12">
         <div class="navbar-header">
@@ -15,14 +17,22 @@
                 <span class="icon-bar"></span>
             </button>
         </div>
+        <form id="logout-form" action="/users/logout" method="post" style="display: none;">
+            <button type="submit" style="display: none;">로그아웃</button>
+        </form>
         <div class="collapse navbar-collapse" id="navbar-collapse2">
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="/">Posts</a></li>
-                <li><a href="/users/login" role="button">로그인</a></li>
-                <li><a href="/users/create" role="button">회원가입</a></li>
-                <li><a href="/users/logout" role="button">로그아웃</a></li>
-                <li><a href="/users/profile" role="button">개인정보수정</a></li>
+                <th:block th:if="${session.loggedUser != null}">
+                    <li><a href="#" onclick="document.getElementById('logout-form').submit(); return false;" role="button">로그아웃</a></li>
+                    <li><a th:href="@{/users/{userId}/update(userId=${session.loggedUser.toString()})}" role="button">개인정보수정</a></li>
+                </th:block>
+                <th:block th:if="${session.loggedUser == null}">
+                    <li><a href="/users/login" role="button">로그인</a></li>
+                    <li><a href="/users/create" role="button">회원가입</a></li>
+                </th:block>
             </ul>
         </div>
     </div>
 </div>
+</html>
