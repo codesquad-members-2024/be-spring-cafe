@@ -1,6 +1,5 @@
 package codesquad.springcafe.repository.comment;
 
-import codesquad.springcafe.exception.db.ArticleNotFoundException;
 import codesquad.springcafe.exception.db.CommentNotFoundException;
 import codesquad.springcafe.model.Comment;
 import codesquad.springcafe.model.UpdatedComment;
@@ -113,11 +112,7 @@ public class CommentJdbcRepository implements CommentRepository {
         String sql = "UPDATE comment SET is_deleted = TRUE WHERE article_id = ?";
         Long[] params = new Long[]{articleId};
         int[] paramTypes = new int[]{Types.BIGINT};
-
-        int rowsUpdated = jdbcTemplate.update(sql, params, paramTypes);
-        if (rowsUpdated == 0) {
-            throw new ArticleNotFoundException(articleId); // 게시글을 찾지 못한 경우 예외 처리
-        }
+        jdbcTemplate.update(sql, params, paramTypes);
     }
 
     private RowMapper<Comment> commentRowMapper() {

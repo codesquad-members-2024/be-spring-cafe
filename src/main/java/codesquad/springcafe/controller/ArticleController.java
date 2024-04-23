@@ -110,7 +110,7 @@ public class ArticleController {
     }
 
     @PutMapping("/update/{articleId}")
-    public String processUpdateForm(@PathVariable long articleId,
+    public String processUpdateForm(@PathVariable long articleId, HttpSession httpSession,
                                     @Valid @ModelAttribute ArticleUpdateDto articleUpdateDto,
                                     BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -119,7 +119,8 @@ public class ArticleController {
 
         UpdatedArticle updatedArticle = articleUpdateDto.createUpdatedArticle();
         articleService.updateArticle(articleId, updatedArticle);
-        return "redirect:/";
+        httpSession.setAttribute("commentControlFlag", true);
+        return "redirect:/article/{articleId}";
     }
 
     @DeleteMapping("/update/{articleId}")
@@ -130,8 +131,8 @@ public class ArticleController {
                 .stream().filter(comment -> !comment.getUserId().equals(userId)).toList();
 
         if (otherComments.isEmpty()) { // 다른 사용자의 댓글이 없는 경우만 게시글 삭제가 가능하다.
-            articleService.deleteArticle(articleId);
             commentService.deleteArticlesComment(articleId);
+            articleService.deleteArticle(articleId);
             return "redirect:/";
         }
         return "redirect:/article/invalid-delete";
@@ -153,12 +154,12 @@ public class ArticleController {
         return "redirect:/article/{articleId}";
     }
 
-    @DeleteMapping("/{articleId}/{userId}/comments/{commentId}")
-    public String deleteComment(@PathVariable long articleId, @PathVariable String userId, @PathVariable long commentId,
-                                HttpSession httpSession) {
+    @DeleteMapping("/{articleId}/comments/{commentId}")
+    public String deleteComment(@PathVariable long commentId, HttpSession httpSession) {
         SessionUser sessionUser = (SessionUser) httpSession.getAttribute("sessionUser");
         String sessionUserId = sessionUser.getUserId();
-        if (!userId.equals(sessionUserId)) {
+        Comment comment = commentService.findCommentsById(commentId);
+        if (!comment.getUserId().equals(sessionUserId)) {
             return "redirect:/article/invalid-modify";
         }
         httpSession.setAttribute("commentControlFlag", true);

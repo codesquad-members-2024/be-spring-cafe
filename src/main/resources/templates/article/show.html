@@ -71,7 +71,7 @@
                                                th:text="${comment.getUserId()}"></p>
                                             <div>
                                                 <form method="post"
-                                                      th:action="@{/article/{articleId}/{userId}/comments/{commentId}(articleId=${articleId}, userId=${comment.getUserId()}, commentId=${comment.getId()})}"
+                                                      th:action="@{/article/{articleId}/comments/{commentId}(articleId=${articleId}, commentId=${comment.getId()})}"
                                                       style="display: inline-block;">
                                                     <button type="submit" th:if="${writer == comment.getUserId()}"
                                                             class="black-component"
