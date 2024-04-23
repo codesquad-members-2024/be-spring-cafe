@@ -57,7 +57,7 @@ public class ArticleController {
         return "qna/form";
     }
 
-    @GetMapping("/qna/{writer}/{id}/form")
+    @GetMapping("/qna/{writer}/{id}")
     public String showUpdateForm(@PathVariable String writer, @PathVariable Long id, HttpSession session, Model model) {
         String value = (String) session.getAttribute("sessionUserId");
         if (writer.equals(value)) {
