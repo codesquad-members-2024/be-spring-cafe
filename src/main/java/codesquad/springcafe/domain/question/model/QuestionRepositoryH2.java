@@ -98,7 +98,7 @@ public class QuestionRepositoryH2 implements QuestionRepository{
 
     @Override
     public Collection<Question> findAll() {
-        final String sql = "select * from question where deleted = false";
+        final String sql = "select * from question where deleted = false order by createdAt desc";
         logger.info("Find All Questions | query : {}", sql);
         return jdbcTemplate.query(sql, questionRowMapper);
     }
