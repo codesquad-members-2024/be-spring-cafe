@@ -50,16 +50,14 @@ public class UserController {
     @PostMapping("/add")
     public String createUser(@ModelAttribute UserCreationDto userCreationDto, Model model) {
         User user = userCreationDto.toEntity();
+
         String[] fields = {"userId", "email", "nickname"};
         String[] values = {user.getUserId(), user.getEmail(), user.getNickname()};
-
-        boolean isDuplicated = false;
-        for (int i = 0; i < fields.length; i++) {
-            if (isValueDuplicated(fields[i], values[i])) {
-                isDuplicated = true;
-                break;
-            }
+        if(hasDuplicationInFields(fields, values)){
+            model.addAttribute("duplicationError", true);
+            return "users/form";
         }
+
         userDatabase.addUser(user);
         return "redirect:/";
     }
@@ -106,19 +104,39 @@ public class UserController {
             @ModelAttribute UserProfileEditDto userProfileEditDto,
             Model model,
             HttpServletResponse response) throws IOException {
+
         Optional<UserCredentialDto> userCredentialDto = userDatabase.getUserCredential(userId);
         if(userCredentialDto.isEmpty()){
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return null;
         }
+
         UserCredentialDto userCredential = userCredentialDto.get();
         if(!userProfileEditDto.getPassword().equals(userCredential.getPassword())){
             model.addAttribute("user", userProfileEditDto);
             model.addAttribute("passwordError", true);
             return "users/updateForm";
         }
+
+        String[] fields = {"email", "nickname"};
+        String[] values = {userProfileEditDto.getEmail(), userProfileEditDto.getNickname()};
+        if(hasDuplicationInFields(fields, values)){
+            model.addAttribute("user", userProfileEditDto);
+            model.addAttribute("duplicationError", true);
+            return "users/updateForm";
+        }
+
         userDatabase.update(userProfileEditDto.getUserId(), userProfileEditDto);
         return "redirect:/users";
+    }
+
+    private boolean hasDuplicationInFields(String[] fields, String[] values){
+        for (int i = 0; i < fields.length; i++) {
+            if (isValueDuplicated(fields[i], values[i])) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean isValueDuplicated(String field, String value){

@@ -24,6 +24,9 @@
             </div>
         </div>
         <form name="question" class="info-container" method="POST" action="/users/detail/{{user.userId}}/update">
+            {{#duplicationError}}
+            <p style="color: crimson; text-align: center">중복된 값이 입력되었습니다. 다시 입력해주세요</p>
+            {{/duplicationError}}
             {{#passwordError}}
             <p style="color: crimson; text-align: center">비밀번호가 옳지 않습니다. 다시 입력해주세요</p>
             {{/passwordError}}
