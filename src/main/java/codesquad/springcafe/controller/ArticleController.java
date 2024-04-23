@@ -28,9 +28,9 @@ public class ArticleController {
         this.articleValidator = articleValidator;
     }
 
-    @GetMapping("/qna")
+    @GetMapping("/article")
     public String showForm() {
-        return "qna/form";
+        return "article/form";
     }
 
     /**
@@ -39,7 +39,7 @@ public class ArticleController {
      * @param session
      * @return
      */
-    @PostMapping("/qna")
+    @PostMapping("/article")
     public String register(ArticleForm articleForm, HttpSession session) {
         User user = (User) session.getAttribute("sessionUser");
         articleService.register(articleForm, user.getUserId());
@@ -64,7 +64,7 @@ public class ArticleController {
             model.addAttribute("validWriter", false);
         }
         model.addAttribute("article", articleService.getArticleDetail(articleId));
-        return "qna/show";
+        return "article/show";
     }
 
     /**
@@ -81,7 +81,7 @@ public class ArticleController {
         articleValidator.validWriter(writer, articleId);
         Article target = articleService.getArticleDetail(articleId);
         model.addAttribute("targetArticle", target);
-        return "qna/editForm";
+        return "article/editForm";
     }
 
     /**
