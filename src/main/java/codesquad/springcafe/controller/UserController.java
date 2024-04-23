@@ -7,12 +7,15 @@ import codesquad.springcafe.model.user.dto.UserProfileDto;
 import codesquad.springcafe.model.user.dto.UserProfileEditDto;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -26,8 +29,32 @@ public class UserController {
         this.userDatabase = userDatabase;
     }
 
+    @GetMapping("/add")
+    public String getUserCreationForm(){
+        return "users/form";
+    }
+
+    @PostMapping("/add/duplication-check")
+    public ResponseEntity<?> checkDuplication(@RequestParam String field, @RequestParam String value){
+        boolean isDuplicated = switch (field) {
+            case "userId" -> userDatabase.existsByUserId(value);
+            case "email" -> userDatabase.existsByEmail(value);
+            case "nickname" -> userDatabase.existsByNickname(value);
+            default -> false;
+        };
+        Map<String, String> response = new HashMap<>();
+        if (isDuplicated) {
+            response.put("status", "fail");
+            return ResponseEntity.ok(response);
+        }
+        response.put("status", "pass");
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/add")
     public String createUser(@ModelAttribute UserCreationDto userCreationDto) {
+        Optional<UserProfileDto> userProfileDtoOptional = userDatabase.findUserByUserId(userCreationDto.getUserId());
+
         userDatabase.addUser(userCreationDto.toEntity());
         return "redirect:/";
     }
