@@ -34,12 +34,12 @@ li {
     width: 80px;
     height: 30px;
     font-size: 14px;
-    background-color: black;
+    background-color: #013368;
     color: white;
 }
 
 .black-component:hover {
-    background-color: #ffcd00;
+    background-color: hotpink;
     color: black;
 }
 
@@ -127,9 +127,10 @@ li {
     width: 100px;
     height: 30px;
     font-size: 14px;
-    background-color: black;
+    background-color: #013368;
     color: white;
     margin: 20px;
+    font-family: NeoDunggeunMo Code;
 }
 
 .post-btn-container {
@@ -138,7 +139,7 @@ li {
 }
 
 .post-write-btn:hover {
-    background-color: #ffcd00;
+    background-color: hotpink;
     color: black;
 }
 
@@ -173,4 +174,8 @@ li {
 
     display: flex;
     flex-direction: column;
+}
+
+body{
+    font-family: NeoDunggeunMo Code;
 }

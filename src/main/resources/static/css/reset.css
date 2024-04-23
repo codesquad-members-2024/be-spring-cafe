@@ -10,13 +10,14 @@ table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
+time, mark, audio, video, input{
     margin: 0;
     padding: 0;
     border: 0;
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
+    font-family: NeoDunggeunMo Code;
 }
 
 a {
@@ -50,4 +51,8 @@ table {
 .background {
     width: 80vw;
     margin-left: 10vw;
+}
+
+body{
+    font-family: NeoDunggeunMo Code;
 }

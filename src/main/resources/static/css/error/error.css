@@ -30,12 +30,12 @@
     width: 80px;
     height: 30px;
     font-size: 14px;
-    background-color: black;
+    background-color: #013368;
     color: white;
 }
 
 .black-component:hover {
-    background-color: #ffcd00;
+    background-color: hotpink;
     color: black;
 }
 
@@ -47,7 +47,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: #ffcd00;
+    background-color: #013368;
     height: 148px;
     margin-bottom: 40px;
 }
@@ -85,4 +85,8 @@ p {
     text-align: left; /* 텍스트 가운데 정렬 */
     word-wrap: break-word; /* 긴 단어가 넘칠 경우 줄바꿈 */
     white-space: pre-wrap; /* 공백과 줄바꿈을 유지 */
+}
+
+body{
+    font-family: NeoDunggeunMo Code;
 }

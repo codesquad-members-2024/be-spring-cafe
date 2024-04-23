@@ -34,13 +34,13 @@ li {
     width: 80px;
     height: 30px;
     font-size: 14px;
-    background-color: black;
+    background-color: #013368;
     color: white;
 }
 
 .black-component:hover {
-    background-color: #ffcd00;
-    color: black;
+    background-color: hotpink;
+    color: black;;
 }
 
 .navbar-right {
@@ -116,7 +116,7 @@ li {
     width: 60px;
     height: 30px;
     font-size: 14px;
-    background-color: black;
+    background-color: #013368;
     color: white;
     margin: 20px;
 }
@@ -127,7 +127,7 @@ li {
 }
 
 .post-write-btn:hover {
-    background-color: #ffcd00;
+    background-color: hotpink;
     color: black;
 }
 
@@ -161,4 +161,8 @@ li {
     border: 1px solid lightgray;
     display: flex;
     flex-direction: column;
+}
+
+body{
+    font-family: NeoDunggeunMo Code;
 }
