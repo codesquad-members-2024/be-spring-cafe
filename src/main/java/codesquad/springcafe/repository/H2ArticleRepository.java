@@ -25,6 +25,7 @@ public class H2ArticleRepository implements ArticleRepository {
     private final static String CONTENTS_KEY = "contents";
     private final static String TIME_KEY = "time";
     private final static String ID_KEY = "id";
+    private final static String EDITED_KEY = "edited";
     private final Logger logger = LoggerFactory.getLogger(H2ArticleRepository.class);
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Article> articleRowMapper = (resultSet, rowNum) -> {
@@ -32,7 +33,8 @@ public class H2ArticleRepository implements ArticleRepository {
                 resultSet.getString(WRITER_KEY),
                 resultSet.getString(TITLE_KEY),
                 resultSet.getString(CONTENTS_KEY),
-                resultSet.getTimestamp(TIME_KEY).toLocalDateTime()
+                resultSet.getTimestamp(TIME_KEY).toLocalDateTime(),
+                resultSet.getBoolean(EDITED_KEY)
         );
         article.setId(resultSet.getLong(ID_KEY));
         return article;
@@ -76,8 +78,8 @@ public class H2ArticleRepository implements ArticleRepository {
 
     @Override
     public void edit(String articleId, EditArticleForm editArticleForm) {
-        final String UPDATE_ARTICLE = "UPDATE Articles SET title=?, contents=? WHERE id=?";
-        jdbcTemplate.update(UPDATE_ARTICLE, editArticleForm.getTitle(), editArticleForm.getContents(), articleId);
+        final String UPDATE_ARTICLE = "UPDATE Articles SET title=?, contents=?, edited=? WHERE id=?";
+        jdbcTemplate.update(UPDATE_ARTICLE, editArticleForm.getTitle(), editArticleForm.getContents(), true, articleId);
         logger.debug("{} 번글 수정 완료", articleId);
     }
 

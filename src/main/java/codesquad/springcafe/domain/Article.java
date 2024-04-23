@@ -9,12 +9,14 @@ public class Article {
     private String contents;
     private LocalDateTime time;
     private Long id;
+    private boolean edited;
 
-    public Article(String writer, String title, String contents, LocalDateTime time) {
+    public Article(String writer, String title, String contents, LocalDateTime time, boolean edited) {
         this.writer = writer;
         this.title = title;
         this.contents = contents;
         this.time = time;
+        this.edited = edited;
     }
 
     public String getWriter() {
@@ -55,6 +57,14 @@ public class Article {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setEdited(boolean isEdited) {
+        edited = isEdited;
+    }
+
+    public boolean getEdited() {
+        return edited;
     }
 
     @Override

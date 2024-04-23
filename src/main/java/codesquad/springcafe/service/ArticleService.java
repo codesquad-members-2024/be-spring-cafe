@@ -20,7 +20,7 @@ public class ArticleService {
     public void register(ArticleForm articleForm, String writer) {
         Article article = new Article(
                 writer, articleForm.getTitle(),
-                articleForm.getContents(), articleForm.getTime()
+                articleForm.getContents(), articleForm.getTime(), false
         );
         articleRepository.add(article);
     }

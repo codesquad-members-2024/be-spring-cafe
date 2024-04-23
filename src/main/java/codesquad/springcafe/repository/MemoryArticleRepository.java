@@ -36,6 +36,7 @@ public class MemoryArticleRepository implements ArticleRepository {
         Article target = database.getArticle(Long.parseLong(articleId));
         target.setTitle(editArticleForm.getTitle());
         target.setContents(editArticleForm.getContents());
+        target.setEdited(true);
     }
 
     @Override

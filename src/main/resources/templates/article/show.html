@@ -22,9 +22,8 @@
                         <div class="article-header-text">
                             <a th:href="@{'/user/' + ${article.getWriter()}}" class="article-author-name"
                                th:text="${article.getWriter()}"></a>
-                            <a href="/questions/413" class="article-header-time" title="퍼머링크"
-                               th:text="${article.getTime()}">
-                                <i class="icon-link"></i>
+                            <a class="article-header-time" title="time"
+                               th:text="${article.edited ? article.getTime() + ' (edited)' : article.getTime()}">
                             </a>
                         </div>
                     </div>
