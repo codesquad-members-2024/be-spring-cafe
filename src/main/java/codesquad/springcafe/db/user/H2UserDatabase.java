@@ -94,4 +94,25 @@ public class H2UserDatabase implements UserDatabase {
         return jdbcTemplate.queryForObject("select count(*) from users", Integer.class);
     }
 
+    @Override
+    public boolean existsByUserId(String userId) {
+        return existsByField("userId", userId);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return existsByField("email", email);
+    }
+
+    @Override
+    public boolean existsByNickname(String nickname) {
+        return existsByField("nickname", nickname);
+    }
+
+
+    private boolean existsByField(String fieldName, String value) {
+        String sql = "select count(*) from users where " + fieldName + " = ?";
+        Integer result = jdbcTemplate.queryForObject(sql, new Object[] {value}, Integer.class);
+        return result != null && result > 0;
+    }
 }

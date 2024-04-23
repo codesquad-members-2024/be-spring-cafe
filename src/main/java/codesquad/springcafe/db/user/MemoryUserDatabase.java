@@ -54,4 +54,19 @@ public class MemoryUserDatabase implements UserDatabase {
     public int getTotalUserNumber(){
         return userDatabase.size();
     }
+
+    @Override
+    public boolean existsByUserId(String userId) {
+        return false;
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return false;
+    }
+
+    @Override
+    public boolean existsByNickname(String nickname) {
+        return false;
+    }
 }
