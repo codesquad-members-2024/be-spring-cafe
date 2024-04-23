@@ -32,7 +32,7 @@ public class ArticleController {
     public String createQuestion(@ModelAttribute Article article, RedirectAttributes redirectAttributes) {
         if (!userDatabase.isExistUser(article.getWriter())) {
             redirectAttributes.addFlashAttribute("prevTitle", article.getTitle());
-            redirectAttributes.addAttribute("prevContent", article.getContent());
+            redirectAttributes.addFlashAttribute("prevContent", article.getContent());
             return "redirect:/qna/form";
         }
         articleDatabase.addArticle(article);

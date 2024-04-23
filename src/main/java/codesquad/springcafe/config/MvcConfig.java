@@ -1,5 +1,6 @@
 package codesquad.springcafe.config;
 
+import codesquad.springcafe.CheckAuthInterceptor;
 import codesquad.springcafe.CheckLoginInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -22,7 +23,12 @@ public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new CheckLoginInterceptor())
+                .order(1)
                 .addPathPatterns("/**")
                 .excludePathPatterns();
+
+        registry.addInterceptor(new CheckAuthInterceptor())
+                .order(2)
+                .addPathPatterns("/qna/form", "/articles/{articleId:\\d+}", "/users");
     }
 }
