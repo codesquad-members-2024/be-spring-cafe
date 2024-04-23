@@ -76,3 +76,44 @@ public void createArticle(Article article) {
     logger.debug("Article Title : '{}' Updated At H2 Database", article.getTitle());
 }
 ```
+
+- SELECT 수행 시, ```DELETED``` 값이 ```FALSE```인 것들만 가져오도록 구현
+```java
+@Override
+public Optional<ArrayList<Article>> getAllArticles() {
+    String sql = "SELECT ARTICLEID, USERID, TITLE, CONTENT, CREATIONDATE, PAGEVIEWS FROM ARTICLES WHERE DELETED = FALSE";
+    ArrayList<Article> articles = (ArrayList<Article>) jdbcTemplate.query(sql, new ArticleRowMapper());
+    Collections.reverse(articles);
+    return Optional.of(articles);
+}
+```
+
+---
+
+## 2) 게시글 삭제 경우 구현하기
+### 삭제 가능한 경우
+- 게시글에 댓글이 없는 경우
+- 게시글에 댓글이 있지만, 작성자가 게시글 작성자와 같은 경우
+
+### 삭제 불가능한 경우
+- 게시글에 작성자가 게시글 작성자와 다른 댓글이 하나라도 있는 경우
+
+## 3) 게시글 삭제 시, 댓글도 삭제되게 구현하기
+- DELETE 시, cascade 옵션을 주면 된다.
+
+- 하지만, ```DELETED``` 필드를 사용해야 한다.
+  - ```DELETE``` 명령이 아닌 ```UPDATE``` 명령이 필요
+> articleRepository.deleteArticle(articleId) 에서 article과 reply를 같이 삭제
+
+```java
+@Override
+public void deleteArticle(long articleId) {
+    String articleDeleteSql = "UPDATE ARTICLES SET DELETED = TRUE WHERE ARTICLEID = ?";
+
+    jdbcTemplate.update(articleDeleteSql, articleId);
+
+    String replyDeleteSql = "UPDATE REPLIES SET DELETED = TRUE WHERE ARTICLEID = ?";
+
+    jdbcTemplate.update(replyDeleteSql, articleId);
+}
+```

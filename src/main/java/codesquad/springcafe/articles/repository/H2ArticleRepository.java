@@ -92,15 +92,19 @@ public class H2ArticleRepository implements ArticleRepository {
 
     @Override
     public void deleteArticle(long articleId) {
-        String sql = "UPDATE ARTICLES SET DELETED = TRUE WHERE ARTICLEID = ?";
+        String articleDeleteSql = "UPDATE ARTICLES SET DELETED = TRUE WHERE ARTICLEID = ?";
 
-        jdbcTemplate.update(sql, articleId);
+        jdbcTemplate.update(articleDeleteSql, articleId);
+
+        String replyDeleteSql = "UPDATE REPLIES SET DELETED = TRUE WHERE ARTICLEID = ?";
+
+        jdbcTemplate.update(replyDeleteSql, articleId);
     }
 
 
     @Override
     public void createReply(Reply reply) {
-        String sql = "INSERT INTO REPLIES (ARTICLEID, USERID, COMMENT, CREATIONDATE) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO REPLIES (ARTICLEID, USERID, COMMENT, CREATIONDATE, DELETED) VALUES (?, ?, ?, ?, false)";
 
         jdbcTemplate.update(sql, reply.getArticleId(), reply.getUserId(), reply.getComment(), reply.getCreationDate().toString());
 
@@ -109,7 +113,7 @@ public class H2ArticleRepository implements ArticleRepository {
 
     @Override
     public Optional<ArrayList<Reply>> getReplies(long articleId) {
-        String sql = "SELECT REPLYID, ARTICLEID, USERID, COMMENT, CREATIONDATE FROM REPLIES WHERE ARTICLEID = ?";
+        String sql = "SELECT REPLYID, ARTICLEID, USERID, COMMENT, CREATIONDATE FROM REPLIES WHERE ARTICLEID = ? AND DELETED = FALSE";
         Object[] params = new Object[]{articleId};
 
         ArrayList<Reply> replies = (ArrayList<Reply>) jdbcTemplate.query(sql, params, new ReplyRowMapper());
@@ -118,7 +122,7 @@ public class H2ArticleRepository implements ArticleRepository {
 
     @Override
     public void deleteReply(long replyId) {
-        String sql = "DELETE FROM REPLIES WHERE REPLYID = ?";
+        String sql = "UPDATE REPLIES SET DELETED = TRUE WHERE REPLYID = ?";
         jdbcTemplate.update(sql, replyId);
     }
 

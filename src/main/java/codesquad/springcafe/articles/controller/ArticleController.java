@@ -8,6 +8,7 @@ import codesquad.springcafe.articles.model.dto.ReplyViewDto;
 import codesquad.springcafe.articles.service.ArticleService;
 import codesquad.springcafe.articles.model.Article;
 import codesquad.springcafe.articles.model.dto.ArticleCreationRequest;
+import codesquad.springcafe.exception.ArticleAccessException;
 import codesquad.springcafe.exception.UserAccessException;
 import codesquad.springcafe.users.model.dto.UserPreviewDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -78,7 +79,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/delete/{articleId}")
-    public String deleteArticle(@PathVariable long articleId, HttpServletRequest request) {
+    public String deleteArticle(@PathVariable long articleId, HttpServletRequest request, Model model) {
         Article article = articleService.findArticleById(articleId);
 
         HttpSession session = request.getSession();
@@ -89,6 +90,7 @@ public class ArticleController {
         }
 
         articleService.deleteArticle(articleId);
+
         return "redirect:/";
     }
 

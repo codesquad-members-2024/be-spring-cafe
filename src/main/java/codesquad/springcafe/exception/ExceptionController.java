@@ -47,4 +47,11 @@ public class ExceptionController {
         return "error/error_page";
     }
 
+    @ExceptionHandler(ArticleAccessException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public String handleArticleAccessException(ArticleAccessException e, Model model) {
+        logger.error(e.getClass().getSimpleName() + " : " + e.getMessage());
+        model.addAttribute("errorMsg", e.getMessage());
+        return "error/error_page";
+    }
 }
