@@ -18,6 +18,9 @@
         <header class="post-header">
             <p class="title">회원가입</p>
         </header>
+        {{#duplicationError}}
+        <p style="color: crimson; text-align: center">중복된 값이 입력되었습니다. 다시 입력해주세요</p>
+        {{/duplicationError}}
         <form name="question" id="registrationForm" class="info-container" method="post" action="/users/add">
             <div class="form-group">
                 <label for="userId">아이디</label>
