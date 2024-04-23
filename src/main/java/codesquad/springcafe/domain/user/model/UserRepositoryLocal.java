@@ -22,14 +22,30 @@ public class UserRepositoryLocal implements UserRepository{
         return user;
     }
 
+    @Override
     public Optional<User> findById(Long id) {
-        return Optional.ofNullable(users.get(id));
+        return findById(id, null);
+    }
+
+    @Override
+    public Optional<User> findById(Long id, Boolean deleted) {
+        User user = users.get(id);
+        if (user != null) {
+            return user.getDeleted().equals(deleted) ? Optional.of(user) : Optional.empty();
+        }
+        return Optional.empty();
     }
 
     @Override
     public Optional<User> findByLoginId(String loginId) {
+        return findByLoginId(loginId, null);
+    }
+
+    @Override
+    public Optional<User> findByLoginId(String loginId, Boolean deleted) {
         List<User> findUsers = users.values().stream()
                 .filter(u -> u.getLoginId().equals(loginId))
+                .filter(u -> deleted == null || u.getDeleted().equals(deleted))
                 .toList();
 
         // TODO : 예외 클래스 생성
@@ -41,7 +57,7 @@ public class UserRepositoryLocal implements UserRepository{
     }
 
     public Collection<User> findAll() {
-        return users.values();
+        return users.values().stream().filter(u -> u.getDeleted().equals(false)).toList();
     }
 
     public void deleteAll() {
@@ -50,7 +66,8 @@ public class UserRepositoryLocal implements UserRepository{
 
     @Override
     public Boolean existsById(Long userId) {
-        return users.containsKey(userId);
+        User user = users.get(userId);
+        return user != null && user.getDeleted().equals(false);
     }
 
     @Override

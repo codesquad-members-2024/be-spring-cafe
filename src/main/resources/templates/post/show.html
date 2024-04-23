@@ -23,7 +23,8 @@
                     <article class="article">
                         <div class="article-header">
                             <div class="article-header-text">
-                                <p class="article-content" th:text = "${question.getUserName() + ' • ' + question.getUserLoginId()}"></p>
+                                <p th:if="${question.isUserWithdrawn()}" class="article-content" th:text = "${question.getUserName()}"></p>
+                                <a th:unless="${question.isUserWithdrawn()}" th:href = "@{'/profile/' + ${question.getUserLoginId}}" class="article-content" th:text = "${question.getUserName() + ' • ' + question.getUserLoginId()}"></a>
                                 <p class="article-content">
                                     작성일자 : <span th:text="${question.getCreatedAt()}"></span>
                                 </p>
@@ -32,8 +33,8 @@
                                 <a th:if="${question.isMy()}" class="article-content" th:href="'/question/delete/' + ${question.getQuestionId()}">삭제</a>
                             </div>
                         </div>
-                        <div class="article-doc">
-                            <pre class="" th:text="${question.getContent()}"></pre>
+                        <div>
+                            <p class="article-doc" th:text="${question.getContent()}"></p>
                         </div>
                     </article>
 

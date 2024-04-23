@@ -54,10 +54,9 @@ public class UserController {
 
     // 로그아웃
     @PostMapping("/user/logout")
-    public String logout(HttpSession httpSession,
-                         @RequestParam("loginId") String loginId) {
+    public String logout(HttpSession httpSession) {
         Object sessionUserId = httpSession.getAttribute("userId");
-        if (!userService.logout(loginId, sessionUserId)) {
+        if (!userService.logout(sessionUserId)) {
             throw new IllegalStateException("로그아웃 할 수 없습니다.");  // TODO : exception 추가
         }
 

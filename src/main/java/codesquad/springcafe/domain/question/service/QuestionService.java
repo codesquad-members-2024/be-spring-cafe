@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * QuestionRepository와 통신하며 질문 게시글 관련 비즈니스 로직을 구현하는 클래스
@@ -45,10 +46,12 @@ public class QuestionService {
     public QuestionListResponse getQuestions(Object userId) {
         List<QuestionResponse> questions = questionRepository.findAll().stream()
                 .map(q -> {
-                    User writer = userRepository.findById(q.getUserId()).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
-                    return new QuestionResponse(q.getId(), writer.getName(), writer.getLoginId(), q.getTitle(),
+                    User writer = userRepository.findById(q.getUserId()).orElseThrow(() -> new NoSuchElementException(("존재하지 않는 사용자입니다.")));
+
+                    return new QuestionResponse(q.getId(), writer.getDeleted() ? "탈퇴한 사용자" : writer.getName(),
+                            writer.getDeleted() ? "탈퇴한 사용자" : writer.getLoginId(), q.getTitle(),
                             q.getContent(), DateUtils.convertCreatedAt(q.getCreatedAt()), q.getViewCnt(),
-                            q.getUserId().equals(userId));
+                            q.getUserId().equals(userId), writer.getDeleted());
                 })
                 .toList();
 
@@ -69,15 +72,16 @@ public class QuestionService {
         question.viewCntUp();
         questionRepository.viewCntUp(questionId, question);
 
-        return new QuestionResponse(question.getId(), writer.getName(), writer.getLoginId(), question.getTitle(), question.getContent(),
-                DateUtils.convertCreatedAt(question.getCreatedAt()), question.getViewCnt(),
-                question.getUserId().equals(userId));
+        return new QuestionResponse(question.getId(), writer.getDeleted() ? "탈퇴한 사용자" : writer.getName(),
+                writer.getDeleted() ? "탈퇴한 사용자" : writer.getLoginId(), question.getTitle(),
+                question.getContent(), DateUtils.convertCreatedAt(question.getCreatedAt()), question.getViewCnt(),
+                question.getUserId().equals(userId), writer.getDeleted());
     }
 
     // 수정할 게시글 조회
     public QuestionResponse getEditQuestion(Long userId, Long questionId) {
         // 사용자 인증
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        User user = userRepository.findById(userId, false).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
 
         // 질문 게시글 조회
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문 게시글입니다."));
@@ -87,12 +91,12 @@ public class QuestionService {
         }
 
         return new QuestionResponse(questionId, user.getName(), user.getLoginId(), question.getTitle(), question.getContent(),
-                DateUtils.convertCreatedAt(question.getCreatedAt()), question.getViewCnt(), true);
+                DateUtils.convertCreatedAt(question.getCreatedAt()), question.getViewCnt(), true, false);
     }
 
     // 질문 수정
     public void editQuestion(Long userId, Long questionId, QuestionRequest questionUpdateRequest) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        User user = userRepository.findById(userId, false).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문 게시글입니다."));
 
         if (!question.getUserId().equals(user.getId())) {
@@ -106,7 +110,7 @@ public class QuestionService {
     // 삭제할 게시글 조회
     public Long getDeleteQuestion(Long userId, Long questionId) {
         // 사용자 인증
-        userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        userRepository.findById(userId, false).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
 
         // 질문 게시글 조회
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문 게시글입니다."));
@@ -120,7 +124,7 @@ public class QuestionService {
 
     // 질문 삭제
     public void deleteQuestion(Long userId, Long questionId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        User user = userRepository.findById(userId, false).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문 게시글입니다."));
 
         if (!question.getUserId().equals(user.getId())) {
@@ -128,6 +132,6 @@ public class QuestionService {
         }
 
         Question deleteQuestion = question.delete();
-        questionRepository.softDeleteById(userId, deleteQuestion);
+        questionRepository.softDeleteById(questionId, deleteQuestion);
     }
 }

@@ -59,13 +59,12 @@ public class UserService {
     }
 
     // 로그아웃
-    public boolean logout(String loginId, Object sessionUserId) {
+    public boolean logout(Object sessionUserId) {
         if(sessionUserId == null) return true;
 
-        User user = findUserByLoginId(loginId);
         Long suid = (Long) sessionUserId;
 
-        return user.getId().equals(suid) && userRepository.existsById(suid);
+        return userRepository.existsById(suid);
     }
 
     // 회원 탈퇴 페이지 접근
@@ -127,12 +126,12 @@ public class UserService {
     }
 
     private User findUserByLoginId(String loginId) {
-        return userRepository.findByLoginId(loginId)
+        return userRepository.findByLoginId(loginId, false)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
     }
 
     private User findUserById(Long id) {
-        return userRepository.findById(id)
+        return userRepository.findById(id, false)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
     }
 }

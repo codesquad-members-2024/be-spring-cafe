@@ -54,7 +54,12 @@ public class UserRepositoryH2 implements UserRepository{
 
     @Override
     public Optional<User> findById(Long userId) {
-        final String sql = "select * from users where id = ? and deleted = false";
+        return findById(userId, null);
+    }
+
+    @Override
+    public Optional<User> findById(Long userId, Boolean deleted) {
+        final String sql = "select * from users where id = ?" + (deleted == null ? "" : " and deleted = " + deleted);
         List<User> users = jdbcTemplate.query(sql, userRowMapper, userId);
 
         if (users.size() > 1) {
@@ -75,7 +80,12 @@ public class UserRepositoryH2 implements UserRepository{
 
     @Override
     public Optional<User> findByLoginId(String loginId) {
-        final String sql = "select * from users where loginId = ? and deleted = false";
+        return findByLoginId(loginId, null);
+    }
+
+    @Override
+    public Optional<User> findByLoginId(String loginId, Boolean deleted) {
+        final String sql = "select * from users where loginId = ?" + (deleted == null ? "" : " and deleted = " + deleted);
         List<User> users = jdbcTemplate.query(sql, userRowMapper, loginId);
 
         if (users.size() > 1) {
@@ -118,14 +128,12 @@ public class UserRepositoryH2 implements UserRepository{
 
     @Override
     public void softDeleteById(Long userId, User withdrawUser) {
-        final String sql = "UPDATE users SET email = ?, password = ?, deleted = ? where id = ?";
+        final String sql = "UPDATE users SET deleted = ? where id = ?";
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, withdrawUser.getEmail());
-            ps.setString(2, withdrawUser.getPassword());
-            ps.setBoolean(3, withdrawUser.getDeleted());
-            ps.setLong(4, userId);
+            ps.setBoolean(1, withdrawUser.getDeleted());
+            ps.setLong(2, userId);
             return ps;
         });
 

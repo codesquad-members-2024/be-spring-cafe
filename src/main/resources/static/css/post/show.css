@@ -55,6 +55,7 @@ li {
 .article-doc {
     line-height: 30px;
     overflow-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .post-title {

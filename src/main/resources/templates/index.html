@@ -34,7 +34,10 @@
                     <tbody>
                     <tr th:each="question : ${questions}">
                         <td><a th:href="@{'/question/' + ${question.getQuestionId()}}" th:text="${question.getTitle()}"></a></td>
-                        <td><a th:href="@{'/profile/' + ${question.getUserLoginId}}" th:text="${question.getUserLoginId()}"></a></td>
+                        <td>
+                            <p th:if="${question.isUserWithdrawn()}" th:text="${question.getUserLoginId()}"></p>
+                            <a th:unless="${question.isUserWithdrawn()}" th:href="@{'/profile/' + ${question.getUserLoginId}}" th:text="${question.getUserLoginId()}"></a>
+                        </td>
                         <td th:text="${question.getCreatedAt()}"></td>
                         <td th:text="${question.getViewCnt()}"></td>
                     </tr>
