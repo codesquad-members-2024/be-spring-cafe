@@ -1,8 +1,8 @@
 package codesquad.springcafe.repository;
 
-import codesquad.springcafe.exception.ArticleNotFountException;
-import codesquad.springcafe.model.Article;
+import codesquad.springcafe.exception.ReplyNotFound;
 import codesquad.springcafe.model.Reply;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -49,7 +49,7 @@ public class ReplyJdbcRepository implements ReplyRepository {
             Reply reply = jdbcTemplate.queryForObject(sql, replyRowMapper(), replyId);
             return Optional.ofNullable(reply);
         } catch (EmptyResultDataAccessException e) {
-            throw new ArticleNotFountException();
+            return Optional.empty();
         }
     }
 
@@ -60,13 +60,18 @@ public class ReplyJdbcRepository implements ReplyRepository {
 
         return replies.stream()
                 .filter(reply -> reply.getArticleId().equals(articleId))
+                .filter(reply -> !reply.isDeleted())
                 .toList();
     }
 
     @Override
     public void delete(Long replyId) {
-        String sql = "DELETE FROM reply WHERE reply_id = ?";
-        jdbcTemplate.update(sql, replyId);
+        String sql = "UPDATE reply SET deleted = ? WHERE reply_id = ?";
+        try {
+            jdbcTemplate.update(sql, true, replyId);
+        } catch (DataAccessException e) {
+            throw new ReplyNotFound();
+        }
     }
 
     private RowMapper<Reply> replyRowMapper() {

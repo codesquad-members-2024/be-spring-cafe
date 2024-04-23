@@ -52,8 +52,8 @@
               </article>
 
               <div class="qna-comment">
-                  <div class="qna-comment-slipp" th:each="reply : ${replies}">
-                      <p class="qna-comment-count"><strong th:text="${replyStat.count}">number of comments</strong>개의 의견</p>
+                  <p class="qna-comment-count"><strong th:text="${replies.size()}">number of comments</strong>개의 의견</p>
+                    <div class="qna-comment-slipp" th:each="reply : ${replies}">
                       <div class="qna-comment-slipp-articles">
                           <article class="article">
                               <div class="article-header">
@@ -75,12 +75,12 @@
                               <div class="article-util">
                                   <ul class="article-util-list">
                                       <li>
-                                          <a class="link-modify-article" th:href="@{/questions/{questionId}/answers/{replyId}/form(questionId = ${articleId}, replyId = ${reply.replyId})}">
+                                          <a class="link-modify-article" th:href="@{/question/{questionId}/answers/{replyId}/form(questionId = ${articleId}, replyId = ${reply.replyId})}">
                                               수정
                                           </a>
                                       </li>
                                       <li>
-                                          <form class="delete-answer-form" th:action="@{/questions/{questionId}/answers/{replyId}(questionId = ${articleId}, replyId = ${reply.replyId})}" th:method="DELETE">
+                                          <form class="delete-answer-form" th:action="@{/question/{questionId}/answers/{replyId}(questionId = ${articleId}, replyId = ${reply.replyId})}" th:method="DELETE">
                                               <button type="submit" class="delete-answer-button">삭제</button>
                                           </form>
                                       </li>
@@ -124,8 +124,7 @@
 			</li>
 			<li>
 				<form class="delete-answer-form" action="/api/questions/{3}/answers/{4}" method="POST">
-					<input type="hidden" name="_method" value="DELETE">
-                     <button type="submit" class="delete-answer-button">삭제</button>
+                    <button type="submit" class="delete-answer-button">삭제</button>
 				</form>
 			</li>
 		</ul>
