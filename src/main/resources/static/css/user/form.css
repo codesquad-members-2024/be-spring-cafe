@@ -183,3 +183,9 @@ li {
 label {
     width: 25%;
 }
+
+ .disabled {
+     background-color: #ccc;
+     color: #666;
+     cursor: not-allowed;
+ }
