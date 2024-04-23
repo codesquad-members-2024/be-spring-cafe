@@ -1,11 +1,4 @@
 <script>
-    // 중복 검사 상태를 추적하는 객체
-    const verificationStatus = {
-        userId: false,
-        email: false,
-        nickname: false
-    };
-
     // 각 input에서 '중복 검사' 버튼 누르면 실행되는 이벤트
     function checkDuplicate(fieldId) {
         let value = document.getElementById(fieldId).value;
@@ -54,7 +47,10 @@
         const submitBtn = document.getElementById('submitBtn');
         const passwordInput = document.getElementById('password').value;
 
-        if (verificationStatus.userId && verificationStatus.email && verificationStatus.nickname && passwordInput) {
+        // 모든 필드 검증 상태와 비밀번호 입력을 확인
+        const allVerified = Object.values(verificationStatus).every(status => status) && passwordInput;
+
+        if (allVerified) {
             submitBtn.classList.remove('disabled');
         } else {
             submitBtn.classList.add('disabled');
