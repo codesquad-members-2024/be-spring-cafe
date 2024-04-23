@@ -41,6 +41,12 @@ public class ArticleH2Dao implements ArticleDao {
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, articleRowMapper(), id));
     }
 
+    @Override
+    public void update(Article article) {
+        final String sql = "UPDATE ARTICLE SET title=?, contents=?, createAt=? WHERE writer=?";
+        jdbcTemplate.update(sql, article.getTitle(), article.getContents(), article.getCreateAt(), article.getWriter());
+    }
+
     private RowMapper<Article> articleRowMapper() {
         return (rs, rowNum) -> {
             Long id = rs.getLong("id");

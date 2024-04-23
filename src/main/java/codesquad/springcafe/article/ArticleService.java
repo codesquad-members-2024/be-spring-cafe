@@ -1,5 +1,6 @@
 package codesquad.springcafe.article;
 
+import codesquad.springcafe.article.dto.ArticleUpdateRequestDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,10 @@ public class ArticleService {
 
     public Collection<Article> getAllArticles() {
         return articleDao.findAll();
+    }
+
+    public void updateArticle(String writer, ArticleUpdateRequestDto dto) {
+        Article article = dto.toEntity(writer);
+        articleDao.update(article);
     }
 }

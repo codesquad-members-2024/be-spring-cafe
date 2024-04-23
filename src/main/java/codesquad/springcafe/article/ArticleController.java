@@ -1,14 +1,13 @@
 package codesquad.springcafe.article;
 
+import codesquad.springcafe.article.dto.ArticleUpdateRequestDto;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class ArticleController {
@@ -55,5 +54,20 @@ public class ArticleController {
             return "redirect:/form/login";
         }
         return "qna/form";
+    }
+
+    @GetMapping("/qna/{writer}/form")
+    public String showUpdateForm(@PathVariable String writer, HttpSession session) {
+        String value = (String) session.getAttribute("sessionUserId");
+        if (writer.equals(value)) {
+            return "qna/updateForm";
+        }
+        return "qna/accessFailed";
+    }
+
+    @PutMapping("/qna/{writer}")
+    public String updateArticle(@PathVariable String writer, @Valid ArticleUpdateRequestDto dto) {
+        service.updateArticle(writer, dto);
+        return "redirect:/";
     }
 }

@@ -34,4 +34,9 @@ public class ArticleMemoryDao implements ArticleDao {
     public Optional<Article> findBy(int id) {
         return Optional.ofNullable(articles.get(id));
     }
+
+    @Override
+    public void update(Article article) {
+
+    }
 }
