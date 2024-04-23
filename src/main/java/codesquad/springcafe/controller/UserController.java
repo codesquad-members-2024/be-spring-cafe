@@ -1,6 +1,7 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.db.user.UserDatabase;
+import codesquad.springcafe.model.user.User;
 import codesquad.springcafe.model.user.dto.UserCreationDto;
 import codesquad.springcafe.model.user.dto.UserCredentialDto;
 import codesquad.springcafe.model.user.dto.UserProfileDto;
@@ -36,12 +37,7 @@ public class UserController {
 
     @PostMapping("/add/duplication-check")
     public ResponseEntity<?> checkDuplication(@RequestParam String field, @RequestParam String value){
-        boolean isDuplicated = switch (field) {
-            case "userId" -> userDatabase.existsByUserId(value);
-            case "email" -> userDatabase.existsByEmail(value);
-            case "nickname" -> userDatabase.existsByNickname(value);
-            default -> false;
-        };
+        boolean isDuplicated = isValueDuplicated(field, value);
         Map<String, String> response = new HashMap<>();
         if (isDuplicated) {
             response.put("status", "fail");
@@ -52,10 +48,19 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public String createUser(@ModelAttribute UserCreationDto userCreationDto) {
-        Optional<UserProfileDto> userProfileDtoOptional = userDatabase.findUserByUserId(userCreationDto.getUserId());
+    public String createUser(@ModelAttribute UserCreationDto userCreationDto, Model model) {
+        User user = userCreationDto.toEntity();
+        String[] fields = {"userId", "email", "nickname"};
+        String[] values = {user.getUserId(), user.getEmail(), user.getNickname()};
 
-        userDatabase.addUser(userCreationDto.toEntity());
+        boolean isDuplicated = false;
+        for (int i = 0; i < fields.length; i++) {
+            if (isValueDuplicated(fields[i], values[i])) {
+                isDuplicated = true;
+                break;
+            }
+        }
+        userDatabase.addUser(user);
         return "redirect:/";
     }
 
@@ -116,4 +121,12 @@ public class UserController {
         return "redirect:/users";
     }
 
+    private boolean isValueDuplicated(String field, String value){
+        return switch (field) {
+            case "userId" -> userDatabase.existsByUserId(value);
+            case "email" -> userDatabase.existsByEmail(value);
+            case "nickname" -> userDatabase.existsByNickname(value);
+            default -> false;
+        };
+    }
 }
