@@ -25,8 +25,8 @@ public class UserController {
     @PostMapping("/user")
     public String join(@Valid @ModelAttribute UserJoinRequest userJoinRequest,
                        HttpSession httpSession) {
-        Long userId = userService.join(userJoinRequest);
-        setSession(httpSession, userId);
+        UserCredentials userCredentials = userService.join(userJoinRequest);
+        setSession(httpSession, userCredentials);
 
         return "redirect:/welcome";
     }
@@ -34,7 +34,7 @@ public class UserController {
     // 환영 페이지 (현재 로그인한 유저에 대한 정보 표시)
     @GetMapping("/welcome")
     public String welcome(HttpSession session, Model model) {
-        Long userId = getSessionUserId(session);
+        Long userId = getUserCredentials(session).getUserId();
         UserResponse myProfile = userService.getMyProfile(userId);
 
         model.addAttribute("user", myProfile);
@@ -46,8 +46,8 @@ public class UserController {
     @PostMapping("/user/login")
     public String login(@Valid @ModelAttribute UserLoginRequest userLoginRequest,
                         HttpSession httpSession) {
-        Long userId = userService.login(userLoginRequest);
-        setSession(httpSession, userId);
+        UserCredentials userCredentials = userService.login(userLoginRequest);
+        setSession(httpSession, userCredentials);
 
         return "redirect:/";
     }
@@ -70,7 +70,7 @@ public class UserController {
                                   @PathVariable("loginId") String loginId,
                                   @RequestHeader("referer") String referer,
                                   Model model) {
-        Long sessionUserId = getSessionUserId(httpSession);
+        Long sessionUserId = getUserCredentials(httpSession).getUserId();
 
         userService.getWithdrawForm(loginId, sessionUserId);
         model.addAttribute("loginId", loginId);
@@ -84,7 +84,7 @@ public class UserController {
     public String withdraw(HttpSession httpSession,
                            @PathVariable("loginId") String userId) {
 
-        Long sessionUserId = getSessionUserId(httpSession);
+        Long sessionUserId = getUserCredentials(httpSession).getUserId();
         if(!userService.withdraw(userId, sessionUserId)){
             throw new IllegalStateException("탈퇴할 수 없습니다.");
         }
@@ -117,7 +117,7 @@ public class UserController {
     // 마이페이지 조회
     @GetMapping("/profile/my")
     public String getMyProfile(HttpSession httpSession, Model model) {
-        Long userId = getSessionUserId(httpSession);
+        Long userId = getUserCredentials(httpSession).getUserId();
         UserResponse userResponse = userService.getMyProfile(userId);
 
         model.addAttribute("user", userResponse);
@@ -129,7 +129,7 @@ public class UserController {
     @GetMapping("/profile/my/edit")
     public String getProfileEditForm(HttpSession httpSession,
                                      Model model) {
-        Long userId = getSessionUserId(httpSession);
+        Long userId = getUserCredentials(httpSession).getUserId();
 
         UserResponse userInfo = userService.getMyProfile(userId);
         model.addAttribute("user", userInfo);
@@ -141,24 +141,24 @@ public class UserController {
     @PutMapping("/profile/my/edit")
     public String updateMyProfile(HttpSession httpSession,
                                  @Valid @ModelAttribute UserUpdateRequest userUpdateRequest) {
-        Long userId = getSessionUserId(httpSession);
+        Long userId = getUserCredentials(httpSession).getUserId();
 
         userService.updateMyProfile(userId, userUpdateRequest);
 
         return "redirect:/profile/my";
     }
 
-    private void setSession(HttpSession httpSession, Long userId) {
-        httpSession.setAttribute("userId", userId);
+    private void setSession(HttpSession httpSession, UserCredentials userCredentials) {
+        httpSession.setAttribute("userCredentials", userCredentials);
         httpSession.setAttribute("CSRF_TOKEN", UUID.randomUUID());
         httpSession.setMaxInactiveInterval(3600);
     }
 
-    private Long getSessionUserId(HttpSession httpSession) {
-        Object userId = httpSession.getAttribute("userId");
-        if (userId == null) {
+    private UserCredentials getUserCredentials(HttpSession httpSession) {
+        Object userCredentials = httpSession.getAttribute("userCredentials");
+        if (userCredentials == null) {
             throw new IllegalStateException("인증이 필요한 요청입니다.");
         }
-        return (Long) userId;
+        return (UserCredentials) userCredentials;
     }
 }

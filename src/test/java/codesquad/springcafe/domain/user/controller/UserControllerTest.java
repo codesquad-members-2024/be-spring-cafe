@@ -1,5 +1,6 @@
 package codesquad.springcafe.domain.user.controller;
 
+import codesquad.springcafe.domain.user.data.UserCredentials;
 import codesquad.springcafe.domain.user.data.UserJoinRequest;
 import codesquad.springcafe.domain.user.data.UserListResponse;
 import codesquad.springcafe.domain.user.data.UserResponse;
@@ -50,7 +51,7 @@ class UserControllerTest {
         final String url = "/user";
 
         given(userService.join(new UserJoinRequest(loginId, email, name, password)))
-                .willReturn(1L);
+                .willReturn(new UserCredentials(1L, name));
 
         //when
         final ResultActions result = mockMvc.perform(

@@ -29,7 +29,7 @@ public class UserService {
 
     // TODO: 예외 클래스 생성해 처리
     // 회원가입
-    public Long join(UserJoinRequest userJoinRequest) {
+    public UserCredentials join(UserJoinRequest userJoinRequest) {
         // 같은 아이디로 가입한 회원 조회
         userRepository.findByLoginId(userJoinRequest.getLoginId())
                 .ifPresent(u -> {
@@ -41,11 +41,11 @@ public class UserService {
         );
         User savedUser = userRepository.save(user);
 
-        return savedUser.getId();
+        return new UserCredentials(savedUser.getId(), savedUser.getName());
     }
 
     // 로그인
-    public Long login(UserLoginRequest userLoginRequest) {
+    public UserCredentials login(UserLoginRequest userLoginRequest) {
         // 회원 존재 여부 확인
         User user = findUserByLoginId(userLoginRequest.getLoginId());
 
@@ -54,8 +54,7 @@ public class UserService {
             throw new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
 
-        // 아이디 반환
-        return user.getId();
+        return new UserCredentials(user.getId(), user.getName());
     }
 
     // 로그아웃
