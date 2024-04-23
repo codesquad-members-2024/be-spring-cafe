@@ -32,12 +32,12 @@ public class CommentService {
         commentRepository.modify(id, commentPostReq);
     }
 
-    public void delete(int id){
+    public void delete(int id) {
         commentRepository.delete(id);
     }
 
     public boolean canModify(int id, SimpleUserInfo loginUser) {
-        if(loginUser == null) return false;
+        if (loginUser == null) return false;
         return commentRepository.findById(id).getAuthorId().equals(loginUser.id());
     }
 
@@ -47,5 +47,14 @@ public class CommentService {
 
     public List<Comment> findByArticleId(int articleId) {
         return commentRepository.findByArticleId(articleId);
+    }
+
+    public List<Comment> findByArticleId(int articleId, int page) {
+        int COMMENTS_PER_PAGE = 15;
+        int START_INDEX = COMMENTS_PER_PAGE * (page - 1);
+        int LAST_INDEX = COMMENTS_PER_PAGE * (page);
+
+        List<Comment> byArticleId = findByArticleId(articleId);
+        return byArticleId.subList(START_INDEX, Math.min(LAST_INDEX, byArticleId.size()));
     }
 }
