@@ -104,5 +104,44 @@ This will be shown if isTrue is true.
 This will be shown if isTrue is false.
 {{/isTrue}}
 ```
-14. Spring JDBC 를 사용하여 리팩토링
-- 
+14. Spring JDBC template 를 사용하여 리팩토링
+15. mustache에서 세션 사용 가능하도록 설정
+```mustache
+spring.mustache.servlet.expose-session-attributes=true
+```
+16.HttpSesion을 활용하여 로그인 구현
+- http session 접속 
+```groovy
+#session time-out
+server.servlet.session.timeout=1800
+```
+
+17. HttpSession 학습
+- HttpSession을 가지고 session을 다룰 수 있게된다
+- login(~,HttpSession httpSession)
+- 매개변수로 HttpSession을 받는 시점에서 세션 생성
+- setAttribute 시점에서 메모리에 세션 정보를 저장한다.
+```java
+//로그인 성공시 httpSession에 정보를 넣는다
+httpSession.setAttribute("loginUserId", loginUserId);
+```
+```java
+    public String login(HttpSession httpSession){
+        System.out.println(httpSession.getClass().getName());
+        //org.apache.catalina.session.StandardSessionFacade
+    }
+```
+```java
+//StandardSession
+/**
+ * The collection of user data attributes associated with this Session.
+ */
+protected ConcurrentMap<String,Object> attributes = new ConcurrentHashMap<>();
+```
+자료 :
+1. https://tomcat.apache.org/tomcat-8.0-doc/api/org/apache/catalina/session/StandardSessionFacade.html
+2. https://tomcat.apache.org/tomcat-8.0-doc/api/org/apache/catalina/session/StandardSession.html
+3. https://github.com/apache/tomcat
+
+18. Facade 패턴
+- Facade 패턴은 복잡한 서브시스템의 일부 또는 전체를 단순화된 인터페이스로 래핑하는 구조를 갖는다. 이를 통해 클라이언트는 단일 인터페이스를 통해 복잡한 시스템을 사용할 수 있다.
