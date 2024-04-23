@@ -31,6 +31,7 @@ public class H2ArticleRepository implements ArticleRepository {
     private static final String CREATIONDATE = "CREATIONDATE";
     private static final String PAGEVIEWS = "PAGEVIEWS";
     private static final String COMMENT = "COMMENT";
+    private static final String REPLYID = "REPLYID";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -107,13 +108,18 @@ public class H2ArticleRepository implements ArticleRepository {
 
     @Override
     public Optional<ArrayList<Reply>> getReplies(long articleId) {
-        String sql = "SELECT ARTICLEID, USERID, COMMENT, CREATIONDATE FROM REPLIES WHERE ARTICLEID = ?";
+        String sql = "SELECT REPLYID, ARTICLEID, USERID, COMMENT, CREATIONDATE FROM REPLIES WHERE ARTICLEID = ?";
         Object[] params = new Object[]{articleId};
 
         ArrayList<Reply> replies = (ArrayList<Reply>) jdbcTemplate.query(sql, params, new ReplyRowMapper());
         return Optional.of(replies);
     }
 
+    @Override
+    public void deleteReply(long replyId) {
+        String sql = "DELETE FROM REPLIES WHERE REPLYID = ?";
+        jdbcTemplate.update(sql, replyId);
+    }
 
     private static class ArticleRowMapper implements RowMapper<Article> {
         @Override
@@ -136,6 +142,7 @@ public class H2ArticleRepository implements ArticleRepository {
     private static class ReplyRowMapper implements RowMapper<Reply> {
         @Override
         public Reply mapRow(ResultSet rs, int rowNum) throws SQLException {
+            long replyId = rs.getLong(REPLYID);
             long articleId = rs.getLong(ARTICLEID);
             String userId = rs.getString(USERID);
             String comment = rs.getString(COMMENT);
@@ -143,6 +150,7 @@ public class H2ArticleRepository implements ArticleRepository {
 
             Reply reply = new Reply(articleId, userId, comment);
 
+            reply.setReplyId(replyId);
             reply.setCreationDate(LocalDate.parse(creationDate));
 
             return reply;

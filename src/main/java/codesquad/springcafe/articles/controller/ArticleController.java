@@ -98,4 +98,11 @@ public class ArticleController {
 
         return "redirect:/articles/{articleId}";
     }
+
+    @DeleteMapping("/{articleId}/answers/{replyId}")
+    public String deleteReply(@PathVariable long articleId, @PathVariable long replyId) {
+        articleService.deleteReply(replyId);
+
+        return "redirect:/articles/{articleId}";
+    }
 }

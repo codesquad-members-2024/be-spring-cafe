@@ -13,6 +13,10 @@ public class ReplyViewDto {
         this.editRight = editRight;
     }
 
+    public long getReplyId() {
+        return reply.getReplyId();
+    }
+
     public String getUserId() {
         return reply.getUserId();
     }

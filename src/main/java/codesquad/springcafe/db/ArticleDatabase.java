@@ -77,4 +77,9 @@ public class ArticleDatabase {
         articles.remove(articleId);
         logger.debug("Article ID '{}' Deleted", articleId);
     }
+
+    public void deleteReply(long replyId) {
+        replies.remove(replyId);
+        logger.debug("Reply ID '{}' Deleted", replyId);
+    }
 }

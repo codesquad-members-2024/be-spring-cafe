@@ -6,7 +6,10 @@
             <!--사용자가 같다면 표시!-->
             {{#hasEditRight}}
             <button class="reply-btn adjust-btn-color">수정</button>
-            <button class="reply-btn delete-btn-color">삭제</button>
+                <form id="deleteForm" method="POST" action="/articles/{{article.getArticleId}}/answers/{{getReplyId}}">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="reply-btn delete-btn-color">삭제</button>
+                </form>
             {{/hasEditRight}}
         </span>
 

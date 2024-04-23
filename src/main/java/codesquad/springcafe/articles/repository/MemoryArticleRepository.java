@@ -64,6 +64,11 @@ public class MemoryArticleRepository implements ArticleRepository {
     public Optional<ArrayList<Reply>> getReplies(long articleId) {
         return Optional.of(articleDatabase.getReplies(articleId));
     }
+
+    @Override
+    public void deleteReply(long replyId) {
+        articleDatabase.deleteReply(replyId);
+    }
 }
 
 

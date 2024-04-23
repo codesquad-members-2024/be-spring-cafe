@@ -76,4 +76,8 @@ public class ArticleService {
         return replyViews;
     }
 
+    public void deleteReply(long replyId) {
+        articleRepository.deleteReply(replyId);
+    }
+
 }

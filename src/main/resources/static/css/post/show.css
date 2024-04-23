@@ -147,6 +147,8 @@ li {
     border: 1px solid black;
     border-radius: 10px;
     margin-left: 10px;
+    cursor: pointer; /* 마우스 커서를 손가락 모양으로 변경 */
+    padding: 5px;
 }
 
 
