@@ -88,7 +88,7 @@ public class ArticleController {
         }
         httpSession.removeAttribute("commentBlankError");
         httpSession.removeAttribute("commentControlFlag");
-        return "article/show";
+        return "article/show_comment";
     }
 
     private void canIncreaseViewCount(HttpSession httpSession, long articleId) {
@@ -136,22 +136,6 @@ public class ArticleController {
             return "redirect:/";
         }
         return "redirect:/article/invalid-delete";
-    }
-
-    @PostMapping("/{articleId}/comments")
-    public String processCommentForm(@PathVariable long articleId, HttpSession httpSession,
-                                     @Valid @ModelAttribute CommentWriteDto commentWriteDto,
-                                     BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            httpSession.setAttribute("commentBlankError", true);
-            return "redirect:/article/{articleId}";
-        }
-        SessionUser sessionUser = (SessionUser) httpSession.getAttribute("sessionUser");
-        String userId = sessionUser.getUserId();
-        Comment comment = commentWriteDto.createComment(articleId, userId);
-        commentService.addComment(comment);
-        httpSession.setAttribute("commentControlFlag", true);
-        return "redirect:/article/{articleId}";
     }
 
     @DeleteMapping("/{articleId}/comments/{commentId}")

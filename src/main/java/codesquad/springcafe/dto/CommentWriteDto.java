@@ -24,6 +24,10 @@ public class CommentWriteDto {
         this.content = content;
     }
 
+    public boolean isEmpty() {
+        return content.isEmpty();
+    }
+
     public Comment createComment(long articleId, String userId) {
         return new Comment(userId, articleId, content);
     }

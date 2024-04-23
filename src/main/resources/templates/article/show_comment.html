@@ -89,24 +89,21 @@
                                            th:text="${comment.getFormattedCreationTime()}"></p>
                                     </div>
                                 </article>
-                                <form class="submit-write" method="post"
-                                      th:action="@{/article/{articleId}/comments(articleId=${articleId})}"
-                                      th:object="${commentWriteDto}">
+                                <div class="submit-write">
                                     <div class="comment-writer-container">
                                         <input class="comment-writer" id="userId" name="userId" th:value="${writer}"
                                                readonly/>
                                     </div>
-                                    <span class="error-message" style="margin-top: 10px; margin-left: 25px; color:red"
-                                          th:if="${IsCommentBlank}">
-                                        댓글은 비어있을 수 없습니다.
+                                    <!-- 오류 메시지를 표시할 span\ 요소 -->
+                                    <span class="error-message"
+                                          style="margin-top: 10px; margin-left: 25px; color:red; display:none;">댓글은 비어있을 수 없습니다.
                                     </span>
-                                    <div class="form-group"
-                                         th:classappend="${#fields.hasErrors('content')} ? 'has-error'">
-                                        <textarea class="form-control" id="content" th:field="*{content}"
+                                    <div class="form-group">
+                                        <textarea class="form-control" id="comment_content"
                                                   placeholder="댓글을 남겨보세요."></textarea>
                                     </div>
-                                    <input class="post-write-btn" type="submit" value="등록"/>
-                                </form>
+                                    <button class="post-write-btn" onclick="sendComment()" th:text="등록"></button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -115,5 +112,65 @@
         </div>
     </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script th:inline="javascript">
+    function sendComment() {
+        var comment_content = $("#comment_content").val();
+        var param = {"content": comment_content}
+
+        $.ajax({
+            url: "/article/" + [[${articleId}]] + "/comments",
+            contentType: "application/json",
+            data: JSON.stringify(param),
+            type: 'POST',
+            success: function (response) {
+                if (response.hasOwnProperty("ERROR")) {
+                    $(".error-message").show();
+                } else if (response.hasOwnProperty("ADD_COMMENT")) {
+                    var newComment = response.ADD_COMMENT;
+
+                    var articleElement = document.createElement('article');
+                    articleElement.classList.add('comment');
+
+                    var divElement = document.createElement('div');
+                    divElement.classList.add('article-text');
+
+                    var content =
+                        '<div style="display: flex; justify-content: space-between; align-items: center;">' +
+                        '<p class="comment-content comment-author-name">' + newComment.userId + '</p>' +
+                        '<div>' +
+                        '<form method="post" action="/delete/comment" style="display: inline-block;">' +
+                        '<button type="submit" class="black-component" style="display: flex; justify-content: center; align-items: center; text-align: center;">' +
+                        '삭제하기' +
+                        '</button>' +
+                        '<input type="hidden" name="_method" value="DELETE">' +
+                        '</form>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="comment-content comment-doc">' +
+                        '<p>' + newComment.content + '</p>' +
+                        '</div>' +
+                        '<p class="comment-content comment-time">' + newComment.creationTime + '</p>';
+
+                    divElement.innerHTML = content;
+                    articleElement.appendChild(divElement);
+
+                    var commentList = document.querySelector('.post-comment-slipp-articles');
+                    var submitWrite = document.querySelector('.submit-write');
+                    // 새로운 댓글을 댓글 리스트의 맨 아래에 추가한다.
+                    commentList.insertBefore(articleElement, submitWrite);
+
+                    // 입력창 내용을 비운다.
+                    $("#comment_content").val("");
+
+                    // 총 댓글 개수를 +1 한다.
+                    var currentCommentCount = parseInt($(".post-comment-count span").text());
+                    var totalCommentCount = currentCommentCount + 1;
+                    $(".post-comment-count span").text(totalCommentCount);
+                }
+            }
+        });
+    }
+</script>
 </body>
 </html>
