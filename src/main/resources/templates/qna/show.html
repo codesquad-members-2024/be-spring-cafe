@@ -23,7 +23,7 @@
                             </a>
                         </div>
                     </div>
-                    <div  th:utext="${#strings.replace(article.contents, nlString, '&lt;br /&gt;')}"></div>
+                    <div  th:utext="${#strings.replace(article.contents, lineSeparator, '&lt;br /&gt;')}"></div>
                     <div class="article-util">
                         <ul class="article-util-list">
                             <li>
