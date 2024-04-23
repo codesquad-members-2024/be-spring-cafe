@@ -43,14 +43,14 @@ public class H2ArticleRepository implements ArticleRepository {
 
     @Override
     public void createArticle(Article article) {
-        String sql = "INSERT INTO ARTICLES (USERID, TITLE, CONTENT, CREATIONDATE, PAGEVIEWS) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO ARTICLES (USERID, TITLE, CONTENT, CREATIONDATE, PAGEVIEWS, DELETED) VALUES (?, ?, ?, ?, ?, false)";
         jdbcTemplate.update(sql, article.getUserId(), article.getTitle(), article.getContent(), article.getCreationDate().toString(), article.getPageViews());
-        logger.debug("Article Title : '{}' Updated At H2 Database", article.getTitle());
+        logger.debug("Article Title : '{}' Created At H2 Database", article.getTitle());
     }
 
     @Override
     public Optional<ArrayList<Article>> getAllArticles() {
-        String sql = "SELECT ARTICLEID, USERID, TITLE, CONTENT, CREATIONDATE, PAGEVIEWS FROM ARTICLES";
+        String sql = "SELECT ARTICLEID, USERID, TITLE, CONTENT, CREATIONDATE, PAGEVIEWS FROM ARTICLES WHERE DELETED = FALSE";
         ArrayList<Article> articles = (ArrayList<Article>) jdbcTemplate.query(sql, new ArticleRowMapper());
         Collections.reverse(articles);
         return Optional.of(articles);
@@ -92,7 +92,8 @@ public class H2ArticleRepository implements ArticleRepository {
 
     @Override
     public void deleteArticle(long articleId) {
-        String sql = "DELETE FROM ARTICLES WHERE ARTICLEID = ?";
+        String sql = "UPDATE ARTICLES SET DELETED = TRUE WHERE ARTICLEID = ?";
+
         jdbcTemplate.update(sql, articleId);
     }
 
@@ -103,7 +104,7 @@ public class H2ArticleRepository implements ArticleRepository {
 
         jdbcTemplate.update(sql, reply.getArticleId(), reply.getUserId(), reply.getComment(), reply.getCreationDate().toString());
 
-        logger.debug("Reply Comment : '{}' Updated At H2 Database", reply.getComment());
+        logger.debug("Reply Comment : '{}' Created At H2 Database", reply.getComment());
     }
 
     @Override
