@@ -16,8 +16,8 @@ public class Article {
         this.publishTime = LocalDateTime.now();
     }
 
-    public Article(String writer, LocalDateTime publishTime, String title, String content) {
-        this.writer = writer;
+    public Article(LocalDateTime publishTime, String title, String content) {
+        this.writer = "익명";
         this.publishTime = publishTime;
         this.title = title;
         this.content = content;

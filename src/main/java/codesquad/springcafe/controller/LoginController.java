@@ -4,6 +4,7 @@ import codesquad.springcafe.db.user.UserDatabase;
 import codesquad.springcafe.model.user.User;
 import codesquad.springcafe.model.user.dto.UserCredentialDto;
 import codesquad.springcafe.model.user.dto.UserLoginDto;
+import codesquad.springcafe.model.user.dto.UserProfileDto;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -45,13 +46,14 @@ public class LoginController {
             Model model
     ) throws IOException
     {
-        User user = userLoginDto.toEntity();
-        Optional<UserCredentialDto> userCredential = userDatabase.getUserCredential(user.getUserId());
-        if(userCredential.isEmpty() || !userCredential.get().getPassword().equals(user.getPassword())){
+        Optional<UserCredentialDto> userCredential = userDatabase.getUserCredential(userLoginDto.getUserId());
+        if(userCredential.isEmpty() || !userCredential.get().getPassword().equals(userLoginDto.getPassword())){
             model.addAttribute("validationError", true);
             return "users/login";
         }
-        session.setAttribute("springCafeMember", user.getUserId());
+        Optional<UserProfileDto> userProfileDto = userDatabase.findUserByUserId(userLoginDto.getUserId());
+        User user = userProfileDto.get().toEntity();
+        session.setAttribute("springCafeMember", user);
         logger.info("로그인 성공! id = {} , session = {}", user.getUserId(), session.getId());
         if(redirectURL != null && !redirectURL.isBlank()){
             response.sendRedirect(redirectURL);
