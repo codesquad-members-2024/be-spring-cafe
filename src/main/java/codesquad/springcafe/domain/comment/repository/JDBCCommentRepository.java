@@ -24,7 +24,7 @@ import java.util.List;
 public class JDBCCommentRepository implements CommentRepository {
 
     private final String ADD_COMMENT = "INSERT INTO comment (ARTICLEID, CREATEDAT, AUTHORID, CONTENT) VALUES (?, ?, ?, ?);";
-    private final String FIND_BY_ARTICLE_ID = "SELECT * FROM comment WHERE ArticleId = ? AND STATUS = 'OPEN' ORDER BY createdAt;";
+    private final String FIND_BY_ARTICLE_ID = "SELECT * FROM comment WHERE ArticleId = ? AND STATUS = 'OPEN' ORDER BY createdAt";
     private final String FIND_BY_USER_ID = "SELECT * FROM comment WHERE AuthorId = ? AND STATUS = 'OPEN' ORDER BY createdAt DESC;";
 
     private final JdbcTemplate jdbcTemplate;
@@ -76,6 +76,17 @@ public class JDBCCommentRepository implements CommentRepository {
         Object[] args = new Object[]{articleId};
         int[] pramTypes = new int[]{Types.VARCHAR};
         return jdbcTemplate.query(FIND_BY_ARTICLE_ID, args, pramTypes, commentRowMapper());
+    }
+
+    @Override
+    public List<Comment> findByArticleId(int articleId, int page) {
+        String paging_query = " LIMIT ? OFFSET ?";
+        int COMMENTS_PER_PAGE = 15;
+        int START_INDEX = COMMENTS_PER_PAGE * (page - 1);
+
+        Object[] args = new Object[]{articleId, COMMENTS_PER_PAGE, START_INDEX};
+        int[] pramTypes = new int[]{Types.VARCHAR, Types.INTEGER, Types.INTEGER};
+        return jdbcTemplate.query(FIND_BY_ARTICLE_ID + paging_query, args, pramTypes, commentRowMapper());
     }
 
     @Override

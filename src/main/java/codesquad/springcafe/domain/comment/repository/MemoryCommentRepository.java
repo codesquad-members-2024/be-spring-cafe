@@ -33,6 +33,16 @@ public class MemoryCommentRepository implements CommentRepository{
     }
 
     @Override
+    public List<Comment> findByArticleId(int articleId, int page) {
+        int COMMENTS_PER_PAGE = 15;
+        int START_INDEX = COMMENTS_PER_PAGE * (page - 1);
+        int LAST_INDEX = COMMENTS_PER_PAGE * page;
+
+        List<Comment> byArticleId = findByArticleId(articleId);
+        return byArticleId.subList(START_INDEX, Math.min(LAST_INDEX, byArticleId.size()));
+    }
+
+    @Override
     public List<Comment> findByUserId(String id) {
         return comments.values().stream().filter(c-> c.getAuthorId().equals(id)).toList();
     }
