@@ -3,6 +3,9 @@ package codesquad.springcafe.controller;
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.domain.UpdatedUser;
 import codesquad.springcafe.database.user.UserDatabase;
+import codesquad.springcafe.dto.UserLoginDto;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Controller
@@ -101,5 +105,38 @@ public class UserController {
         logger.debug("user update: " + user.toString());
         return "redirect:/users/list";
     }
+
+    @PostMapping("/user/login")
+    public String userLogin(HttpServletRequest request, @ModelAttribute UserLoginDto userLoginDto, Model model) {
+        try {
+            Optional<User> optionalUser = userDatabase.getUserById(userLoginDto.getId());
+            User loginUser = optionalUser.orElseThrow(() -> new NoSuchElementException("해당 아이디로 등록된 사용자가 없습니다."));
+
+            if(!loginUser.comparePassword(userLoginDto.getPassword())){
+                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            }
+
+            HttpSession session = request.getSession();
+            session.setAttribute("sessionUser", loginUser);
+
+        } catch (NoSuchElementException e){
+            // 아이디가 잘못 된 경우
+            model.addAttribute("errorMsg", "해당 아이디로 등록된 사용자가 없습니다.");
+            return "users/login";
+        }catch (IllegalArgumentException e) {
+            // 비밀번호가 잘못 된 경우
+            model.addAttribute("errorMsg", "비밀번호가 일치하지 않습니다.");
+            return "users/login";
+        }
+
+        return "redirect:/main";
+    }
+
+    @GetMapping("/user/logout")
+    public String userLogout(HttpServletRequest request) {
+        request.getSession().invalidate();
+        return "redirect:/main";
+    }
+
 
 }
