@@ -11,7 +11,7 @@
         <div class="panel panel-default">
             {{#article}}
           <header class="qna-header">
-              <h2 class="qna-title">{{title}}</h2>
+              <h2 class="qna-title">{{title}} 의 {{id}}번째 게시글</h2>
           </header>
           <div class="content-main">
               <article class="article">
@@ -33,10 +33,10 @@
                   <div class="article-util">
                       <ul class="article-util-list">
                           <li>
-                              <a class="link-modify-article" href="/qna/{{writer}}/form">수정</a>
+                              <a class="link-modify-article" href="/qna/{{writer}}/{{id}}/form">수정</a>
                           </li>
                           <li>
-                              <form class="form-delete" action="/questions/423" method="POST">
+                              <form class="form-delete" action="/qna/{{writer}}/{{id}}" method="POST">
                                   <input type="hidden" name="_method" value="DELETE">
                                   <button class="link-delete-article" type="submit">삭제</button>
                               </form>

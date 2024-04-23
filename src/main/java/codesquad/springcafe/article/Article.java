@@ -9,7 +9,8 @@ public class Article {
     private final String contents;
     private final LocalDateTime createAt;
 
-    public Article(String writer, String title, String contents, LocalDateTime createAt) {
+    public Article(Long id, String writer, String title, String contents, LocalDateTime createAt) {
+        this.id = id;
         this.writer = writer;
         this.title = title;
         this.contents = contents;
@@ -30,6 +31,10 @@ public class Article {
 
     public LocalDateTime getCreateAt() {
         return createAt;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     // DB에서 꺼내올때만 사용

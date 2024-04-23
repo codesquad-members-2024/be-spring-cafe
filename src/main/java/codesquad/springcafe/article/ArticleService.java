@@ -31,8 +31,8 @@ public class ArticleService {
         return articleDao.findAll();
     }
 
-    public void updateArticle(String writer, ArticleUpdateRequestDto dto) {
-        Article article = dto.toEntity(writer);
+    public void updateArticle(String writer, Long id, ArticleUpdateRequestDto dto) {
+        Article article = dto.toEntity(id, writer);
         articleDao.update(article);
     }
 }

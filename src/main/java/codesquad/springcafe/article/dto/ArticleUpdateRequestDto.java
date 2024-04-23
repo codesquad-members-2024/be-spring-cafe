@@ -16,7 +16,7 @@ public class ArticleUpdateRequestDto {
         this.contents = contents;
     }
 
-    public Article toEntity(String writer) {
-        return new Article(writer, title, contents, LocalDateTime.now());
+    public Article toEntity(Long id, String writer) {
+        return new Article(id, writer, title, contents, LocalDateTime.now());
     }
 }
