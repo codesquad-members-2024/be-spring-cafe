@@ -54,7 +54,7 @@ public class UserController {
             dto.setName(user.getName());
             dto.setEmail(user.getEmail());
             model.addAttribute(dto);
-            return "/user/profile";
+            return "user/profile";
         }
         //todo 해당 아이디의 user 없을 시 예외 처리
         // 누군가 url을 임의로 입력 했을 경우이다

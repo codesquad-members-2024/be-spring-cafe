@@ -20,6 +20,6 @@ public class HomeController {
     public String home(Model model) {
         List<Article> articles = articleRepository.findAll();
         model.addAttribute(articles);
-        return "/index";
+        return "index";
     }
 }

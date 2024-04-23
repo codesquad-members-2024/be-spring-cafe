@@ -38,7 +38,7 @@ public class ArticleController {
         if (optionalArticle.isPresent()) {
             Article article = optionalArticle.get();
             model.addAttribute(article);
-            return "/qna/show";
+            return "qna/show";
         }
         return null;
     }
