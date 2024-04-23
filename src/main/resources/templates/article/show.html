@@ -11,6 +11,8 @@
     <![endif]-->
     <link th:href="@{/css/article/show.css}" href="../../static/css/article/show.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
 </head>
 <body>
 <div class="background">
@@ -93,7 +95,7 @@
                                             '<div class="article-text">' +
                                             '<p class="comment-content comment-author-name">' + comment.writer + '</p>' +
                                             '<div class="comment-content comment-doc"><p>' + comment.content + '</p></div>' +
-                                            '<p class="comment-content comment-time">' + comment.writeDate + '</p>' +
+                                            '<p class="comment-content comment-time">' + formatWriteDate(comment.writeDate) + '</p>' +
                                             '<button type="button" data-comment-id="' + comment.id + '" class="delete-button">삭제</button>' +
                                             '</div>' +
                                             '</article>';
@@ -105,6 +107,11 @@
                                         alert('댓글을 등록하지 못했습니다.');
                                     }
                                 });
+                            }
+
+                            function formatWriteDate(date) {
+                                return moment(date).format('YYYY-MM-DD HH:mm:ss');
+
                             }
 
                             // 댓글 삭제 함수

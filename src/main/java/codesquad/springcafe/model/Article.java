@@ -8,7 +8,7 @@ public class Article {
     private final String writer;
     private final String title;
     private final String content;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:MM:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime writeDate;
     private boolean isDeleted;
     private long views;
