@@ -24,7 +24,7 @@ import java.util.List;
 public class JDBCCommentRepository implements CommentRepository {
 
     private final String ADD_COMMENT = "INSERT INTO comment (ARTICLEID, CREATEDAT, AUTHORID, CONTENT) VALUES (?, ?, ?, ?);";
-    private final String FIND_BY_ARTICLE_ID = "SELECT * FROM comment WHERE ArticleId = ? AND STATUS = 'OPEN' ORDER BY createdAt DESC;";
+    private final String FIND_BY_ARTICLE_ID = "SELECT * FROM comment WHERE ArticleId = ? AND STATUS = 'OPEN' ORDER BY createdAt;";
     private final String FIND_BY_USER_ID = "SELECT * FROM comment WHERE AuthorId = ? AND STATUS = 'OPEN' ORDER BY createdAt DESC;";
 
     private final JdbcTemplate jdbcTemplate;

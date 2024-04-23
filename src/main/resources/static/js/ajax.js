@@ -20,11 +20,11 @@ function addAnswer(e) {
             var answerTemplate = $("#comment_template").html();
             var template = answerTemplate.format(data);
 
-            $(".qna-comment-slipp-articles").prepend(template); // 추가
+            $(".qna-comment-slipp-articles").append(template); // 추가
             $("textarea[name=content]").val("");  // 비운다
+            refreshNumber();
         }
     });
-
 }
 
 $(document).on("click", "#delete-answer-form", deleteAnswer);
@@ -48,6 +48,13 @@ function deleteAnswer(e) {
                 deleteBtn.closest(".article").remove();
             }
             alert(data.message);
+
+            refreshNumber();
         }
     });
+}
+
+function refreshNumber() {
+    var number = document.getElementById("comments_block").querySelectorAll('article').length;
+    document.getElementById("numberOfComments").innerText = number;
 }
