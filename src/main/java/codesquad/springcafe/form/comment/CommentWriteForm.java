@@ -4,13 +4,13 @@ import jakarta.validation.constraints.NotBlank;
 
 public class CommentWriteForm {
     @NotBlank
-    private final String content;
-
-    public CommentWriteForm(String content) {
-        this.content = content;
-    }
+    private String content;
 
     public String getContent() {
         return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }
