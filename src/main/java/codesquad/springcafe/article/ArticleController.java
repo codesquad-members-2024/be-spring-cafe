@@ -57,18 +57,19 @@ public class ArticleController {
         return "qna/form";
     }
 
-    @GetMapping("/qna/{writer}/form")
-    public String showUpdateForm(@PathVariable String writer, HttpSession session) {
+    @GetMapping("/qna/{writer}/{id}/form")
+    public String showUpdateForm(@PathVariable String writer, @PathVariable Long id, HttpSession session, Model model) {
         String value = (String) session.getAttribute("sessionUserId");
         if (writer.equals(value)) {
+            model.addAttribute("id", id);
             return "qna/updateForm";
         }
         return "qna/accessFailed";
     }
 
-    @PutMapping("/qna/{writer}")
-    public String updateArticle(@PathVariable String writer, @Valid ArticleUpdateRequestDto dto) {
-        service.updateArticle(writer, dto);
+    @PutMapping("/qna/{writer}/{id}")
+    public String updateArticle(@PathVariable String writer, @PathVariable Long id, @Valid ArticleUpdateRequestDto dto) {
+        service.updateArticle(writer, id, dto);
         return "redirect:/";
     }
 
