@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html lang="kr">
 {{>layout/header}}
-{{>layout/duplication_check_script}}
+{{>layout/form_duplication_check_script}}
+<script>
+    const verificationStatus = {
+        userId: false,
+        email: false,
+        nickname: false
+    };
+</script>
 <link href="/css/user/form.css" rel="stylesheet">
 <body>
 <div class="background">
