@@ -1,4 +1,4 @@
-CREATE TABLE "article"
+CREATE TABLE articles
 (
     id        BIGINT AUTO_INCREMENT PRIMARY KEY,
     writer    VARCHAR(255) NOT NULL,
