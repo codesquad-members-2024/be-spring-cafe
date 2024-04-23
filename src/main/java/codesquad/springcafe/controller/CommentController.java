@@ -37,6 +37,7 @@ public class CommentController {
 
         Map<String, Object> response = new HashMap<>();
         Map<String, Object> addCommentMap = new HashMap<>();
+        addCommentMap.put("id", comment.getId());
         addCommentMap.put("userId", comment.getUserId());
         addCommentMap.put("content", comment.getContent());
         addCommentMap.put("creationTime", comment.getFormattedCreationTime());

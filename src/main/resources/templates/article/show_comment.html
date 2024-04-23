@@ -117,6 +117,7 @@
     function sendComment() {
         var comment_content = $("#comment_content").val();
         var param = {"content": comment_content}
+        var articleId = [[${articleId}]];
 
         $.ajax({
             url: "/article/" + [[${articleId}]] + "/comments",
@@ -128,48 +129,43 @@
                     $(".error-message").show();
                 } else if (response.hasOwnProperty("ADD_COMMENT")) {
                     var newComment = response.ADD_COMMENT;
-
-                    var articleElement = document.createElement('article');
-                    articleElement.classList.add('comment');
-
-                    var divElement = document.createElement('div');
-                    divElement.classList.add('article-text');
-
-                    var content =
-                        '<div style="display: flex; justify-content: space-between; align-items: center;">' +
-                        '<p class="comment-content comment-author-name">' + newComment.userId + '</p>' +
-                        '<div>' +
-                        '<form method="post" action="/delete/comment" style="display: inline-block;">' +
-                        '<button type="submit" class="black-component" style="display: flex; justify-content: center; align-items: center; text-align: center;">' +
-                        '삭제하기' +
-                        '</button>' +
-                        '<input type="hidden" name="_method" value="DELETE">' +
-                        '</form>' +
-                        '</div>' +
-                        '</div>' +
-                        '<div class="comment-content comment-doc">' +
-                        '<p>' + newComment.content + '</p>' +
-                        '</div>' +
-                        '<p class="comment-content comment-time">' + newComment.creationTime + '</p>';
-
-                    divElement.innerHTML = content;
-                    articleElement.appendChild(divElement);
+                    var newCommentElement = createCommentElement(articleId, newComment);
 
                     var commentList = document.querySelector('.post-comment-slipp-articles');
                     var submitWrite = document.querySelector('.submit-write');
-                    // 새로운 댓글을 댓글 리스트의 맨 아래에 추가한다.
-                    commentList.insertBefore(articleElement, submitWrite);
+                    commentList.insertBefore($(newCommentElement)[0], submitWrite);
 
-                    // 입력창 내용을 비운다.
                     $("#comment_content").val("");
-
-                    // 총 댓글 개수를 +1 한다.
                     var currentCommentCount = parseInt($(".post-comment-count span").text());
                     var totalCommentCount = currentCommentCount + 1;
                     $(".post-comment-count span").text(totalCommentCount);
                 }
             }
         });
+    }
+
+    function createCommentElement(articleId, comment) {
+        return `
+    <article class="comment">
+      <div class="article-text">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p class="comment-content comment-author-name">${comment.userId}</p>
+          <div>
+            <form method="post" action="/article/${articleId}/comments/${comment.id}" style="display: inline-block;">
+              <button type="submit" class="black-component" style="display: flex; justify-content: center; align-items: center; text-align: center;">
+                삭제하기
+              </button>
+              <input type="hidden" name="_method" value="DELETE">
+            </form>
+          </div>
+        </div>
+        <div class="comment-content comment-doc">
+          <p>${comment.content}</p>
+        </div>
+        <p class="comment-content comment-time">${comment.creationTime}</p>
+      </div>
+    </article>
+  `;
     }
 </script>
 </body>
