@@ -14,14 +14,14 @@
                   <div class="wrap">
                       <div class="main">
                           <strong class="subject">
-                              <a th:href="@{/articles/{articleIndex}(articleIndex=${article.getKey() + 1})}" th:text="${article.getValue().getTitle()}">title</a>
+                              <a th:href="@{/articles/{sequence}(sequence=${articles.indexOf(article) + 1})}" th:text="${article.getTitle()}">title</a>
                           </strong>
                           <div class="auth-info">
                               <i class="icon-add-comment"></i>
                               <a href="/none" class="author">
-                                  작성자 : <span  th:text="${article.getValue().getWriter()}">writer</span>
+                                  작성자 : <span  th:text="${article.getWriter()}">writer</span>
                               </a>
-                              ㅤ작성 시간 : <span class="time" th:text="${#temporals.format(article.getValue().getCurrentTime(), 'yyyy-MM-dd HH:mm:ss')}"></span>
+                              ㅤ작성 시간 : <span class="time" th:text="${#temporals.format(article.getCurrentTime(), 'yyyy-MM-dd HH:mm:ss')}"></span>
                           </div>
                           <div class="reply" title="댓글">
                               <i class="icon-reply"></i>

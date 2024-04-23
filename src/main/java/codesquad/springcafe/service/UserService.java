@@ -2,10 +2,11 @@ package codesquad.springcafe.service;
 
 import codesquad.springcafe.domain.user.User;
 import codesquad.springcafe.domain.user.UserRepository;
+import codesquad.springcafe.web.dto.UserCreateDto;
 import codesquad.springcafe.web.dto.UserUpdateDto;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -16,24 +17,27 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void join(User user) {
-        userRepository.save(user);
+    public void join(UserCreateDto userCreateDto) {
+        userRepository.save(
+                new User(userCreateDto.getUserId(),
+                userCreateDto.getPassword(),
+                userCreateDto.getName(),
+                userCreateDto.getEmail()));
     }
 
     public User findOne(String userId) {
         return userRepository.findByUserId(userId).get();
     }
 
-    public Map<Long, User> getUsers() {
-        return userRepository.getUsers();
+    public List<User> getUsers() {
+        return userRepository.findAll();
     }
 
     public void updateUser(String userId, UserUpdateDto userUpdateDto) {
         User findUser = findOne(userId);
-        Long findSequence = userRepository.findSequence(findUser);
-        findUser.setPassword(userUpdateDto.getPassword());
+        findUser.setPassword(userUpdateDto.getNewPassword());
         findUser.setName(userUpdateDto.getName());
         findUser.setEmail(userUpdateDto.getEmail());
-        userRepository.update(findSequence, findUser);
+        userRepository.update(findUser);
     }
 }

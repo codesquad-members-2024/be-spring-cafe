@@ -2,9 +2,10 @@ package codesquad.springcafe.service;
 
 import codesquad.springcafe.domain.article.Article;
 import codesquad.springcafe.domain.article.ArticleRepository;
+import codesquad.springcafe.web.dto.ArticleCreateDto;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.util.List;
 
 @Service
 public class ArticleService {
@@ -15,15 +16,20 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public void saveArticle(Article article) {
-        articleRepository.save(article);
+    public void saveArticle(ArticleCreateDto articleCreateDto) {
+        articleRepository.save(new Article(
+                articleCreateDto.getWriter(),
+                articleCreateDto.getTitle(),
+                articleCreateDto.getContents(),
+                articleCreateDto.getCurrentTime()
+        ));
     }
 
-    public Article findByIndex(Long index) {
-        return articleRepository.findByIndex(index);
+    public Article findById(Long id) {
+        return articleRepository.findById(id).get();
     }
 
-    public Map<Long, Article> getArticles() {
-        return articleRepository.getArticles();
+    public List<Article> getArticles() {
+        return articleRepository.findAll();
     }
 }

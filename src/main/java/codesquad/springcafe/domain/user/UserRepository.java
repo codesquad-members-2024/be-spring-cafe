@@ -1,45 +1,12 @@
 package codesquad.springcafe.domain.user;
 
-import org.springframework.stereotype.Repository;
-
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
-@Repository
-public class UserRepository {
+public interface UserRepository {
 
-    private final Map<Long, User> users;
-    private final AtomicLong sequence;
-
-    public UserRepository() {
-        this.users = new ConcurrentHashMap<>();
-        sequence = new AtomicLong();
-    }
-
-    public void save(User user) {
-        users.put(sequence.getAndIncrement(), user);
-    }
-
-    public void update(Long sequence, User user) {
-        users.put(sequence, user);
-    }
-
-    public Optional<User> findByUserId(String userId) {
-        return users.values().stream()
-                .filter(user -> user.getUserId().equals(userId))
-                .findAny();
-    }
-
-    public Long findSequence(User user) {
-        return users.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(user))
-                .map(Map.Entry::getKey)
-                .findAny().get();
-    }
-
-    public Map<Long, User> getUsers() {
-        return users;
-    }
+    void save(User user);
+    void update(User user);
+    Optional<User> findByUserId(String userId);
+    List<User> findAll();
 }
