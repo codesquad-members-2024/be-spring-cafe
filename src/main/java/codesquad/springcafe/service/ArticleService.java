@@ -1,11 +1,13 @@
 package codesquad.springcafe.service;
 
 import codesquad.springcafe.dto.article.ArticleInfoDTO;
+import codesquad.springcafe.dto.article.ArticleUpdateDTO;
 import codesquad.springcafe.dto.article.UploadDTO;
 import codesquad.springcafe.model.Article;
 import codesquad.springcafe.repository.article.ArticleRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalLong;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,11 +16,12 @@ import org.springframework.stereotype.Service;
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
-    private Long totalIndex = 0L;
+    private Long totalIndex;
 
     @Autowired
     public ArticleService(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
+        this.totalIndex = initTotalIndex();
     }
 
     public ArticleInfoDTO upload(UploadDTO uploadDTO) {
@@ -40,5 +43,13 @@ public class ArticleService {
             throw new IllegalArgumentException();
         }
         return targetArticle.get().toDTO();
+    }
+
+    private Long initTotalIndex() {
+        OptionalLong maxIndex = articleRepository.getAll().stream().mapToLong(Article::getIndex).max();
+        if (maxIndex.isEmpty()) {
+            return 0L;
+        }
+        return maxIndex.getAsLong();
     }
 }
