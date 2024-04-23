@@ -28,4 +28,9 @@ public class MemoryArticleRepository implements ArticleRepository {
     public List<Article> getAll() {
         return new ArrayList<>(articles.values());
     }
+
+    @Override
+    public void modify(Article modifiedArticle) {
+        articles.put(modifiedArticle.getIndex(), modifiedArticle);
+    }
 }

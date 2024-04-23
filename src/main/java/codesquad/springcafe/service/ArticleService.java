@@ -45,6 +45,13 @@ public class ArticleService {
         return targetArticle.get().toDTO();
     }
 
+    public ArticleInfoDTO updateInfo(Long index, ArticleUpdateDTO updateInfo) {
+        ArticleInfoDTO originalArticle = findByIndex(index);
+        Article modifiedArticle = updateInfo.toArticle(index, originalArticle.getTimestamp(), originalArticle.getWriter());
+        articleRepository.modify(modifiedArticle);
+        return modifiedArticle.toDTO();
+    }
+
     private Long initTotalIndex() {
         OptionalLong maxIndex = articleRepository.getAll().stream().mapToLong(Article::getIndex).max();
         if (maxIndex.isEmpty()) {

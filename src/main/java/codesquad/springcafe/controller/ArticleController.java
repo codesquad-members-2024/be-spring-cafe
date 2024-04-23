@@ -47,4 +47,28 @@ public class ArticleController {
         model.addAttribute("article", targetArticle);
         return "/article/show";
     }
+
+    @GetMapping("articles/{index}/update")
+    public String tryUpdate(@PathVariable Long index, HttpSession session, Model model) {
+        ArticleInfoDTO article = articleService.findByIndex(index);
+        UserInfoDTO user = (UserInfoDTO) session.getAttribute("loggedInUser");
+        if (!article.isWriter(user.getUserId())) {
+            return "/article/update_failed";
+        }
+        return "redirect:/articles/" + index + "/form";
+    }
+
+    @GetMapping("articles/{index}/form")
+    public String showUpdateForm(@PathVariable Long index, Model model) {
+        ArticleInfoDTO article = articleService.findByIndex(index);
+        model.addAttribute("article", article);
+        return "/article/updateForm";
+    }
+
+    @PutMapping("articles/{index}/update")
+    public String updateInfo(@ModelAttribute("article") ArticleUpdateDTO updateInfo, @PathVariable Long index, Model model) {
+        ArticleInfoDTO updatedArticle = articleService.updateInfo(index, updateInfo);
+        model.addAttribute("article", updatedArticle);
+        return "redirect:/";
+    }
 }

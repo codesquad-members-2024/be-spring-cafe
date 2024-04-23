@@ -1,6 +1,7 @@
 package codesquad.springcafe.repository.article;
 
 import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.User;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
@@ -54,5 +55,12 @@ public class JdbcArticleRepository implements ArticleRepository {
             );
             return Optional.ofNullable(article);
         });
+    }
+
+    @Override
+    public void modify(Article modifiedArticle) {
+        String sql = "UPDATE `article` SET title = ?, content = ? WHERE index = ?";
+        jdbcTemplate.update(sql,
+            modifiedArticle.getTitle(), modifiedArticle.getContent(), modifiedArticle.getIndex());
     }
 }
