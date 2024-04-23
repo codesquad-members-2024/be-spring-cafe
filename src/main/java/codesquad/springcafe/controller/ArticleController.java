@@ -28,6 +28,7 @@ public class ArticleController {
     @GetMapping("/main")
     public String showArticle(Model model) {
         model.addAttribute("articles", articleDatabase.getAllArticles()); // 전체 article 반환
+        model.addAttribute("totalArticleNumber", Integer.toString(articleDatabase.getArticleSize())); // article 개수 반환
 
         return "main";
     }
