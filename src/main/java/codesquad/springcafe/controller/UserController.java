@@ -1,8 +1,10 @@
 package codesquad.springcafe.controller;
 
+import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.domain.UpdatedUser;
 import codesquad.springcafe.database.user.UserDatabase;
+import codesquad.springcafe.dto.UserCreateDto;
 import codesquad.springcafe.dto.UserLoginDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -45,12 +47,13 @@ public class UserController {
 
     @PostMapping("/user/create")
     // @ModelAttribute 어노테이션 을 통해 Post body를 파싱해 user객체로 반환한다.
-    public String saveUser(@ModelAttribute User user) {
-        userDatabase.saveUser(user);
-        logger.debug("new user: " + user.toString());
+    public String saveUser(@ModelAttribute UserCreateDto userCreateDto) {
+        User newUser = userCreateDto.makeUser(); // dto User로 변환
+        userDatabase.saveUser(newUser);
+        logger.debug("new user: " + newUser.toString());
 
         // login success 페이지를 위해 쿼리로 userId 전달
-        return "redirect:/users/success"+"?userId="+user.getId();
+        return "redirect:/users/success"+"?userId="+newUser.getUserId();
     }
 
     @GetMapping("/users/list")

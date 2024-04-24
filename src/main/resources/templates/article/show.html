@@ -33,8 +33,20 @@
                         </div>
                     </article>
 
+                    <div style="display: flex; margin-top: 30px; margin-left: 5px; margin-bottom: 10px">
+                        <a href="/article/update/{{article.getUserId}}/{{article.getId}}" style="color: grey; font-size: 15px; line-height: 1.5;">수정</a>
+                        <form action="/article/delete/{{article.getUserId}}/{{article.getId}}" method="POST">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" style="color: grey; font-size: 15px; background-color: transparent; border: transparent; padding: 0; line-height: 1.5; margin-left: 5px">삭제</button>
+                        </form>
+                    </div>
+
+                    {{#noPermission}}
+                    <h4 style="color:red">다른 사람의 글은 수정할 수 없습니다.</h4>
+                    {{/noPermission}}
+
                     <div class="post-comment-main">
-                        <p class="post-comment-count-main post-info-main">댓글 2개</p>
+                        <p class="post-comment-count-main post-info-main" style="margin: 0 10px 10px;">댓글 2개</p>
                         <div class="comment-divider-main"></div>
                         <div class="post-comment-slipp">
                             <div class="post-comment-slipp-articles">
