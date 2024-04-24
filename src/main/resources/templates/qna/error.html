@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <!-- 여기에 common-head 프래그먼트를 적용합니다 -->
+    <!-- 예를 들어, <link> 태그나 <script> 태그 등의 공통 head 내용이 포함된다고 가정합니다. -->
+    <th:block th:replace="fragments/head :: common-head"></th:block>
+    <title>권한이 없습니다.</title>
+</head>
+<body>
+<!-- 여기에 navbar 프래그먼트를 적용합니다 -->
+<!-- 내비게이션 바 내용을 포함합니다. -->
+<th:block th:replace="fragments/navbar :: navbar"></th:block>
+
+<div class="container" id="main">
+    <div class="row text-center">
+        <div>
+            <h1>죄송합니다, 해당 권한이 없습니다.</h1>
+        </div>
+    </div>
+</div>
+
+<!-- 페이지 하단의 공통 스크립트를 포함합니다 -->
+<th:block th:replace="fragments/script :: common-scripts"></th:block>
+</body>
+</html>
