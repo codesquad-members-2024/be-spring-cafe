@@ -22,7 +22,7 @@ public class ReplyController {
     @PostMapping("/create")
     public String createReply(ReplyCreateDto replyCreateDto) {
         replyService.save(replyCreateDto);
-        return "redirect:/";
+        return "redirect:/article/" + replyCreateDto.getArticleId();
     }
 
     @DeleteMapping("/{replyId}/delete")
