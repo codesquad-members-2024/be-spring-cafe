@@ -4,7 +4,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import springcafe.article.model.Article;
 
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,23 +18,24 @@ public class H2ArticleDao implements ArticleDao {
     }
 
     @Override
-    public void insert(Article article) {
-        jdbcTemplate.update("INSERT into ARTICLES (WRITER, TITLE, CONTENTS) values (?,?,?)",
-                article.getWriter(), article.getTitle(), article.getContents());
+    public void save(Article article, Long id) {
+        jdbcTemplate.update("INSERT into ARTICLES (WRITER, TITLE, CONTENTS, USERS_ID) values (?,?,?,?)",
+                article.getWriter(), article.getTitle(), article.getContents(), id);
     }
 
     @Override
     public Article findById(Long id) {
 
         return jdbcTemplate.queryForObject(
-                "SELECT ID, WRITER, TITLE, CONTENTS, CREATE_DATE FROM ARTICLES WHERE ID =?",
+                "SELECT ID, WRITER, TITLE, CONTENTS, CREATE_DATE, USERS_ID FROM ARTICLES WHERE ID =? AND IS_DELETED =FALSE",
                 new Object[]{id},
                 (rs, rowNum) ->new Article(
                         rs.getString("WRITER"),
                         rs.getString("TITLE"),
                         rs.getString("CONTENTS"),
                         rs.getTimestamp("CREATE_DATE").toLocalDateTime(),
-                        rs.getLong("ID")
+                        rs.getLong("ID"),
+                        rs.getLong("USERS_ID")
                         )
         );
     }
@@ -43,23 +43,37 @@ public class H2ArticleDao implements ArticleDao {
     @Override
     public List<Article> findAll() {
         return jdbcTemplate.query(
-                "SELECT ID, WRITER, TITLE, CONTENTS, CREATE_DATE FROM ARTICLES",
+                "SELECT ID, WRITER, TITLE, CONTENTS, CREATE_DATE, USERS_ID FROM ARTICLES WHERE IS_DELETED =FALSE",
                 (rs) -> {
                     List<Article> articleList = new ArrayList();
-
                     while (rs.next()) {
-                        Long id = rs.getLong("ID");
                         String writer = rs.getString("WRITER");
                         String title = rs.getString("TITLE");
                         String contents = rs.getString("CONTENTS");
                         LocalDateTime createDate = rs.getTimestamp("CREATE_DATE").toLocalDateTime();
+                        Long id = rs.getLong("ID");
+                        long usersId = rs.getLong("USERS_ID");
 
-                        Article article = new Article(writer, title, contents, createDate, id);
+                        Article article = new Article(writer, title, contents, createDate, id, usersId);
                         articleList.add(article);
 
                     }
                     return articleList;
                 }
+        );
+    }
+
+    @Override
+    public void update(Article article) {
+        jdbcTemplate.update(
+                "UPDATE ARTICLES SET TITLE =?, CONTENTS =? WHERE ID =? AND IS_DELETED =FALSE",
+                article.getTitle(), article.getContents(), article.getId());
+    }
+
+    @Override
+    public void delete(Long articleId) {
+        jdbcTemplate.update(
+                "UPDATE ARTICLES SET IS_DELETED=TRUE WHERE ID=?",articleId
         );
     }
 }
