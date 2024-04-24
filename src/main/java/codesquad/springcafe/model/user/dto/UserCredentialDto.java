@@ -23,6 +23,10 @@ public class UserCredentialDto {
         return new User(userId, password);
     }
 
+    public boolean isPasswordMatches(String passwordInput){
+        return password.equals(passwordInput);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj){
