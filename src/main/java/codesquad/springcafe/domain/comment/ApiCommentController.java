@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/comment")
 public class ApiCommentController {
@@ -31,5 +33,10 @@ public class ApiCommentController {
 
         commentService.delete(id);
         return new ApiResponse(true , id+"번 댓글 삭제 성공");
+    }
+
+    @GetMapping("/{articleId}")
+    public List<Comment> get(@PathVariable int articleId,  @RequestParam int page){
+        return commentService.findByArticleId(articleId, page);
     }
 }
