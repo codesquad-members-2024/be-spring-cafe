@@ -16,7 +16,7 @@ public class HomeController {
         this.articleRepository = articleRepository;
     }
 
-    @GetMapping("/index.html")
+    @GetMapping(value = {"/index.html", "/"})
     public String home(Model model) {
         List<Article> articles = articleRepository.findAll();
         model.addAttribute(articles);
