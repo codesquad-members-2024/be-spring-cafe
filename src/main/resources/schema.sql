@@ -16,5 +16,6 @@
      writer    VARCHAR(50),
      title     VARCHAR(50),
      content   TEXT,
-     primary key (id)
+     primary key (id),
+     foreign key (writer) references `user`(userId)
  );
