@@ -1,7 +1,6 @@
 package codesquad.springcafe.repository.user;
 
 import codesquad.springcafe.domain.User;
-import codesquad.springcafe.dto.UserDto;
 import codesquad.springcafe.dto.UserUpdateDto;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,19 +21,10 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     @Override
-    public void createUser(UserDto userDto) {
-        User user = userDto.toEntity();
+    public void createUser(User user) {
         String SQL = "INSERT INTO users (user_id, nickname, email, password, created) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(SQL, user.getUserId(), user.getNickname(), user.getEmail(), user.getPassword(),
                 user.getCreated());
-    }
-
-    @Override
-    public void updateUser(String userId, UserUpdateDto userUpdateDto) {
-        String SQL = "UPDATE users SET password = ?, nickname = ?, email = ? WHERE user_id = ?";
-        jdbcTemplate.update(SQL, userUpdateDto.getNewPassword(), userUpdateDto.getNewNickname(),
-                userUpdateDto.getNewEmail(),
-                userId);
     }
 
     @Override
@@ -51,6 +41,14 @@ public class JdbcUserRepository implements UserRepository {
         } catch (EmptyResultDataAccessException ex) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public void updateUser(String userId, UserUpdateDto userUpdateDto) {
+        String SQL = "UPDATE users SET password = ?, nickname = ?, email = ? WHERE user_id = ?";
+        jdbcTemplate.update(SQL, userUpdateDto.getPassword(), userUpdateDto.getNickname(),
+                userUpdateDto.getEmail(),
+                userId);
     }
 
     private RowMapper<User> rowMapper() {
