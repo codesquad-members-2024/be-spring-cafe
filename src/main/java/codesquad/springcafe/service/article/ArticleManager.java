@@ -8,6 +8,8 @@ import codesquad.springcafe.repository.comment.CommentRepository;
 import codesquad.springcafe.service.exception.DataDeletionException;
 import codesquad.springcafe.service.exception.ResourceNotFoundException;
 import codesquad.springcafe.service.exception.UnauthorizedException;
+import codesquad.springcafe.util.Page;
+import codesquad.springcafe.util.PageRequest;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -38,6 +40,18 @@ public class ArticleManager implements ArticleService {
     @Override
     public List<Article> findAllArticle() {
         return articleRepository.findAll();
+    }
+
+    @Override
+    public Page<Article> findAllArticle(PageRequest pageRequest) {
+        Page<Article> page = articleRepository.findAll(pageRequest);
+
+        /* 요청한 페이지 번호가 전체 페이지 개수보다 많으면 ResourceNotFoundException 예외 */
+        if (pageRequest.getPageNumber() >= page.getTotalPages()) {
+            throw new ResourceNotFoundException("전체 페이지 개수를 넘는 페이지를 요청할 수 없습니다.");
+        }
+
+        return page;
     }
 
     @Override
