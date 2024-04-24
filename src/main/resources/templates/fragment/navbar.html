@@ -62,7 +62,7 @@
                     <li th:if="${session.loginUser == null}"><a href="/login" role="button">로그인</a></li>
                     <li th:if="${session.loginUser == null}"><a href="/users/create" role="button">회원가입</a></li>
                     <li th:if="${session.loginUser != null}"><a href="/logout" role="button">로그아웃</a></li>
-                    <li th:if="${session.loginUser != null}"><a href="#" role="button">개인정보수정</a></li>
+                    <li th:if="${session.loginUser != null}"><a th:href="@{/users/{userId}/update(userId=${session.loginUser.getUserId()})}" role="button">개인정보수정</a></li>
                 </ul>
             </div>
         </div>
