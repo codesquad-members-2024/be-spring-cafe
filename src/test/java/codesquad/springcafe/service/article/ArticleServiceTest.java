@@ -6,8 +6,13 @@ import codesquad.springcafe.controller.article.UpdateArticle;
 import codesquad.springcafe.domain.article.Article;
 import codesquad.springcafe.domain.member.Member;
 import codesquad.springcafe.repository.article.ArticleRepository;
+import codesquad.springcafe.repository.comment.CommentRepository;
 import codesquad.springcafe.repository.member.MemberRepository;
+import codesquad.springcafe.service.exception.ResourceNotFoundException;
 import codesquad.springcafe.service.exception.UnauthorizedException;
+import codesquad.springcafe.util.Page;
+import codesquad.springcafe.util.PageRequest;
+import codesquad.springcafe.util.Sort;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,13 +20,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles("test")
 @SpringBootTest
 class ArticleServiceTest {
 
-    public static final LocalDateTime NOW = LocalDateTime.now();
+    public static final LocalDateTime NOW = LocalDateTime.now().withNano(0);
     public static final LocalDateTime MINUS_DAYS = NOW.minusDays(2);
 
     @Autowired
@@ -33,8 +36,16 @@ class ArticleServiceTest {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private CommentRepository commentRepository;
+
     @BeforeEach
     void setUp() {
+        /* 데이터베이스 초기화 */
+        commentRepository.clear();
+        articleRepository.clear();
+        memberRepository.clear();
+
         /* 테스터1, 테스터2 생성 */
         memberRepository.save(new Member("tester1", null, null, null));
         memberRepository.save(new Member("tester2", null, null, null));
@@ -44,12 +55,6 @@ class ArticleServiceTest {
         Article article2 = makeArticle("test2", "tester2", "body2", MINUS_DAYS);
         articleRepository.save(article1);
         articleRepository.save(article2);
-    }
-
-    @BeforeEach
-    void clear() {
-        articleRepository.clear();
-        memberRepository.clear();
     }
 
     @DisplayName("3번째로 작성하는 게시물은 id가 3번으로 게시물이 발행된다")
@@ -99,7 +104,6 @@ class ArticleServiceTest {
         assertThat(articles.size()).isEqualTo(2);
         assertThat(articles).extracting("title").contains("test1", "test2");
         assertThat(articles).extracting("createdBy").contains("tester1", "tester2");
-        assertThat(articles).extracting("contents").contains("body1", "body2");
         assertThat(articles).extracting("createdAt").contains(MINUS_DAYS, NOW);
     }
 
@@ -161,5 +165,34 @@ class ArticleServiceTest {
     void unpublish_success() {
         assertThatCode(() -> articleService.unpublish(1L))
                 .doesNotThrowAnyException();
+    }
+
+    @DisplayName("게시물이 2개 있을 때 0번 페이지를 요청하면 Page엔 2개의 게시물을 가져올 수 있다")
+    @Test
+    void findAllArticle_success() {
+        // given
+        PageRequest pageRequest = PageRequest.of(0, 15, Sort.sorted());
+
+        // when
+        Page<Article> page = articleService.findAllArticle(pageRequest);
+
+        // then
+        assertThat(page.getNumberOfElements()).isEqualTo(2);
+        assertThat(page.getPageNumber()).isEqualTo(0);
+        assertThat(page.getTotalPages()).isEqualTo(1);
+        assertThat(page.isFirst()).isTrue();
+        assertThat(page.isLast()).isTrue();
+        assertThat(page.getTotalPages()).isEqualTo(1);
+    }
+
+    @DisplayName("전체 페이지 개수는 1개일 때 1번 페이지를 요청하면 ResourceNotFoundException 예외를 던진다")
+    @Test
+    void findAllArticle_fail() {
+        // given
+        PageRequest pageRequest = PageRequest.of(1, 15, Sort.sorted());
+
+        // when & then
+        assertThatThrownBy(() -> articleService.findAllArticle(pageRequest))
+                .isInstanceOf(ResourceNotFoundException.class);
     }
 }

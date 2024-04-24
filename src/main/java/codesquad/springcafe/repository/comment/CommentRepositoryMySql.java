@@ -115,12 +115,14 @@ public class CommentRepositoryMySql implements CommentRepository {
 
     @Override
     public void clear() {
-        String sql = "set foreign_key_checks = 0;"
-                + "alter table MEMBER drop foreign key fk_comment_created_by;"
-                + "alter table COMMENT drop foreign key fk_comment_article_id;"
-                + "TRUNCATE TABLE COMMENT; ALTER TABLE COMMENT AUTO_INCREMENT = 1;"
-                + "set foreign_key_checks = 1;";
+        String uncheck = "set foreign_key_checks = 0;";
+        String truncate = "TRUNCATE TABLE COMMENT;";
+        String autoIncrementReset = "ALTER TABLE COMMENT AUTO_INCREMENT = 1;";
+        String check = "set foreign_key_checks = 1;";
 
-        template.update(sql);
+        template.update(uncheck);
+        template.update(truncate);
+        template.update(autoIncrementReset);
+        template.update(check);
     }
 }

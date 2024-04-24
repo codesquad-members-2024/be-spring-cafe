@@ -76,14 +76,15 @@ public class MemberRepositoryMySql implements MemberRepository {
 
     @Override
     public void clear() {
-        String sql = "set foreign_key_checks = 0;"
-                + "alter table ARTICLE drop foreign key fk_created_by;"
-                + "alter table COMMENT drop foreign key fk_comment_created_by;"
-                + "alter table COMMENT drop foreign key fk_comment_article_id;"
-                + "truncate table MEMBER; alter table MEMBER AUTO_INCREMENT = 1;"
-                + "set foreign_key_checks = 1;";
+        String uncheck = "set foreign_key_checks = 0;";
+        String truncate = "TRUNCATE TABLE MEMBER;";
+        String autoIncrementReset = "ALTER TABLE MEMBER AUTO_INCREMENT = 1;";
+        String check = "set foreign_key_checks = 1;";
 
-        template.update(sql);
+        template.update(uncheck);
+        template.update(truncate);
+        template.update(autoIncrementReset);
+        template.update(check);
     }
 
     private RowMapper<Member> memberRowMapper() {
