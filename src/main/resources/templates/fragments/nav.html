@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<div class="background">
+    <nav class="navbar navbar-fixed-top header" th:fragment="navbar">
+        <div class="col-md-12">
+            <div class="navbar-header">
+                <a th:href="@{/}" class="navbar-brand">
+                    <img src="/images/KakaoCI.png"/>
+                </a>
+
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active"><a th:href="@{/users}">멤버 리스트</a></li>
+                <li th:if="${session.user == null}"><a class="black-component" th:href="@{/users/login}" role="button">로그인</a>
+                </li>
+                <li th:if="${session.user == null}"><a class="black-component" th:href="@{/users/create}" role="button">회원가입</a>
+                </li>
+
+                <li th:if="${session.user != null}"><a class="black-component" th:href="@{/users/logout}" role="button">로그아웃</a>
+                </li>
+                <li th:if="${session.user != null}"><a class="black-component"
+                                                       th:href="@{/users/{userId}/update(userId = ${session.user.getUserId()})}"
+                                                       role="button">개인정보수정</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+</html>

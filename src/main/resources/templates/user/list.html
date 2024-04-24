@@ -23,8 +23,17 @@
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a th:href="@{/}">메인 페이지</a></li>
-                <li><a class="black-component" th:href="@{/users/login}" role="button">로그인</a></li>
-                <li><a class="black-component" th:href="@{/users/create}" role="button">회원가입</a></li>
+                <li th:if="${session.user == null}"><a class="black-component" th:href="@{/users/login}" role="button">로그인</a>
+                </li>
+                <li th:if="${session.user == null}"><a class="black-component" th:href="@{/users/create}" role="button">회원가입</a>
+                </li>
+
+                <li th:if="${session.user != null}"><a class="black-component" th:href="@{/users/logout}" role="button">로그아웃</a>
+                </li>
+                <li th:if="${session.user != null}"><a class="black-component"
+                                                       th:href="@{/users/{userId}/update(userId = ${session.user.getUserId()})}"
+                                                       role="button">개인정보수정</a>
+                </li>
             </ul>
         </div>
     </nav>

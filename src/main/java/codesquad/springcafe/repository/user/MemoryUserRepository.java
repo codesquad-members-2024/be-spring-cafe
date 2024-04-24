@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+import org.springframework.ui.Model;
 
 @Repository
 public class MemoryUserRepository implements UserRepository {
@@ -23,9 +23,13 @@ public class MemoryUserRepository implements UserRepository {
         logger.debug("사용자 생성: {}", user.toDto());
     }
 
+
     @Override
     public void updateUser(String userId, UserUpdateDto userUpdateDto) {
         User user = findByUserId(userId).get();
+        if (!user.matchPassword(userUpdateDto.getPassword())) {
+            logger.debug("비밀번호 오류");
+        }
         user.update(userUpdateDto);
         logger.debug("정보 업데이트: {}", user.toDto());
     }
