@@ -1,7 +1,6 @@
 package codesquad.springcafe.user;
 
 public class User {
-    private Long id;
     private String userId;
     private String password;
     private String name;
@@ -11,20 +10,11 @@ public class User {
 
     }
 
-    public User(Long id, String userId, String password, String name, String email){
-        this.id = id;
+    public User(String userId, String password, String name, String email){
         this.userId = userId;
         this.password = password;
         this.name = name;
         this.email = email;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getUserId() {
@@ -65,6 +55,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "User [id=" + id + ", userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
+        return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
     }
 }
