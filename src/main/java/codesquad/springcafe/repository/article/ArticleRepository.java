@@ -13,5 +13,5 @@ public interface ArticleRepository {
 
     void modify(Article modifiedArticle);
 
-    void remove(Long index);
+    void remove(Long id);
 }

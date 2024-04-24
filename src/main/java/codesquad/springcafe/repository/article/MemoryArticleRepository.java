@@ -35,7 +35,7 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public void remove(Long index) {
-        articles.remove(index);
+    public void remove(Long id) {
+        articles.remove(id);
     }
 }

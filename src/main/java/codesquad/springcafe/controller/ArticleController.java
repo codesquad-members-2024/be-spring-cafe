@@ -27,14 +27,14 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    @PostMapping("/questions")
+    @PostMapping("articles")
     public String upload(@ModelAttribute("article") ArticleUploadDTO articleUploadDTO, Model model) {
         ArticleInfoDTO newArticle = articleService.upload(articleUploadDTO);
         model.addAttribute("article", newArticle);
         return "redirect:/";
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public String showList(Model model) {
         List<ArticleInfoDTO> articles = articleService.findAll();
         model.addAttribute("articles", articles);

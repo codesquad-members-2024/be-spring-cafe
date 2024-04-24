@@ -16,8 +16,8 @@ public class JdbcArticleRepository implements ArticleRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public JdbcArticleRepository() {
-        this.jdbcTemplate = new JdbcTemplate();
+    public JdbcArticleRepository(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
@@ -59,14 +59,14 @@ public class JdbcArticleRepository implements ArticleRepository {
 
     @Override
     public void modify(Article modifiedArticle) {
-        String sql = "UPDATE `article` SET title = ?, content = ? WHERE index = ?";
+        String sql = "UPDATE `article` SET title = ?, content = ? WHERE id = ?";
         jdbcTemplate.update(sql,
             modifiedArticle.getTitle(), modifiedArticle.getContent(), modifiedArticle.getId());
     }
 
     @Override
-    public void remove(Long index) {
-        String sql = "DELETE FROM `article` WHERE index = ?";
-        jdbcTemplate.update(sql, index);
+    public void remove(Long id) {
+        String sql = "DELETE FROM `article` WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }
