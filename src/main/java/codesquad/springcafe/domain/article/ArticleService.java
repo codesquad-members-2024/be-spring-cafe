@@ -41,6 +41,10 @@ public class ArticleService {
         return new ArticleWithComments(article, commentService.findByArticleId(articleId, 1));
     }
 
+    public List<Article> getArticlesAtPage(int page){
+        return articleRepository.getArticles(page);
+    }
+
     public List<Article> findByUserId(String id) {
         return articleRepository.findByUserId(id);
     }

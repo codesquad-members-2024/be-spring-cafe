@@ -18,4 +18,6 @@ public interface ArticleRepository {
     void delete(int id);
 
     void deleteAll();
+
+    List<Article> getArticles(int page);
 }

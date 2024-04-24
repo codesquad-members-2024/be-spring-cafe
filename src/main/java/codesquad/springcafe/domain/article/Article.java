@@ -53,6 +53,10 @@ public class Article {
         return createdAt.toLocalDateTime().format(formatter);
     }
 
+    public String getFormedTime() {
+        return formedTime;
+    }
+
     @Override
     public String toString() {
         return "Article{" +

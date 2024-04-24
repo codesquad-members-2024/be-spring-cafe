@@ -20,7 +20,7 @@ public class MainController {
 
     @GetMapping("")
     public String index(Model model){
-        model.addAttribute("articles", articleService.findAll());
+        model.addAttribute("articles", articleService.getArticlesAtPage(1));
         return "index";
     }
 }

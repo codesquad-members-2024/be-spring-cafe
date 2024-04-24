@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class JDBCArticleRepository implements ArticleRepository {
     @Override
     public void delete(int id) {
         String DELETE = "UPDATE ARTICLE SET STATUS = ? WHERE ID = ? ;";
-        Object[] args = new Object[]{CLOSE , id};
+        Object[] args = new Object[]{CLOSE, id};
 
         jdbcTemplate.update(DELETE, args);
     }
@@ -104,6 +105,18 @@ public class JDBCArticleRepository implements ArticleRepository {
         String DELETE_ALL = "DELETE FROM ARTICLE";
 
         jdbcTemplate.update(DELETE_ALL);
+    }
+
+    @Override
+    public List<Article> getArticles(int page) {
+        String paging_query = "SELECT * FROM ARTICLE WHERE STATUS = ? ORDER BY CREATEDAT DESC LIMIT ? OFFSET ?";
+
+        int COMMENTS_PER_PAGE = 15;
+        int START_INDEX = COMMENTS_PER_PAGE * (page - 1);
+
+        Object[] args = new Object[]{OPEN, COMMENTS_PER_PAGE, START_INDEX};
+        int[] pramTypes = new int[]{Types.VARCHAR, Types.INTEGER, Types.INTEGER};
+        return jdbcTemplate.query(paging_query, args, pramTypes, articleRowMapper());
     }
 
     private RowMapper<Article> articleRowMapper() {

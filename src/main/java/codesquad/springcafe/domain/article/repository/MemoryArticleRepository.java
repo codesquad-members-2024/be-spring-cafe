@@ -3,6 +3,7 @@ package codesquad.springcafe.domain.article.repository;
 import codesquad.springcafe.domain.article.Article;
 import codesquad.springcafe.domain.article.DTO.ArticlePostReq;
 import codesquad.springcafe.annotation.TestRepository;
+import codesquad.springcafe.domain.comment.DTO.Comment;
 import codesquad.springcafe.domain.user.DTO.SimpleUserInfo;
 
 import java.sql.Timestamp;
@@ -70,5 +71,15 @@ public class MemoryArticleRepository implements ArticleRepository {
     public void deleteAll() {
         nowIndex = 1;
         articles.clear();
+    }
+
+    @Override
+    public List<Article> getArticles(int page) {
+        int ARTICLES_PER_PAGE = 15;
+        int START_INDEX = ARTICLES_PER_PAGE * (page - 1);
+        int LAST_INDEX = ARTICLES_PER_PAGE * page;
+
+        List<Article> all = findAll();
+        return all.subList(START_INDEX, Math.min(LAST_INDEX, all.size()));
     }
 }
