@@ -23,7 +23,7 @@
                 <p><strong>아이디:</strong> {{user.userId}}</p>
             </div>
         </div>
-        <form name="question" class="info-container" method="POST" action="/users/detail/{{user.userId}}/update">
+        <form name="question" id="registrationForm" class="info-container" method="POST" action="/users/detail/{{user.userId}}/update">
             {{#duplicationError}}
             <p style="color: crimson; text-align: center">중복된 값이 입력되었습니다. 다시 입력해주세요</p>
             {{/duplicationError}}
