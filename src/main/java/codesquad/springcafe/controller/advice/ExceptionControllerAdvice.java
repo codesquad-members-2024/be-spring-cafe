@@ -1,5 +1,6 @@
 package codesquad.springcafe.controller.advice;
 
+import codesquad.springcafe.controller.HomeController;
 import codesquad.springcafe.controller.article.ArticleController;
 import codesquad.springcafe.controller.comment.CommentController;
 import codesquad.springcafe.controller.member.MemberController;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ControllerAdvice(assignableTypes = {MemberController.class, CommentController.class, ArticleController.class})
+@ControllerAdvice(assignableTypes = {HomeController.class, MemberController.class, CommentController.class, ArticleController.class})
 public class ExceptionControllerAdvice {
 
     private static final Logger log = LoggerFactory.getLogger(ExceptionControllerAdvice.class);

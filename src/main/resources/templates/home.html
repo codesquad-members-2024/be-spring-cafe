@@ -9,13 +9,14 @@
     <div class="col-md-12 col-sm-12 col-lg-10 col-lg-offset-1">
         <div class="panel panel-default qna-list">
             <ul class="list">
-                <li th:each="article, loop : ${articles}">
+                <li th:each="article, loop : ${articlePage.getContent()}">
                     <div class="wrap">
                         <div class="main">
                             <div class="row" th:text="*{loop.current.id}">1</div>
                             <strong class="subject">
                                 <a href="qna/detail.html" th:href="@{|/questions/${article.id}|}">
                                     <span th:text="*{article.title}">국내에서 Ruby on Rails와 Play가 활성화되기 힘든 이유는 뭘까?</span>
+                                    <span class="label label-primary" th:text="*{article.commentSize}">42</span>
                                 </a>
                             </strong>
                             <div class="auth-info">
@@ -27,10 +28,6 @@
                                     <span th:text="*{article.createdBy}">guest</span>
                                 </a>
                             </div>
-                            <div class="reply" title="댓글">
-                                <i class="icon-reply"></i>
-                                <span class="point" th:text="*{article.commentSize}">0</span>
-                            </div>
                         </div>
                     </div>
                 </li>
@@ -39,13 +36,52 @@
                 <div class="col-md-3"></div>
                 <div class="col-md-6 text-center">
                     <ul class="pagination center-block" style="display:inline-block;">
-                        <li><a href="#">«</a></li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                        <li><a href="#">»</a></li>
+                        <!--/* 왼쪽 이동 버튼 활성/비활성화 여부 */-->
+                        <li th:class="${articlePage.isFirst() || (articlePage.getPageNumber() / 5) == 0 ? 'disabled' : null}">
+                            <a th:if="${articlePage.isFirst() || (articlePage.getPageNumber() / 5) == 0}">«</a>
+                            <a th:if="${!articlePage.isFirst() && (articlePage.getPageNumber() / 5) > 0}"
+                               th:href="@{|/?page=${(articlePage.getPageNumber() / 5) * 5}|}">«</a>
+                        </li>
+
+                        <!--/* 전체 페이지 개수가 0 개일 때 == 게시물이 없을 때 */-->
+                        <th:block th:if="${articlePage.getTotalPages() == 0}">
+                            <li class="active"><a focus>1</a></li>
+                        </th:block>
+
+                        <!--/* 현재 페이지가 속한 페이지 그룹의 시작 페이지 번호가 전체 페이지 개수보다 작을 때 */-->
+                        <th:block th:if="${(articlePage.getPageNumber() / 5) * 5 + 5} < ${articlePage.getTotalPages()}">
+                            <th:block th:each="idx : ${#numbers.sequence((articlePage.getPageNumber() / 5) * 5 + 1, (articlePage.getPageNumber() / 5) * 5 + 5)}">
+                                <li th:class="${idx == articlePage.getPageNumber() + 1 ? 'active' : null}">
+                                    <a th:if="${idx == articlePage.getPageNumber() + 1 ? 'focus' : null}">[[${idx}]]</a>
+                                    <a th:unless="${idx} == ${articlePage.getPageNumber() + 1}" th:href="@{|/?page=${idx}|}">[[${idx}]]</a>
+                                </li>
+                            </th:block>
+
+                            <!--/* 오른쪽 이동 버튼 활성/비활성화 여부 */-->
+                            <li th:class="${articlePage.isLast() ? 'disabled' : null}">
+                                <a th:if="${articlePage.isLast()}">»</a>
+                                <a th:unless="${articlePage.isLast()}"
+                                   th:href="@{|/?page=${(articlePage.getPageNumber() / 5 + 1) * 5 + 1}|}">»</a>
+                            </li>
+                        </th:block>
+
+                        <!--/* 현재 페이지가 속한 페이지 그룹의 시작 페이지 번호가 전체 페이지 개수보다 많을 떄  */-->
+                        <th:block th:if="${(articlePage.getPageNumber() / 5) * 5 + 5 >= articlePage.getTotalPages()}">
+                            <th:block th:if="${articlePage.getTotalPages() > 0}" th:each="idx : ${#numbers.sequence((articlePage.getPageNumber() / 5) * 5 + 1, articlePage.getTotalPages())}">
+                                <li th:class="${idx == articlePage.getPageNumber() + 1 ? 'active' : null}">
+                                    <a th:if="${idx == articlePage.getPageNumber() + 1 ? 'focus' : null}">[[${idx}]]</a>
+                                    <a th:unless="${idx} == ${articlePage.getPageNumber() + 1}" th:href="@{|/?page=${idx}|}">[[${idx}]]</a>
+                                </li>
+                            </th:block>
+
+                            <!--/* 오른쪽 이동 버튼 활성/비활성화 여부 */-->
+                            <li th:class="${articlePage.isLast() ? 'disabled' : null}">
+                                <a th:if="${articlePage.isLast()}">»</a>
+                                <a th:unless="${articlePage.isLast()}" th:href="@{|/?page=${articlePage.getTotalPages()}|}">»</a>
+                            </li>
+                        </th:block>
+
+
                     </ul>
                 </div>
                 <div class="col-md-3 qna-write">
