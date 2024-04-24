@@ -1,11 +1,13 @@
 package codesquad.springcafe.service;
 
-import codesquad.springcafe.dto.UserUpdateDto;
-import codesquad.springcafe.repository.UserRepository;
+import codesquad.springcafe.exception.UserNotFoundException;
+import codesquad.springcafe.model.UpdateUser;
 import codesquad.springcafe.model.User;
+import codesquad.springcafe.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -25,18 +27,22 @@ public class UserService {
     }
 
     public User findUserById(String userId) {
-        return userRepository.findUserById(userId);
+        Optional<User> optionalUser = userRepository.findUserById(userId);
+        if (optionalUser.isPresent()) {
+            return optionalUser.get();
+        }
+        throw new UserNotFoundException(userId);
     }
 
-    public void update(UserUpdateDto userUpdateDto) {
-        String userId = userUpdateDto.getUserId();
-        User user = userRepository.findUserById(userId);
-        user.update(userUpdateDto);
+    public void update(UpdateUser updateUser) {
+        String userId = updateUser.getUserId();
+        User user = findUserById(userId);
+        user.update(updateUser);
         userRepository.update(user);
     }
 
     public boolean isValidUser(String userId, String password) {
-        User user = userRepository.findUserById(userId);
+        User user = findUserById(userId);
         return user.validatePassword(password);
     }
 

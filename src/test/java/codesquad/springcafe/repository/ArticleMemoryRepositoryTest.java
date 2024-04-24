@@ -20,12 +20,13 @@ class ArticleMemoryRepositoryTest {
     @Test
     @DisplayName("게시글을 저장할 수 있다.")
     void saveArticle() {
-        ArticleRequestDto articleRequestDto = new ArticleRequestDto("cori", "안녕하세요.", "오늘은 4월 11일 입니다.");
-        Long articleId = articleRepository.save(new Article(articleRequestDto));
+        Long articleId = 1L;
+        Article article = new Article(articleId, "cori", "안녕하세요", "오늘은 날씨가 흐립니다.");
+        articleRepository.save(article);
 
-        Article findArticle = articleRepository.findById(articleId);
+        Article findArticle = articleRepository.findById(articleId).get();
 
-        assertThat(findArticle).usingRecursiveComparison().isEqualTo(new Article(articleId, articleRequestDto));
+        assertThat(findArticle).usingRecursiveComparison().isEqualTo(article);
     }
 
 

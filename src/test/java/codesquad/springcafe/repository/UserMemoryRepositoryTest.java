@@ -23,7 +23,7 @@ class UserMemoryRepositoryTest {
 
         userRepository.saveUser(user);
 
-        assertThat(userRepository.findUserById(user.getUserId())).isEqualTo(user);
+        assertThat(userRepository.findUserById(user.getUserId()).get()).isEqualTo(user);
     }
 
     @Test

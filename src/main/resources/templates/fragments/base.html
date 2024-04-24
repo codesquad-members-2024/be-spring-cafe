@@ -73,7 +73,7 @@
                     </form>
 <!--                    <a href="/users/logout" methods="POST" role="button">로그아웃</a>-->
                 </li>
-                <li th:if="${session.loginUserId != null}"><a th:href="@{/users/{userId}/form(userId = ${session.loginUserId})}" role="button">개인정보수정</a></li>
+                <li th:if="${session.loginUserId != null}"><a th:href="@{/users/update/{userId}(userId = ${session.loginUserId})}" role="button">개인정보수정</a></li>
             </ul>
         </div>
     </div>

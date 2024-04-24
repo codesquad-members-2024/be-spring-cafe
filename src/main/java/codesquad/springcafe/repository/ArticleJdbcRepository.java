@@ -1,7 +1,10 @@
 package codesquad.springcafe.repository;
 
+import codesquad.springcafe.dto.ArticleRequestDto;
+import codesquad.springcafe.exception.ArticleNotFountException;
 import codesquad.springcafe.model.Article;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -11,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 @Primary
@@ -41,9 +45,14 @@ public class ArticleJdbcRepository implements ArticleRepository {
     }
 
     @Override
-    public Article findById(Long articleId) {
+    public Optional<Article> findById(Long articleId) {
         String sql = "SELECT article_id, writer, title, contents, local_date_time, hits FROM articles WHERE article_id = ?";
-        return jdbcTemplate.queryForObject(sql, articleRowMapper(), articleId);
+        try {
+            Article article = jdbcTemplate.queryForObject(sql, articleRowMapper(), articleId);
+            return Optional.ofNullable(article);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ArticleNotFountException();
+        }
     }
 
     @Override
@@ -56,6 +65,18 @@ public class ArticleJdbcRepository implements ArticleRepository {
     public void clear() {
         String sql = "DELETE FROM articles";
         jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public void update(Long articleId, ArticleRequestDto articleRequestDto) {
+        String sql = "UPDATE articles SET title = ?, contents = ? WHERE article_id = ?";
+        jdbcTemplate.update(sql, articleRequestDto.getTitle(), articleRequestDto.getContents(), articleId);
+    }
+
+    @Override
+    public void delete(Long articleId) {
+        String sql = "DELETE FROM articles WHERE article_id = ?";
+        jdbcTemplate.update(sql, articleId);
     }
 
     private RowMapper<Article> articleRowMapper() {

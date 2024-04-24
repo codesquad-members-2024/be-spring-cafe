@@ -33,12 +33,12 @@ public class Article {
         this.hits = new AtomicLong();
     }
 
-    public Article(long articleId, ArticleRequestDto articleRequestDto) {
-        this(articleId, articleRequestDto.getWriter(), articleRequestDto.getTitle(), articleRequestDto.getContents());
+    public Article(long articleId, String writer, ArticleRequestDto articleRequestDto) {
+        this(articleId, writer, articleRequestDto.getTitle(), articleRequestDto.getContents());
     }
 
-    public Article(ArticleRequestDto articleRequestDto) {
-        this.writer = articleRequestDto.getWriter();
+    public Article(String writer, ArticleRequestDto articleRequestDto) {
+        this.writer = writer;
         this.title = articleRequestDto.getTitle();
         this.contents = articleRequestDto.getContents();
         this.localDateTime = LocalDateTime.now();
@@ -71,6 +71,10 @@ public class Article {
 
     public void setArticleId(Long articleId) {
         this.articleId = articleId;
+    }
+
+    public boolean checkWriter(String userId) {
+        return this.writer.equals(userId);
     }
 
 }

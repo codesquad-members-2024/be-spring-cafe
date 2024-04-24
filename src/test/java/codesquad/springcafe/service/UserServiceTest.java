@@ -53,8 +53,8 @@ class UserServiceTest {
         User user = new User("cori", "1234", "old name", "cori@naver.com");
         userRepository.saveUser(user);
 
-        UserUpdateDto userUpdateDto = new UserUpdateDto("cori", "1234", "4321", "new name", "cori123@naver.com");
-        userService.update(userUpdateDto);
+        UserUpdateDto userUpdateDto = new UserUpdateDto("1234", "4321", "new name", "cori123@naver.com");
+        userService.update(userUpdateDto.toEntity("cori"));
 
         assertThat(user).usingRecursiveComparison().isEqualTo(new User("cori", "4321", "new name", "cori123@naver.com"));
     }
@@ -65,8 +65,8 @@ class UserServiceTest {
         User user = new User("cori", "1234", "old name", "cori@naver.com");
         userRepository.saveUser(user);
 
-        UserUpdateDto userUpdateDto = new UserUpdateDto("cori", "1111", "4321", "new name", "cori123@naver.com");
+        UserUpdateDto userUpdateDto = new UserUpdateDto("1111", "4321", "new name", "cori123@naver.com");
 
-        assertThatThrownBy(() -> userService.update(userUpdateDto)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> userService.update(userUpdateDto.toEntity("cori"))).isInstanceOf(IllegalArgumentException.class);
     }
 }

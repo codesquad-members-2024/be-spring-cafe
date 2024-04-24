@@ -1,12 +1,15 @@
 package codesquad.springcafe.repository;
 
+import codesquad.springcafe.exception.UserNotFoundException;
 import codesquad.springcafe.model.User;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Primary
@@ -31,9 +34,14 @@ public class UserJdbcRepository implements UserRepository {
     }
 
     @Override
-    public User findUserById(String userId) {
+    public Optional<User> findUserById(String userId) {
         String sql = "SELECT * FROM users WHERE user_id = ?";
-        return jdbcTemplate.queryForObject(sql, userRowMapper(), userId);
+        try {
+            User user = jdbcTemplate.queryForObject(sql, userRowMapper(), userId);
+            return Optional.ofNullable(user);
+        } catch (EmptyResultDataAccessException e) {
+            throw new UserNotFoundException(userId);
+        }
     }
 
     @Override

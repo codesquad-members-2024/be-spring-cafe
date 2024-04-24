@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base.html::head}">
+</head>
+
+<body>
+<nav th:replace="~{fragments/base.html::navigation-bar}">
+</nav>
+
+<div class="navbar navbar-default" id="subnav" th:replace="~{fragments/base.html::subnav}">
+</div>
+
+<div class="container" id="main">
+        <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-default content-main">
+                        <p th:text="${errorMessage}" class="error-message">error message</p>
+                </div>
+        </div>
+</div>
+
+<!-- script references -->
+<div th:replace="~{fragments/base.html::scripts}">
+</div>
+</body>
+</html>

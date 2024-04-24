@@ -1,23 +1,19 @@
 package codesquad.springcafe.dto;
 
+import codesquad.springcafe.model.UpdateUser;
+
 public class UserUpdateDto {
 
-    private final String userId;
     private final String password;
     private final String newPassword;
     private final String name;
     private final String email;
 
-    public UserUpdateDto(String userId, String password, String newPassword, String name, String email) {
-        this.userId = userId;
+    public UserUpdateDto(String password, String newPassword, String name, String email) {
         this.password = password;
         this.newPassword = newPassword;
         this.name = name;
         this.email = email;
-    }
-
-    public String getUserId() {
-        return userId;
     }
 
     public String getPassword() {
@@ -36,14 +32,18 @@ public class UserUpdateDto {
         return email;
     }
 
+    public UpdateUser toEntity(String userId) {
+        return new UpdateUser(userId, password, newPassword, name, email);
+    }
+
     @Override
     public String toString() {
         return "UserUpdateDto{" +
-                "userId='" + userId + '\'' +
-                ", password='" + password + '\'' +
+                "password='" + password + '\'' +
                 ", newPassword='" + newPassword + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }
+
 }

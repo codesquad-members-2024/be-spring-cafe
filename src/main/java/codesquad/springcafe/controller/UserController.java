@@ -2,6 +2,7 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.dto.UserProfileDto;
 import codesquad.springcafe.dto.UserUpdateDto;
+import codesquad.springcafe.model.UpdateUser;
 import codesquad.springcafe.model.User;
 import codesquad.springcafe.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -58,11 +59,16 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String userId, @RequestParam String password, HttpSession httpSession) {
+    public String login(
+            @RequestParam String userId,
+            @RequestParam String password,
+            @RequestParam(defaultValue = "/") String redirectUri,
+            HttpSession httpSession) {
+
         if (userService.isValidUser(userId, password)) {
             httpSession.setAttribute(LOGIN_USER_ID, userId);
             log.debug("로그인 성공: {}", userId);
-            return "redirect:/";
+            return "redirect:" + redirectUri;
         }
         return "redirect:/users/login";
     }
@@ -72,26 +78,26 @@ public class UserController {
         return "user/form";
     }
 
-    @GetMapping("/{userId}/form")
+    @GetMapping("update/{userId}")
     public String getUserUpdateForm(@PathVariable String userId, Model model) {
         model.addAttribute("userId", userId);
         return "user/updateForm";
     }
 
     @PutMapping("/{userId}")
-    public String updateUser(@PathVariable String userId, @RequestParam("password") String password, @RequestParam("newPassword") String newPassword, @RequestParam("name") String name, @RequestParam("email") String email, HttpSession httpSession) {
+    public String updateUser(@PathVariable String userId, @ModelAttribute UserUpdateDto userUpdateDto, HttpSession httpSession) {
         String loginUserId = (String) httpSession.getAttribute(LOGIN_USER_ID);
         if (!loginUserId.equals(userId)) {
             return "redirect:/";
         }
-        UserUpdateDto userUpdateDto = new UserUpdateDto(userId, password, newPassword, name, email);
+        UpdateUser updateUser = userUpdateDto.toEntity(userId);
         try {
-            userService.update(userUpdateDto);
+            userService.update(updateUser);
         } catch (IllegalArgumentException e) {
-            log.debug("user {} password does not match", userUpdateDto.getUserId());
+            log.debug("user {} password does not match", loginUserId);
             return "redirect:/users/" + userId + "/form";
         }
-        log.debug("user {} update", userUpdateDto.getUserId());
+        log.debug("user {} update", loginUserId);
         return "redirect:/users";
     }
 

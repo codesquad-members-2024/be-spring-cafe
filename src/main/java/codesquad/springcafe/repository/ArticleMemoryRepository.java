@@ -1,11 +1,13 @@
 package codesquad.springcafe.repository;
 
+import codesquad.springcafe.dto.ArticleRequestDto;
 import codesquad.springcafe.model.Article;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -22,8 +24,8 @@ public class ArticleMemoryRepository implements ArticleRepository {
         return articleId;
     }
 
-    public Article findById(Long articleId) {
-        return articles.get(articleId);
+    public Optional<Article> findById(Long articleId) {
+        return Optional.ofNullable(articles.get(articleId));
     }
 
     public List<Article> findAllArticle() {
@@ -34,4 +36,14 @@ public class ArticleMemoryRepository implements ArticleRepository {
         articles.clear();
         sequence.set(0L);
     }
+
+    @Override
+    public void update(Long articleId, ArticleRequestDto articleRequestDto) {
+    }
+
+    @Override
+    public void delete(Long articleId) {
+        articles.remove(articleId);
+    }
+
 }
