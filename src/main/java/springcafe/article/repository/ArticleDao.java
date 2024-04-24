@@ -6,8 +6,10 @@ import java.util.List;
 
 public interface ArticleDao {
 
-    public void insert(Article article);
+    public void save(Article article, Long id);
     public Article findById(Long id);
     public List<Article> findAll();
+    public void update(Article article);
+    public void delete(Long articleId);
 
 }
