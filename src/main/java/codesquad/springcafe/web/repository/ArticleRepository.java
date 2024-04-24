@@ -10,8 +10,6 @@ public interface ArticleRepository {
 
     List<Article> articlesAll();
 
-    int articleSize();
-
-    Optional<Article> findByIndex(int number);
+    Optional<Article> findByIndex(Long number);
 
 }

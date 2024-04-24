@@ -12,12 +12,12 @@
 <div class="container" id="main">
    <div class="col-md-12 col-sm-12 col-lg-10 col-lg-offset-1">
       <div class="panel panel-default qna-list">
-          <ul class="list">
+          <ul class="list" >
               <li th:each="article : ${articles}">
                   <div class="wrap">
                       <div class="main">
                           <strong class="subject">
-                              <a th:href="@{/article/{articleNumber}(articleNumber=${article.articleNumber})}" th:text="${article.title}"></a>
+                              <a th:href="@{/article/{articleId}(articleId=${article.articleId})}" th:text="${article.title}"></a>
                           </strong>
                           <div class="auth-info">
                               <i class="icon-add-comment"></i>
@@ -26,7 +26,7 @@
                           </div>
                           <div class="reply" title="댓글">
                               <i class="icon-reply"></i>
-                              <span class="point" th:text="${article.articleNumber}"></span>
+                              <span class="point" th:text="${article.articleId}"></span>
                           </div>
                       </div>
                   </div>

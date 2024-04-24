@@ -20,7 +20,11 @@
               </thead>
               <tbody>
                 <tr th:each="user : ${users}">
-                    <th scope="row">1</th><td> <a th:text="${user.userId}" th:href="@{/user/profile/{userId}(userId=${user.userId})}"></a></td> <td th:text="${user.name}"></td> <td th:text="${user.email}"></td><td><a th:href="@{/user/update/{userId}(userId=${user.userId})}" class="btn btn-success" role="button">수정</a></td>
+                    <th scope="row">1</th>
+                    <td> <a th:text="${user.userId}" th:href="@{/user/profile/{userId}(userId=${user.userId})}"></a></td>
+                    <td th:text="${user.name}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td><a th:href="@{/user/update/{userId}(userId=${user.userId})}" class="btn btn-success" role="button">수정</a></td>
                 </tr>
               </tbody>
           </table>
