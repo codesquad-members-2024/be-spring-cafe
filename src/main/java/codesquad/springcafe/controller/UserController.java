@@ -70,31 +70,29 @@ public class UserController {
         return "users/list";
     }
 
-    @GetMapping("detail/{userId}")
-    public String userProfile(
-            @PathVariable String userId,
-            HttpServletResponse response,
-            Model model) throws IOException {
-        Optional<UserProfileDto> dto = userDatabase.findUserByUserId(userId);
-        if(dto.isEmpty()){
+    private boolean profilePopulationSucceed(String userId, Model model, HttpServletResponse response) throws IOException {
+        Optional<UserProfileDto> userProfileOpt = userDatabase.findUserByUserId(userId);
+        if (userProfileOpt.isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            return null;
+            return false;
         }
-        model.addAttribute("user", dto.get());
+        model.addAttribute("user", userProfileOpt.get());
+        return true;
+    }
+
+    @GetMapping("detail/{userId}")
+    public String userProfile(@PathVariable String userId, HttpServletResponse response, Model model) throws IOException {
+        if(!profilePopulationSucceed(userId, model, response)){
+           return null;
+        }
         return "users/profile";
     }
 
     @GetMapping("detail/{userId}/update")
-    public String getProfileEditPage(
-            @PathVariable String userId,
-            Model model,
-            HttpServletResponse response) throws IOException {
-        Optional<UserProfileDto> dto = userDatabase.findUserByUserId(userId);
-        if(dto.isEmpty()){
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+    public String getProfileEditPage(@PathVariable String userId, Model model, HttpServletResponse response) throws IOException {
+        if(!profilePopulationSucceed(userId, model, response)){
             return null;
         }
-        model.addAttribute("user", dto.get());
         return "users/updateForm";
     }
 
