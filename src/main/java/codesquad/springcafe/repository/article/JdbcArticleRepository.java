@@ -4,7 +4,6 @@ import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.dto.ArticleDto;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,11 +18,8 @@ public class JdbcArticleRepository implements ArticleRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    //update article set point = article.point+1 where id = ?
-
     @Override
-    public void createArticle(ArticleDto articleDto) {
-        Article article = articleDto.toEntity();
+    public void createArticle(Article article) {
         String SQL = "INSERT INTO article (writer, title, content, views, created) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(SQL, article.getWriter(), article.getTitle(), article.getContent(), article.getViews(),
                 article.getCreated());
@@ -36,14 +32,26 @@ public class JdbcArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Optional<Article> findById(long id) {
+    public Article findById(long id) {
         String SQL = "SELECT * FROM article WHERE id = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(SQL, rowMapper(), id));
+        return jdbcTemplate.queryForObject(SQL, rowMapper(), id);
     }
 
     @Override
-    public void increaseViews(long id) {
+    public void updateViews(long id) {
         String SQL = "UPDATE article SET views = views+1 WHERE id = ?";
+        jdbcTemplate.update(SQL, id);
+    }
+
+    @Override
+    public void updateArticle(long id, ArticleDto articleDto) {
+        String SQL = "UPDATE article SET title = ?, content = ? WHERE id = ?";
+        jdbcTemplate.update(SQL, articleDto.getTitle(), articleDto.getContent(), id);
+    }
+
+    @Override
+    public void deleteArticle(long id) {
+        String SQL = "DELETE FROM article WHERE id = ?";
         jdbcTemplate.update(SQL, id);
     }
 

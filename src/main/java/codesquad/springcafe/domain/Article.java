@@ -21,24 +21,25 @@ public class Article {
         this.created = created;
     }
 
-    public Article(String writer, String title, String content) {
-        this.writer = writer;
+    public Article(String userId, String title, String content) {
+        this.writer = userId;
         this.title = title;
         this.content = content;
         this.views = 0;
         this.created = LocalDateTime.now();
     }
 
-    public ArticleDto toDto() {
-        return new ArticleDto(title, content);
+    public Article(String userId, ArticleDto articleDto) {
+        this.writer = userId;
+        this.title = articleDto.getTitle();
+        this.content = articleDto.getContent();
+        this.views = 0;
+        this.created = LocalDateTime.now();
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void increaseViews() {
-        views++;
+    public void update(ArticleDto articleDto) {
+        this.title = articleDto.getTitle();
+        this.content = articleDto.getContent();
     }
 
     public long getId() {
@@ -63,5 +64,13 @@ public class Article {
 
     public long getViews() {
         return views;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setViews(long views) {
+        this.views = views;
     }
 }
