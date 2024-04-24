@@ -35,7 +35,7 @@ public class QuestionService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
 
         // 질문 게시글 등록
-        Question question = questionRequest.toQuestion(user.getId());
+        Question question = questionRequest.toQuestion(user);
         Question saved = questionRepository.save(question);
 
         return saved.getId();

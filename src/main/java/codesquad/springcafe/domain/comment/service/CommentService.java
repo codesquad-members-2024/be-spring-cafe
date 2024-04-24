@@ -31,15 +31,15 @@ public class CommentService {
     }
 
     // 댓글 등록
-    public Long createComment(Long userId, Long questionId, CommentRequest commentCreateRequest) {
+    public Long createComment(Long userId, CommentRequest commentCreateRequest) {
         // 사용자 인증
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자압니다."));
 
         // 댓글 달 게시글 조회
-        Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 게시글입니다."));
+        Question question = questionRepository.findById(commentCreateRequest.getQuestionId()).orElseThrow(() -> new NoSuchElementException("존재하지 않는 게시글입니다."));
 
         // 댓글 등록
-        Comment saved = commentRepository.save(commentCreateRequest.toComment(userId, questionId));
+        Comment saved = commentRepository.save(commentCreateRequest.toComment(user, question));
         return saved.getId();
     }
 
@@ -52,7 +52,7 @@ public class CommentService {
                 .stream().map(c -> {
                     User writer = userRepository.findById(c.getUserId()).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
 
-                    return new CommentResponse(c.getId(), writer.getName(), c.getContent(), DateUtils.convertLocalDateTimeToString(c.getModifiedAt()),
+                    return new CommentResponse(c.getId(), writer.getLoginId(), writer.getName(), c.getContent(), DateUtils.convertLocalDateTimeToString(c.getModifiedAt()),
                             c.getModified(), c.getUserId().equals(userId));
                 }).toList();
 

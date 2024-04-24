@@ -34,7 +34,7 @@ public class CommentRepositoryH2 implements CommentRepository{
 
     @Override
     public Comment save(Comment comment) {
-        final String sql = "INSERT INTO users(userId, questionId, content) values(?, ?, ?)";
+        final String sql = "INSERT INTO comment(userId, questionId, content) values(?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -70,7 +70,7 @@ public class CommentRepositoryH2 implements CommentRepository{
     public Collection<Comment> findByQuestionId(Long questionId) {
         final String sql = "select * from comment where questionId = ? and deleted = false";
         logger.info("Find All Comments By QuestionId | questionId : {} | query : {}", questionId, sql);
-        return jdbcTemplate.query(sql, commentRowMapper);
+        return jdbcTemplate.query(sql, commentRowMapper, questionId);
     }
 
     @Override

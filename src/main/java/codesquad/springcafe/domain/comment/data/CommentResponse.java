@@ -2,14 +2,16 @@ package codesquad.springcafe.domain.comment.data;
 
 public class CommentResponse {
     private final Long commentId;
+    private final String userLoginId;
     private final String userName;
     private final String content;
     private final String modifiedAt;
     private final boolean isModified;
     private final boolean isMy;
 
-    public CommentResponse(Long commentId, String userName, String content, String modifiedAt, boolean isModified, boolean isMy) {
+    public CommentResponse(Long commentId, String userLoginId, String userName, String content, String modifiedAt, boolean isModified, boolean isMy) {
         this.commentId = commentId;
+        this.userLoginId = userLoginId;
         this.userName = userName;
         this.content = content;
         this.modifiedAt = modifiedAt;
@@ -19,6 +21,10 @@ public class CommentResponse {
 
     public Long getCommentId() {
         return commentId;
+    }
+
+    public String getUserLoginId() {
+        return userLoginId;
     }
 
     public String getUserName() {

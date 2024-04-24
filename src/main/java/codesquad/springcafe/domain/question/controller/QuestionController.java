@@ -1,5 +1,7 @@
 package codesquad.springcafe.domain.question.controller;
 
+import codesquad.springcafe.domain.comment.data.CommentListResponse;
+import codesquad.springcafe.domain.comment.service.CommentService;
 import codesquad.springcafe.domain.question.data.QuestionListResponse;
 import codesquad.springcafe.domain.question.data.QuestionRequest;
 import codesquad.springcafe.domain.question.data.QuestionResponse;
@@ -14,13 +16,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class QuestionController {
+public class
+QuestionController {
 
     private final QuestionService questionService;
+    private final CommentService commentService;
 
     @Autowired
-    public QuestionController(QuestionService questionService) {
+    public QuestionController(QuestionService questionService, CommentService commentService) {
         this.questionService = questionService;
+        this.commentService = commentService;
     }
 
     // 게시글 작성
@@ -53,8 +58,11 @@ public class QuestionController {
                               @PathVariable("questionId") Long questionId, Model model) {
         Long userId = getUserCredentials(httpSession).getUserId();
         QuestionResponse questionResponse = questionService.getQuestion(userId, questionId);
+        CommentListResponse comments = commentService.getComments(userId, questionId);
 
         model.addAttribute("question", questionResponse);
+        model.addAttribute("totalCommentCnt", comments.getTotalCommentCnt());
+        model.addAttribute("comments", comments.getComments());
 
         return "post/show";
     }

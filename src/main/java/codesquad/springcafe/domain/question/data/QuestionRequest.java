@@ -1,6 +1,7 @@
 package codesquad.springcafe.domain.question.data;
 
 import codesquad.springcafe.domain.question.model.Question;
+import codesquad.springcafe.domain.user.model.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -28,7 +29,7 @@ public class QuestionRequest {
         return content;
     }
 
-    public Question toQuestion(Long userId) {
-        return new Question(userId, this.title, this.content, 0);
+    public Question toQuestion(User user) {
+        return new Question(user.getId(), this.title, this.content, 0);
     }
 }

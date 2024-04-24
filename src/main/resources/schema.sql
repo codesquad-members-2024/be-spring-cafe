@@ -35,5 +35,7 @@ CREATE TABLE comment (
                          modified BOOLEAN DEFAULT FALSE,
                          deleted BOOLEAN NOT NULL DEFAULT 0,
                          createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                         modifiedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                         modifiedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                         FOREIGN KEY (userId) REFERENCES users(id),
+                         FOREIGN KEY (questionId) REFERENCES question(id)
 )
