@@ -122,6 +122,17 @@ h3,h4,h5 {
     padding-bottom:.6em;
     border-bottom:1px dashed #dadada
 }
+
+.article-more{
+    display:table;width:100%;
+    padding-bottom:.6em;
+    padding-top:.6em;
+    border-bottom:1px dashed #dadada;
+    text-align: center;
+    font-size: larger;
+    font-weight: 600;
+}
+
 .article-header-text,.article-header-thumb{display:table-cell;vertical-align:middle; padding-left: 10px;}
 .article-header-thumb{width:48px}
 .article-author-thumb{width:40px;height:40px;-webkit-border-radius:3px;border-radius:3px}

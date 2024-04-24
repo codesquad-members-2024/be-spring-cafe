@@ -44,8 +44,9 @@
                             {{#comments}}
                             {{> components/article/comment.partial}}
                             {{/comments}}
-
                         </div>
+                        <p id="nowPage" style="display: none">1</p>
+                        <div class="article-more" href="/api/comment/{{article.id}}?page="> 댓글 더보기 </div>
                         {{> components/comment/comment_form.partial}}
                     </div>
                 </div>

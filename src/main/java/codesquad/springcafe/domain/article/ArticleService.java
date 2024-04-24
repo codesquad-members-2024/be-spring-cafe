@@ -38,7 +38,7 @@ public class ArticleService {
         }
 
         articleRepository.addPoint(articleId);
-        return new ArticleWithComments(article, commentService.findByArticleId(articleId));
+        return new ArticleWithComments(article, commentService.findByArticleId(articleId, 1));
     }
 
     public List<Article> findByUserId(String id) {
