@@ -1,6 +1,6 @@
-package codesquad.springcafe.Repository;
+package codesquad.springcafe.repository;
 
-import codesquad.springcafe.Domain.Post;
+import codesquad.springcafe.domain.Post;
 import java.util.List;
 import java.util.Optional;
 

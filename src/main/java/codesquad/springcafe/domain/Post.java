@@ -1,7 +1,6 @@
-package codesquad.springcafe.Domain;
+package codesquad.springcafe.domain;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class Post {
 

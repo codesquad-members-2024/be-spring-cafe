@@ -1,7 +1,7 @@
-package codesquad.springcafe.Controller;
+package codesquad.springcafe.controller;
 
-import codesquad.springcafe.Domain.Post;
-import codesquad.springcafe.Service.PostService;
+import codesquad.springcafe.domain.Post;
+import codesquad.springcafe.service.PostService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

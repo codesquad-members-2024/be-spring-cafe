@@ -1,10 +1,9 @@
-package codesquad.springcafe.Repository;
+package codesquad.springcafe.repository;
 
-import codesquad.springcafe.Domain.User;
+import codesquad.springcafe.domain.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.stereotype.Repository; //컨테이너가 등록
 
 
 public class UserRepositoryImpl implements UserRepository {
