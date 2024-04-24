@@ -7,7 +7,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import static codesquad.springcafe.controller.UserController.LOGIN_USER_ID;
 
-public class AuthenticationInterceptor implements HandlerInterceptor {
+public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
