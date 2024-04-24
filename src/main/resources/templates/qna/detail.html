@@ -58,7 +58,12 @@
                             <article th:replace="~{fragment/comment/commentsFragment :: commentList(${commentsPage.content}, ${lineSeparator})}" class="article" id="answer-1405">
                             </article>
                         </div>
+                        <!-- 댓글이 15개 이상인 경우 더보기 버튼 추가 -->
                         <div id="comment-form" class="qna-comment-slipp-articles">
+                            <!-- comments.size()가 15 이상인 경우에만 버튼 표시 -->
+                            <th:block th:if="${commentsPage.getTotalElements() > 15}">
+                                <button class="btn btn-primary article article-header">더보기</button>
+                            </th:block>
                             <form class="submit-write" th:action="@{|/api/questions/${article.id}/comments|}"
                                   th:object="${commentForm}" method="POST">
                                 <div class="form-group" style="padding:14px;">
@@ -76,4 +81,41 @@
     </div>
 </div>
 </body>
+
+<!-- 페이지 정보를 전달하는 함수 -->
+<script th:inline="javascript">
+    var articleId = [[${article.id}]]
+    var requestPage = [[${commentsPage.pageNumber} + 1]];
+
+    function loadMoreComments() {
+        var url = '/api/questions/' + articleId + '/comments?page=' + requestPage;
+        console.log("요청 페이지 번호: ", requestPage);
+
+        $.ajax({
+            type : 'get',
+            url : url,
+            error: function (xhr) {
+                if (xhr.status === 400) {
+                    alert("댓글 불러오기 오류");
+                }
+            },
+            success : function (page, status) {
+                displayLoadedComments(page.content);
+                console.log("반환한 Page 객체: ", page);
+                console.log("댓글 개수: ", page.numberOfElements);
+
+                // 다음 페이지가 존재하면 page + 1
+                if (page.pageNumber + 1 < page.totalPages) {
+                    requestPage += 1;
+                }
+
+                // 갱신된 commentsPage에서 hasNext를 확인하여 버튼 제거
+                if (page.pageNumber + 1 >= page.totalPages) {
+                    $('.btn-primary').remove();
+                }
+            }
+        });
+    }
+</script>
+
 </html>

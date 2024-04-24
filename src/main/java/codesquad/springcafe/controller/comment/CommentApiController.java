@@ -3,6 +3,9 @@ package codesquad.springcafe.controller.comment;
 import codesquad.springcafe.controller.argumentresolver.LoginId;
 import codesquad.springcafe.domain.comment.Comment;
 import codesquad.springcafe.service.comment.CommentManager;
+import codesquad.springcafe.util.Page;
+import codesquad.springcafe.util.PageRequest;
+import codesquad.springcafe.util.Sort;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.slf4j.Logger;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -33,28 +37,29 @@ public class CommentApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Comment>> getCommentList(@LoginId String loginId, @PathVariable("articleId") long articleId) {
+    public ResponseEntity<Page<Comment>> getCommentList(@LoginId String loginId, @PathVariable("articleId") long articleId,
+                                                        @RequestParam(value = "page", defaultValue = "1") int page,
+                                                        @RequestParam(value = "size", defaultValue = "15") int size) {
         /* 전체 댓글 조회 */
-        List<Comment> comments = commentManager.findAllComment(articleId);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.sorted());
+        Page<Comment> comments = commentManager.findAllComment(articleId, pageRequest);
 
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<List<Comment>> publish(@LoginId String loginId, @PathVariable("articleId") long articleId,
-                                                 @Validated @RequestBody CommentForm form, BindingResult bindingResult) {
+    public ResponseEntity<Comment> publish(@LoginId String loginId, @PathVariable("articleId") long articleId,
+                                           @Validated @RequestBody CommentForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         /* 댓글 데이터 추가 */
         Comment requestComment = createComment(loginId, articleId, form);
-        commentManager.publish(requestComment);
+        Comment comment = commentManager.publish(requestComment);
 
-        /* 전체 댓글 조회 */
-        List<Comment> comments = commentManager.findAllComment(articleId);
-
-        return new ResponseEntity<>(comments, HttpStatus.OK);
+        /* 저장된 댓글 반환 */
+        return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
     @DeleteMapping("/{commentId}")
@@ -68,10 +73,7 @@ public class CommentApiController {
         /* 해당 댓글 삭제 */
         commentManager.unpublish(commentId);
 
-        /* 전체 댓글 조회 */
-        List<Comment> comments = commentManager.findAllComment(articleId);
-
-        return new ResponseEntity<>(comments, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private Comment createComment(String loginId, long articleId, CommentForm form) {
