@@ -67,13 +67,13 @@ public class ArticleController {
         throw new UnauthorizedAccessException("본인의 게시글만 수정할 수 있습니다.");
     }
 
-    @PutMapping("{articleId}")
+    @PutMapping("/{articleId}")
     public String updateArticle(@PathVariable Long articleId, @ModelAttribute ArticleRequestDto articleRequestDto) {
         articleService.update(articleId, articleRequestDto);
         return "redirect:/question/" + articleId;
     }
 
-    @DeleteMapping("{articleId}")
+    @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable Long articleId, HttpSession session){
         String userId = (String) session.getAttribute(LOGIN_USER_ID);
         if (articleService.checkArticleWriter(articleId, userId)) {
