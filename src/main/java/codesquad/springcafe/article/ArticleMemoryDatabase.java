@@ -32,4 +32,9 @@ public class ArticleMemoryDatabase implements ArticleDatabase{
     public Article getArticle(long articleId) {
         return articleMap.get(articleId);
     }
+
+    @Override
+    public void updateArticle(Article article) {
+
+    }
 }

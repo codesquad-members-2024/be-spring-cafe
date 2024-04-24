@@ -30,15 +30,17 @@
                   </div>
                   <div class="article-util">
                       <ul class="article-util-list">
+                          {{#isWriter}}
                           <li>
-                              <a class="link-modify-article" href="/questions/423/form">수정</a>
+                              <a class="link-modify-article" href="/articles/{{article.articleId}}/form">수정</a>
                           </li>
                           <li>
-                              <form class="form-delete" action="/questions/423" method="POST">
+                              <form class="form-delete" action="/articles/{{article.articleId}}" method="POST">
                                   <input type="hidden" name="_method" value="DELETE">
                                   <button class="link-delete-article" type="submit">삭제</button>
                               </form>
                           </li>
+                          {{/isWriter}}
                           <li>
                               <a class="link-modify-article" href="/index.html">목록</a>
                           </li>
@@ -54,7 +56,7 @@
                           <article class="article" id="answer-1405">
                               <div class="article-header">
                                   <div class="article-header-thumb">
-                                      <img src="https://graph.facebook.com/v2.3/1324855987/picture" class="article-author-thumb" alt="">
+                                      <img src="hcttps://graph.facebook.com/v2.3/1324855987/piture" class="article-author-thumb" alt="">
                                   </div>
                                   <div class="article-header-text">
                                       <a href="/users/1/자바지기" class="article-author-name">자바지기</a>

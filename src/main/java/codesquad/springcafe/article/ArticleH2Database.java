@@ -58,4 +58,10 @@ public class ArticleH2Database implements ArticleDatabase {
         List<Article> articleList = jdbcTemplate.query(sql, articleRowMapper, articleId);
         return articleList.isEmpty() ? null : articleList.get(0);
     }
+
+    @Override
+    public void updateArticle(Article article) {
+        String sql = "UPDATE MAIN.ARTICLES SET title = ?, content = ? WHERE articleId = ?";
+        jdbcTemplate.update(sql, article.getTitle(), article.getContent(), article.getArticleId());
+    }
 }
