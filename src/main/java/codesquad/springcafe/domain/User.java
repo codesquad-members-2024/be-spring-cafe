@@ -1,24 +1,23 @@
 package codesquad.springcafe.domain;
 
-import java.util.Objects;
-
 public class User {
-    private String userId;
+    private String id;
     private String nickname;
     private String email;
     private String password;
 
-    public User(String userId, String nickname, String email, String password) {
-        this.userId = userId;
+    public User(String id, String nickname, String email, String password) {
+        this.id = id;
         this.nickname = nickname;
         this.email = email;
         this.password = password;
     }
+
     public String getNickname() {
         return nickname;
     }
-    public String getUserId() {
-        return userId;
+    public String getId() {
+        return id;
     }
     public String getEmail() {
         return email;
@@ -31,20 +30,18 @@ public class User {
         return password.equals(inputPassword);
     }
 
-    public void update(UserUpdate userUpdate){
-        if(!userUpdate.getNewNickname().isEmpty()){
-            this.nickname = userUpdate.getNewNickname();
-        }
-        if(!userUpdate.getNewEmail().isEmpty()){
-            this.email = userUpdate.getNewEmail();
-        }
-        if(!userUpdate.getNewPassword().isEmpty()){
-            this.password = userUpdate.getNewPassword();
+    // memoryUserDatabase에만 사용
+    public void update(UpdatedUser updatedUser){
+        this.nickname = updatedUser.getNewNickname();
+        this.email = updatedUser.getNewEmail();
+
+        if(!updatedUser.getNewPassword().isEmpty()){
+            this.password = updatedUser.getNewPassword();
         }
     }
 
     @Override
     public String toString() {
-        return "userId: " + userId + ", nickname: " + nickname + ", email: " + email;
+        return "id: " + id + ", nickname: " + nickname + ", email: " + email;
     }
 }

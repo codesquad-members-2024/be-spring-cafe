@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="kr">
 <head>
-    {{> /repeatedHtml/head_data}}
+    {{> repeatedHtml/head_data}}
     <!--[if IE 9]><link href="/css/ie9.css" rel="stylesheet"><![endif]-->
     <link href="/css/index.css" rel="stylesheet">
     <link href="/css/user/profile.css" rel="stylesheet">
@@ -11,10 +11,10 @@
 <div class="background">
     <nav class="navbar navbar-fixed-top header">
         <div class="col-md-12">
-            {{> /repeatedHtml/navbar_header}}
+            {{> repeatedHtml/navbar_header}}
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="/main">멤버 리스트</a></li>
-                {{> /repeatedHtml/basic_button}}
+                {{> repeatedHtml/basic_button}}
             </ul>
         </div>
     </nav>
@@ -29,7 +29,7 @@
             </tr>
             <tr>
                 <td>User ID</td>
-                <td>{{ user.userId }}</td>
+                <td>{{ user.id }}</td>
             </tr>
             <tr>
                 <td>Email</td>
@@ -37,7 +37,7 @@
             </tr>
             </tbody>
         </table>
-        <a class="btn-edit-profile" href="/users/update/{{userId}}" role="button">프로필 수정</a>
+        <a class="btn-edit-profile" href="/users/update/{{id}}" role="button">프로필 수정</a>
     </div>
 
 

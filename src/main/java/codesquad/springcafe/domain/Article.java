@@ -4,25 +4,38 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Article {
+    private int id;
     private String writer;
     private String title;
     private String content;
     private LocalDateTime time;
-    private String formattedTime;
-    private String id;
+    private int views;
 
-
+    // ArticleCreateDto를 통해 사용자가 입력한 Article을 저장할 때 사용
     public Article(String writer, String title, String content) {
         this.writer = writer;
         this.title = title;
         this.content = content;
         this.time = LocalDateTime.now();
-        setFormattedTime();
+        this.views = 0;
     }
 
-    public void setFormattedTime(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        this.formattedTime = time.format(formatter);
+    // h2에서 Article 값을 가져올 때 사용하는 생성자
+    public Article(Integer id, String writer, String title, String content, LocalDateTime time, int views) {
+        this.id = id;
+        this.writer = writer;
+        this.title = title;
+        this.content = content;
+        this.time = time;
+        this.views = views;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public void increaseViews(){
+        this.views += 1;
     }
 
     public String getWriter(){
@@ -41,17 +54,17 @@ public class Article {
         return time;
     }
 
+    public int getViews(){
+        return views;
+    }
+
     public String getFormattedTime(){
-        return formattedTime;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return time.format(formatter);
     }
 
-
-    public String getId(){
+    public int getId(){
         return id;
-    }
-
-    public void setId(String id){
-        this.id = id;
     }
 
 
@@ -59,5 +72,5 @@ public class Article {
     public String toString() {
         return "[id:" + id + "] " + "writer: " + writer + ", title: " + title + ", content: " + content;
     }
-    
+
 }
