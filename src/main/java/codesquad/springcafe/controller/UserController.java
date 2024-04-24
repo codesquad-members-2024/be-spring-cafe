@@ -99,32 +99,32 @@ public class UserController {
     @PutMapping("detail/{userId}/update")
     public String updateProfile(
             @PathVariable String userId,
-            @ModelAttribute UserProfileEditDto userProfileEditDto,
+            @ModelAttribute UserProfileEditDto userInput,
             Model model,
-            HttpServletResponse response) throws IOException {
-
-        Optional<UserCredentialDto> userCredentialDto = userDatabase.getUserCredential(userId);
-        if(userCredentialDto.isEmpty()){
+            HttpServletResponse response) throws IOException
+    {
+        Optional<UserCredentialDto> userCredentialOpt = userDatabase.getUserCredential(userId);
+        if(userCredentialOpt.isEmpty()){
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return null;
         }
 
-        UserCredentialDto userCredential = userCredentialDto.get();
-        if(!userProfileEditDto.getPassword().equals(userCredential.getPassword())){
-            model.addAttribute("user", userProfileEditDto);
+        UserCredentialDto userCredential = userCredentialOpt.get();
+        if(!userCredential.isPasswordMatches(userInput.getPassword())){
+            model.addAttribute("user", userInput);
             model.addAttribute("passwordError", true);
             return "users/updateForm";
         }
 
         String[] fields = {"email", "nickname"};
-        String[] values = {userProfileEditDto.getEmail(), userProfileEditDto.getNickname()};
+        String[] values = {userInput.getEmail(), userInput.getNickname()};
         if(hasDuplicationInFields(fields, values)){
-            model.addAttribute("user", userProfileEditDto);
+            model.addAttribute("user", userInput);
             model.addAttribute("duplicationError", true);
             return "users/updateForm";
         }
 
-        userDatabase.update(userProfileEditDto.getUserId(), userProfileEditDto);
+        userDatabase.update(userInput.getUserId(), userInput);
         return "redirect:/users";
     }
 
