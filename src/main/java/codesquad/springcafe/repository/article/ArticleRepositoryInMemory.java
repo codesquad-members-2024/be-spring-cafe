@@ -2,6 +2,8 @@ package codesquad.springcafe.repository.article;
 
 import codesquad.springcafe.controller.article.UpdateArticle;
 import codesquad.springcafe.domain.article.Article;
+import codesquad.springcafe.util.Page;
+import codesquad.springcafe.util.PageRequest;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,11 @@ public class ArticleRepositoryInMemory implements ArticleRepository {
         return store.values().stream()
                 .sorted(Comparator.comparing(Article::getCreatedAt).reversed())
                 .toList();
+    }
+
+    @Override
+    public Page<Article> findAll(PageRequest page) {
+        return null;
     }
 
     @Override
