@@ -22,7 +22,7 @@ import java.util.Optional;
 @Controller
 public class LoginController {
 
-    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    public static final String LOGIN_SESSION_NAME = "springCafeMember";
 
     private final UserDatabase userDatabase;
 
@@ -58,8 +58,7 @@ public class LoginController {
         }
 
         UserProfileDto userProfile = userProfileOpt.get();
-        session.setAttribute("springCafeMember", userProfile);
-        logger.info("로그인 성공! id = {} , session = {}", userProfile.getUserId(), session.getId());
+        session.setAttribute(LOGIN_SESSION_NAME, userProfile);
         return "redirect:" + redirectURL;
     }
 
