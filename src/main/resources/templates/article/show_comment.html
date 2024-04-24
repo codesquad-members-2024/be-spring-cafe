@@ -64,16 +64,17 @@
                         <div class="post-comment-slipp">
                             <p class="post-comment-count">댓글 <span th:text="${commentList.size()}"></span>개</p>
                             <div class="post-comment-slipp-articles">
-                                <article class="comment" th:each="comment: ${commentList}">
+                                <article id="comment" class="comment" th:each="comment: ${commentList}">
                                     <div class="article-text" th:inline="text">
                                         <div style="display: flex; justify-content: space-between; align-items: center;">
                                             <p class="comment-content comment-author-name"
                                                th:text="${comment.getUserId()}"></p>
                                             <div>
-                                                <form method="post"
+                                                <form method="post" class="delete-comment-form"
                                                       th:action="@{/article/{articleId}/comments/{commentId}(articleId=${articleId}, commentId=${comment.getId()})}"
                                                       style="display: inline-block;">
-                                                    <button type="submit" th:if="${writer == comment.getUserId()}"
+                                                    <button th:if="${writer == comment.getUserId()}"
+                                                            onclick="deleteComment(event)"
                                                             class="black-component"
                                                             style="display: flex; justify-content: center; align-items: center; text-align: center;">
                                                         삭제하기
@@ -114,6 +115,8 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script th:inline="javascript">
+    // $(".delete-comment-form button[type='submit']").click(deleteComment(event));
+
     function sendComment() {
         var comment_content = $("#comment_content").val();
         var param = {"content": comment_content}
@@ -125,7 +128,7 @@
             data: JSON.stringify(param),
             type: 'POST',
             success: function (response) {
-                if (response.hasOwnProperty("ERROR")) {
+                if (response.hasOwnProperty("INVALID")) {
                     $(".error-message").show();
                 } else if (response.hasOwnProperty("ADD_COMMENT")) {
                     var newComment = response.ADD_COMMENT;
@@ -146,13 +149,14 @@
 
     function createCommentElement(articleId, comment) {
         return `
-    <article class="comment">
+    <article id="comment" class="comment">
       <div class="article-text">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <p class="comment-content comment-author-name">${comment.userId}</p>
           <div>
-            <form method="post" action="/article/${articleId}/comments/${comment.id}" style="display: inline-block;">
-              <button type="submit" class="black-component" style="display: flex; justify-content: center; align-items: center; text-align: center;">
+            <form class="delete-comment-form"
+            method="post" action="/article/${articleId}/comments/${comment.id}" style="display: inline-block;">
+              <button onclick="deleteComment(event)" class="black-component" style="display: flex; justify-content: center; align-items: center; text-align: center;">
                 삭제하기
               </button>
               <input type="hidden" name="_method" value="DELETE">
@@ -167,6 +171,33 @@
     </article>
   `;
     }
+
+    function deleteComment(event) {
+        event.preventDefault();
+
+        var form = $(event.target).closest('form');
+        var deleteFormUrl = form.attr('action');
+
+        $.ajax({
+            url: deleteFormUrl,
+            contentType: "application/json",
+            type: 'DELETE',
+            success: function (response) {
+                if (response.hasOwnProperty("INVALID")) {
+                    window.location.href = "/article/invalid-modify";
+                } else if (response.hasOwnProperty("DELETE_COMMENT")) {
+                    $(event.target).closest('article').remove();
+                    var currentCommentCount = parseInt($(".post-comment-count span").text());
+                    var updatedCommentCount = currentCommentCount - 1;
+                    $(".post-comment-count span").text(updatedCommentCount);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+
 </script>
 </body>
 </html>

@@ -5,7 +5,7 @@ import codesquad.springcafe.model.UpdatedComment;
 import java.util.List;
 
 public interface CommentService {
-    void addComment(Comment comment);
+    Comment addComment(Comment comment);
 
     Comment findCommentsById(long id);
 

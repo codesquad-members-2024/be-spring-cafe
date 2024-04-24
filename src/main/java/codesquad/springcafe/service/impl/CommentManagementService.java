@@ -26,9 +26,10 @@ public class CommentManagementService implements CommentService {
     }
 
     @Override
-    public void addComment(Comment comment) {
-        commentRepository.addArticle(comment);
+    public Comment addComment(Comment comment) {
+        Comment addComment = commentRepository.addArticle(comment);
         logger.info("[댓글 생성 완료] - " + comment);
+        return addComment;
     }
 
     @Override

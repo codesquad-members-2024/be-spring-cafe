@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,12 +29,12 @@ public class CommentController {
     public Map<String, Object> processCommentForm(@PathVariable long articleId, HttpSession httpSession,
                                                   @RequestBody CommentWriteDto commentWriteDto) {
         if (commentWriteDto.isEmpty()) {
-            return Map.of("ERROR", "EMPTY_COMMENT_CONTENT");
+            return Map.of("INVALID", "EMPTY_COMMENT_CONTENT");
         }
         SessionUser sessionUser = (SessionUser) httpSession.getAttribute("sessionUser");
         String userId = sessionUser.getUserId();
-        Comment comment = commentWriteDto.createComment(articleId, userId);
-        commentService.addComment(comment);
+        Comment comment = commentService.addComment(commentWriteDto.createComment(articleId, userId));
+        System.out.println(comment.toString());
 
         Map<String, Object> response = new HashMap<>();
         Map<String, Object> addCommentMap = new HashMap<>();
@@ -43,5 +44,19 @@ public class CommentController {
         addCommentMap.put("creationTime", comment.getFormattedCreationTime());
         response.put("ADD_COMMENT", addCommentMap);
         return response;
+    }
+
+    @DeleteMapping("/{articleId}/comments/{commentId}")
+    public Map<String, Object> deleteComment(@PathVariable long commentId,
+                                             HttpSession httpSession) {
+        SessionUser sessionUser = (SessionUser) httpSession.getAttribute("sessionUser");
+        String sessionUserId = sessionUser.getUserId();
+        Comment comment = commentService.findCommentsById(commentId);
+        if (!comment.getUserId().equals(sessionUserId)) {
+            return Map.of("INVALID", "INVALID_MODIFY");
+        }
+
+        commentService.deleteComment(commentId);
+        return Map.of("DELETE_COMMENT", "VALID_DELETE");
     }
 }

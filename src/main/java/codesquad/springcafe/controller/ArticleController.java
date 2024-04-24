@@ -138,19 +138,6 @@ public class ArticleController {
         return "redirect:/article/invalid-delete";
     }
 
-    @DeleteMapping("/{articleId}/comments/{commentId}")
-    public String deleteComment(@PathVariable long commentId, HttpSession httpSession) {
-        SessionUser sessionUser = (SessionUser) httpSession.getAttribute("sessionUser");
-        String sessionUserId = sessionUser.getUserId();
-        Comment comment = commentService.findCommentsById(commentId);
-        if (!comment.getUserId().equals(sessionUserId)) {
-            return "redirect:/article/invalid-modify";
-        }
-        httpSession.setAttribute("commentControlFlag", true);
-        commentService.deleteComment(commentId);
-        return "redirect:/article/{articleId}";
-    }
-
     @GetMapping("/invalid-modify")
     public String showInvalidModifyPage(Model model) {
         model.addAttribute("errorMsg", "다른 사용자의 게시글과 댓글은 수정할 수 없습니다.");
