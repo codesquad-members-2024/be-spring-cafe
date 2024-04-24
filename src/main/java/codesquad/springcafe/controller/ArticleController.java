@@ -1,8 +1,8 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.dto.article.ArticleInfoDTO;
+import codesquad.springcafe.dto.article.ArticleUploadDTO;
 import codesquad.springcafe.dto.article.ArticleUpdateDTO;
-import codesquad.springcafe.dto.article.UploadDTO;
 import codesquad.springcafe.dto.user.UserInfoDTO;
 import codesquad.springcafe.service.ArticleService;
 import jakarta.servlet.http.HttpSession;
@@ -27,9 +27,9 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    @PostMapping("/articles")
-    public String upload(@ModelAttribute("article") UploadDTO uploadDTO, Model model) {
-        ArticleInfoDTO newArticle = articleService.upload(uploadDTO);
+    @PostMapping("/questions")
+    public String upload(@ModelAttribute("article") ArticleUploadDTO articleUploadDTO, Model model) {
+        ArticleInfoDTO newArticle = articleService.upload(articleUploadDTO);
         model.addAttribute("article", newArticle);
         return "redirect:/";
     }
@@ -41,45 +41,45 @@ public class ArticleController {
         return "index";
     }
 
-    @GetMapping("articles/{index}")
-    public String showArticle(@PathVariable Long index, Model model) {
-        ArticleInfoDTO targetArticle = articleService.findByIndex(index);
+    @GetMapping("articles/{id}")
+    public String showArticle(@PathVariable("id") Long id, Model model) {
+        ArticleInfoDTO targetArticle = articleService.findById(id);
         model.addAttribute("article", targetArticle);
         return "/article/show";
     }
 
-    @GetMapping("articles/{index}/update")
-    public String tryUpdate(@PathVariable Long index, HttpSession session, Model model) {
-        ArticleInfoDTO article = articleService.findByIndex(index);
+    @GetMapping("articles/{id}/update")
+    public String tryUpdate(@PathVariable Long id, HttpSession session, Model model) {
+        ArticleInfoDTO article = articleService.findById(id);
         UserInfoDTO user = (UserInfoDTO) session.getAttribute("loggedInUser");
         if (!article.isWriter(user.getUserId())) {
             return "/article/update_failed";
         }
-        return "redirect:/articles/" + index + "/form";
+        return "redirect:/articles/" + id + "/form";
     }
 
-    @GetMapping("articles/{index}/form")
-    public String showUpdateForm(@PathVariable Long index, Model model) {
-        ArticleInfoDTO article = articleService.findByIndex(index);
+    @GetMapping("articles/{id}/form")
+    public String showUpdateForm(@PathVariable Long id, Model model) {
+        ArticleInfoDTO article = articleService.findById(id);
         model.addAttribute("article", article);
         return "/article/updateForm";
     }
 
-    @PutMapping("articles/{index}/update")
-    public String updateInfo(@ModelAttribute("article") ArticleUpdateDTO updateInfo, @PathVariable Long index, Model model) {
-        ArticleInfoDTO updatedArticle = articleService.updateInfo(index, updateInfo);
+    @PutMapping("articles/{id}/update")
+    public String updateInfo(@ModelAttribute("article") ArticleUpdateDTO updateInfo, @PathVariable Long id, Model model) {
+        ArticleInfoDTO updatedArticle = articleService.updateInfo(id, updateInfo);
         model.addAttribute("article", updatedArticle);
         return "redirect:/";
     }
 
-    @DeleteMapping("articles/{index}")
-    public String delete(@PathVariable Long index, HttpSession session) {
-        ArticleInfoDTO article = articleService.findByIndex(index);
+    @DeleteMapping("articles/{id}")
+    public String delete(@PathVariable Long id, HttpSession session) {
+        ArticleInfoDTO article = articleService.findById(id);
         UserInfoDTO user = (UserInfoDTO) session.getAttribute("loggedInUser");
         if (!article.isWriter(user.getUserId())) {
             return "/article/delete_failed";
         }
-        articleService.delete(index);
+        articleService.delete(id);
         return "redirect:/";
     }
 }

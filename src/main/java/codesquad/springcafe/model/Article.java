@@ -4,22 +4,22 @@ import codesquad.springcafe.dto.article.ArticleInfoDTO;
 import java.time.LocalDateTime;
 
 public class Article {
-    private final Long index;
+    private final Long id;
     private final LocalDateTime timestamp;
     private final String writer;
     private final String title;
     private final String content;
 
-    public Article(Long index, LocalDateTime timestamp, String writer, String title, String content) {
-        this.index = index;
+    public Article(Long id, LocalDateTime timestamp, String writer, String title, String content) {
+        this.id = id;
         this.timestamp = timestamp;
         this.writer = writer;
         this.title = title;
         this.content = content;
     }
 
-    public Long getIndex() {
-        return index;
+    public Long getId() {
+        return id;
     }
 
     public LocalDateTime getTimeStamp() {
@@ -39,6 +39,6 @@ public class Article {
     }
 
     public ArticleInfoDTO toDTO() {
-        return new ArticleInfoDTO(index, timestamp, writer, title, content);
+        return new ArticleInfoDTO(id, timestamp, writer, title, content);
     }
 }

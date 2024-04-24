@@ -2,7 +2,7 @@ package codesquad.springcafe.service;
 
 import codesquad.springcafe.dto.article.ArticleInfoDTO;
 import codesquad.springcafe.dto.article.ArticleUpdateDTO;
-import codesquad.springcafe.dto.article.UploadDTO;
+import codesquad.springcafe.dto.article.ArticleUploadDTO;
 import codesquad.springcafe.model.Article;
 import codesquad.springcafe.repository.article.ArticleRepository;
 import java.util.List;
@@ -16,16 +16,16 @@ import org.springframework.stereotype.Service;
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
-    private Long totalIndex;
+    private Long totalId = 0L;
 
     @Autowired
     public ArticleService(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
-        this.totalIndex = initTotalIndex();
+        this.totalId = initTotalId();
     }
 
-    public ArticleInfoDTO upload(UploadDTO uploadDTO) {
-        Article newArticle = uploadDTO.toArticle(++totalIndex);
+    public ArticleInfoDTO upload(ArticleUploadDTO articleUploadDTO) {
+        Article newArticle = articleUploadDTO.toArticle(++totalId);
         articleRepository.save(newArticle);
         return newArticle.toDTO();
     }
@@ -37,30 +37,27 @@ public class ArticleService {
             .collect(Collectors.toList());
     }
 
-    public ArticleInfoDTO findByIndex(Long index) {
-        Optional<Article> targetArticle = articleRepository.getByIndex(index);
-        if (targetArticle.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-        return targetArticle.get().toDTO();
+    public ArticleInfoDTO findById(Long id) {
+        Optional<Article> targetArticle = articleRepository.getById(id);
+        return targetArticle.map(Article::toDTO).orElse(null);
     }
 
-    public ArticleInfoDTO updateInfo(Long index, ArticleUpdateDTO updateInfo) {
-        ArticleInfoDTO originalArticle = findByIndex(index);
-        Article modifiedArticle = updateInfo.toArticle(index, originalArticle.getTimestamp(), originalArticle.getWriter());
+    public ArticleInfoDTO updateInfo(Long id, ArticleUpdateDTO updateInfo) {
+        ArticleInfoDTO originalArticle = findById(id);
+        Article modifiedArticle = updateInfo.toArticle(id, originalArticle.getTimestamp(), originalArticle.getWriter());
         articleRepository.modify(modifiedArticle);
         return modifiedArticle.toDTO();
     }
 
-    public void delete(Long index) {
-        articleRepository.remove(index);
+    public void delete(Long id) {
+        articleRepository.remove(id);
     }
 
-    private Long initTotalIndex() {
-        OptionalLong maxIndex = articleRepository.getAll().stream().mapToLong(Article::getIndex).max();
-        if (maxIndex.isEmpty()) {
+    private Long initTotalId() {
+        OptionalLong maxId = articleRepository.getAll().stream().mapToLong(Article::getId).max();
+        if (maxId.isEmpty()) {
             return 0L;
         }
-        return maxIndex.getAsLong();
+        return maxId.getAsLong();
     }
 }

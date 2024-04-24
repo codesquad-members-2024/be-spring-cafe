@@ -1,11 +1,11 @@
 package codesquad.springcafe.dto.user;
 
-public class LoginDTO {
+public class UserLoginDTO {
 
     private final String userId;
     private final String password;
 
-    public LoginDTO(String userId, String password) {
+    public UserLoginDTO(String userId, String password) {
         this.userId = userId;
         this.password = password;
     }
