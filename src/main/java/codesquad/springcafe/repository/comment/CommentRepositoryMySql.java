@@ -2,23 +2,30 @@ package codesquad.springcafe.repository.comment;
 
 import codesquad.springcafe.controller.comment.CommentUpdateForm;
 import codesquad.springcafe.domain.comment.Comment;
+import codesquad.springcafe.util.Page;
+import codesquad.springcafe.util.PageRequest;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @Primary
 public class CommentRepositoryMySql implements CommentRepository {
+    private static final Logger log = LoggerFactory.getLogger(CommentRepositoryMySql.class);
     private final JdbcTemplate template;
 
     @Autowired
@@ -65,6 +72,28 @@ public class CommentRepositoryMySql implements CommentRepository {
     public List<Comment> findAllByArticleId(long articleId) {
         String sql = "SELECT COMMENT_ID, ARTICLE_ID, CONTENT, CREATED_BY, CREATED_AT, DELETED FROM COMMENT WHERE ARTICLE_ID = ? and DELETED is false ORDER BY CREATED_AT";
         return template.query(sql, replyRowMapper(), articleId);
+    }
+
+    @Override
+    public Page<Comment> findAllByArticleId(long articleId, PageRequest pageRequest) {
+        NamedParameterJdbcTemplate namedTemplate = new NamedParameterJdbcTemplate(template);
+        String findSql = "SELECT COMMENT_ID, ARTICLE_ID, CONTENT, CREATED_BY, CREATED_AT, DELETED "
+                + "FROM COMMENT "
+                + "WHERE ARTICLE_ID = :articleId and DELETED is false "
+                + "ORDER BY CREATED_AT "
+                + "LIMIT :offset, :pageSize;";
+
+        String totalSql = "select COUNT(*) as total FROM COMMENT WHERE deleted is false and ARTICLE_ID = ?;";
+
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("articleId", articleId);
+        parameters.addValue("offset", pageRequest.getOffset());
+        parameters.addValue("pageSize", pageRequest.getPageSize());
+
+        List<Comment> comments = namedTemplate.query(findSql, parameters, replyRowMapper());
+        Integer total = template.queryForObject(totalSql, Integer.class, articleId);
+
+        return new Page<>(comments, PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), pageRequest.getSort()), total);
     }
 
     private RowMapper<Comment> replyRowMapper() {
