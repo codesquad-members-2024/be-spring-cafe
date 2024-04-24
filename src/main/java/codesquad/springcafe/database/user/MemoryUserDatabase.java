@@ -38,7 +38,7 @@ public class MemoryUserDatabase implements UserDatabase{
     @Override
     public Optional<User> getUserById(String id) {
         return users.stream()
-                .filter(user -> user.getId().equals(id))
+                .filter(user -> user.getUserId().equals(id))
                 .findFirst();
     }
 
