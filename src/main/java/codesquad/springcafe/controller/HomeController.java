@@ -2,7 +2,6 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.domain.article.Article;
 import codesquad.springcafe.service.article.ArticleManager;
-import codesquad.springcafe.service.exception.ResourceNotFoundException;
 import codesquad.springcafe.util.Page;
 import codesquad.springcafe.util.PageRequest;
 import codesquad.springcafe.util.Sort;
@@ -25,10 +24,6 @@ public class HomeController {
                                  Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.unSorted());
         Page<Article> articlePage = articleManager.findAllArticle(pageRequest);
-
-        if (page > articlePage.getTotalPages()) {
-            throw new ResourceNotFoundException();
-        }
 
         model.addAttribute("articlePage", articlePage);
 
