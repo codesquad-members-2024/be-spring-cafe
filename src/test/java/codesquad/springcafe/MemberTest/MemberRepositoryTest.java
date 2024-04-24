@@ -20,10 +20,7 @@ public class MemberRepositoryTest {
     }
 
     @AfterEach
-    void tearDown() {
-        memberRepository = null;
-    }
-
+    void tearDown() { memberRepository.clear();}
     @Test
     @DisplayName("유저 추가 테스트")
     void addMemberTest() {
@@ -37,9 +34,36 @@ public class MemberRepositoryTest {
     void getMemberTest() {
         Member member = new Member("user2", "user2Name", "user2@example.com", "password2");
         memberRepository.addMember(member);
-        Optional<Member> foundMember = memberRepository.getMember("user2");
+        Optional<Member> foundMember = memberRepository.findById("user2");
 
         assertThat(foundMember.isPresent()).isTrue();
         assertThat(foundMember.get()).isEqualTo(member);
+    }
+    @Test
+    @DisplayName("회원 정보 수정 성공 테스트")
+    void updateMemberInfoSuccess() {
+        Member originalMember = new Member("user3", "user3Name", "user3@example.com", "password3");
+        memberRepository.addMember(originalMember);
+
+        Member updatedMember = new Member("user3", "updatedName", "updated@example.com", "password3");
+        boolean result = memberRepository.updateMemberInfo("user3", updatedMember);
+
+        assertThat(result).isTrue();
+        assertThat(memberRepository.findById("user3").get().getName()).isEqualTo("updatedName");
+        assertThat(memberRepository.findById("user3").get().getEmail()).isEqualTo("updated@example.com");
+    }
+
+    @Test
+    @DisplayName("비밀번호 불일치로 인한 회원 정보 수정 실패 테스트")
+    void updateMemberInfoFail() {
+        Member originalMember = new Member("user4", "user4Name", "user4@example.com", "password4");
+        memberRepository.addMember(originalMember);
+
+        Member updatedMember = new Member("user4", "updatedName", "updated@example.com", "wrongPassword");
+        boolean result = memberRepository.updateMemberInfo("user4", updatedMember);
+
+        assertThat(result).isFalse();
+        assertThat(memberRepository.findById("user4").get().getName()).isEqualTo("user4Name");
+        assertThat(memberRepository.findById("user4").get().getEmail()).isEqualTo("user4@example.com");
     }
 }
