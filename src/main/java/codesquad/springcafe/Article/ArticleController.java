@@ -2,7 +2,6 @@ package codesquad.springcafe.Article;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,11 +17,11 @@ import java.util.Optional;
 
 @Controller
 public class ArticleController {
-    private final MemoryArticleRepository memoryArticleRepository;
+    private ArticleService articleService;
     private static final Logger logger = LoggerFactory.getLogger(ArticleController.class);
 
-    public ArticleController(MemoryArticleRepository memoryArticleRepository) {
-        this.memoryArticleRepository = memoryArticleRepository;
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
     @GetMapping("/article/form")
@@ -34,15 +33,15 @@ public class ArticleController {
     @PostMapping("/questions")
     public String articleCreate(@ModelAttribute Article article) {
         article.setTime(LocalDateTime.now());
-        article.setArticleNum(memoryArticleRepository.articleSize() + 1);
-        memoryArticleRepository.add(article);
+        article.setArticleNum(articleService.articleSize() + 1);
+        articleService.addArticle(article);
         logger.info("새 게시글 추가: {}", article);
         return "redirect:/";
     }
 
     @GetMapping("/")
     public String articleList(Model model) {
-        List<Article> articles = memoryArticleRepository.findAll();
+        List<Article> articles = articleService.findAll();
         model.addAttribute("articles", articles);
         logger.info("게시글 목록 조회");
         return "index";
@@ -50,7 +49,7 @@ public class ArticleController {
 
     @GetMapping("/article/{articleNumber}")
     public String articleDetail(@PathVariable int articleNumber, Model model) {
-        Optional<Article> article = memoryArticleRepository.findByIndex(articleNumber);
+        Optional<Article> article = articleService.findByIndex(articleNumber);
         if (!article.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Article Not Found");
         }
