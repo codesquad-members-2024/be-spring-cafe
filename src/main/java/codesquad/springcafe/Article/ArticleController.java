@@ -18,11 +18,11 @@ import java.util.Optional;
 
 @Controller
 public class ArticleController {
-    private final ArticleRepository articleRepository;
+    private final MemoryArticleRepository memoryArticleRepository;
     private static final Logger logger = LoggerFactory.getLogger(ArticleController.class);
 
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    public ArticleController(MemoryArticleRepository memoryArticleRepository) {
+        this.memoryArticleRepository = memoryArticleRepository;
     }
 
     @GetMapping("/article/form")
@@ -34,15 +34,15 @@ public class ArticleController {
     @PostMapping("/questions")
     public String articleCreate(@ModelAttribute Article article) {
         article.setTime(LocalDateTime.now());
-        article.setArticleNum(articleRepository.articleSize() + 1);
-        articleRepository.add(article);
+        article.setArticleNum(memoryArticleRepository.articleSize() + 1);
+        memoryArticleRepository.add(article);
         logger.info("새 게시글 추가: {}", article);
         return "redirect:/";
     }
 
     @GetMapping("/")
     public String articleList(Model model) {
-        List<Article> articles = articleRepository.findAll();
+        List<Article> articles = memoryArticleRepository.findAll();
         model.addAttribute("articles", articles);
         logger.info("게시글 목록 조회");
         return "index";
@@ -50,7 +50,7 @@ public class ArticleController {
 
     @GetMapping("/article/{articleNumber}")
     public String articleDetail(@PathVariable int articleNumber, Model model) {
-        Optional<Article> article = articleRepository.findByIndex(articleNumber);
+        Optional<Article> article = memoryArticleRepository.findByIndex(articleNumber);
         if (!article.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Article Not Found");
         }
