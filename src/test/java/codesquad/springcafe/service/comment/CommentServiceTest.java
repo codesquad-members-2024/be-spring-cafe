@@ -11,6 +11,9 @@ import codesquad.springcafe.repository.comment.CommentRepository;
 import codesquad.springcafe.repository.member.MemberRepository;
 import codesquad.springcafe.service.exception.ResourceNotFoundException;
 import codesquad.springcafe.service.exception.UnauthorizedException;
+import codesquad.springcafe.util.Page;
+import codesquad.springcafe.util.PageRequest;
+import codesquad.springcafe.util.Sort;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,12 +21,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles("test")
 @SpringBootTest
 class CommentServiceTest {
-    public static final LocalDateTime NOW = LocalDateTime.now();
+    public static final LocalDateTime NOW = LocalDateTime.now().withNano(0);
 
     @Autowired
     private CommentService commentService;
@@ -229,5 +230,49 @@ class CommentServiceTest {
         article.setCreatedAt(createdAt);
 
         return article;
+    }
+
+    @DisplayName("1번 게시물의 댓글이 300개 있을 때 0번 페이지를 요청하면 Page엔 15개의 게시물을 가져올 수 있다")
+    @Test
+    void findAllCommentWithPage_success() {
+        // given
+        Comment comment = new Comment();
+        comment.setArticleId(1L);
+        comment.setCreatedBy("tester1");
+        comment.setContent("테스트 댓글");
+        comment.setCreatedAt(NOW);
+
+        for (int i = 0; i < 300; i++) {
+            commentService.publish(comment);
+        }
+
+        // when
+        Page<Comment> page = commentService.findAllComment(1, PageRequest.of(0, 15, Sort.sorted()));
+
+        // then
+        assertThat(page.getNumberOfElements()).isEqualTo(15);
+        assertThat(page.getPageNumber()).isEqualTo(0);
+        assertThat(page.getTotalPages()).isEqualTo(20);
+        assertThat(page.isFirst()).isTrue();
+        assertThat(page.isLast()).isFalse();
+    }
+
+    @DisplayName("전체 페에지 개수가 20개일 때 21번 페이지를 요청하면 ResourceNotFoundException 예외를 던진다")
+    @Test
+    void findAllCommentWithPage_fail() {
+        // given
+        Comment comment = new Comment();
+        comment.setArticleId(1L);
+        comment.setCreatedBy("tester1");
+        comment.setContent("테스트 댓글");
+        comment.setCreatedAt(NOW);
+
+        for (int i = 0; i < 300; i++) {
+            commentService.publish(comment);
+        }
+
+        // when & then
+        assertThatThrownBy(() -> commentService.findAllComment(1, PageRequest.of(21, 15, Sort.sorted())))
+                .isInstanceOf(ResourceNotFoundException.class);
     }
 }

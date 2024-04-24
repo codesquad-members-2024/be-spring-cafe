@@ -5,6 +5,8 @@ import codesquad.springcafe.domain.comment.Comment;
 import codesquad.springcafe.repository.comment.CommentRepository;
 import codesquad.springcafe.service.exception.ResourceNotFoundException;
 import codesquad.springcafe.service.exception.UnauthorizedException;
+import codesquad.springcafe.util.Page;
+import codesquad.springcafe.util.PageRequest;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,18 @@ public class CommentManager implements CommentService {
     @Override
     public List<Comment> findAllComment(long articleId) {
         return repository.findAllByArticleId(articleId);
+    }
+
+    @Override
+    public Page<Comment> findAllComment(long articleId, PageRequest pageRequest) {
+        Page<Comment> page = repository.findAllByArticleId(articleId, pageRequest);
+
+        /* 요청한 페이지 번호가 전체 페이지 개수보다 많으면 ResourceNotFoundException 예외 */
+        if (pageRequest.getPageNumber() >= page.getTotalPages()) {
+            throw new ResourceNotFoundException("전체 페이지 개수를 넘는 페이지를 요청할 수 없습니다.");
+        }
+
+        return page;
     }
 
     @Override
