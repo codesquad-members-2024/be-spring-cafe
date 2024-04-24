@@ -11,5 +11,5 @@ public interface UserDao {
 
     Optional<User> findUser(String userId);
 
-    void updateUser(User user);
+    void update(User user);
 }

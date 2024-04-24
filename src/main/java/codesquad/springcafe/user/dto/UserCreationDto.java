@@ -1,9 +1,16 @@
-package codesquad.springcafe.user;
+package codesquad.springcafe.user.dto;
+
+import codesquad.springcafe.user.User;
+import jakarta.validation.constraints.NotEmpty;
 
 public class UserCreationDto {
+    @NotEmpty
     private String userId;
+    @NotEmpty
     private String password;
+    @NotEmpty
     private String name;
+    @NotEmpty
     private String email;
 
     public UserCreationDto(String userId, String password, String name, String email) {
@@ -13,19 +20,7 @@ public class UserCreationDto {
         this.email = email;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
+    public User toEntity() {
+        return new User(userId, password, name, email);
     }
 }

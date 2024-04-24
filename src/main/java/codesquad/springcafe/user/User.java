@@ -1,8 +1,13 @@
 package codesquad.springcafe.user;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Objects;
 
 public class User {
+    private static final Logger log = LoggerFactory.getLogger(User.class);
+
     private final String userId;
     private final String password;
     private final String nickName;
@@ -15,11 +20,9 @@ public class User {
         this.email = email;
     }
 
-    public User(String userId, String nickName, String email) {
-        this.userId = userId;
-        this.nickName = nickName;
-        this.email = email;
-        this.password = "";
+    public boolean has(String password) {
+        log.debug("로그인 가능 여부 : {}", Objects.equals(this.password, password));
+        return Objects.equals(this.password, password);
     }
 
     public String getUserId() {

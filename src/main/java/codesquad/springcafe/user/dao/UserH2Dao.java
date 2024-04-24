@@ -30,19 +30,19 @@ public class UserH2Dao implements UserDao {
 
     @Override
     public Collection<User> getAllUsers() {
-        final String sql = "SELECT userId, nickname, email FROM USERS";
+        final String sql = "SELECT userId, password, nickname, email FROM USERS";
         return jdbcTemplate.query(sql, userRowMapper());
     }
 
     @Override
     public Optional<User> findUser(String userId) {
-        final String sql = "SELECT nickname, email FROM USERS WHERE userId = ?";
+        final String sql = "SELECT userId, password, nickname, email FROM USERS WHERE userId = ?";
         List<User> users = jdbcTemplate.query(sql, userRowMapper(), userId);
         return users.stream().findAny();
     }
 
     @Override
-    public void updateUser(User user) {
+    public void update(User user) {
         final String sql = "UPDATE USERS SET password=?, nickname=?, email=? WHERE userId=?";
         jdbcTemplate.update(sql, user.getPassword(), user.getNickName(), user.getEmail(), user.getUserId());
     }
@@ -50,9 +50,10 @@ public class UserH2Dao implements UserDao {
     private RowMapper<User> userRowMapper() {
         return (rs, rowNum) -> {
             String userId = rs.getString("userId");
+            String password = rs.getString("password");
             String nickname = rs.getString("nickname");
             String email = rs.getString("email");
-            return new User(userId, nickname, email);
+            return new User(userId, password, nickname, email);
         };
     }
 }

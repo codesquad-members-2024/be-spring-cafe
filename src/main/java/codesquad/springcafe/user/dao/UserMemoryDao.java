@@ -31,7 +31,7 @@ public class UserMemoryDao implements UserDao {
         return Optional.ofNullable(users.get(userId));
     }
 
-    public void updateUser(User user) {
+    public void update(User user) {
         users.put(user.getUserId(), user);
     }
 }
