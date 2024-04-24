@@ -20,22 +20,18 @@ public class User {
         this.created = created;
     }
 
-    public User(String userId, String nickname, String email, String password) {
-        this.userId = userId;
-        this.nickname = nickname;
-        this.email = email;
-        this.password = password;
+    public User(UserDto userDto) {
+        this.userId = userDto.getUserId();
+        this.nickname = userDto.getNickname();
+        this.email = userDto.getEmail();
+        this.password = userDto.getPassword();
         this.created = LocalDateTime.now();
     }
 
-    public UserDto toDto() {
-        return new UserDto(userId, nickname, email, password);
-    }
-
     public void update(UserUpdateDto userUpdateDto) {
-        this.password = userUpdateDto.getNewPassword();
-        this.nickname = userUpdateDto.getNewNickname();
-        this.email = userUpdateDto.getNewEmail();
+        this.password = userUpdateDto.getPassword();
+        this.nickname = userUpdateDto.getNickname();
+        this.email = userUpdateDto.getEmail();
     }
 
     public boolean matchUserId(String userId) {
@@ -64,5 +60,16 @@ public class User {
 
     public String getCreated() {
         return created.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId='" + userId + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", created=" + created +
+                '}';
     }
 }
