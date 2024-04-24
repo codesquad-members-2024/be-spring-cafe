@@ -16,12 +16,12 @@ public class MemoryArticleRepository implements ArticleRepository {
 
     @Override
     public void save(Article article) {
-        articles.put(article.getIndex(), article);
+        articles.put(article.getId(), article);
     }
 
     @Override
-    public Optional<Article> getByIndex(Long index) {
-        return Optional.ofNullable(articles.get(index));
+    public Optional<Article> getById(Long id) {
+        return Optional.ofNullable(articles.get(id));
     }
 
     @Override

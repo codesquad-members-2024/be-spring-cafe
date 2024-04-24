@@ -1,20 +1,20 @@
 package codesquad.springcafe.dto.user;
 
 public class UserInfoDTO {
-    private final Long index;
+    private final Long order;
     private final String userId;
     private final String name;
     private final String email;
 
-    public UserInfoDTO(Long index, String userId, String name, String email) {
-        this.index = index;
+    public UserInfoDTO(Long order, String userId, String name, String email) {
+        this.order = order;
         this.userId = userId;
         this.name = name;
         this.email = email;
     }
 
-    public Long getIndex() {
-        return index;
+    public Long getOrder() {
+        return order;
     }
 
     public String getUserId() {

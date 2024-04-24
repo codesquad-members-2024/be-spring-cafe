@@ -1,7 +1,7 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.dto.user.LoginDTO;
-import codesquad.springcafe.dto.user.SignUpDTO;
+import codesquad.springcafe.dto.user.UserLoginDTO;
+import codesquad.springcafe.dto.user.UserSignupDTO;
 import codesquad.springcafe.dto.user.UserInfoDTO;
 import codesquad.springcafe.dto.user.UserUpdateDTO;
 import codesquad.springcafe.service.UserService;
@@ -30,8 +30,8 @@ public class UserController {
     }
 
     @PostMapping
-    public String signUp(@ModelAttribute("user") SignUpDTO signUpDTO, Model model) {
-        UserInfoDTO newUser = userService.signUp(signUpDTO);
+    public String signUp(@ModelAttribute("user") UserSignupDTO userSignupDTO, Model model) {
+        UserInfoDTO newUser = userService.signUp(userSignupDTO);
         model.addAttribute("user", newUser);
         return "redirect:/users";
     }
@@ -71,8 +71,8 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/authenticate")
-    public String authenticate(@ModelAttribute("user") LoginDTO loginDTO, @PathVariable String userId) {
-        Optional<UserInfoDTO> loggedInUser = userService.authenticate(loginDTO);
+    public String authenticate(@ModelAttribute("user") UserLoginDTO userLoginDTO, @PathVariable String userId) {
+        Optional<UserInfoDTO> loggedInUser = userService.authenticate(userLoginDTO);
         if (loggedInUser.isEmpty()) {
             return "/user/login_needed";
         }
@@ -87,8 +87,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute("user") LoginDTO loginDTO, HttpSession session) {
-        Optional<UserInfoDTO> loggedInUser = userService.authenticate(loginDTO);
+    public String login(@ModelAttribute("user") UserLoginDTO userLoginDTO, HttpSession session) {
+        Optional<UserInfoDTO> loggedInUser = userService.authenticate(userLoginDTO);
         if (loggedInUser.isEmpty()) {
             return "/user/login_failed";
         }

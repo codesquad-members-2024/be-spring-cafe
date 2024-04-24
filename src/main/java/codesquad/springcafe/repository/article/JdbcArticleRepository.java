@@ -15,23 +15,23 @@ public class JdbcArticleRepository implements ArticleRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public JdbcArticleRepository(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public JdbcArticleRepository() {
+        this.jdbcTemplate = new JdbcTemplate();
     }
 
     @Override
     public void save(Article article) {
-        String sql = "INSERT INTO article (index, timestamp, writer, title, content) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO `article` (id, timestamp, writer, title, content) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
-            article.getIndex(), Timestamp.valueOf(article.getTimeStamp()), article.getWriter(), article.getTitle(), article.getContent());
+            article.getId(), Timestamp.valueOf(article.getTimeStamp()), article.getWriter(), article.getTitle(), article.getContent());
     }
 
     @Override
     public List<Article> getAll() {
-        String sql = "SELECT * FROM article";
+        String sql = "SELECT * FROM `article`";
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
             Article article = new Article(
-                resultSet.getLong("index"),
+                resultSet.getLong("id"),
                 resultSet.getTimestamp("timestamp").toLocalDateTime(),
                 resultSet.getString("writer"),
                 resultSet.getString("title"),
@@ -42,11 +42,11 @@ public class JdbcArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Optional<Article> getByIndex(Long index) {
-        String sql = "SELECT * FROM article WHERE index = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{index}, (resultSet, rowNum) -> {
+    public Optional<Article> getById(Long id) {
+        String sql = "SELECT * FROM `article` WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, (resultSet, rowNum) -> {
             Article article = new Article(
-                resultSet.getLong("index"),
+                resultSet.getLong("id"),
                 resultSet.getTimestamp("timestamp").toLocalDateTime(),
                 resultSet.getString("writer"),
                 resultSet.getString("title"),
