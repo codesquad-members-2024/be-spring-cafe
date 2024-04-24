@@ -1,20 +1,23 @@
 package codesquad.springcafe.service;
 
-import codesquad.springcafe.dto.Article;
-import codesquad.springcafe.dto.UpdatedArticle;
+import codesquad.springcafe.exception.service.DuplicateUserIdException;
+import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.ListArticle;
+import codesquad.springcafe.model.UpdatedArticle;
 import java.util.List;
-import java.util.Optional;
 
 public interface ArticleService {
-    void addArticle(Article article);
+    void addArticle(Article article) throws DuplicateUserIdException;
 
-    Optional<Article> findArticleById(long id);
+    Article findArticleById(long id);
 
-    void modifyArticle(long id, UpdatedArticle article);
+    void updateArticle(long id, UpdatedArticle article);
 
     void deleteArticle(long id);
 
-    List<Article> findAllArticle();
+    List<ListArticle> findAllArticle();
 
     void increaseViewCount(long id);
+
+    List<Long> findUserArticleIds(String userId);
 }

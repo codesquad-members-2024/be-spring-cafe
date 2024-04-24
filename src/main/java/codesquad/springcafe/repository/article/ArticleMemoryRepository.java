@@ -1,8 +1,9 @@
 package codesquad.springcafe.repository.article;
 
-import codesquad.springcafe.dto.Article;
-import codesquad.springcafe.dto.UpdatedArticle;
 import codesquad.springcafe.exception.db.ArticleNotFoundException;
+import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.ListArticle;
+import codesquad.springcafe.model.UpdatedArticle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,8 +46,8 @@ public class ArticleMemoryRepository implements ArticleRepository {
     }
 
     @Override
-    public List<Article> findAllArticle() {
-        return articles;
+    public List<ListArticle> findAllArticle() {
+        return null;
     }
 
     @Override
@@ -55,5 +56,10 @@ public class ArticleMemoryRepository implements ArticleRepository {
         long increasedViewCount = article.getViewCount() + 1;
         article.setViewCount(increasedViewCount);
         return increasedViewCount;
+    }
+
+    @Override
+    public List<Long> findUserArticleIds(String userId) {
+        return null;
     }
 }

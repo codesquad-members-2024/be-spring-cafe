@@ -11,21 +11,7 @@
 </head>
 <body>
 <div class="background">
-    <nav class="navbar navbar-fixed-top header">
-        <div class="col-md-12">
-            <div class="navbar-header">
-                <a th:href="@{/home}" class="navbar-brand">
-                    <img src="/images/KakaoCI.png"/>
-                </a>
-            </div>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a class="black-component" th:href="@{/users/match-pw/{userId}(userId=${user.getUserId()})}"
-                       role="button" style="width: auto; padding-left: 10px; padding-right: 10px;">회원 정보 수정</a></li>
-                <li><a class="black-component" th:href="@{/users/logout}" role="button">로그아웃</a></li>
-            </ul>
-        </div>
-    </nav>
-
+    <div th:replace="~{fragments/navigation :: main_nav}"></div>
     <div class="container" id="main" style="margin-bottom: 80px">
         <header class="post-header">
             <p class="title">프로필</p>

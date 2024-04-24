@@ -1,7 +1,8 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.dto.Article;
+import codesquad.springcafe.model.ListArticle;
 import codesquad.springcafe.service.ArticleService;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +23,10 @@ public class HomeController {
     }
 
     @GetMapping(value = {"/", "/home"})
-    public String showHomePage(Model model) {
-        List<Article> articles = articleService.findAllArticle();
+    public String showHomePage(Model model, HttpSession httpSession) {
+        httpSession.removeAttribute("matchPw");
+        List<ListArticle> articles = articleService.findAllArticle();
         model.addAttribute("articleList", articles);
-        return "home";
+        return "article/list";
     }
 }

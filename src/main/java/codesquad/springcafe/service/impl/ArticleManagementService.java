@@ -1,9 +1,11 @@
 package codesquad.springcafe.service.impl;
 
-import codesquad.springcafe.dto.Article;
-import codesquad.springcafe.dto.UpdatedArticle;
 import codesquad.springcafe.exception.db.ArticleNotFoundException;
 import codesquad.springcafe.exception.service.DuplicateArticleIdException;
+import codesquad.springcafe.exception.service.DuplicateUserIdException;
+import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.ListArticle;
+import codesquad.springcafe.model.UpdatedArticle;
 import codesquad.springcafe.repository.article.ArticleRepository;
 import codesquad.springcafe.service.ArticleService;
 import java.util.List;
@@ -27,13 +29,14 @@ public class ArticleManagementService implements ArticleService {
     }
 
     @Override
-    public void addArticle(Article article) {
+    public void addArticle(Article article) throws DuplicateUserIdException {
         try {
             validateDuplicateArticleId(article); // 중복 검증
             articleRepository.addArticle(article);
             logger.info("[게시글 생성 완료] - " + article);
         } catch (DuplicateArticleIdException e) {
             logger.error("이미 중복된 ID를 가진 게시글이 존재합니다.");
+            throw new DuplicateUserIdException(article.getUserId());
         }
     }
 
@@ -49,43 +52,36 @@ public class ArticleManagementService implements ArticleService {
     }
 
     @Override
-    public Optional<Article> findArticleById(long id) {
-        Optional<Article> optionalArticle = Optional.empty();
-        try {
-            optionalArticle = articleRepository.findArticleById(id);
-        } catch (ArticleNotFoundException e) {
-            logger.error("게시글이 존재하지 않습니다.");
-        }
-        return optionalArticle;
+    public Article findArticleById(long id) {
+        Optional<Article> optArticle = articleRepository.findArticleById(id);
+        return optArticle.orElseThrow(() -> new ArticleNotFoundException(id));
     }
 
     @Override
-    public void modifyArticle(long id, UpdatedArticle article) {
-        try {
-            articleRepository.modifyArticle(id, article);
-        } catch (ArticleNotFoundException e) {
-            logger.error("게시글이 존재하지 않습니다.");
-        }
+    public void updateArticle(long id, UpdatedArticle article) {
+        articleRepository.modifyArticle(id, article);
+        logger.info("[{} 게시글 수정 성공]", id);
     }
 
     @Override
     public void deleteArticle(long id) {
         long deletedArticleId = articleRepository.deleteArticle(id);
-        logger.info("[" + deletedArticleId + "번째 게시글 삭제 성공]");
+        logger.info("[{} 게시글 삭제 성공]", deletedArticleId);
     }
 
     @Override
-    public List<Article> findAllArticle() {
+    public List<ListArticle> findAllArticle() {
         return articleRepository.findAllArticle();
     }
 
     @Override
     public void increaseViewCount(long id) {
-        try {
-            long increasedViewCount = articleRepository.increaseViewCount(id);
-            logger.info("[" + id + "번째 게시글 조회수 증가] - " + increasedViewCount);
-        } catch (ArticleNotFoundException e) {
-            logger.error("게시글이 존재하지 않습니다.");
-        }
+        long increasedViewCount = articleRepository.increaseViewCount(id);
+        logger.info("[{}번째 게시글 조회수 증가] - 현재 조회수 : {}", id, increasedViewCount);
+    }
+
+    @Override
+    public List<Long> findUserArticleIds(String userId) {
+        return articleRepository.findUserArticleIds(userId);
     }
 }

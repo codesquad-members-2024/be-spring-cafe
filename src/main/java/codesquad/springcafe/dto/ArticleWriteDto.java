@@ -1,7 +1,12 @@
 package codesquad.springcafe.dto;
 
-public class UpdatedArticle {
+import codesquad.springcafe.model.Article;
+import jakarta.validation.constraints.NotBlank;
+
+public class ArticleWriteDto {
+    @NotBlank
     private String title;
+    @NotBlank
     private String content;
 
     public String getTitle() {
@@ -20,4 +25,7 @@ public class UpdatedArticle {
         this.content = content;
     }
 
+    public Article createArticle(String userId) {
+        return new Article(userId, title, content);
+    }
 }

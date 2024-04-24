@@ -1,0 +1,23 @@
+<nav th:fragment="main_nav" class="navbar navbar-fixed-top header">
+    <div class="col-md-12">
+        <div class="navbar-header">
+            <a th:href="@{/home}" class="navbar-brand">
+                <img th:src="@{/images/fubao-logo.png}"/>
+            </a>
+        </div>
+        <div th:if="${navbarFlag}">
+            <ul class="nav navbar-nav navbar-right" th:if="${isLoggedIn}"> <!-- 로그인된 경우에 보여질 내용 -->
+                <li class="active" th:text="${navUserId + '님'}"></li>
+                <li class="active"><a th:href="@{/users/list}">멤버 리스트</a></li>
+                <li><a class="black-component" th:href="@{/users/logout}" role="button">로그아웃</a></li>
+                <li><a class="black-component" th:href="@{/users/update/{navUserId}(navUserId=${navUserId})}"
+                       role="button">개인정보수정</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" th:unless="${isLoggedIn}"> <!-- 로그인되지 않은 경우에 보여질 내용 -->
+                <li><a class="black-component" th:href="@{/users/login}" role="button">로그인</a></li>
+                <li><a class="black-component" th:href="@{/users/join}" role="button">회원가입</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

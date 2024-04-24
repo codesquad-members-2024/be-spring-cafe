@@ -1,10 +1,12 @@
 package codesquad.springcafe.repository.article;
 
-import codesquad.springcafe.dto.Article;
-import codesquad.springcafe.dto.UpdatedArticle;
 import codesquad.springcafe.exception.db.ArticleNotFoundException;
+import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.ListArticle;
+import codesquad.springcafe.model.UpdatedArticle;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +39,7 @@ public class ArticleJdbcRepository implements ArticleRepository {
         jdbcInsert.withTableName("article").usingGeneratedKeyColumns("id");
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("writer", article.getWriter());
+        parameters.put("user_id", article.getUserId());
         parameters.put("title", article.getTitle());
         parameters.put("content", article.getContent());
         parameters.put("creation_time", Timestamp.valueOf(article.getCreationTime()));
@@ -52,7 +54,7 @@ public class ArticleJdbcRepository implements ArticleRepository {
 
     @Override
     public Optional<Article> findArticleById(long id) throws ArticleNotFoundException {
-        String sql = "SELECT id, writer, title, content, creation_time, view_count FROM article WHERE id = ?";
+        String sql = "SELECT id, user_id, title, content, creation_time, view_count FROM article WHERE id = ?";
         Long[] params = new Long[]{id};
         int[] paramTypes = new int[]{Types.BIGINT};
 
@@ -82,9 +84,9 @@ public class ArticleJdbcRepository implements ArticleRepository {
     }
 
     @Override
-    public List<Article> findAllArticle() {
-        String sql = "SELECT id, writer, title, content, creation_time, view_count FROM article";
-        return jdbcTemplate.query(sql, articleRowMapper());
+    public List<ListArticle> findAllArticle() {
+        String sql = "SELECT id, user_id, title, creation_time, view_count FROM article";
+        return jdbcTemplate.query(sql, listArticleRowMapper());
     }
 
     @Override
@@ -97,14 +99,41 @@ public class ArticleJdbcRepository implements ArticleRepository {
         return id;
     }
 
+    @Override
+    public List<Long> findUserArticleIds(String userId) {
+        String sql = "SELECT id FROM article WHERE user_id = ?";
+        String[] params = new String[]{userId};
+        int[] paramTypes = new int[]{Types.VARCHAR};
+
+        try {
+            return jdbcTemplate.query(sql, params, paramTypes, articleIdRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    private RowMapper<ListArticle> listArticleRowMapper() {
+        return (rs, rowNum) -> new ListArticle(
+                rs.getLong("id"),
+                rs.getString("user_id"),
+                rs.getString("title"),
+                rs.getTimestamp("creation_time").toLocalDateTime(),
+                rs.getLong("view_count")
+        );
+    }
+
     private RowMapper<Article> articleRowMapper() {
         return (rs, rowNum) -> new Article(
                 rs.getLong("id"),
-                rs.getString("writer"),
+                rs.getString("user_id"),
                 rs.getString("title"),
                 rs.getString("content"),
                 rs.getTimestamp("creation_time").toLocalDateTime(),
                 rs.getLong("view_count")
         );
+    }
+
+    private RowMapper<Long> articleIdRowMapper() {
+        return (rs, rowNum) -> rs.getLong("id");
     }
 }
