@@ -25,6 +25,7 @@ public class HomeController {
         List<Article> articles = articleRepository.findAllArticles();
         logger.debug("게시글 수: {}", articles.size());
         model.addAttribute("articles", articles);
+
         return "index";
     }
 }
