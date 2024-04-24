@@ -4,6 +4,7 @@ import codesquad.springcafe.db.article.ArticleDatabase;
 import codesquad.springcafe.model.article.Article;
 import codesquad.springcafe.model.article.dto.ArticleCreationDto;
 import codesquad.springcafe.model.user.User;
+import codesquad.springcafe.model.user.dto.UserProfileDto;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,10 @@ public class ArticleController {
     @PostMapping("/add")
     public String createArticle(@ModelAttribute ArticleCreationDto articleCreationDto, HttpSession session) {
         Article article = articleCreationDto.toEntity();
-        User user = (User) session.getAttribute("springCafeMember");
+        UserProfileDto userProfile = (UserProfileDto) session.getAttribute("springCafeMember");
         long seq = sequence.incrementAndGet();
         article.setSequence(seq);
-        article.setWriter(user.getNickname());
+        article.setWriter(userProfile.getNickname());
         articleDatabase.addArticle(article);
         return "redirect:/";
     }

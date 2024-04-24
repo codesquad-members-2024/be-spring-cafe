@@ -22,4 +22,21 @@ public class UserCredentialDto {
     public User toEntity(){
         return new User(userId, password);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj){
+            return true;
+        }
+        if (obj == null || this.getClass() != this.getClass()){
+            return false;
+        }
+        UserCredentialDto that = (UserCredentialDto) obj;
+        return this.userId.equals(that.userId) && this.password.equals(that.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return userId.hashCode() + password.hashCode();
+    }
 }
