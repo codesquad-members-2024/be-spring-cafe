@@ -141,6 +141,25 @@
 
 ---
 
+## 댓글 쓰기
+### 1) 자신의 글에 댓글 작성
+- 자신이 작성한 댓글에 대해서는 수정 / 삭제 버튼이 생긴다
+![img_3.png](docs/img1/img_3.png)
+
+### 2) 자신의 글에 다른 사람이 댓글 작성
+- 타인이 작성한 댓글은 수정 / 삭제 할 수 없다
+![img_4.png](docs/img1/img_4.png)
+
+## 게시글 삭제
+## 1) 게시글에 댓글이 없는 경우, 자신의 댓글만 있는 경우
+![img_5.png](docs/img1/img_5.png)
+![img_6.png](docs/img/img_6.png)
+![img_8.png](docs/img/img_8.png)
+
+## 2) 게시글에 다른 사용자의 댓글이 있는 경우
+- 삭제가 불가능하다
+![img_9.png](docs/img/img_9.png)
+---
 # EC2 인스턴스에서 서버 동작
 
 > http://3.34.194.184:8080/
@@ -154,13 +173,13 @@
 
 > 3000번째 게시물은 없는 상태
 
-![img.png](img.png)
+![img.png](docs/img1/img.png)
 
 ### 2) 없는 사용자를 조회하려고 할 때
 
 > whoami 라는 사용자는 없는 상태
 
-![img_1.png](img_1.png)
+![img_1.png](docs/img1/img_1.png)
 
 
 
@@ -228,7 +247,7 @@
 
 ## DB 모델링
 
-![img_2.png](img_2.png)
+![img_2.png](docs/img1/img_2.png)
 
 ---
 
