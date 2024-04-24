@@ -44,14 +44,14 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public String showProfile(@PathVariable String userId, Model model) {
+    public String showProfile(@PathVariable("userId") String userId, Model model) {
         UserInfoDTO targetUser = userService.findById(userId);
         model.addAttribute("user", targetUser);
         return "/user/profile";
     }
 
     @GetMapping("/{userId}/form")
-    public String showUpdateInfoForm(@PathVariable String userId, Model model) {
+    public String showUpdateInfoForm(@PathVariable("userId") String userId, Model model) {
         UserInfoDTO targetUser = userService.findById(userId);
         model.addAttribute("user", targetUser);
         return "/user/updateForm";

@@ -36,9 +36,6 @@ public class ArticleService {
 
     public ArticleInfoDTO findByIndex(Long index) {
         Optional<Article> targetArticle = articleRepository.getByIndex(index);
-        if (targetArticle.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-        return targetArticle.get().toDTO();
+        return targetArticle.map(Article::toDTO).orElse(null);
     }
 }

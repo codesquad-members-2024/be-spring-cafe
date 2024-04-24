@@ -37,7 +37,7 @@ public class ArticleController {
     }
 
     @GetMapping("articles/{index}")
-    public String showArticle(@PathVariable Long index, Model model) {
+    public String showArticle(@PathVariable("index") Long index, Model model) {
         ArticleInfoDTO targetArticle = articleService.findByIndex(index);
         model.addAttribute("article", targetArticle);
         return "/qna/show";
