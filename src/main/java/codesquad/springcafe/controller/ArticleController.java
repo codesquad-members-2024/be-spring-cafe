@@ -3,7 +3,6 @@ package codesquad.springcafe.controller;
 import codesquad.springcafe.db.article.ArticleDatabase;
 import codesquad.springcafe.model.article.Article;
 import codesquad.springcafe.model.article.dto.ArticleCreationDto;
-import codesquad.springcafe.model.user.User;
 import codesquad.springcafe.model.user.dto.UserProfileDto;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -15,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static codesquad.springcafe.controller.LoginController.LOGIN_SESSION_NAME;
 
 @Controller
 @RequestMapping("/articles")
@@ -35,7 +36,7 @@ public class ArticleController {
     @PostMapping("/add")
     public String createArticle(@ModelAttribute ArticleCreationDto articleCreationDto, HttpSession session) {
         Article article = articleCreationDto.toEntity();
-        UserProfileDto userProfile = (UserProfileDto) session.getAttribute("springCafeMember");
+        UserProfileDto userProfile = (UserProfileDto) session.getAttribute(LOGIN_SESSION_NAME);
         long seq = sequence.incrementAndGet();
         article.setSequence(seq);
         article.setWriter(userProfile.getNickname());
