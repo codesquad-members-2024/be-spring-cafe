@@ -83,12 +83,14 @@ public class H2ArticleRepository implements ArticleRepository {
     public void incrementPageView(long articleId) {
         String sql = "UPDATE ARTICLES SET PAGEVIEWS = PAGEVIEWS + 1 WHERE ARTICLEID = ?";
         jdbcTemplate.update(sql, articleId);
+        logger.debug("Article ID : {} Page View Increased", articleId);
     }
 
     @Override
     public void updateArticle(long articleId, ArticleUpdateDto articleUpdateDto) {
         String sql = "UPDATE ARTICLES SET TITLE = ?, CONTENT = ? WHERE ARTICLEID = ?";
         jdbcTemplate.update(sql, articleUpdateDto.getTitle(), articleUpdateDto.getContent(), articleId);
+        logger.debug("Article ID : {} Updated", articleId);
     }
 
     @Override
@@ -100,6 +102,8 @@ public class H2ArticleRepository implements ArticleRepository {
         String replyDeleteSql = "UPDATE REPLIES SET DELETED = TRUE WHERE ARTICLEID = ?";
 
         jdbcTemplate.update(replyDeleteSql, articleId);
+
+        logger.debug("Article ID : {} Deleted", articleId);
     }
 
 
@@ -125,6 +129,7 @@ public class H2ArticleRepository implements ArticleRepository {
     public void deleteReply(long replyId) {
         String sql = "UPDATE REPLIES SET DELETED = TRUE WHERE REPLYID = ?";
         jdbcTemplate.update(sql, replyId);
+        logger.debug("Reply ID : {} Deleted", replyId);
     }
 
     @Override

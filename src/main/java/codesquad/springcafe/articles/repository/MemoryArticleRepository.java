@@ -19,6 +19,7 @@ public class MemoryArticleRepository implements ArticleRepository {
     private static final Logger logger = LoggerFactory.getLogger(MemoryArticleRepository.class);
 
     private final ArticleDatabase articleDatabase;
+
     @Autowired
     public MemoryArticleRepository(ArticleDatabase articleDatabase) {
         this.articleDatabase = articleDatabase;
@@ -72,7 +73,7 @@ public class MemoryArticleRepository implements ArticleRepository {
 
     @Override
     public Optional<Reply> findReplyById(long replyId) {
-        return Optional.empty();
+        return Optional.of(articleDatabase.findReplyById(replyId));
     }
 }
 

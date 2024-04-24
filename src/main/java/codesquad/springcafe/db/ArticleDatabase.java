@@ -82,4 +82,8 @@ public class ArticleDatabase {
         replies.remove(replyId);
         logger.debug("Reply ID '{}' Deleted", replyId);
     }
+
+    public Reply findReplyById(long replyId) {
+        return replies.get(replyId);
+    }
 }

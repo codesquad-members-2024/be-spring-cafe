@@ -20,8 +20,6 @@ import java.util.Optional;
 
 @Service
 public class ArticleService {
-    private static final Logger logger = LoggerFactory.getLogger(ArticleService.class);
-
     private final ArticleRepository articleRepository;
 
     @Autowired
@@ -31,7 +29,6 @@ public class ArticleService {
 
     public void createArticle(ArticleCreationRequest articleCreationRequest) {
         Article article = new Article(articleCreationRequest.getUserId(), articleCreationRequest.getTitle(), articleCreationRequest.getContent());
-        logger.debug("Article Created : {}", article);
         articleRepository.createArticle(article);
     }
 
@@ -101,6 +98,4 @@ public class ArticleService {
             throw new ArticleAccessException("게시글을 삭제할 수 없습니다. [에러 내용] : 작성자가 다른 댓글이 있는 경우 삭제가 불가능합니다.");
         }
     }
-
-
 }
