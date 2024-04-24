@@ -2,7 +2,6 @@ package springcafe.user.login.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import springcafe.user.dto.AuthInfo;
 import springcafe.user.exception.WrongIdPasswordException;
 import springcafe.user.login.security.PasswordHashing;
 import springcafe.user.model.User;
