@@ -52,9 +52,11 @@
 
                 <div class="qna-comment">
                     <div class="qna-comment-slipp">
-                        <p class="qna-comment-count"><strong th:text="${comments.size()}">0</strong>개의 의견</p>
+                        <p class="qna-comment-count"><strong th:text="${commentsPage.getTotalElements()}">0</strong>개의 의견</p>
                         <div id="comment-list" class="qna-comment-slipp-articles">
                             <!-- 댓글이 추가되는 곳 -->
+                            <article th:replace="~{fragment/comment/commentsFragment :: commentList(${commentsPage.content}, ${lineSeparator})}" class="article" id="answer-1405">
+                            </article>
                         </div>
                         <div id="comment-form" class="qna-comment-slipp-articles">
                             <form class="submit-write" th:action="@{|/api/questions/${article.id}/comments|}"
