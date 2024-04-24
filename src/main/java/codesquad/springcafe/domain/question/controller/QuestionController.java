@@ -4,6 +4,7 @@ import codesquad.springcafe.domain.question.data.QuestionListResponse;
 import codesquad.springcafe.domain.question.data.QuestionRequest;
 import codesquad.springcafe.domain.question.data.QuestionResponse;
 import codesquad.springcafe.domain.question.service.QuestionService;
+import codesquad.springcafe.domain.user.data.UserCredentials;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class QuestionController {
     public String postQuestion(HttpSession httpSession,
                                @Valid @ModelAttribute QuestionRequest questionRequest,
                                RedirectAttributes redirectAttributes) {
-        Long userId = getSessionUserId(httpSession);
+        Long userId = getUserCredentials(httpSession).getUserId();
         Long questionId = questionService.postQuestion(userId, questionRequest);
 
         redirectAttributes.addAttribute("questionId", questionId);
@@ -50,7 +51,7 @@ public class QuestionController {
     @GetMapping("/question/{questionId}")
     public String getQuestion(HttpSession httpSession,
                               @PathVariable("questionId") Long questionId, Model model) {
-        Long userId = getSessionUserId(httpSession);
+        Long userId = getUserCredentials(httpSession).getUserId();
         QuestionResponse questionResponse = questionService.getQuestion(userId, questionId);
 
         model.addAttribute("question", questionResponse);
@@ -63,7 +64,7 @@ public class QuestionController {
     public String getQuestionEditForm(HttpSession httpSession,
                                       @PathVariable("questionId") Long questionId,
                                       Model model) {
-        Long userId = getSessionUserId(httpSession);
+        Long userId = getUserCredentials(httpSession).getUserId();
 
         QuestionResponse questionResponse = questionService.getEditQuestion(userId, questionId);
         model.addAttribute("question", questionResponse);
@@ -77,7 +78,7 @@ public class QuestionController {
                                @PathVariable("questionId") Long questionId,
                                QuestionRequest questionUpdateRequest,
                                RedirectAttributes redirectAttributes) {
-        Long userId = getSessionUserId(httpSession);
+        Long userId = getUserCredentials(httpSession).getUserId();
         questionService.editQuestion(userId, questionId, questionUpdateRequest);
 
         redirectAttributes.addAttribute("questionId", questionId);
@@ -90,7 +91,7 @@ public class QuestionController {
                                       @RequestHeader("referer") String referer,
                                       @PathVariable("questionId") Long questionId,
                                       Model model) {
-        Long userId = getSessionUserId(httpSession);
+        Long userId = getUserCredentials(httpSession).getUserId();
         Long deleteQuestionId = questionService.getDeleteQuestion(userId, questionId);
 
         model.addAttribute("goBack", referer);
@@ -103,17 +104,17 @@ public class QuestionController {
     @DeleteMapping("/question/delete/{questionId}")
     public String deleteQuestion(HttpSession httpSession,
                                  @PathVariable("questionId") Long questionId) {
-        Long userId = getSessionUserId(httpSession);
+        Long userId = getUserCredentials(httpSession).getUserId();
         questionService.deleteQuestion(userId, questionId);
 
         return "redirect:/questions";
     }
 
-    private Long getSessionUserId(HttpSession httpSession) {
-        Object userId = httpSession.getAttribute("userId");
-        if (userId == null) {
+    private UserCredentials getUserCredentials(HttpSession httpSession) {
+        Object userCredentials = httpSession.getAttribute("userCredentials");
+        if (userCredentials == null) {
             throw new IllegalStateException("인증이 필요한 요청입니다.");
         }
-        return (Long) userId;
+        return (UserCredentials) userCredentials;
     }
 }
