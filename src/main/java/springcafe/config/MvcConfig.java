@@ -7,7 +7,6 @@ import org.springframework.web.servlet.config.annotation.*;
 import springcafe.interceptor.AuthCheckInterceptor;
 
 @Configuration
-@EnableWebMvc
 public class MvcConfig implements WebMvcConfigurer {
 
     @Override
@@ -18,7 +17,10 @@ public class MvcConfig implements WebMvcConfigurer {
                         ,"/qna/questions"
                         ,"/user/*/form"
                         ,"/user/profile/*"
-                        ,"qna/show/*");
+                        ,"/qna/show/*"
+                        ,"/reply/create/*"
+                        ,"/reply/update/*"
+                        ,"/reply/delete/*");
     }
 
 
