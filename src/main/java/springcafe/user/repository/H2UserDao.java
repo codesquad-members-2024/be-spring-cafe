@@ -1,5 +1,6 @@
 package springcafe.user.repository;
 
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -32,13 +33,15 @@ public class H2UserDao implements UserDao {
         try {
 
             User user = jdbcTemplate.queryForObject(
-                    "SELECT USERID, PASSWORD, NAME, EMAIL FROM USERS WHERE USERID =?",
+                    "SELECT USERID, NAME, EMAIL, PASSWORD, ID FROM USERS WHERE USERID =?",
                     new Object[]{userId},
                     (rs, rowNum) -> new User(
                             rs.getString("USERID"),
-                            rs.getString("PASSWORD"),
                             rs.getString("NAME"),
-                            rs.getString("EMAIL"))
+                            rs.getString("EMAIL"),
+                            rs.getString("PASSWORD"),
+                            rs.getLong("ID")
+                            )
             );
 
             return user;
@@ -52,7 +55,7 @@ public class H2UserDao implements UserDao {
         return jdbcTemplate.query(
                 "SELECT USERID, PASSWORD, NAME, EMAIL FROM USERS",
                 (rs, rowNum) -> new User(rs.getString("USERID"), rs.getString("PASSWORD"),
-                        rs.getString("NAME"), rs.getString("EMAIL"))
+                        rs.getString("NAME"), rs.getString("EMAIL"), rs.getLong("ID"))
         );
     }
 
@@ -61,7 +64,6 @@ public class H2UserDao implements UserDao {
         jdbcTemplate.update(
                 "UPDATE USERS SET NAME = ?, EMAIL = ? WHERE USERID = ?",
                 user.getName(), user.getEmail(), user.getUserId());
-        System.out.println("업데이트 성공: " + user.getUserId());
 
     }
 
