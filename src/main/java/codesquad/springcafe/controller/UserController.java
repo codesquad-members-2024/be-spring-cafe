@@ -35,27 +35,27 @@ public class UserController {
 
     @GetMapping
     public String showList(Model model) {
-        List<UserInfoDTO> users = userService.findAllUsers();
+        List<UserInfoDTO> users = userService.findAll();
         model.addAttribute("users", users);
         return "/user/list";
     }
 
     @GetMapping("/{userId}")
-    public String showProfile(@PathVariable String userId, Model model) {
-        UserInfoDTO targetUser = userService.findUserById(userId);
+    public String showProfile(@PathVariable("userId") String userId, Model model) {
+        UserInfoDTO targetUser = userService.findById(userId);
         model.addAttribute("user", targetUser);
         return "/user/profile";
     }
 
     @GetMapping("/{userId}/form")
-    public String showUpdateInfoForm(@PathVariable String userId, Model model) {
-        UserInfoDTO targetUser = userService.findUserById(userId);
+    public String showUpdateInfoForm(@PathVariable("userId") String userId, Model model) {
+        UserInfoDTO targetUser = userService.findById(userId);
         model.addAttribute("user", targetUser);
         return "/user/updateForm";
     }
 
     @PutMapping("/{userId}/update")
-    public String updateInfo(@PathVariable String userId, @ModelAttribute("user") UserUpdateDTO updateInfo, Model model) {
+    public String updateInfo(@PathVariable("userId") String userId, @ModelAttribute("user") UserUpdateDTO updateInfo, Model model) {
         UserInfoDTO updatedUser = userService.updateInfo(userId, updateInfo);
         model.addAttribute("user", updatedUser);
         return "redirect:/users";

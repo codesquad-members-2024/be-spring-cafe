@@ -6,9 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public class MemoryArticleRepository implements ArticleRepository {
     private final Map<Long, Article> articles;
 
@@ -29,10 +27,5 @@ public class MemoryArticleRepository implements ArticleRepository {
     @Override
     public List<Article> getAll() {
         return new ArrayList<>(articles.values());
-    }
-
-    @Override
-    public void modify(Article modifiedArticle) {
-        articles.put(modifiedArticle.getIndex(), modifiedArticle);
     }
 }

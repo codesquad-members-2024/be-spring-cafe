@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
-    private Long index = 0L;
+    private Long totalIndex = 0L;
 
     @Autowired
     public ArticleService(ArticleRepository articleRepository) {
@@ -22,23 +22,20 @@ public class ArticleService {
     }
 
     public ArticleInfoDTO upload(UploadDTO uploadDTO) {
-        Article newArticle = uploadDTO.toArticle(++index);
+        Article newArticle = uploadDTO.toArticle(++totalIndex);
         articleRepository.save(newArticle);
         return newArticle.toDTO();
     }
 
-    public List<ArticleInfoDTO> findAllArticles() {
+    public List<ArticleInfoDTO> findAll() {
         List<Article> articles = articleRepository.getAll();
         return articles.stream()
             .map(Article::toDTO)
             .collect(Collectors.toList());
     }
 
-    public ArticleInfoDTO findArticleByIndex(Long index) {
+    public ArticleInfoDTO findByIndex(Long index) {
         Optional<Article> targetArticle = articleRepository.getByIndex(index);
-        if (targetArticle.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-        return targetArticle.get().toDTO();
+        return targetArticle.map(Article::toDTO).orElse(null);
     }
 }

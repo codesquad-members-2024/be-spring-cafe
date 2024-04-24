@@ -1,7 +1,6 @@
 package codesquad.springcafe.dto.user;
 
 import codesquad.springcafe.model.User;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class UserUpdateDTO {
     private final String password;
@@ -14,8 +13,7 @@ public class UserUpdateDTO {
         this.email = email;
     }
 
-    public User toUser(String userId, PasswordEncoder passwordEncoder) {
-        String hashedPassword = passwordEncoder.encode(password);
-        return new User(userId, hashedPassword, name, email);
+    public User toUser(String userId) {
+        return new User(userId, password, name, email);
     }
 }

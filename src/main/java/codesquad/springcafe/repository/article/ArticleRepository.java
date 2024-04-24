@@ -10,6 +10,4 @@ public interface ArticleRepository {
     Optional<Article> getByIndex(Long index);
 
     List<Article> getAll();
-
-    void modify(Article modifiedArticle);
 }

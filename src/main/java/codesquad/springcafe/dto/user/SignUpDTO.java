@@ -1,7 +1,6 @@
 package codesquad.springcafe.dto.user;
 
 import codesquad.springcafe.model.User;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class SignUpDTO {
 
@@ -17,8 +16,7 @@ public class SignUpDTO {
         this.email = email;
     }
 
-    public User toUser(PasswordEncoder passwordEncoder) {
-        String encodedPassword = passwordEncoder.encode(password);
-        return new User(userId, encodedPassword, name, email);
+    public User toUser() {
+        return new User(userId, password, name, email);
     }
 }

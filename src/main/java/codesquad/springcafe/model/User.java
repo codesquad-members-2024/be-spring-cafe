@@ -19,6 +19,18 @@ public class User {
         return userId;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
     public UserInfoDTO toDTO(Long index) {
         return new UserInfoDTO(index, userId, name, email);
     }
