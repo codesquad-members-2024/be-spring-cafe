@@ -61,7 +61,7 @@ public class JdbcArticleRepository implements ArticleRepository {
     public void modify(Article modifiedArticle) {
         String sql = "UPDATE `article` SET title = ?, content = ? WHERE index = ?";
         jdbcTemplate.update(sql,
-            modifiedArticle.getTitle(), modifiedArticle.getContent(), modifiedArticle.getIndex());
+            modifiedArticle.getTitle(), modifiedArticle.getContent(), modifiedArticle.getId());
     }
 
     @Override

@@ -31,7 +31,7 @@ public class MemoryArticleRepository implements ArticleRepository {
 
     @Override
     public void modify(Article modifiedArticle) {
-        articles.put(modifiedArticle.getIndex(), modifiedArticle);
+        articles.put(modifiedArticle.getId(), modifiedArticle);
     }
 
     @Override
