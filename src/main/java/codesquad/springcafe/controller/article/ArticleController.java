@@ -6,8 +6,10 @@ import codesquad.springcafe.domain.article.Article;
 import codesquad.springcafe.domain.comment.Comment;
 import codesquad.springcafe.service.article.ArticleManager;
 import codesquad.springcafe.service.comment.CommentManager;
+import codesquad.springcafe.util.Page;
+import codesquad.springcafe.util.PageRequest;
+import codesquad.springcafe.util.Sort;
 import java.time.LocalDateTime;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/questions")
@@ -54,7 +57,10 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}")
-    public String detail(@LoginId String loginId, @PathVariable("articleId") long articleId, Model model) {
+    public String detail(@LoginId String loginId, @PathVariable("articleId") long articleId,
+                         @RequestParam(value = "page", defaultValue = "1") int page,
+                         @RequestParam(value = "size", defaultValue = "15") int size,
+                         Model model) {
         /* 줄바꿈 문자 추가 */
         String lineSeparator = System.lineSeparator();
         model.addAttribute("lineSeparator", lineSeparator);
@@ -64,8 +70,8 @@ public class ArticleController {
         model.addAttribute("article", findArticle);
 
         /* 댓글 리스트 추가 */
-        List<Comment> comments = commentManager.findAllComment(articleId);
-        model.addAttribute("comments", comments);
+        Page<Comment> commentsPage = commentManager.findAllComment(articleId, PageRequest.of(page - 1, size, Sort.sorted()));
+        model.addAttribute("commentsPage", commentsPage);
 
         /* 댓글 폼 추가 */
         model.addAttribute("commentForm", new CommentForm());
