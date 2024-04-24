@@ -1,6 +1,5 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.domain.UpdatedUser;
 import codesquad.springcafe.database.user.UserDatabase;
@@ -105,7 +104,7 @@ public class UserController {
         }
 
         userDatabase.updateUser(id, updatedUser);
-        logger.debug("user update: " + user.toString());
+        logger.debug("user update: {}", user.toString());
         return "redirect:/users/list";
     }
 
@@ -125,17 +124,18 @@ public class UserController {
         } catch (NoSuchElementException e){
             // 아이디가 잘못 된 경우
             model.addAttribute("errorMsg", "해당 아이디로 등록된 사용자가 없습니다.");
-            return "users/login";
+            return "user/login";
         }catch (IllegalArgumentException e) {
             // 비밀번호가 잘못 된 경우
             model.addAttribute("errorMsg", "비밀번호가 일치하지 않습니다.");
-            return "users/login";
+            return "user/login";
         }
 
         return "redirect:/main";
     }
 
     @GetMapping("/user/logout")
+    // 로그아웃, 현재 세션 삭제
     public String userLogout(HttpServletRequest request) {
         request.getSession().invalidate();
         return "redirect:/main";

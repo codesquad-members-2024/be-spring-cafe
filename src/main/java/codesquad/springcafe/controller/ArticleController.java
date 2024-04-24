@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @Controller
 public class ArticleController {
     private static final Logger logger = LoggerFactory.getLogger(ArticleController.class);
@@ -89,6 +87,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/article/delete/{userId}/{id}")
+    // 게시글 삭제하기
     public String deleteArticle(@PathVariable String userId, @PathVariable String id, Model model, HttpServletRequest request) {
         String sessionUserId = getSessionUser(request).getUserId();
         if(!userId.equals(sessionUserId)){ // 수정 권한 없을 때 (= 자신이 작성한 글 아님)
