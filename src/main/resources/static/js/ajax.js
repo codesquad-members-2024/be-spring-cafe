@@ -58,3 +58,34 @@ function refreshNumber() {
     var number = document.getElementById("comments_block").querySelectorAll('article').length;
     document.getElementById("numberOfComments").innerText = number;
 }
+
+$(".article-more").click(nextPage);
+
+function nextPage(e) {
+    e.preventDefault();
+
+    var nowPage = $("#nowPage").text();
+    var nextPageNumber = parseInt(nowPage) + 1;
+    $("#nowPage").text(nextPageNumber);
+
+    var url = $(".article-more").attr("href") + nextPageNumber;
+
+
+    $.ajax({
+        type: 'get',
+        url: url,
+        dataType: 'json',
+        error: function () {
+            alert("error");
+        },
+        success: function (data, status) {
+            console.log(data);
+            data.forEach(function (item) {
+                var answerTemplate = $("#comment_template").html();
+                var template = answerTemplate.format(item);
+                $(".qna-comment-slipp-articles").append(template); // 추가
+            })
+            refreshNumber();
+        }
+    });
+}
