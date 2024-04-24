@@ -53,7 +53,10 @@ public class JdbcUserRepository implements UserRepository {
             );
             return user;
         });
-        return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
+        if (users.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(users.get(0));
     }
 
     @Override
