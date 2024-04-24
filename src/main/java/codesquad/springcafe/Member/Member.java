@@ -1,10 +1,12 @@
 package codesquad.springcafe.Member;
 
+
 public class Member {
     private final String memberId;
     private String name;
     private String email;
     private String password;
+    private Long id;
 
     public Member(String memberId, String name, String email, String password) {
         this.memberId = memberId;
@@ -33,4 +35,11 @@ public class Member {
 
     public String getPassword(){ return password;}
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
 }

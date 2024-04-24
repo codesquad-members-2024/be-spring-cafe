@@ -2,7 +2,7 @@ package codesquad.springcafe.MemberTest;
 
 import codesquad.springcafe.Member.Member;
 import codesquad.springcafe.Member.MemberController;
-import codesquad.springcafe.Member.MemberRepository;
+import codesquad.springcafe.Member.MemoryMemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +12,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -27,7 +25,7 @@ public class MemberControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private MemberRepository memberRepository;
+    private MemoryMemberRepository memoryMemberRepository;
 
     @Test
     @DisplayName("회원 등록 후 /user/list로 리다이렉트한다")
@@ -55,7 +53,7 @@ public class MemberControllerTest {
     void showProfileTest() throws Exception {
 
         String memberId = "test_user";
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(new Member("test_user", "테스트 유저", "test@test", "test")));
+        given(memoryMemberRepository.findById(memberId)).willReturn(Optional.of(new Member("test_user", "테스트 유저", "test@test", "test")));
 
         // MockMvc를 사용하여 /users/{userId}에 GET 요청을 보내고, 뷰 이름을 확인합니다.
         mockMvc.perform(get("/users/{memberId}", memberId))
@@ -67,7 +65,7 @@ public class MemberControllerTest {
     @DisplayName("/users/{userId}/form 요청 시 user/updateForm 뷰로 이동")
     void updateFormTest() throws Exception {
         String memberId = "test_user";
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(new Member("test_user", "테스트 유저", "test@test.com", "test")));
+        given(memoryMemberRepository.findById(memberId)).willReturn(Optional.of(new Member("test_user", "테스트 유저", "test@test.com", "test")));
 
         mockMvc.perform(get("/users/{memberId}/form", memberId))
                 .andExpect(status().isOk())
@@ -80,8 +78,8 @@ public class MemberControllerTest {
         String memberId = "test_user";
         Member updatedMember = new Member("test_user", "수정된 유저", "updated@test.com", "updated");
 
-        // MemberRepository의 updateMemberInfo 메서드가 true를 반환하도록 설정
-        given(memberRepository.updateMemberInfo(eq(memberId), any(Member.class))).willReturn(true);
+        given(memoryMemberRepository.findById(memberId)).willReturn(Optional.of(updatedMember));
+
 
         mockMvc.perform(put("/user/update/{memberId}", memberId)
                         .param("name", updatedMember.getName())
