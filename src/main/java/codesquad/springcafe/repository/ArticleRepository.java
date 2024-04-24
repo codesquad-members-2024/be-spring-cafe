@@ -2,26 +2,13 @@ package codesquad.springcafe.repository;
 
 import codesquad.springcafe.model.Article;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class ArticleRepository {
+public interface ArticleRepository {
+    void addArticle(Article article);
 
-    private final List<Article> articles;
+    Optional<Article> findById(Long id);
 
-    public ArticleRepository() {
-        this.articles = new ArrayList<>();
-    }
-
-    public void addArticle(Article article) {
-        articles.add(article);
-    }
-
-    public Article findByIndex(int id) {
-        return articles.get(id);
-    }
-
-    public List<Article> findAll() {
-        return articles;
-    }
+    List<Article> findAll();
 }

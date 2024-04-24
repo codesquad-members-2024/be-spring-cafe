@@ -54,20 +54,12 @@ public class UserController {
     public String updateForm(@PathVariable String userId, Model model) {
         Optional<User> optionalUser = userService.findOne(userId);
         optionalUser.ifPresent(user -> model.addAttribute("user", user));
-        model.addAttribute("userId", userId); // userId도 함께 모델에 추가
         return "users/updateForm";
     }
 
     @PutMapping("/{userId}/form")
-    public String userUpdate(@PathVariable String userId, @ModelAttribute User updatedUser, Model model) {
-        Optional<User> optionalUser = userService.findOne(userId);
-        optionalUser.ifPresent(user -> {
-                    user.setName(updatedUser.getName());
-                    user.setPassword(updatedUser.getPassword());
-                    user.setEmail(updatedUser.getEmail());
-                    userService.userUpdate(user);
-                }
-        );
+    public String userUpdate(@PathVariable String userId, @ModelAttribute User updatedUser) {
+        userService.userUpdate(userId, updatedUser);
         return "redirect:/users";
     }
 }

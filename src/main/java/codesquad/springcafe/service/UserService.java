@@ -1,6 +1,7 @@
 package codesquad.springcafe.service;
 
 import codesquad.springcafe.model.User;
+import codesquad.springcafe.repository.MemoryUserRepository;
 import codesquad.springcafe.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +10,11 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-    private final UserRepository userRepository = new UserRepository();
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     /**
      * 회원 가입
@@ -39,7 +44,14 @@ public class UserService {
         return userRepository.findUserById(userId);
     }
 
-    public void userUpdate(User updatedUser) {
-        userRepository.userUpdate(updatedUser);
+    public void userUpdate(String userId, User updatedUser) {
+        Optional<User> optionalUser = findOne(userId);
+        optionalUser.ifPresent(user -> {
+                    user.setName(updatedUser.getName());
+                    user.setPassword(updatedUser.getPassword());
+                    user.setEmail(updatedUser.getEmail());
+                }
+        );
+        userRepository.userUpdate(optionalUser.get());
     }
 }
