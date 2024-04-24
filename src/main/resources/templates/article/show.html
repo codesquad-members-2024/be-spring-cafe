@@ -55,39 +55,43 @@
           <div class="qna-comment-slipp">
             <div class="qna-comment-slipp-articles">
               <div th:each="reply : ${replies}" class="article">
-                <div class="article-header">
-                  <div class="article-header-thumb">
-                    <img src="https://graph.facebook.com/v2.3/1324855987/picture"
-                         class="article-author-thumb" alt="">
+                <div id="replyTemplate">
+                  <div class="article-header">
+                    <div class="article-header-thumb">
+                      <img src="https://graph.facebook.com/v2.3/1324855987/picture"
+                           class="article-author-thumb" alt="">
+                    </div>
+                    <div class="article-header-text">
+                      <a th:href="@{/users/{userId}(userId=${reply.userId})}"
+                         th:text="${reply.author}" class="article-author-name"></a>
+                      <a th:href="@{'#answer-'}" class="article-header-time" title="퍼머링크"
+                         th:text="${#dates.format(reply.createdTime, 'yyyy-MM-dd HH:mm')}"></a>
+                    </div>
                   </div>
-                  <div class="article-header-text">
-                    <a th:href="@{/users/{userId}(userId=${reply.userId})}"
-                       th:text="${reply.author}" class="article-author-name"></a>
-                    <a th:href="@{'#answer-'}" class="article-header-time" title="퍼머링크"
-                       th:text="${#dates.format(reply.createdTime, 'yyyy-MM-dd HH:mm')}"></a>
+                  <div class="article-doc comment-doc">
+                    <p th:text="${reply.contents}"></p>
                   </div>
-                </div>
-                <div class="article-doc comment-doc">
-                  <p th:text="${reply.contents}"></p>
-                </div>
-                <div class="article-util">
-                  <ul class="article-util-list">
-                    <li>
-                      <a class="link-modify-article"
-                         th:href="@{/article/{articleId}/update_form(articleId=${article.articleId})}">수정</a>
-                    </li>
-                    <li>
-                      <button class="link-delete-article"
-                              th:onclick="'confirmDeleteReply(' + ${reply.replyId} + ')'">삭제
-                      </button>
-                    </li>
-                    <li>
-                      <a class="link-modify-article" href="/templates/index.html">목록</a>
-                    </li>
-                  </ul>
+                  <div class="article-util">
+                    <ul class="article-util-list">
+                      <li>
+                        <a class="link-modify-article"
+                           th:href="@{/article/{articleId}/update_form(articleId=${article.articleId})}">수정</a>
+                      </li>
+                      <li>
+                        <button class="link-delete-article"
+                                th:onclick="'confirmDeleteReply(' + ${reply.replyId} + ')'">삭제
+                        </button>
+                      </li>
+                      <li>
+                        <a class="link-modify-article" href="/templates/index.html">목록</a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
-              <form class="submit-write" id="replyForm" method="post" action="/reply/create">
+
+
+              <form class="submit-write" id="replyForm" method="post" action="/api/reply/create">
                 <div class="form-group" style="padding:14px;">
                   <textarea class="form-control" name="contents" id="contents" rows="5"
                             placeholder="댓글을 작성해주세요"></textarea>
@@ -96,7 +100,8 @@
                        th:value="${article.articleId}"/>
                 <input type="hidden" name="author" id="author" th:value="${session.nickname}"/>
                 <input type="hidden" name="userId" id="userId" th:value="${session.userId}"/>
-                <button class="btn btn-success pull-right" type="submit">답변하기</button>
+                <button class="btn btn-success pull-right" id="createReply" type="submit">답변하기
+                </button>
                 <div class="clearfix"/>
               </form>
             </div>
@@ -112,6 +117,7 @@
 <script src="../js/jquery-2.2.0.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/scripts.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script th:inline="javascript">
   function confirmDeleteArticle() {
     if (confirm("정말 지울거야?")) {
@@ -119,7 +125,6 @@
       form.method = "POST";
       var articleId = [[${article.articleId}]];
       form.action = "/article/" + articleId + "/delete";
-      console.log(form.action);
       var hiddenField = document.createElement("input");
       hiddenField.type = "hidden";
       hiddenField.name = "_method";
@@ -146,5 +151,90 @@
     }
   }
 </script>
+
+<script th:inline="javascript">
+  $(document).ready(function () {
+    $('.submit-write').submit(updateReply);
+
+    function formatDateTimeToMinute(dateTimeString) {
+      const date = new Date(dateTimeString);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
+    }
+
+    function updateReply(e) {
+
+      e.preventDefault();
+      let replyBean = {
+        author: $("#author").val(),
+        contents: $("#contents").val(),
+        articleId: $("#articleId").val(),
+        userId: $("#userId").val()
+      };
+      let url = $(this).attr('action');
+
+      let template = `
+        <div class="article">
+          <div class="article-header">
+            <div class="article-header-thumb">
+              <img src="https://graph.facebook.com/v2.3/1324855987/picture" class="article-author-thumb" alt="">
+            </div>
+            <div class="article-header-text">
+              <a href="/users/{userId}" class="article-author-name">{author}</a>
+              <span class="article-header-time" title="퍼머링크">{createdTime}</span>
+            </div>
+          </div>
+          <div class="article-doc comment-doc">
+            <p>{contents}</p>
+          </div>
+          <div class="article-util">
+            <ul class="article-util-list">
+              <li>
+                <a class="link-modify-article" href="/article/{articleId}/update_form">수정</a>
+              </li>
+              <li>
+                <button class="link-delete-article" onclick="confirmDeleteReply({replyId})">삭제</button>
+              </li>
+              <li>
+                <a class="link-modify-article" href="/templates/index.html">목록</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      `;
+
+      $.ajax({
+        type: 'POST',
+        url: url,
+        data: replyBean,
+        dataType: 'json',
+        success: function (data) {
+          if (!data.contents) {
+            alert("본문을 작성해주세요!");
+            return;
+          }
+          if (data.createdTime) {
+            data.createdTime = formatDateTimeToMinute(data.createdTime);
+          }
+          let formattedTemplate = template.formatJson(data);
+          $(".submit-write").before($(formattedTemplate));
+          $("textarea[name=contents]").val("");
+        },
+        error: function (xhr, status, error) {
+          console.log("Error: " + error);
+        }
+      });
+    }
+
+  });
+
+</script>
+
+
 </body>
 </html>
