@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface ReplyDatabase {
 
-    void save(Reply reply);
+    Reply save(Reply reply);
 
     List<Reply> findByArticleId(Long articleId);
 

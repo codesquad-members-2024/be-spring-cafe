@@ -8,15 +8,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReplyService {
 
-    private ReplyDatabase replyDatabase;
+    private final ReplyDatabase replyDatabase;
 
     @Autowired
     public ReplyService(ReplyDatabase replyDatabase) {
         this.replyDatabase = replyDatabase;
     }
 
-    public void save(ReplyCreateDto replyCreateDto) {
-        replyDatabase.save(replyCreateDto.toEntity());
+    public Reply save(ReplyCreateDto replyCreateDto) {
+        return replyDatabase.save(replyCreateDto.toEntity());
     }
 
     public List<Reply> findByArticleId(Long articleId) {
