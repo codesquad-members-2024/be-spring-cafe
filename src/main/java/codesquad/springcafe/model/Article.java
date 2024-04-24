@@ -4,6 +4,8 @@ import codesquad.springcafe.dto.ArticleRequestDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Article {
@@ -14,6 +16,17 @@ public class Article {
     private final String contents;
     private final LocalDateTime localDateTime;
     private AtomicLong hits;
+    private boolean deleted;
+
+    public Article(Long articleId, String writer, String title, String contents, LocalDateTime localDateTime, Long hits, boolean deleted) {
+        this.articleId = articleId;
+        this.writer = writer;
+        this.title = title;
+        this.contents = contents;
+        this.localDateTime = localDateTime;
+        this.hits = new AtomicLong(hits);
+        this.deleted = deleted;
+    }
 
     public Article(Long articleId, String writer, String title, String contents, LocalDateTime localDateTime, long hits) {
         this.articleId = articleId;
@@ -22,6 +35,7 @@ public class Article {
         this.contents = contents;
         this.localDateTime = localDateTime;
         this.hits = new AtomicLong(hits);
+        this.deleted = false;
     }
 
     public Article(Long articleId, String writer, String title, String contents) {
@@ -31,6 +45,7 @@ public class Article {
         this.contents = contents;
         this.localDateTime = LocalDateTime.now();
         this.hits = new AtomicLong();
+        this.deleted = false;
     }
 
     public Article(long articleId, String writer, ArticleRequestDto articleRequestDto) {
@@ -43,6 +58,7 @@ public class Article {
         this.contents = articleRequestDto.getContents();
         this.localDateTime = LocalDateTime.now();
         this.hits = new AtomicLong();
+        this.deleted = false;
     }
 
     public Long getArticleId() {
@@ -67,6 +83,10 @@ public class Article {
 
     public long getHits() {
         return hits.get();
+    }
+
+    public boolean isDeleted() {
+        return deleted;
     }
 
     public void setArticleId(Long articleId) {

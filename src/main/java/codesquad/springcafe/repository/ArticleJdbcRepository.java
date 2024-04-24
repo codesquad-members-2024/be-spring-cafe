@@ -37,6 +37,7 @@ public class ArticleJdbcRepository implements ArticleRepository {
         parameters.put("contents", article.getContents());
         parameters.put("local_date_time", article.getCreatedTime());
         parameters.put("hits", article.getHits());
+        parameters.put("deleted", article.isDeleted());
 
         Number key = jdbcInsert.executeAndReturnKey(parameters);
         article.setArticleId((key.longValue()));
@@ -46,7 +47,7 @@ public class ArticleJdbcRepository implements ArticleRepository {
 
     @Override
     public Optional<Article> findById(Long articleId) {
-        String sql = "SELECT article_id, writer, title, contents, local_date_time, hits FROM articles WHERE article_id = ?";
+        String sql = "SELECT article_id, writer, title, contents, local_date_time, hits, deleted FROM articles WHERE article_id = ?";
         try {
             Article article = jdbcTemplate.queryForObject(sql, articleRowMapper(), articleId);
             return Optional.ofNullable(article);
@@ -57,8 +58,8 @@ public class ArticleJdbcRepository implements ArticleRepository {
 
     @Override
     public List<Article> findAllArticle() {
-        String sql = "SELECT article_id, writer, title, contents, local_date_time, hits FROM articles";
-        return jdbcTemplate.query(sql, articleRowMapper());
+        String sql = "SELECT article_id, writer, title, contents, local_date_time, hits, deleted FROM articles where deleted = ?";
+        return jdbcTemplate.query(sql, articleRowMapper(), false);
     }
 
     @Override
@@ -75,8 +76,8 @@ public class ArticleJdbcRepository implements ArticleRepository {
 
     @Override
     public void delete(Long articleId) {
-        String sql = "DELETE FROM articles WHERE article_id = ?";
-        jdbcTemplate.update(sql, articleId);
+        String sql = "UPDATE articles SET deleted = ? WHERE article_id = ?";
+        jdbcTemplate.update(sql, true, articleId);
     }
 
     private RowMapper<Article> articleRowMapper() {
@@ -87,8 +88,9 @@ public class ArticleJdbcRepository implements ArticleRepository {
             String contents = rs.getString("contents");
             LocalDateTime localDateTime = rs.getTimestamp("local_date_time").toLocalDateTime();
             long hits = rs.getLong("hits");
+            boolean deleted = rs.getBoolean("deleted");
 
-            return new Article(articleId, writer, title, contents, localDateTime, hits);
+            return new Article(articleId, writer, title, contents, localDateTime, hits, deleted);
         };
     }
 
