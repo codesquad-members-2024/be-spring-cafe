@@ -1,10 +1,10 @@
 // 페이지 로드 시 실행되는 함수
 $(document).ready(function() {
   // 페이지 로드 시 댓글을 가져오도록 호출
-  fetchComments();
+  // fetchComments();
 
   // 댓글 작성 버튼 클릭 시
-  $(".submit-write button[type=submit]").click(addAnswer);
+  $(".submit-write button[type=submit]").click(publish);
 
   // 삭제 버튼 클릭 시
   $(document).on("click", ".delete-answer-button", function(event) {
@@ -17,29 +17,18 @@ $(document).ready(function() {
     // 댓글 삭제 함수 호출
     deleteComment(articleId, commentId);
   });
+
+  // "더보기" 버튼 클릭 시 loadMoreComments 함수 호출
+  $('#comment-form').on('click', '.btn-primary', function(event) {
+    event.preventDefault(); // 기본 이벤트 제거
+
+    // 콘텐츠 더보기
+    loadMoreComments();
+  });
 });
 
-// 서버로부터 댓글 리스트를 가져오는 함수
-function fetchComments() {
-  var url = $(".submit-write").attr("action");
-
-  $.ajax({
-    type : 'get',
-    url : url,
-    dataType : 'json',
-    error: function () {
-      console.log('failure');
-    },
-    success : function (comments, status) {
-      displayComments(comments);
-      $("textarea#content")[0].value = '' // 텍스트 비우기
-      console.log(comments);
-    }
-  });
-}
-
-// 서버에 작성한 댓글을 전송하는 함수
-function addAnswer(e) {
+// 작성한 댓글을 서버에 전송하는 함수
+function publish(e) {
   e.preventDefault(); //submit 이 자동으로 동작하는 것을 막는다.
 
   const formData = {
@@ -61,28 +50,48 @@ function addAnswer(e) {
         alert("빈 내용을 등록할 수 없습니다. 1글자 이상 작성해주세요.")
       }
     },
-    success : function (comments, status) {
-      displayComments(comments);
+    success : function (comment, status) {
+      displayComment(comment);
       $("textarea#content")[0].value = '' // 텍스트 비우기
-      console.log(comments);
+      console.log(comment);
     }
   });
 }
 
-// 댓글 표시 함수
-function displayComments(comments) {
+// '더보기' 버튼으로 가져온 댓글들 추가하기
+function displayLoadedComments(comments) {
+  // 댓글 더보기 추가
   const commentList = document.getElementById('comment-list');
-  const commentCount = $('.qna-comment-count').find('strong');
-  commentCount.eq(0).text(comments.length); // 댓글 수 업데이트
-  commentList.innerHTML = ''; // 기존 댓글 삭제
+
   comments.forEach(comment => {
     const article = document.createElement('article');
-    article.innerHTML = addComment(comment); <!-- 댓글 내용, 작성자 정보 등 표시 -->
+    article.classList.add('article');
+    article.setAttribute('data-id', comment.id);
+
+    // article 태그의 자식 태그에 댓글 추가
+    article.innerHTML = addComment(comment);
+
+    // comment-list 태그의 자식 태그에 댓글 추가
     commentList.appendChild(article);
   });
 
   // 댓글 작성자에 따라 버튼 보이기/숨기기
   hideButton();
+}
+
+// 댓글 단건 표시 함수
+function displayComment(comment) {
+  // 댓글 수 업데이트
+  const commentCount = $('.qna-comment-count').find('strong');
+  commentCount.eq(0).text(parseInt(commentCount.eq(0).text()) + 1);
+
+  // 댓글 추가
+  const commentList = document.getElementById('comment-list');
+  const article = document.createElement('article');
+  article.classList.add('article');
+  article.setAttribute('data-id', comment.id);
+  article.innerHTML = addComment(comment);
+  commentList.appendChild(article);
 }
 
 
@@ -158,9 +167,14 @@ function deleteComment(articleId, commentId) {
         console.log('failure');
       }
     },
-    success : function (comments, status) {
-      displayComments(comments);
-      console.log(comments);
+    success : function (status) {
+      // 댓글 수 업데이트
+      const commentCount = $('.qna-comment-count').find('strong');
+      commentCount.eq(0).text(parseInt(commentCount.eq(0).text()) - 1);
+
+      // 댓글 삭제
+      const article = $('article[data-id="' + commentId + '"]')
+      article.remove();
     }
   });
 }
