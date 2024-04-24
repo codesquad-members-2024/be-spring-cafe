@@ -1,0 +1,9 @@
+<!-- 로그인 사용자용 내비게이션 바 -->
+{{#loginUser}}
+{{>layout/navbar_details/login_user_navbar}}
+{{/loginUser}}
+
+<!-- 비로그인 사용자용 내비게이션 바 -->
+{{^loginUser}}
+{{>layout/navbar_details/non_login_user_navbar}}
+{{/loginUser}}
