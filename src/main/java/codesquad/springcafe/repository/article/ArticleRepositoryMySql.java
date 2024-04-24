@@ -2,6 +2,8 @@ package codesquad.springcafe.repository.article;
 
 import codesquad.springcafe.controller.article.UpdateArticle;
 import codesquad.springcafe.domain.article.Article;
+import codesquad.springcafe.util.Page;
+import codesquad.springcafe.util.PageRequest;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -14,6 +16,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
@@ -74,6 +78,29 @@ public class ArticleRepositoryMySql implements ArticleRepository {
     }
 
     @Override
+    public Page<Article> findAll(PageRequest pageRequest) {
+        NamedParameterJdbcTemplate namedTemplate = new NamedParameterJdbcTemplate(template);
+
+        String findSql = "select A.ARTICLE_ID, A.TITLE, A.CREATED_BY, A.CREATED_AT, COALESCE(COUNT(C.DELETED), 0) AS comment_size "
+                + "from ARTICLE A LEFT JOIN COMMENT C ON A.ARTICLE_ID = C.ARTICLE_ID AND C.DELETED = false "
+                + "where A.DELETED is false "
+                + "group by A.ARTICLE_ID, A.TITLE, A.CREATED_BY, A.CREATED_AT "
+                + "order by A.CREATED_AT " + String.format("%s ", pageRequest.getSort().val);
+        findSql += "limit :offset, :pageSize;";
+
+        String totalSql = "select COUNT(*) as total FROM ARTICLE WHERE deleted is false;";
+
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("offset", pageRequest.getOffset());
+        parameters.addValue("pageSize", pageRequest.getPageSize());
+
+        List<Article> articles = namedTemplate.query(findSql, parameters, articleRowMapperForList());
+        Integer total = template.queryForObject(totalSql, Integer.class);
+
+        return new Page<>(articles, PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), pageRequest.getSort()), total);
+    }
+
+    @Override
     public void update(UpdateArticle updateParam) {
         String sql = "update ARTICLE set TITLE = ?, CONTENTS = ? where ARTICLE_ID = ?";
         template.update(sql, updateParam.getTitle(), updateParam.getContents(), updateParam.getId());
@@ -99,13 +126,15 @@ public class ArticleRepositoryMySql implements ArticleRepository {
 
     @Override
     public void clear() {
-        String sql = "set foreign_key_checks = 0;"
-                + "alter table ARTICLE drop foreign key fk_created_by;"
-                + "alter table MEMBER drop foreign key fk_comment_created_by;"
-                + "alter table COMMENT drop foreign key fk_comment_article_id;"
-                + "TRUNCATE TABLE ARTICLE; ALTER TABLE ARTICLE AUTO_INCREMENT = 1;"
-                + "set foreign_key_checks = 1;";
-        template.update(sql);
+        String uncheck = "set foreign_key_checks = 0;";
+        String truncate = "TRUNCATE TABLE ARTICLE;";
+        String autoIncrementReset = "ALTER TABLE ARTICLE AUTO_INCREMENT = 1;";
+        String check = "set foreign_key_checks = 1;";
+
+        template.update(uncheck);
+        template.update(truncate);
+        template.update(autoIncrementReset);
+        template.update(check);
     }
 
     private RowMapper<Article> articleRowMapper() {
