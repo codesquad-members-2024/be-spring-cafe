@@ -35,7 +35,7 @@ public class ArticleJdbcRepository implements ArticleRepository {
         parameters.put("writer", article.getWriter());
         parameters.put("title", article.getTitle());
         parameters.put("contents", article.getContents());
-        parameters.put("local_date_time", article.getLocalDateTime());
+        parameters.put("local_date_time", article.getCreatedTime());
         parameters.put("hits", article.getHits());
 
         Number key = jdbcInsert.executeAndReturnKey(parameters);

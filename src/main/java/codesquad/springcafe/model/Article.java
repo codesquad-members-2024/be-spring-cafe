@@ -61,7 +61,7 @@ public class Article {
         return contents;
     }
 
-    public String getLocalDateTime() {
+    public String getCreatedTime() {
         return localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
