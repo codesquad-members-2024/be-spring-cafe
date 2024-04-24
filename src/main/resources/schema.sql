@@ -1,8 +1,5 @@
 -- article 외래키 제약조건 먼저 제거
 SET foreign_key_checks = 0;
---alter table ARTICLE drop foreign key fk_created_by;
---alter table MEMBER drop foreign key fk_comment_created_by;
---alter table COMMENT drop foreign key fk_comment_article_id;
 
 -- member
 drop table if exists MEMBER;
