@@ -1,6 +1,8 @@
 package codesquad.springcafe.database.article;
 
 import codesquad.springcafe.domain.Article;
+import codesquad.springcafe.domain.UpdateArticle;
+import codesquad.springcafe.domain.UpdatedUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,7 @@ public class H2ArticleDatabase implements ArticleDatabase {
     private RowMapper<Article> articleRowMapper(){
         return (rs, rowNum) -> new Article(
                 rs.getInt("id"),
-                rs.getString("writer"),
+                rs.getString("user_id"),
                 rs.getString("title"),
                 rs.getString("content"),
                 rs.getTimestamp("time").toLocalDateTime(),
@@ -45,13 +47,23 @@ public class H2ArticleDatabase implements ArticleDatabase {
         jdbcInsert.withTableName("articles").usingGeneratedKeyColumns(  "id");
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("writer", article.getWriter());
+        parameters.put("user_id", article.getUserId());
         parameters.put("title", article.getTitle());
         parameters.put("content", article.getContent());
         parameters.put("time", Timestamp.valueOf(article.getTime()));
         parameters.put("views", article.getViews());
 
         jdbcInsert.execute(new MapSqlParameterSource(parameters));
+    }
+
+    @Override
+    public void updateArticle(int id, UpdateArticle updateArticle) {
+        jdbcTemplate.update("update articles set title = ?, content = ? where id = ?",
+                updateArticle.getTitle(), updateArticle.getContent(), id);
+    }
+
+    public void deleteArticle(int id) {
+        jdbcTemplate.update("delete from articles where id = ?", id);
     }
 
     @Override
