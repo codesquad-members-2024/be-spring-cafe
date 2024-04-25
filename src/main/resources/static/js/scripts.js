@@ -153,18 +153,17 @@ function formatLocalDateTime(localDateTimeString) {
 // 댓글 삭제 함수
 function deleteComment(articleId, commentId) {
   const url = "/api/questions/" + articleId + "/comments/" + commentId;
-  console.log("url : " + url);
+  console.log("댓글 삭제 요청 url : " + url);
 
   $.ajax({
     type : 'delete',
     contentType: 'application/json',
     url : url,
-    dataType : 'json',
     error: function (xhr) {
       if (xhr.status === 403) {
         alert("다른 회원의 댓글을 삭제할 권한이 없습니다.");
       } else {
-        console.log('failure');
+        console.log('댓글 삭제 실패');
       }
     },
     success : function (status) {
@@ -175,6 +174,7 @@ function deleteComment(articleId, commentId) {
       // 댓글 삭제
       const article = $('article[data-id="' + commentId + '"]')
       article.remove();
+      console.log("댓글 삭제 완료 : " + commentId);
     }
   });
 }
