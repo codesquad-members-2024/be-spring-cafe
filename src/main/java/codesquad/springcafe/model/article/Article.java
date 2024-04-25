@@ -1,8 +1,10 @@
 package codesquad.springcafe.model.article;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Article {
+    private final AtomicLong sequenceFactory = new AtomicLong();
     private long sequence;
     private String writer;
     private LocalDateTime publishTime;
@@ -25,8 +27,8 @@ public class Article {
         return sequence;
     }
 
-    public void setSequence(long sequence) {
-        this.sequence = sequence;
+    public void setSequence(){
+        this.sequence = sequenceFactory.incrementAndGet();
     }
 
     public String getTitle() {
