@@ -8,11 +8,14 @@ public class ShowReply {
     private LocalDateTime time;
     private String contents;
     private boolean isSameWriter;
+    private Long id;
+    private boolean deleted;
 
-    public ShowReply(String writerId, LocalDateTime time, String contents) {
+    public ShowReply(String writerId, LocalDateTime time, String contents, boolean deleted) {
         this.writerId = writerId;
         this.time = time;
         this.contents = contents;
+        this.deleted = deleted;
         this.isSameWriter = false;
     }
     public String getWriterId() {
@@ -33,5 +36,21 @@ public class ShowReply {
 
     public void changeSameWriter() {
         isSameWriter = !isSameWriter;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public boolean getDeleted() {
+        return deleted;
     }
 }

@@ -76,7 +76,7 @@
                                                href="/questions/413/answers/1405/form">수정</a>
                                         </li>
                                         <li th:if="${reply.sameWriter}">
-                                            <form class="form-delete" action="/reply/"
+                                            <form class="form-delete" th:action="@{'/reply/' +${article.id} + '/' + ${reply.id}}"
                                                   method="POST">
                                                 <input type="hidden" name="_method" value="DELETE">
                                                 <button type="submit" class="delete-answer-button">삭제</button>

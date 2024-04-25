@@ -28,7 +28,7 @@ public class ReplyService {
     public List<ShowReply> getReplyBy(String articleId, String writerId) {
         List<ShowReply> result = replyRepository.getReplyBy(articleId);
         checkWriter(result, writerId);
-        return result;
+        return checkDeletedReply(result);
     }
 
     // 해당 값을 순회하면서 일단 바꿔줘야 한다 지금 글쓴이가 쓴 댓글인지의 여부를 체크해서
@@ -36,5 +36,20 @@ public class ReplyService {
         showReplies.stream()
                 .filter(showReply -> showReply.getWriterId().equals(writerId))
                 .forEach(ShowReply::changeSameWriter);
+    }
+
+    // 삭제값인 경우 반환할 리스트에서 제거한다
+    public List<ShowReply> checkDeletedReply(List<ShowReply> showReplies) {
+        return showReplies.stream()
+                .filter(showReply -> !showReply.getDeleted())
+                .collect(Collectors.toList());
+    }
+
+    public void deleteReply(String replyId) {
+        replyRepository.delete(replyId);
+    }
+
+    public Reply getReplyById(String id) {
+        return replyRepository.getReplyById(id).orElseThrow(() -> new NotFoundException("해당하는 댓글이 없습니다"));
     }
 }

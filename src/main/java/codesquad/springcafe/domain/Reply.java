@@ -9,6 +9,7 @@ public class Reply {
     private boolean deleted;
     private Long articleId;
     private LocalDateTime time;
+    private Long id;
 
     public Reply(String contents, String writerId, LocalDateTime time, boolean deleted, Long articleId) {
         this.contents = contents;
@@ -56,6 +57,14 @@ public class Reply {
 
     public String getTime() {
         return time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public void setTime(LocalDateTime time) {

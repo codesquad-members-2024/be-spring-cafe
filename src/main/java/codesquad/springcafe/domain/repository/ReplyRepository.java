@@ -11,5 +11,7 @@ public interface ReplyRepository extends DbRepository<Reply> {
 
     List<ShowReply> getReplyBy(String articleId);
 
-    void delete(Reply reply);
+    Optional<Reply> getReplyById(String reply);
+
+    void delete(String replyId);
 }
