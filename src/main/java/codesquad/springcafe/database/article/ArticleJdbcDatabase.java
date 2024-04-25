@@ -128,10 +128,8 @@ public class ArticleJdbcDatabase implements ArticleDatabase {
 
     @PostConstruct
     public void makeTestArticles() {
-        if (countTotalArticles() != 0) {
-            return;
-        }
-        for (int i = 1; i <= 100; i++) {
+        long totalCount = countTotalArticles();
+        for (long i = 1 + totalCount; i <= 100; i++) {
             Article article = new Article("상추", String.valueOf(i), String.valueOf(i), LocalDateTime.now());
             add(article);
         }
