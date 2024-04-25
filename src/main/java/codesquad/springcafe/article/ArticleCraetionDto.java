@@ -1,5 +1,7 @@
 package codesquad.springcafe.article;
 
+import java.time.LocalDateTime;
+
 public class ArticleCraetionDto {
     private String writer;
     private String title;
@@ -11,15 +13,7 @@ public class ArticleCraetionDto {
         this.contents = contents;
     }
 
-    public String getWriter() {
-        return writer;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContents() {
-        return contents;
+    public Article toEntity(String writer) {
+        return new Article(writer, title, contents, LocalDateTime.now());
     }
 }

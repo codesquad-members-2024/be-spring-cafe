@@ -9,6 +9,14 @@ public class Article {
     private final String contents;
     private final LocalDateTime createAt;
 
+    public Article(Long id, String writer, String title, String contents, LocalDateTime createAt) {
+        this.id = id;
+        this.writer = writer;
+        this.title = title;
+        this.contents = contents;
+        this.createAt = createAt;
+    }
+
     public Article(String writer, String title, String contents, LocalDateTime createAt) {
         this.writer = writer;
         this.title = title;
@@ -32,9 +40,8 @@ public class Article {
         return createAt;
     }
 
-    // DB에서 꺼내올때만 사용
-    public void setId(Long id) {
-        this.id = id;
+    public Long getId() {
+        return id;
     }
 
     @Override

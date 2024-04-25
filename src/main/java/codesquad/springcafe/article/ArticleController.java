@@ -1,57 +1,81 @@
 package codesquad.springcafe.article;
 
+import codesquad.springcafe.article.dto.ArticleUpdateRequestDto;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-
-import java.time.LocalDateTime;
-import java.util.Collection;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class ArticleController {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final ArticleDao articleDao;
+    private final ArticleService service;
 
-    public ArticleController(ArticleDao articleDao) {
-        this.articleDao = articleDao;
+    public ArticleController(ArticleService service) {
+        this.service = service;
     }
 
     // 아티클 id를 가지고 해당 아티클 보여주기 없으면 기본 홈페이지 보여주기
     @GetMapping("/article/{id}")
-    public String showArticle(@PathVariable int id, Model model) {
-        return articleDao.findBy(id)
+    public String showArticle(@PathVariable int id, Model model, HttpSession session) {
+        String value = (String) session.getAttribute("sessionUserId");
+        if (value == null) {
+            return "redirect:/form/login";
+        }
+
+        return service.findArticle(id)
                 .map(article -> {
                     model.addAttribute("article", article);
                     return "qna/show";
                 }).orElseThrow(() -> new IllegalArgumentException(id + "는 찾을 수 없습니다"));
     }
 
-
     // 아티클 등록
     @PostMapping("/article")
-    public String storeArticle(@ModelAttribute ArticleCraetionDto articleCraetionDto) {
-        final String writer = articleCraetionDto.getWriter();
-        final String title = articleCraetionDto.getTitle();
-        final String contents = articleCraetionDto.getContents();
-        final LocalDateTime createAt = LocalDateTime.now();
-
-        Article article = new Article(writer, title, contents, createAt);
-
-        log.debug("들어온 게시글 : {}", article);
-        articleDao.save(article);
+    public String saveArticle(@ModelAttribute ArticleCraetionDto articleCraetionDto, HttpSession session) {
+        String writer = (String) session.getAttribute("sessionUserId");
+        service.save(articleCraetionDto, writer);
         return "redirect:/articles";
     }
 
     // 모든 아티클 보여주기
     @GetMapping("/articles")
     public String showArticle(Model model) {
-        Collection<Article> allArticles = articleDao.findAll();
-        model.addAttribute("articles", allArticles);
+        model.addAttribute("articles", service.getAllArticles());
         return "index";
+    }
+
+    @GetMapping("/qna/form")
+    public String showArticleRegisterForm(HttpSession session) {
+        String value = (String) session.getAttribute("sessionUserId");
+        if (value == null) {
+            return "redirect:/form/login";
+        }
+        return "qna/form";
+    }
+
+    @GetMapping("/qna/{writer}/{id}")
+    public String showUpdateForm(@PathVariable String writer, @PathVariable Long id, HttpSession session, Model model) {
+        String value = (String) session.getAttribute("sessionUserId");
+        if (writer.equals(value)) {
+            model.addAttribute("id", id);
+            return "qna/updateForm";
+        }
+        return "qna/accessFailed";
+    }
+
+    @PutMapping("/qna/{writer}/{id}")
+    public String updateArticle(@PathVariable String writer, @PathVariable Long id, @Valid ArticleUpdateRequestDto dto) {
+        service.updateArticle(writer, id, dto);
+        return "redirect:/";
+    }
+
+    @DeleteMapping("/qna/{writer}/{id}")
+    public String deleteArticle(@PathVariable String writer, @PathVariable Long id) {
+        service.deleteArticle(writer, id);
+        return "redirect:/";
     }
 }

@@ -10,4 +10,8 @@ public interface ArticleDao {
     Collection<Article> findAll();
 
     Optional<Article> findBy(int id);
+
+    void update(Article article);
+
+    void delete(String writer, Long id);
 }
