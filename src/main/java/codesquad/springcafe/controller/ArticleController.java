@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static codesquad.springcafe.controller.LoginController.LOGIN_SESSION_NAME;
 
@@ -21,7 +20,6 @@ import static codesquad.springcafe.controller.LoginController.LOGIN_SESSION_NAME
 @RequestMapping("/articles")
 public class ArticleController {
     private final ArticleDatabase articleDatabase;
-    private final AtomicLong sequence = new AtomicLong();
 
     @Autowired
     public ArticleController(ArticleDatabase articleDatabase){
@@ -36,8 +34,7 @@ public class ArticleController {
     @PostMapping("/add")
     public String createArticle(@ModelAttribute ArticleCreationDto articleCreationDto, HttpSession session) {
         Article article = articleCreationDto.toEntity();
-        long seq = sequence.incrementAndGet();
-        article.setSequence(seq);
+        article.setSequence();
         article.setWriter((String) session.getAttribute(LOGIN_SESSION_NAME));
         articleDatabase.addArticle(article);
         return "redirect:/";
