@@ -28,4 +28,16 @@ public class PostService {
     public List<Post> findAllPost() {
         return postRepository.findAll();
     }
+
+    public int findPostSize() {
+        return postRepository.findSize();
+    }
+
+    public void update(Post post) {
+        postRepository.update(post);
+    }
+
+    public void deletePost(String postId) {
+        postRepository.delete(postId);
+    }
 }

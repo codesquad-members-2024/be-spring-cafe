@@ -1,13 +1,17 @@
 CREATE TABLE IF NOT EXISTS USERS (
-                                    EMAIL VARCHAR(255),
-                                    USERID VARCHAR(255) PRIMARY KEY,
-                                    PASSWORD VARCHAR(255),
-                                    SIGNUPDATE DATE
-);
-
+    EMAIL VARCHAR(255),
+    USERID VARCHAR(255) PRIMARY KEY,
+    PASSWORD VARCHAR(255),
+    SIGNUPDATE DATE
+    );
+-- IF NOT EXISTS
+-- drop TABLE POSTS;
 CREATE TABLE IF NOT EXISTS POSTS (
-                                    ID BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                    TITLE VARCHAR(255),
-                                    CONTENT CLOB,
-                                    CREATEDAT DATE
-);
+    ID BIGINT AUTO_INCREMENT PRIMARY KEY,
+    USERID VARCHAR(255),
+    TITLE VARCHAR(255),
+    CONTENT VARCHAR(MAX),
+    CREATEDAT DATE,
+    VIEWCOUNT INT,
+    FOREIGN KEY (USERID) REFERENCES USERS(USERID)
+    );

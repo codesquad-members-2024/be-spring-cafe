@@ -30,11 +30,21 @@
                       <article class="article">
                           <div class="article-header">
                               <div class="article-header-text">
-                                  <p class="article-content">멋진삼</p>
+                                  <p class="article-content">{{post.userId}}</p>
                                   <p class="article-content">
                                       작성일자:{{post.createdAt}}
                                   </p>
-                                  <p class="article-content">조회 4</p>
+                                  <p class="article-content">조회 {{post.viewCount}}</p>
+
+                                  {{#author}}
+                                  <a class="black-component" href="/post/{{post.id}}/update">수정</a>
+
+                                  <form method="post" action="/post/delete">
+                                      <input type="hidden" name="_method" value="DELETE" />
+                                      <input type="hidden" name="postId" value="{{post.id}}">
+                                      <button class="red-button" type="submit" >삭제</button>
+                                  </form>
+                                  {{/author}}
                               </div>
                           </div>
                           <div class="article-doc">

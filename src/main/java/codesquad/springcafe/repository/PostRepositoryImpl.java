@@ -24,4 +24,17 @@ public class PostRepositoryImpl implements PostRepository {
     public List<Post> findAll() {
         return postDB;
     }
+
+    @Override
+    public int findSize() {
+        return postDB.size();
+    }
+
+    @Override
+    public void update(Post post) {
+    }
+
+    @Override
+    public void delete(String id) {
+    }
 }

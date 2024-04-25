@@ -21,8 +21,10 @@ public class IndexController {
     @GetMapping
     public String index(Model model) {
         List<Post> posts = postService.findAllPost();
+        int postSize = postService.findPostSize();
 
         model.addAttribute("posts", posts);
+        model.addAttribute("postSize", postSize);
         return "index";
     }
 }

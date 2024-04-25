@@ -112,7 +112,7 @@ public class UserController {
         @RequestParam("password") String password,
         @RequestParam(defaultValue = "/") String redirectURL,
         HttpSession httpSession) {
-        System.out.println("redirectURL = "+redirectURL);
+
         try {
             String loginUserId = userService.login(email, password);
 

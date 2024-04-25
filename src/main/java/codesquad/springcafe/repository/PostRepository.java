@@ -6,9 +6,15 @@ import java.util.Optional;
 
 public interface PostRepository {
 
-    public void save(Post post);
+    void save(Post post);
 
-    public Optional<Post> findById(Long postId);
+    Optional<Post> findById(Long postId);
 
-    public List<Post> findAll();
+    List<Post> findAll();
+
+    int findSize();
+
+    void update(Post post);
+
+    void delete(String id);
 }

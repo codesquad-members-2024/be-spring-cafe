@@ -8,6 +8,8 @@ public class Post {
     private String title;
     private String content;
     private LocalDate createdAt;
+    private String userId;
+    private int viewCount;
 
     // 생성자
     public Post() {
@@ -47,6 +49,21 @@ public class Post {
         this.createdAt = localDate;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public int getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(int viewCount) {
+        this.viewCount = viewCount;
+    }
 
     // toString 메서드
     @Override
