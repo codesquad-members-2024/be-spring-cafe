@@ -2,7 +2,6 @@ package codesquad.springcafe.reply;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class ReplyCreateDto {
 
@@ -16,7 +15,7 @@ public class ReplyCreateDto {
         this.author = author;
         this.contents = contents;
         this.articleId = articleId;
-        this.createdTime = Timestamp.valueOf(getCreatedTime());
+        this.createdTime = Timestamp.valueOf(LocalDateTime.now());
         this.deleted = false;
     }
 
@@ -38,9 +37,6 @@ public class ReplyCreateDto {
         return articleId;
     }
 
-    public String getCreatedTime() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
 
     public boolean getDeleted() {
         return deleted;

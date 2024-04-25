@@ -4,7 +4,6 @@ import codesquad.springcafe.article.Article;
 import codesquad.springcafe.article.ArticleBuilder;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class ArticleCreateDto {
 
@@ -18,7 +17,7 @@ public class ArticleCreateDto {
         this.title = title;
         this.author = author;
         this.contents = contents;
-        this.createdTime = Timestamp.valueOf(getCreatedTime());
+        this.createdTime = Timestamp.valueOf(LocalDateTime.now());
         this.deleted = false;
     }
 
@@ -40,12 +39,7 @@ public class ArticleCreateDto {
         return contents;
     }
 
-
     public boolean getDeleted() {
         return deleted;
-    }
-
-    public String getCreatedTime() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 }
