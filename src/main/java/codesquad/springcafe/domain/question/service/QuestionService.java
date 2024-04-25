@@ -1,5 +1,7 @@
 package codesquad.springcafe.domain.question.service;
 
+import codesquad.springcafe.domain.comment.model.Comment;
+import codesquad.springcafe.domain.comment.model.CommentRepository;
 import codesquad.springcafe.domain.question.data.QuestionListResponse;
 import codesquad.springcafe.domain.question.data.QuestionRequest;
 import codesquad.springcafe.domain.question.data.QuestionResponse;
@@ -11,6 +13,7 @@ import codesquad.springcafe.global.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -22,11 +25,13 @@ public class QuestionService {
 
     private final UserRepository userRepository;
     private final QuestionRepository questionRepository;
+    private final CommentRepository commentRepository;
 
     @Autowired
-    public QuestionService(UserRepository userRepository, QuestionRepository questionRepository) {
+    public QuestionService(UserRepository userRepository, QuestionRepository questionRepository, CommentRepository commentRepository) {
         this.userRepository = userRepository;
         this.questionRepository = questionRepository;
+        this.commentRepository = commentRepository;
     }
 
     // 질문 등록
@@ -112,6 +117,16 @@ public class QuestionService {
             throw new IllegalStateException("다른 사람의 글을 삭제할 수 없습니다.");
         }
 
+        // 댓글 조회
+        Collection<Comment> comments = commentRepository.findByQuestionId(questionId);
+        long count = comments.stream()
+                .filter(comment -> !comment.getUser().getId().equals(question.getUser().getId()))
+                .count();
+
+        if (count != 0) {
+            throw new IllegalStateException("다른 사람의 댓글이 있는 게시글은 삭제할 수 없습니다.");
+        }
+
         return question.getId();
     }
 
@@ -123,6 +138,21 @@ public class QuestionService {
         if (!question.getUser().getId().equals(user.getId())) {
             throw new IllegalStateException("다른 사람의 글을 삭제할 수 없습니다.");
         }
+
+        // 댓글 조회
+        Collection<Comment> comments = commentRepository.findByQuestionId(questionId);
+        long count = comments.stream()
+                .filter(comment -> !comment.getUser().getId().equals(question.getUser().getId()))
+                .count();
+
+        if (count != 0) {
+            throw new IllegalStateException("다른 사람의 댓글이 있는 게시글은 삭제할 수 없습니다.");
+        }
+
+        comments.forEach(c -> {
+            Comment deleteComment = c.delete();
+            commentRepository.softDeleteById(c.getId(), deleteComment);
+        });
 
         Question deleteQuestion = question.delete();
         questionRepository.softDeleteById(questionId, deleteQuestion);
