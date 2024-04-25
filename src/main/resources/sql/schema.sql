@@ -1,9 +1,9 @@
-ALTER TABLE IF EXISTS ARTICLE
-    DROP constraint IF EXISTS FK_ARTICLE_user;
-ALTER TABLE IF EXISTS REPLY
-    DROP constraint IF EXISTS fk_reply_author;
-ALTER TABLE IF EXISTS REPLY
-    DROP constraint IF EXISTS FK_REPLY_ARTICLE;
+ALTER TABLE ARTICLE
+    drop constraint fk_article_user;
+ALTER TABLE REPLY
+    drop constraint fk_reply_author;
+ALTER TABLE REPLY
+    drop constraint fk_reply_article;
 
 DROP TABLE IF EXISTS USERS;
 CREATE TABLE USERS
