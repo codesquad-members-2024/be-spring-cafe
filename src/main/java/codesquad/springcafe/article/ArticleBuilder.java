@@ -8,7 +8,6 @@ public class ArticleBuilder {
     private String author;
     private String title;
     private String contents;
-    private String userId;
     private Timestamp createdTime;
     private boolean deleted;
 
@@ -32,11 +31,6 @@ public class ArticleBuilder {
         return this;
     }
 
-    public ArticleBuilder userId(String userId) {
-        this.userId = userId;
-        return this;
-    }
-
     public ArticleBuilder createdTime(Timestamp createdTime) {
         this.createdTime = createdTime;
         return this;
@@ -48,7 +42,7 @@ public class ArticleBuilder {
     }
 
     public Article build() {
-        return new Article(articleId, title, author, contents, userId, createdTime, deleted);
+        return new Article(articleId, title, author, contents, createdTime, deleted);
     }
 
 }

@@ -11,22 +11,20 @@ public class ArticleCreateDto {
     private String title;
     private String author;
     private String contents;
-    private String userId;
     private Timestamp createdTime;
     private boolean deleted;
 
-    public ArticleCreateDto(String title, String author, String contents, String userId) {
+    public ArticleCreateDto(String title, String author, String contents) {
         this.title = title;
         this.author = author;
         this.contents = contents;
-        this.userId = userId;
         this.createdTime = Timestamp.valueOf(getCreatedTime());
         this.deleted = false;
     }
 
     public Article toEntity() {
         return new ArticleBuilder().author(this.author).title(this.title)
-            .contents(this.contents).userId(this.userId).createdTime(this.createdTime)
+            .contents(this.contents).createdTime(this.createdTime)
             .deleted(this.deleted).build();
     }
 
@@ -42,9 +40,6 @@ public class ArticleCreateDto {
         return contents;
     }
 
-    public String getUserId() {
-        return userId;
-    }
 
     public boolean getDeleted() {
         return deleted;

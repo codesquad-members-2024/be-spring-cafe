@@ -7,17 +7,15 @@ public class Reply {
     private Long replyId;
     private String author;
     private String contents;
-    private String userId;
     private Long articleId;
     private Timestamp createdTime;
     private boolean deleted;
 
-    public Reply(Long replyId, String author, String contents, String userId, Long articleId,
+    public Reply(Long replyId, String author, String contents, Long articleId,
         Timestamp createdTime, boolean deleted) {
         this.replyId = replyId;
         this.author = author;
         this.contents = contents;
-        this.userId = userId;
         this.articleId = articleId;
         this.createdTime = createdTime;
         this.deleted = deleted;
@@ -35,9 +33,6 @@ public class Reply {
         return contents;
     }
 
-    public String getUserId() {
-        return userId;
-    }
 
     public Long getArticleId() {
         return articleId;

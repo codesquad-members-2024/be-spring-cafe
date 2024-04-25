@@ -32,6 +32,6 @@ public class ReplyService {
     }
 
     public boolean isAutehnticated(String userId, Long articleId) {
-        return findById(articleId).getUserId().equals(userId);
+        return findById(articleId).getAuthor().equals(userId);
     }
 }

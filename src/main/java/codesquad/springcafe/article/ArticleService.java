@@ -38,8 +38,8 @@ public class ArticleService {
         articleDatabase.delete(articleId);
     }
 
-    public boolean isAuthenticated(String userId, Long articleId) {
-        return findById(articleId).getUserId().equals(userId);
+    public boolean isAuthenticated(String nickname, Long articleId) {
+        return findById(articleId).getAuthor().equals(nickname);
     }
 
 

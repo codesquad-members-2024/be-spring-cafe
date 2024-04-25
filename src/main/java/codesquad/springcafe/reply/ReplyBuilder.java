@@ -7,7 +7,6 @@ public class ReplyBuilder {
     private Long replyId;
     private String author;
     private String contents;
-    private String userId;
     private Long articleId;
     private Timestamp createdTime;
     private boolean deleted;
@@ -27,10 +26,6 @@ public class ReplyBuilder {
         return this;
     }
 
-    public ReplyBuilder userId(String userId) {
-        this.userId = userId;
-        return this;
-    }
 
     public ReplyBuilder articleId(Long articleId) {
         this.articleId = articleId;
@@ -48,7 +43,7 @@ public class ReplyBuilder {
     }
 
     public Reply build() {
-        return new Reply(replyId, author, contents, userId, articleId, createdTime, deleted);
+        return new Reply(replyId, author, contents, articleId, createdTime, deleted);
     }
 
 }
