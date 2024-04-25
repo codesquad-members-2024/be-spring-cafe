@@ -78,4 +78,10 @@ public class H2ReplyRepository implements ReplyRepository {
             return Optional.empty();
         }
     }
+
+    @Override
+    public void edit(String replyId, String contents) {
+        String UPDATE_REPLY = "UPDATE REPLY SET contents=? WHERE id=?";
+        jdbcTemplate.update(UPDATE_REPLY, contents, replyId);
+    }
 }

@@ -73,7 +73,7 @@
                                     <ul class="article-util-list">
                                         <li th:if="${reply.sameWriter}">
                                             <a class="link-modify-article"
-                                               href="/questions/413/answers/1405/form">수정</a>
+                                               th:href="@{'/reply/' +${article.id} + '/' + ${reply.id}}">수정</a>
                                         </li>
                                         <li th:if="${reply.sameWriter}">
                                             <form class="form-delete" th:action="@{'/reply/' +${article.id} + '/' + ${reply.id}}"

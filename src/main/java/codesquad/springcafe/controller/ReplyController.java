@@ -1,15 +1,19 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.domain.User;
+import codesquad.springcafe.dto.EditReply;
 import codesquad.springcafe.dto.ReplyForm;
 import codesquad.springcafe.service.ReplyService;
 import codesquad.springcafe.service.UserService;
 import codesquad.springcafe.service.validator.UserValidator;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @Controller
 public class ReplyController {
@@ -44,4 +48,22 @@ public class ReplyController {
     }
 
     // 댓글 수정
+    @PutMapping("/reply/{articleId}/{replyId}")
+    public String edit(HttpSession session, @PathVariable("replyId") String replyId, EditReply editReply) {
+        User expected = (User) session.getAttribute("sessionUser");
+        String replyWriterId = replyService.getReplyById(replyId).getWriterId();
+        User actual = userService.getUserById(replyWriterId);
+        userValidator.validSameUser(expected, actual);
+
+        replyService.editReply(editReply, replyId);
+        return "redirect:/article/{articleId}";
+    }
+
+    // 댓글 수정창으로 이동
+    @GetMapping("/reply/{articleId}/{replyId}")
+    public String showEditReplyForm(Model model, @PathVariable("replyId") String replyId, @PathVariable("articleId") String articleId) {
+        model.addAttribute("replyId", replyId);
+        model.addAttribute("articleId", articleId);
+        return "article/editReplyForm";
+    }
 }

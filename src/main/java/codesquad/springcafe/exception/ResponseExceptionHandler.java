@@ -10,8 +10,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class ResponseExceptionHandler {
     @ExceptionHandler(value = {InvalidAccessException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    private ModelAndView invalidHandler() {
+    private ModelAndView invalidHandler(InvalidAccessException e) {
         ModelAndView modelAndView = new ModelAndView("error/invalidAccess");
+        modelAndView.addObject("message", e.getMessage());
         return modelAndView;
     }
 

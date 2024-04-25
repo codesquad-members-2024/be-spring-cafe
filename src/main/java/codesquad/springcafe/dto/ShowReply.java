@@ -46,8 +46,8 @@ public class ShowReply {
         return id;
     }
 
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
+    public void changeDeleted() {
+        deleted = !deleted;
     }
 
     public boolean getDeleted() {

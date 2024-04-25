@@ -2,6 +2,7 @@ package codesquad.springcafe.service;
 
 import codesquad.springcafe.domain.Reply;
 import codesquad.springcafe.domain.repository.ReplyRepository;
+import codesquad.springcafe.dto.EditReply;
 import codesquad.springcafe.dto.ReplyForm;
 import codesquad.springcafe.dto.ShowReply;
 import codesquad.springcafe.exception.NotFoundException;
@@ -38,6 +39,14 @@ public class ReplyService {
                 .forEach(ShowReply::changeSameWriter);
     }
 
+    public boolean existOtherReply(String articleId, String writer) {
+        List<ShowReply> result = replyRepository.getReplyBy(articleId);
+        long count = result.stream()
+                .filter(showReply -> !showReply.getWriterId().equals(writer))
+                .count();
+        return count > 0;
+    }
+
     // 삭제값인 경우 반환할 리스트에서 제거한다
     public List<ShowReply> checkDeletedReply(List<ShowReply> showReplies) {
         return showReplies.stream()
@@ -49,7 +58,24 @@ public class ReplyService {
         replyRepository.delete(replyId);
     }
 
-    public Reply getReplyById(String id) {
-        return replyRepository.getReplyById(id).orElseThrow(() -> new NotFoundException("해당하는 댓글이 없습니다"));
+    public Reply getReplyById(String replyId) {
+        return replyRepository.getReplyById(replyId).orElseThrow(() -> new NotFoundException("해당하는 댓글이 없습니다"));
+    }
+
+    public boolean existReply(String articleId) {
+        return replyRepository.getReplyBy(articleId).size() > 0;
+    }
+
+    // 해당 articleid를 가진 댓글들의 상태를 모두 삭제로 바꾼다
+    public List<ShowReply> deleteAllReply(String articleId) {
+        List<ShowReply> result = replyRepository.getReplyBy(articleId);
+        result.stream()
+                .forEach(showReply -> deleteReply(showReply.getId().toString()));
+        return result;
+    }
+
+    public void editReply(EditReply editReply, String replyId) {
+        editReply.setId(replyId);
+        replyRepository.edit(editReply.getId(), editReply.getContents());
     }
 }
