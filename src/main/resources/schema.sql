@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS articles;
 CREATE TABLE users (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     userId VARCHAR(50) NOT NULL,
-    password VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     nickname VARCHAR(50) NOT NULL,
     email VARCHAR(50) NOT NULL,
     registerTime TIMESTAMP NOT NULL

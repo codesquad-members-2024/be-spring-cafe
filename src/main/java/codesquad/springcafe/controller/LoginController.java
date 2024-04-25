@@ -4,6 +4,7 @@ import codesquad.springcafe.db.user.UserDatabase;
 import codesquad.springcafe.model.user.User;
 import codesquad.springcafe.model.user.dto.UserCredentialDto;
 import codesquad.springcafe.model.user.dto.UserProfileDto;
+import codesquad.springcafe.security.PasswordEncoder;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -25,10 +26,12 @@ public class LoginController {
     public static final String LOGIN_SESSION_NAME = "springCafeMember";
 
     private final UserDatabase userDatabase;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public LoginController(UserDatabase userDatabase){
+    public LoginController(UserDatabase userDatabase, PasswordEncoder passwordEncoder){
         this.userDatabase = userDatabase;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/login")
@@ -46,7 +49,9 @@ public class LoginController {
     ) throws IOException
     {
         Optional<UserCredentialDto> userCredentialsOpt = userDatabase.getUserCredential(userInput.getUserId());
-        if(userCredentialsOpt.isEmpty() || !userInput.equals(userCredentialsOpt.get())){
+
+        if(userCredentialsOpt.isEmpty() ||
+                !passwordEncoder.matches(userInput.getPassword(), userCredentialsOpt.get().getPassword())){
             model.addAttribute("validationError", true);
             return "users/login";
         }
