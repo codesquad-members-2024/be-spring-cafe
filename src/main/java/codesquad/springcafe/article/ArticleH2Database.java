@@ -15,8 +15,6 @@ public class ArticleH2Database implements ArticleDatabase {
 
     JdbcTemplate jdbcTemplate;
 
-    private static Long sequence = 0L;
-
     @Autowired
     public ArticleH2Database(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -33,7 +31,6 @@ public class ArticleH2Database implements ArticleDatabase {
 
     @Override
     public void addArticle(Article article) {
-        article.setArticleId(++sequence);
         String sql = "INSERT INTO MAIN.ARTICLES (writer, title, content, createdTime) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(sql, article.getWriter(), article.getTitle(), article.getContent(), article.getCreatedTime());
     }
