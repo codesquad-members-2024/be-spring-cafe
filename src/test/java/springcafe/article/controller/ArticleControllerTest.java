@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import springcafe.article.model.Article;
 import springcafe.article.repository.ArticleDao;
 import springcafe.article.service.ArticleService;
+import springcafe.reply.repository.ReplyDao;
 import springcafe.user.model.User;
 
 import java.time.LocalDateTime;
@@ -34,6 +35,7 @@ class ArticleControllerTest {
     @Autowired
     MockMvc mockMvc;
     ArticleDao articleDao;
+    ReplyDao replyDao;
     private ArticleService articleService;
 
     public ArticleControllerTest() {
@@ -43,7 +45,7 @@ class ArticleControllerTest {
     @BeforeEach
     public void setup() {
         articleDao = Mockito.mock(ArticleDao.class);
-        articleService = new ArticleService(articleDao);
+        articleService = new ArticleService(articleDao, replyDao);
         Mockito.reset(articleDao); // 모킹된 DAO의 상태를 초기화
     }
 

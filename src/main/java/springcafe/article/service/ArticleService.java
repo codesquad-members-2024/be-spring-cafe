@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 import springcafe.article.model.Article;
 import springcafe.article.repository.ArticleDao;
 import springcafe.reply.model.Reply;
+import springcafe.reply.repository.ReplyDao;
+import springcafe.user.exception.WrongWriterException;
+import springcafe.user.model.User;
 
 import java.util.List;
 
@@ -12,9 +15,12 @@ import java.util.List;
 public class ArticleService {
 
     private ArticleDao articleDao;
+    private ReplyDao replyDao;
 
-    public ArticleService(ArticleDao articleDao) {
+
+    public ArticleService(ArticleDao articleDao, ReplyDao replyDao) {
         this.articleDao = articleDao;
+        this.replyDao = replyDao;
     }
 
     public void saveArticle(String writer, String title, String contents, Long id){
@@ -40,7 +46,15 @@ public class ArticleService {
 
     }
 
-    public void deleteArticle(Long articleId){
+    public void deleteArticle(Long articleId, User user){
+        Article articleToDelete = articleDao.findById(articleId);
+        List<Reply> replyList = replyDao.findByArticleId(articleId);
+
+        if (!articleToDelete.matchesWriter(user.getUserId())
+                || !checkIfPossibleToDelete(replyList, articleToDelete.getWriter())) {
+            throw new WrongWriterException("삭제 권한이 없습니다.");
+        }
+
         articleDao.delete(articleId);
     }
 

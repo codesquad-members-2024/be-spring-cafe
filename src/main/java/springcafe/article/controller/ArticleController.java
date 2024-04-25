@@ -94,19 +94,9 @@ public class ArticleController {
 
     @DeleteMapping("/qna/delete/{id}")
     public String deleteArticle(@PathVariable Long id, HttpSession session) {
-        Article articleToDelete = articleService.findByArticleId(id);
         User user = (User) session.getAttribute("user");
+        articleService.deleteArticle(id, user);
 
-
-        List<Reply> replyList = replyService.findReplyByArticleId(id);
-
-        if (!articleToDelete.getWriter().equals(user.getUserId())
-                || !articleService.checkIfPossibleToDelete(replyList, articleToDelete.getWriter())) {
-            throw new WrongWriterException("삭제 권한이 없습니다.");
-        }
-
-
-        articleService.deleteArticle(id);
 
         return "redirect:/";
     }
