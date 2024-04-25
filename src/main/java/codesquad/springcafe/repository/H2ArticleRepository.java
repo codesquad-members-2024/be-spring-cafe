@@ -2,13 +2,16 @@ package codesquad.springcafe.repository;
 
 import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.domain.repository.ArticleRepository;
+import codesquad.springcafe.dto.EditArticleForm;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -22,6 +25,7 @@ public class H2ArticleRepository implements ArticleRepository {
     private final static String CONTENTS_KEY = "contents";
     private final static String TIME_KEY = "time";
     private final static String ID_KEY = "id";
+    private final static String EDITED_KEY = "edited";
     private final Logger logger = LoggerFactory.getLogger(H2ArticleRepository.class);
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Article> articleRowMapper = (resultSet, rowNum) -> {
@@ -29,7 +33,8 @@ public class H2ArticleRepository implements ArticleRepository {
                 resultSet.getString(WRITER_KEY),
                 resultSet.getString(TITLE_KEY),
                 resultSet.getString(CONTENTS_KEY),
-                resultSet.getTimestamp(TIME_KEY).toLocalDateTime()
+                resultSet.getTimestamp(TIME_KEY).toLocalDateTime(),
+                resultSet.getBoolean(EDITED_KEY)
         );
         article.setId(resultSet.getLong(ID_KEY));
         return article;
@@ -62,8 +67,24 @@ public class H2ArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Article getById(Long articleId) {
+    public Optional<Article> getById(Long articleId) {
         final String SELECT_ARTICLE = "SELECT * FROM Articles WHERE id= ?";
-        return jdbcTemplate.queryForObject(SELECT_ARTICLE, articleRowMapper, articleId);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_ARTICLE, articleRowMapper, articleId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public void edit(String articleId, EditArticleForm editArticleForm) {
+        final String UPDATE_ARTICLE = "UPDATE Articles SET title=?, contents=?, edited=? WHERE id=?";
+        jdbcTemplate.update(UPDATE_ARTICLE, editArticleForm.getTitle(), editArticleForm.getContents(), true, articleId);
+        logger.debug("{} 번글 수정 완료", articleId);
+    }
+
+    public void delete(String articleId) {
+        final String DELETE_ARTICLE = "DELETE FROM Articles WHERE id=?";
+        jdbcTemplate.update(DELETE_ARTICLE, articleId);
     }
 }

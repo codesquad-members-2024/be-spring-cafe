@@ -3,7 +3,9 @@ package codesquad.springcafe.controller;
 import codesquad.springcafe.dto.UpdateUser;
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.service.UserService;
+import codesquad.springcafe.service.validator.UserValidator;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +16,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 @Controller
 public class UserController {
     private final UserService userService;
+    private final UserValidator userValidator;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserValidator userValidator) {
+        this.userValidator = userValidator;
         this.userService = userService;
     }
 
@@ -25,8 +29,13 @@ public class UserController {
     }
 
     @PostMapping("/user/register")
-    public String register(User user) {
-        userService.addNewUser(user);
+    public String register(User user, Model model) {
+        try {
+            userService.addNewUser(user);
+        } catch (DuplicateKeyException e) {
+            model.addAttribute("error", true);
+            return "user/register/form";
+        }
         return "redirect:/user/list";
     }
 
@@ -47,25 +56,21 @@ public class UserController {
 
     @GetMapping("/user/profile/{userId}/update")
     public String showEditProfileForm(Model model, @PathVariable("userId") String userId, HttpSession session) {
-        Object value = session.getAttribute("sessionUser");
-        User actual = (User) value;
+        User actual = (User) session.getAttribute("sessionUser");
         User expected = userService.getUserById(userId);
+        userValidator.validSameUser(expected, actual);
 
-        if (userService.isSameUser(expected, actual)) {
-            model.addAttribute("user", userId);
-            return "user/updateForm";
-        }
-        return "redirect:/user/list";
+        model.addAttribute("user", userId);
+        return "user/updateForm";
     }
 
     @PutMapping("/user/profile/{userId}/update")
-    public String editProfile(UpdateUser updateUser, @PathVariable("userId") String userId, Model model,
-                              HttpSession session) {
-        Object value = session.getAttribute("sessionUser");
-        User actual = (User) value;
+    public String editProfile(UpdateUser updateUser, @PathVariable("userId") String userId, Model model, HttpSession session) {
+        User actual = (User) session.getAttribute("sessionUser");
         User expected = userService.getUserById(userId);
+        userValidator.validSameUser(expected, actual);
 
-        if (userService.editUserProfile(updateUser, expected, actual)) {
+        if (userService.editUserProfile(updateUser, actual)) {
             return "redirect:/user/list";
         } else {
             model.addAttribute("error", true);
