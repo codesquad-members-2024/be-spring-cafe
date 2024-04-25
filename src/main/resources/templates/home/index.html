@@ -37,7 +37,8 @@
                     </thead>
                     <tbody>
                     <tr th:each="article:${articles}">
-                        <td><a th:href="@{/articles/detail/{id}(id=${article.id})}" th:text="${article.title}">국내에서 Ruby
+                        <td><a th:href="@{/articles/detail/{id}(id=${article.id})}"
+                               th:text="|${article.title} [${commentCounts.get(article.id)}]|">국내에서 Ruby
                             on Rails와 Play가 활성화되기 힘든
                             이유는 뭘까?</a></td>
                         <td th:text="${article.writer}">닉네임 1</td>

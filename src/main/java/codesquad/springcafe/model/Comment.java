@@ -6,9 +6,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 public class Comment {
     private final String writer;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private final String content;
     private final Long articleId;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime writeDate;
     private boolean isDeleted;
     private Long id;
@@ -22,6 +22,10 @@ public class Comment {
 
     public void delete() {
         isDeleted = true;
+    }
+
+    public boolean hasSameWriter(String writer) {
+        return this.writer.equals(writer);
     }
 
     public String getWriter() {
@@ -61,14 +65,14 @@ public class Comment {
             return false;
         }
         Comment comment = (Comment) object;
-        return Objects.equals(writer, comment.writer) && Objects.equals(content, comment.content)
-                && Objects.equals(articleId, comment.articleId) && Objects.equals(writeDate,
-                comment.writeDate) && Objects.equals(id, comment.id);
+        return isDeleted == comment.isDeleted && Objects.equals(writer, comment.writer)
+                && Objects.equals(content, comment.content) && Objects.equals(articleId,
+                comment.articleId) && Objects.equals(id, comment.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(writer, content, articleId, writeDate, id);
+        return Objects.hash(writer, content, articleId, isDeleted, id);
     }
 
     @Override

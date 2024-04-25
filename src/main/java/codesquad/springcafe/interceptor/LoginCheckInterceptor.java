@@ -4,7 +4,9 @@ import codesquad.springcafe.util.LoginUserProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.nio.charset.StandardCharsets;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.util.UriUtils;
 
 public class LoginCheckInterceptor implements HandlerInterceptor {
     /**
@@ -15,7 +17,8 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             throws Exception {
         HttpSession session = request.getSession(false);
         if (session == null || LoginUserProvider.provide(session) == null) {
-            response.sendRedirect("/login?redirectUrl=" + request.getRequestURI());
+            String redirectUrl = UriUtils.encode(request.getRequestURI(), StandardCharsets.UTF_8);
+            response.sendRedirect("/login?redirectUrl=" + redirectUrl);
             return false;
         }
         return true;

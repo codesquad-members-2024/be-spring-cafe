@@ -10,11 +10,13 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
-public class CommentH2Database implements CommentDatabase {
+@Repository
+public class CommentJdbcDatabase implements CommentDatabase {
     private final JdbcTemplate jdbcTemplate;
 
-    public CommentH2Database(DataSource dataSource) {
+    public CommentJdbcDatabase(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
@@ -26,9 +28,9 @@ public class CommentH2Database implements CommentDatabase {
         Map<String, Object> params = new HashMap<>();
         params.put("writer", comment.getWriter());
         params.put("content", comment.getContent());
-        params.put("writeDate", comment.getWriteDate());
-        params.put("articleId", comment.getArticleId());
-        params.put("isDeleted", comment.isDeleted());
+        params.put("write_date", comment.getWriteDate());
+        params.put("article_id", comment.getArticleId());
+        params.put("is_deleted", comment.isDeleted());
 
         Number key = simpleJdbcInsert.executeAndReturnKey(params);
         comment.setId(key.longValue());
@@ -38,7 +40,7 @@ public class CommentH2Database implements CommentDatabase {
 
     @Override
     public Optional<Comment> findBy(Long id) {
-        String sql = "SELECT id, writer, content, writeDate, articleId, isDeleted FROM comments WHERE id = ? and isDeleted=false";
+        String sql = "SELECT id, writer, content, write_date, article_id, is_deleted FROM comments WHERE id = ? and is_deleted=false";
         return jdbcTemplate.query(sql, commentRowMapper(), id)
                 .stream()
                 .findAny();
@@ -46,21 +48,33 @@ public class CommentH2Database implements CommentDatabase {
 
     @Override
     public List<Comment> findAll(Long articleId) {
-        String sql = "SELECT id, writer, content, writeDate, articleId, isDeleted FROM comments WHERE articleId = ? and isDeleted=false";
+        String sql = "SELECT id, writer, content, write_date, article_id, is_deleted FROM comments WHERE article_id = ? and is_deleted=false";
         return jdbcTemplate.query(sql, commentRowMapper(), articleId);
     }
 
     @Override
     public void update(Comment comment) {
-        String sql = "UPDATE comments SET writer = ?, content = ?, writeDate = ?, articleId = ?, isDeleted = ? WHERE id = ?";
+        String sql = "UPDATE comments SET writer = ?, content = ?, write_date = ?, article_id = ?, is_deleted = ? WHERE id = ?";
         jdbcTemplate.update(sql, comment.getWriter(), comment.getContent(), comment.getWriteDate(),
                 comment.getArticleId(), comment.isDeleted(), comment.getId());
     }
+
+    @Override
+    public void softDelete(Long id) {
+        String sql = "UPDATE comments SET is_deleted = true WHERE id =?";
+        jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public Long count(Long articleId) {
+        String sql = "SELECT COUNT(*) FROM comments WHERE article_id = ? AND is_deleted = false";
+        return jdbcTemplate.queryForObject(sql, Long.class, articleId);
+    }
 //
 //    @Override
-//    public void delete(Long id) {
+//    public void deleteArticle(Long id) {
 //        String sql = "DELETE FROM comments WHERE id = ?";
-//        jdbcTemplate.update(sql, id);
+//        jdbcTemplate.updateArticle(sql, id);
 //    }
 
     @Override
@@ -73,8 +87,8 @@ public class CommentH2Database implements CommentDatabase {
         return (rs, rowNum) -> {
             String writer = rs.getString("writer");
             String content = rs.getString("content");
-            long articleId = rs.getLong("articleId");
-            LocalDateTime writeDate = rs.getTimestamp("writeDate").toLocalDateTime();
+            long articleId = rs.getLong("article_id");
+            LocalDateTime writeDate = rs.getTimestamp("write_date").toLocalDateTime();
 
             Comment comment = new Comment(writer, content, articleId, writeDate);
             comment.setId(rs.getLong("id"));

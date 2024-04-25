@@ -10,11 +10,13 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
-public class ArticleH2Database implements ArticleDatabase {
+@Repository
+public class ArticleJdbcDatabase implements ArticleDatabase {
     private final JdbcTemplate jdbcTemplate;
 
-    public ArticleH2Database(DataSource dataSource) {
+    public ArticleJdbcDatabase(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
@@ -27,9 +29,9 @@ public class ArticleH2Database implements ArticleDatabase {
         parameters.put("writer", article.getWriter());
         parameters.put("title", article.getTitle());
         parameters.put("content", article.getContent());
-        parameters.put("writeDate", article.getWriteDate());
+        parameters.put("write_date", article.getWriteDate());
         parameters.put("views", article.getViews());
-        parameters.put("isDeleted", article.isDeleted());
+        parameters.put("is_deleted", article.isDeleted());
 
         Number key = jdbcInsert.executeAndReturnKey(parameters);
         article.setId((key.longValue()));
@@ -39,29 +41,48 @@ public class ArticleH2Database implements ArticleDatabase {
 
     @Override
     public Optional<Article> findBy(Long id) {
-        String sql = "select id, writer, title, content, writedate, views, isDeleted from articles where id = ? and isDeleted = false";
+        String sql = "select id, writer, title, content, write_date, views, is_deleted from articles where id = ? and is_deleted = false";
         List<Article> result = jdbcTemplate.query(sql, articleRowMapper(), id);
         return result.stream()
                 .findAny();
     }
 
     @Override
+    public List<Article> findAll(String nickname) {
+        String sql = "SELECT id, writer, title, content, write_date, views, is_deleted FROM articles WHERE writer = ? and is_deleted = false";
+        return jdbcTemplate.query(sql, articleRowMapper(), nickname);
+    }
+
+    @Override
     public List<Article> findAll() {
-        String sql = "select id, writer, title, content, writedate, views, isDeleted from articles where isDeleted=false";
+        String sql = "select id, writer, title, content, write_date, views, is_Deleted from articles where is_deleted=false";
         return jdbcTemplate.query(sql, articleRowMapper());
     }
 
     @Override
     public void update(Article article) {
-        String sql = "UPDATE articles SET title = ?, content = ?, writer = ?, views = ?, isDeleted = ? WHERE id = ?";
+        String sql = "UPDATE articles SET title = ?, content = ?, writer = ?, views = ?, is_deleted = ? WHERE id = ?";
         jdbcTemplate.update(sql, article.getTitle(), article.getContent(), article.getWriter(), article.getViews()
                 , article.isDeleted(), article.getId());
     }
+
+    @Override
+    public void increaseViews(Long id) {
+        String sql = "UPDATE articles SET views = views + 1 WHERE id =?";
+        jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public void softDelete(Long id) {
+        String sql = "UPDATE articles SET is_deleted = true WHERE id =?";
+        jdbcTemplate.update(sql, id);
+    }
+
 //
 //    @Override
-//    public void delete(Long id) {
+//    public void deleteArticle(Long id) {
 //        String sql = "DELETE FROM articles WHERE id = ?";
-//        jdbcTemplate.update(sql, id);
+//        jdbcTemplate.updateArticle(sql, id);
 //    }
 
 
@@ -71,13 +92,19 @@ public class ArticleH2Database implements ArticleDatabase {
         jdbcTemplate.update(sql);
     }
 
+    @Override
+    public List<Long> findAllId() {
+        String sql = "SELECT id FROM articles WHERE is_deleted = false";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"));
+    }
+
     private RowMapper<Article> articleRowMapper() {
         return (rs, rowNum) -> {
 
             String writer = rs.getString("writer");
             String title = rs.getString("title");
             String content = rs.getString("content");
-            LocalDateTime writeDate = rs.getTimestamp("writeDate").toLocalDateTime();
+            LocalDateTime writeDate = rs.getTimestamp("write_date").toLocalDateTime();
             Article article = new Article(writer, title, content, writeDate);
             article.setId(rs.getLong("id"));
             article.setViews(rs.getLong("views"));

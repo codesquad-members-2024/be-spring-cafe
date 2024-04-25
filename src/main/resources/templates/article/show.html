@@ -10,11 +10,13 @@
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link th:href="@{/css/article/show.css}" href="../../static/css/article/show.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
 </head>
 <body>
 <div class="background">
     <div th:replace="~{fragments/navbar :: navbar}"></div>
-
     <div class="container" id="main" th:object="${article}">
         <div class="col-md-12 col-sm-12 col-lg-12">
             <div class="panel panel-default">
@@ -26,72 +28,124 @@
                         <div class="article-header">
                             <div class="article-header-text">
                                 <p class="article-content" th:text="*{writer}">멋진삼</p>
-                                <p class="article-content" th:text="|작성일자:*{{writeDate}}|">
-                                    작성일자:2015-12-30 01:47
-                                </p>
+                                <p class="article-content" th:text="|작성일자:*{{writeDate}}|">작성일자:2015-12-30 01:47</p>
                                 <p class="article-content" th:text="|조회 *{views}|">조회 4</p>
                             </div>
                         </div>
                         <div class="article-doc">
-                            <p th:text="*{content}">호눅스가 요청하신 페이지의 디자인 입니다.<br>
-                                각각의 글의 상세 페이지는 이런 느낌이네요!</p>
+                            <p th:text="*{content}">호눅스가 요청하신 페이지의 디자인입니다.<br>각각의 글의 상세 페이지는 이런 느낌이네요!</p>
                         </div>
                     </article>
 
+                    <!--                    코멘트-->
                     <div class="post-comment">
                         <div class="post-comment-slipp">
-                            <p class="post-comment-count" th:text="|댓글 ${comments.size()}개|">댓글 2개</p>
-                            <div class="post-comment-slipp-articles">
-
-                                <article class="comment" th:each="comment:${comments}">
+                            <p class="post-comment-count" th:text="'댓글 ' + ${#lists.size(comments)} + '개'">댓글 2개</p>
+                            <div class="post-comment-slipp-articles" id="comments-container">
+                                <article class="comment" th:each="comment : ${comments}">
                                     <div class="article-text">
                                         <p class="comment-content comment-author-name" th:text="${comment.writer}">
-                                            자바지기</p>
+                                            작성자명</p>
                                         <div class="comment-content comment-doc">
-                                            <p th:text="${comment.content}">이 글만으로는 원인 파악하기 힘들겠다. 소스 코드와 설정을 단순화해서 공유해
-                                                주면 같이 디버깅해줄 수도
-                                                있겠다.</p>
+                                            <p th:text="${comment.content}">댓글 내용</p>
                                         </div>
-                                        <p class="comment-content comment-time" th:text="${{comment.writeDate}}">
-                                            2016-01-12 14:06
-                                        </p>
+                                        <p class="comment-content comment-time" th:text="${{comment.writeDate}}">작성
+                                            시간</p>
                                         <div th:if="${comment.writer == loginUser.nickname}">
-                                            <form th:action="@{/articles/detail/{articleId}/comments/{id}(articleId=${article.id},id=${comment.id})}"
-                                                  method="post">
-                                                <input type="hidden" name="_method" value="DELETE"/>
-                                                <button type="submit" class="delete-button">삭제</button>
-                                            </form>
+                                            <button type="button" th:data-comment-id="${comment.id}"
+                                                    class="delete-button">삭제
+                                            </button>
                                         </div>
                                     </div>
                                 </article>
-
-                                <form class="submit-write" th:object="${commentWriteForm}"
-                                      th:classappend="${#fields.hasErrors('content')} ? 'field-error'"
-                                      method="post"
-                                      th:action="@{/articles/detail/{articleId}/comments(articleId=${article.id})}"
-                                      action="../home/index.html ">
-                                    <div class="comment-writer-container">
-                                        <input class="comment-writer" id="writer" th:field="${loginUser.nickname}"
-                                               readonly/>
-                                    </div>
-                                    <div class="form-group">
-                                        <textarea class="form-control" id="content"
-                                                  th:field="*{content}"
-                                                  placeholder="내용을 입력하세요"></textarea>
-                                    </div>
-                                    <input class="post-write-btn" type="submit" value="등록"/>
-                                </form>
-                                <div class="field-error" th:errors="${commentWriteForm.content}">
-                                    댓글 오류
+                            </div>
+                            <div class="submit-write" th:object="${commentWriteForm}"
+                                 th:classappend="${#fields.hasErrors('content')} ? 'field-error'" method="post"
+                                 th:action="@{/articles/detail/{articleId}/comments(articleId=${article.id})}"
+                                 action="../home/index.html">
+                                <div class="comment-writer-container">
+                                    <input class="comment-writer" th:field="${loginUser.nickname}" readonly/>
                                 </div>
+                                <textarea id="commentContent" placeholder="내용을 입력하세요" class="form-control"></textarea>
+                                <button type="button" id="submitCommentButton" class="post-write-btn">등록</button>
                             </div>
                         </div>
                     </div>
+                    <script th:inline="javascript">
+                        $(document).ready(function () {
+                            $('#submitCommentButton').click(function () {
+                                submitComment();
+                            });
+                            var articleId = [[${article.id}]];
+
+                            function submitComment() {
+
+                                var content = $('#commentContent').val().trim();
+                                if (!content) {
+                                    alert('댓글 내용을 입력하세요.');
+                                    return;
+                                }
+                                $.ajax({
+                                    url: '/api/articles/detail/' + articleId + '/comments',
+                                    type: 'POST',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify({content: content}),
+                                    success: function (comment) {
+                                        var newCommentHtml = '<article class="comment" id="comment-' + comment.id + '">' +
+                                            '<div class="article-text">' +
+                                            '<p class="comment-content comment-author-name">' + comment.writer + '</p>' +
+                                            '<div class="comment-content comment-doc"><p>' + comment.content + '</p></div>' +
+                                            '<p class="comment-content comment-time">' + formatWriteDate(comment.writeDate) + '</p>' +
+                                            '<button type="button" data-comment-id="' + comment.id + '" class="delete-button">삭제</button>' +
+                                            '</div>' +
+                                            '</article>';
+                                        $('#comments-container').append(newCommentHtml);
+                                        $('#commentContent').val('');
+                                        updateCommentCount();
+                                    },
+                                    error: function () {
+                                        alert('댓글을 등록하지 못했습니다.');
+                                    }
+                                });
+                            }
+
+                            function formatWriteDate(date) {
+                                return moment(date).format('YYYY-MM-DD HH:mm:ss');
+
+                            }
+
+                            // 댓글 삭제 함수
+                            $(document).on('click', '.delete-button', function () {
+                                var commentId = $(this).data('comment-id');
+                                var commentElement = $(this).closest('.comment'); // 삭제할 댓글의 부모 요소
+                                $.ajax({
+                                    url: `/api/articles/detail/${articleId}/comments/${commentId}`,
+                                    type: 'DELETE',
+                                    success: function () {
+                                        commentElement.remove(); // DOM에서 요소 제거
+                                        updateCommentCount();
+                                        alert('댓글이 삭제되었습니다.');
+                                    },
+                                    error: function () {
+                                        alert('댓글 삭제에 실패했습니다.');
+                                    }
+                                });
+                            });
+
+                            // 댓글 개수 업데이트 함수
+                            function updateCommentCount() {
+                                var count = $('#comments-container').children('article').length;
+                                $('.post-comment-count').text('댓글 ' + count + '개');
+                            }
+                        });
+
+                    </script>
+
                     <ul th:if="${article.writer == loginUser.nickname}" class="actions">
-                        <li><a th:href="@{/articles/edit/{id}(id=*{id})}" class="black-component"
-                               role="button">수정하기</a></li>
-                        <li><a th:href="@{/articles/delete/{id}(id=*{id})}"
-                               class="black-component" role="button">삭제하기</a></li>
+                        <li><a th:href="@{/articles/edit/{id}(id=*{id})}" class="black-component" role="button">수정하기</a>
+                        </li>
+                        <li><a th:href="@{/articles/delete/{id}(id=*{id})}" class="black-component"
+                               role="button">삭제하기</a></li>
                     </ul>
                 </div>
             </div>

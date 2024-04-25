@@ -10,7 +10,6 @@
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link th:href="@{/css/user/form.css}" rel="stylesheet">
-
 </head>
 <body>
 <div class="background">
@@ -21,21 +20,24 @@
             <p class="title">글 삭제</p>
         </header>
 
-        <form name="question" class="info-container" method="post" th:action th:object="${articleDeleteForm}">
+        <form name="articleDelete" class="info-container" method="post" th:action>
             <input type="hidden" name="_method" value="DELETE"/>
-            <div th:if="${#fields.hasGlobalErrors()}">
-                <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
+            <div>정말로 삭제하시겠습니까?</div>
+            <div class="form-group button-group"> <!-- Added class for styling -->
+                <button type="submit" class="btn btn-danger">예</button>
+                <a th:href="@{/articles/detail/{id}(id=${articleId})}" class="btn btn-default">아니오</a>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('password')} ? 'field-error'">
-                <label for="password">현재 비밀번호</label>
-                <input type="password" class="form-control" id="password" th:field="*{password}"
-                       placeholder="비밀번호를 입력하세요">
-            </div>
-            <div class="field-error" th:errors="*{password}">비밀번호 오류</div>
-
-            <button type="submit" class="btn btn-success clearfix pull-right">완료</button>
         </form>
     </div>
 </div>
+
+<style>
+    .button-group {
+        display: flex;
+        justify-content: space-around; /* This will space the buttons evenly */
+        align-items: center; /* This will center the buttons vertically */
+    }
+</style>
+
 </body>
 </html>

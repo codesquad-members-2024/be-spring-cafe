@@ -1,6 +1,10 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.database.article.ArticleDatabase;
+import codesquad.springcafe.model.Article;
+import codesquad.springcafe.service.ArticleService;
+import codesquad.springcafe.service.CommentService;
+import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/")
 public class HomeController {
-    private final ArticleDatabase articleDatabase;
+    private final ArticleService articleService;
+    private final CommentService commentService;
 
-    public HomeController(ArticleDatabase articleDatabase) {
-        this.articleDatabase = articleDatabase;
+    public HomeController(ArticleService articleService, CommentService commentService) {
+        this.articleService = articleService;
+        this.commentService = commentService;
     }
 
     /**
@@ -20,7 +26,14 @@ public class HomeController {
      */
     @GetMapping
     public String home(Model model) {
-        model.addAttribute("articles", articleDatabase.findAll());
+
+        List<Article> articles = articleService.getArticles();
+
+        Map<Long, Long> commentCounts = commentService.getCommentCounts();
+
+        model.addAttribute("articles", articles);
+        model.addAttribute("commentCounts", commentCounts);
+
         return "home/index";
     }
 }

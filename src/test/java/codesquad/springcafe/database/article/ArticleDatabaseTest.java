@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import codesquad.springcafe.database.user.UserDatabase;
 import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.User;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,8 +29,8 @@ class ArticleDatabaseTest {
         userDatabase.clear();
         articleDatabase.clear();
 
-        User user1 = new User("sangchu@gmail.com", "상추", "123");
-        User user2 = new User("baechu@gmail.com", "배추", "123");
+        User user1 = new User("sangchu@gmail.com", "상추", "123", LocalDate.now());
+        User user2 = new User("baechu@gmail.com", "배추", "123", LocalDate.now());
         userDatabase.add(user1);
         userDatabase.add(user2);
     }

@@ -9,11 +9,19 @@ public interface ArticleDatabase {
 
     Optional<Article> findBy(Long id);
 
+    List<Article> findAll(String nickname);
+
     List<Article> findAll();
 
     void update(Article article);
 
-//    void delete(Long id);
+    void increaseViews(Long id);
+
+    void softDelete(Long id);
+//    void deleteArticle(Long id);
 
     void clear();
+
+    List<Long> findAllId();
+
 }

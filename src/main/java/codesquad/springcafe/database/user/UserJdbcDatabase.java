@@ -1,7 +1,7 @@
 package codesquad.springcafe.database.user;
 
 import codesquad.springcafe.model.User;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,11 +10,13 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
-public class UserH2Database implements UserDatabase {
+@Repository
+public class UserJdbcDatabase implements UserDatabase {
     private final JdbcTemplate jdbcTemplate;
 
-    public UserH2Database(DataSource dataSource) {
+    public UserJdbcDatabase(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
@@ -27,7 +29,7 @@ public class UserH2Database implements UserDatabase {
         params.put("nickname", user.getNickname());
         params.put("email", user.getEmail());
         params.put("password", user.getPassword());
-        params.put("joinDate", user.getJoinDate());
+        params.put("join_date", user.getJoinDate());
 
         Number key = insert.executeAndReturnKey(params);
         user.setId(key.longValue());
@@ -37,7 +39,7 @@ public class UserH2Database implements UserDatabase {
 
     @Override
     public Optional<User> findByNickname(String nickname) {
-        String sql = "select id, nickname, email, password, joindate from users where nickname = ?";
+        String sql = "select id, nickname, email, password, join_date from users where nickname = ?";
         List<User> result = jdbcTemplate.query(sql, userRowMapper(), nickname);
 
         return result.stream().findAny();
@@ -45,7 +47,7 @@ public class UserH2Database implements UserDatabase {
 
     @Override
     public Optional<User> findByEmail(String email) {
-        String sql = "select id, nickname, email, password, joindate from users where email = ?";
+        String sql = "select id, nickname, email, password, join_date from users where email = ?";
         List<User> result = jdbcTemplate.query(sql, userRowMapper(), email);
 
         return result.stream().findAny();
@@ -53,7 +55,7 @@ public class UserH2Database implements UserDatabase {
 
     @Override
     public List<User> findAll() {
-        String sql = "select id, nickname, email, password, joindate from users";
+        String sql = "select id, nickname, email, password, join_date from users";
         return jdbcTemplate.query(sql, userRowMapper());
     }
 
@@ -74,12 +76,9 @@ public class UserH2Database implements UserDatabase {
             String email = rs.getString("email");
             String nickname = rs.getString("nickname");
             String password = rs.getString("password");
-
-            User user = new User(email, nickname, password);
+            LocalDate joinDate = rs.getDate("join_date").toLocalDate();
+            User user = new User(email, nickname, password, joinDate);
             user.setId(rs.getLong("id"));
-            Date joindate = rs.getDate("joindate");
-
-            user.setJoinDate(joindate.toLocalDate());
 
             return user;
         };
