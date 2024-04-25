@@ -27,10 +27,18 @@
                         <div class="article-header">
                             <div class="article-header-text">
                                 <p class="article-content" th:text="${article.getWriter()}">작성자</p>
-                                <p class="article-content" th:text="${article.getCreated()}">
-                                    작성일자
-                                </p>
+                                <p class="article-content" th:text="${article.getCreatedDate()}">작성일자</p>
                                 <p class="article-content" th:text="${article.getViews()}">조회수</p>
+                                <div th:if="${writer}" style="display: flex;">
+                                    <a class="black-component" style="margin-left: 10px"
+                                       th:href="@{/articles/{id}/update(id=${article.getId()})}">수정하기</a>
+                                    <form method="post" th:action="@{/articles/{id}(id=${article.getId()})}"
+                                          style="margin-left: 10px;">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="black-component">삭제하기</button>
+                                    </form>
+                                </div>
+
                             </div>
                         </div>
                         <div class="article-doc">
@@ -60,8 +68,8 @@
                                         <input class="comment-writer" id="writer" name="writer" value="멋진상" readonly/>
                                     </div>
                                     <div class="form-group">
-                                        <textarea class="form-control" id="comment" name="comment"
-                                                  placeholder="내용을 입력하세요"></textarea>
+                                                            <textarea class="form-control" id="comment" name="comment"
+                                                                      placeholder="내용을 입력하세요"></textarea>
                                     </div>
                                     <input class="post-write-btn" type="submit" value="등록"/>
                                 </form>
