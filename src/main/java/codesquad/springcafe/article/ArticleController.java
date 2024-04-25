@@ -52,8 +52,8 @@ public class ArticleController {
     @GetMapping("/{articleId}/update_form")
     public String updateArticleForm(@PathVariable Long articleId, Model model,
         HttpServletRequest request) {
-        String userId = (String) request.getSession().getAttribute("userId");
-        if (!articleService.isAuthenticated(userId, articleId)) {
+        String nickname = (String) request.getSession().getAttribute("nickname");
+        if (!articleService.isAuthenticated(nickname, articleId)) {
             return "redirect:/";
         }
         model.addAttribute("article", articleService.findById(articleId));
@@ -64,8 +64,8 @@ public class ArticleController {
     @PatchMapping("/{articleId}/update_form")
     public String updateArticle(@PathVariable Long articleId, ArticleUpdateDto articleUpdateDto,
         HttpServletRequest request) {
-        String userId = (String) request.getSession().getAttribute("userId");
-        if (!articleService.isAuthenticated(userId, articleId)) {
+        String nickname = (String) request.getSession().getAttribute("nickname");
+        if (!articleService.isAuthenticated(nickname, articleId)) {
             return "redirect:/";
         }
         articleService.update(articleUpdateDto, articleId);
@@ -75,8 +75,8 @@ public class ArticleController {
     //게시글 삭제
     @DeleteMapping("/{replyId}/delete")
     public String deleteArticle(@PathVariable Long replyId, HttpServletRequest request) {
-        String userId = (String) request.getSession().getAttribute("userId");
-        if (!articleService.isAuthenticated(userId, replyId)) {
+        String nickname = (String) request.getSession().getAttribute("nickname");
+        if (!articleService.isAuthenticated(nickname, replyId)) {
             return "redirect:/";
         }
         articleService.delete(replyId);

@@ -30,7 +30,6 @@ public class ReplyH2Database implements ReplyDatabase {
         Map<String, Object> parameters = Map.of(
             "author", reply.getAuthor(),
             "contents", reply.getContents(),
-            "userId", reply.getUserId(),
             "articleId", reply.getArticleId(),
             "createdTime", reply.getCreatedTime(),
             "deleted", false

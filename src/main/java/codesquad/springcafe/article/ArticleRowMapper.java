@@ -13,7 +13,6 @@ public class ArticleRowMapper implements RowMapper<Article> {
             .author(resultSet.getString("author"))
             .title(resultSet.getString("title"))
             .contents(resultSet.getString("contents"))
-            .userId(resultSet.getString("userId"))
             .createdTime(resultSet.getTimestamp("createdTime"))
             .deleted(resultSet.getBoolean("deleted"))
             .build();

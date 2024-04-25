@@ -19,9 +19,9 @@ public class ArticleH2Database implements ArticleDatabase {
 
     @Override
     public void save(Article article) {
-        String sql = "INSERT INTO article (author, title, contents, userId, createdTime) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO article (author, title, contents, createdTime) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(sql, article.getAuthor(), article.getTitle(),
-            article.getContents(), article.getUserId(), article.getCreatedTime());
+            article.getContents(), article.getCreatedTime());
     }
 
     @Override

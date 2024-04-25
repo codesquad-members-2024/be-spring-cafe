@@ -8,17 +8,15 @@ public class Article {
     private String title;
     private String author;
     private String contents;
-    private String userId;
     private Timestamp createdTime;
     private boolean deleted;
 
-    public Article(Long articleId, String title, String author, String contents, String userId,
+    public Article(Long articleId, String title, String author, String contents,
         Timestamp createdTime, boolean deleted) {
         this.articleId = articleId;
         this.title = title;
         this.author = author;
         this.contents = contents;
-        this.userId = userId;
         this.createdTime = createdTime;
         this.deleted = deleted;
     }
@@ -37,10 +35,6 @@ public class Article {
 
     public String getContents() {
         return contents;
-    }
-
-    public String getUserId() {
-        return userId;
     }
 
     public Timestamp getCreatedTime() {

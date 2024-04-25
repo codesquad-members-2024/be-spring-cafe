@@ -10,8 +10,8 @@ CREATE TABLE USERS
 (
     userId   VARCHAR(100) PRIMARY KEY,
     password VARCHAR(100) NOT NULL,
-    nickname VARCHAR(100) NOT NULL,
-    email    VARCHAR(100) NOT NULL,
+    nickname VARCHAR(100) NOT NULL UNIQUE,
+    email    VARCHAR(100) NOT NULL UNIQUE,
     deleted  BOOLEAN DEFAULT FALSE
 );
 
@@ -22,7 +22,6 @@ CREATE TABLE ARTICLE
     author      VARCHAR(100) NOT NULL,
     title       VARCHAR(100) NOT NULL,
     contents    TEXT         NOT NULL,
-    userId      VARCHAR(100) NOT NULL,
     createdTime TIMESTAMP,
     deleted     BOOLEAN DEFAULT FALSE
 );
@@ -34,14 +33,13 @@ CREATE TABLE REPLY
     articleId   INT          NOT NULL,
     author      VARCHAR(100) NOT NULL,
     contents    TEXT         NOT NULL,
-    userId      VARCHAR(100) NOT NULL,
     createdTime TIMESTAMP,
     deleted     BOOLEAN DEFAULT FALSE
 );
 
 alter table ARTICLE
-    add constraint fk_article_user foreign key (userId) references USERS (userId);
+    add constraint fk_article_user foreign key (author) references USERS (nickname);
 alter table REPLY
-    add constraint fk_reply_user foreign key (userId) references USERS (userId);
+    add constraint fk_reply_author foreign key (author) references USERS (nickname);
 alter table REPLY
     add constraint fk_reply_article foreign key (articleId) references ARTICLE (articleId);
