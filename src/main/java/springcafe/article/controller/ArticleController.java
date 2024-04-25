@@ -3,8 +3,6 @@ package springcafe.article.controller;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,7 +20,7 @@ import java.util.List;
 
 @Controller
 public class ArticleController {
-    Logger logger = LoggerFactory.getLogger("ArticleController");
+
     private final ArticleService articleService;
     private final ReplyService replyService;
 
@@ -33,7 +31,7 @@ public class ArticleController {
 
     @GetMapping("/")
     public String showArticleList(Model model) {
-        List<Article> articleList = articleService.findAll();
+        List<Article> articleList = articleService.findAllArticles();
         model.addAttribute("articleList", articleList);
 
         return "index";
@@ -42,7 +40,7 @@ public class ArticleController {
     @GetMapping("qna/show/{articleId}")
     public String displayArticleDetails(@PathVariable("articleId") Long articleId, Model model, HttpSession session) {
 
-        Article article = articleService.findById(articleId);
+        Article article = articleService.findByArticleId(articleId);
         User user = (User) session.getAttribute("user");
         List<Reply> replyList = replyService.findReplyByArticleId(articleId);
 
@@ -54,7 +52,7 @@ public class ArticleController {
     }
 
     @GetMapping("qna/questions")
-    public String questionCreate(@ModelAttribute("article") ArticleForm article) {
+    public String showQuestionCreationForm(@ModelAttribute("article") ArticleForm article) {
 
         return "qna/form";
     }
@@ -68,15 +66,14 @@ public class ArticleController {
         }
 
         User user = (User) session.getAttribute("user");
-        this.articleService.create(user.getUserId(), article.getTitle(), article.getContents(), user.getId());
+        this.articleService.saveArticle(user.getUserId(), article.getTitle(), article.getContents(), user.getId());
         return "redirect:/";
     }
 
     @GetMapping("qna/update/{id}")
     public String showUpdateForm(@PathVariable Long id, @ModelAttribute("article") Article article, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        Article articleToUpdate = articleService.findById(id);
-        logger.info("logging");
+        Article articleToUpdate = articleService.findByArticleId(id);
         if (!user.matchUserId(articleToUpdate.getWriter())) {
             throw new WrongWriterException("다른 사람의 글을 수정할 수 없습니다.");
         }
@@ -97,19 +94,19 @@ public class ArticleController {
 
     @DeleteMapping("/qna/delete/{id}")
     public String deleteArticle(@PathVariable Long id, HttpSession session) {
-        Article articleToDelete = articleService.findById(id);
+        Article articleToDelete = articleService.findByArticleId(id);
         User user = (User) session.getAttribute("user");
 
 
         List<Reply> replyList = replyService.findReplyByArticleId(id);
 
         if (!articleToDelete.getWriter().equals(user.getUserId())
-                || ! articleService.checkIfPossibleToDelete(replyList, articleToDelete.getWriter())) {
+                || !articleService.checkIfPossibleToDelete(replyList, articleToDelete.getWriter())) {
             throw new WrongWriterException("삭제 권한이 없습니다.");
         }
 
 
-        articleService.delete(id);
+        articleService.deleteArticle(id);
 
         return "redirect:/";
     }

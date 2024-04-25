@@ -11,26 +11,23 @@ import java.util.List;
 @Service
 public class ArticleService {
 
-    private Long sequence =0L;
-
-
     private ArticleDao articleDao;
 
     public ArticleService(ArticleDao articleDao) {
         this.articleDao = articleDao;
     }
 
-    public void create(String writer, String title, String contents, Long id){
+    public void saveArticle(String writer, String title, String contents, Long id){
 
         Article article = new Article(writer, title, contents);
         this.articleDao.save(article, id);
     }
 
-    public Article findById(Long id){
+    public Article findByArticleId(Long id){
        return articleDao.findById(id);
 
     }
-    public List<Article> findAll(){
+    public List<Article> findAllArticles(){
         return this.articleDao.findAll();
     }
 
@@ -43,19 +40,12 @@ public class ArticleService {
 
     }
 
-    public void delete(Long articleId){
+    public void deleteArticle(Long articleId){
         articleDao.delete(articleId);
     }
 
     public boolean checkIfPossibleToDelete(List<Reply>replyList, String writer){
-        if(replyList.isEmpty()){
-                return true;
-        }
-
-        return replyList.stream().allMatch(reply->
-                reply.matchesWriter(writer));
+        return replyList.isEmpty() || replyList.stream().allMatch(reply -> reply.matchesWriter(writer));
 
     }
-
-
 }

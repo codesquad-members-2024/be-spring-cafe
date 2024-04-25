@@ -3,8 +3,6 @@ package springcafe.article.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -69,7 +66,7 @@ class ArticleControllerTest {
         assertThat(all.size()).isEqualTo(1);
         assertThat(all.get(0).getTitle()).isEqualTo("제목");
         assertThat(all.get(0).getWriter()).isEqualTo("fnelclsrn");
-        assertThat(all.get(0).getContents()).isEqualTo("내용");
+        assertThat(all.get(0).getContent()).isEqualTo("내용");
 
     }
 
