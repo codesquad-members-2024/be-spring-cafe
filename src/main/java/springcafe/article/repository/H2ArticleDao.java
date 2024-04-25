@@ -19,20 +19,20 @@ public class H2ArticleDao implements ArticleDao {
 
     @Override
     public void save(Article article, Long id) {
-        jdbcTemplate.update("INSERT into ARTICLES (WRITER, TITLE, CONTENTS, USER_ID) values (?,?,?,?)",
-                article.getWriter(), article.getTitle(), article.getContents(), id);
+        jdbcTemplate.update("INSERT into ARTICLES (WRITER, TITLE, CONTENT, USER_ID) values (?,?,?,?)",
+                article.getWriter(), article.getTitle(), article.getContent(), id);
     }
 
     @Override
     public Article findById(Long id) {
 
         return jdbcTemplate.queryForObject(
-                "SELECT ID, WRITER, TITLE, CONTENTS, CREATE_DATE, USER_ID FROM ARTICLES WHERE ID =? AND IS_DELETED =FALSE",
+                "SELECT ID, WRITER, TITLE, CONTENT, CREATE_DATE, USER_ID FROM ARTICLES WHERE ID =? AND IS_DELETED =FALSE",
                 new Object[]{id},
                 (rs, rowNum) ->new Article(
                         rs.getString("WRITER"),
                         rs.getString("TITLE"),
-                        rs.getString("CONTENTS"),
+                        rs.getString("CONTENT"),
                         rs.getTimestamp("CREATE_DATE").toLocalDateTime(),
                         rs.getLong("ID"),
                         rs.getLong("USER_ID")
@@ -43,18 +43,18 @@ public class H2ArticleDao implements ArticleDao {
     @Override
     public List<Article> findAll() {
         return jdbcTemplate.query(
-                "SELECT ID, WRITER, TITLE, CONTENTS, CREATE_DATE, USER_ID FROM ARTICLES WHERE IS_DELETED =FALSE",
+                "SELECT ID, WRITER, TITLE, CONTENT, CREATE_DATE, USER_ID FROM ARTICLES WHERE IS_DELETED =FALSE",
                 (rs) -> {
                     List<Article> articleList = new ArrayList();
                     while (rs.next()) {
                         String writer = rs.getString("WRITER");
                         String title = rs.getString("TITLE");
-                        String contents = rs.getString("CONTENTS");
+                        String content = rs.getString("CONTENT");
                         LocalDateTime createDate = rs.getTimestamp("CREATE_DATE").toLocalDateTime();
                         Long id = rs.getLong("ID");
                         long userId = rs.getLong("USER_ID");
 
-                        Article article = new Article(writer, title, contents, createDate, id, userId);
+                        Article article = new Article(writer, title, content, createDate, id, userId);
                         articleList.add(article);
 
                     }
@@ -66,8 +66,8 @@ public class H2ArticleDao implements ArticleDao {
     @Override
     public void update(Article article) {
         jdbcTemplate.update(
-                "UPDATE ARTICLES SET TITLE =?, CONTENTS =? WHERE ID =? AND IS_DELETED =FALSE",
-                article.getTitle(), article.getContents(), article.getId());
+                "UPDATE ARTICLES SET TITLE =?, CONTENT =? WHERE ID =? AND IS_DELETED =FALSE",
+                article.getTitle(), article.getContent(), article.getId());
     }
 
     @Override

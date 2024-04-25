@@ -7,24 +7,24 @@ public class Article {
 
     private String writer;
     private String title;
-    private String contents;
+    private String content;
     private LocalDateTime createDate;
     private Long id;
-    private Long usersId;
+    private Long userId;
 
-    public Article(String writer, String title, String contents) {
+    public Article(String writer, String title, String content) {
         this.writer = writer;
         this.title = title;
-        this.contents = contents;
+        this.content = content;
     }
 
-    public Article(String writer, String title, String contents, LocalDateTime createDate, Long id, Long usersId) {
+    public Article(String writer, String title, String content, LocalDateTime createDate, Long id, Long userId) {
         this.writer = writer;
         this.title = title;
-        this.contents = contents;
+        this.content = content;
         this.createDate = createDate;
         this.id = id;
-        this.usersId = usersId;
+        this.userId = userId;
     }
 
     public void updateTitle(String title) {
@@ -32,7 +32,7 @@ public class Article {
     }
 
     public void updateContent(String contents) {
-        this.contents = contents;
+        this.content = contents;
     }
 
     public String getWriter() {
@@ -43,16 +43,16 @@ public class Article {
         return title;
     }
 
-    public String getContents() {
-        return contents;
+    public String getContent() {
+        return content;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getUsersId() {
-        return usersId;
+    public Long getUserId() {
+        return userId;
     }
 
     public LocalDateTime getCreateDate() {
