@@ -45,6 +45,8 @@ http://repository.transtep.com/repository/thirdparty/H2/1.0.63/docs/html/datatyp
   - 기존 요청 URL을 기록
   - 로그인 후 위에서 기록한 URL로 이동
 
+> 로그인 후 기존에 접근하려던 페이지로 리다이렉트 요청을 보낼 수 있도록 세션에 "redirectUri" 로 저장해두고 사용.
+
 - 게시글에 수정, 삭제 버튼 추가
   - 수정, 삭제 버튼은 로그인한 아이디가 게시글의 작성자와 같은 경우에만 출력되도록 한다.
     - 추가로 요상한 요청이 들어갈 수 있으니, 로직에도 게시글작성자와 로그인사용자가 같은지 확인하는 부분을 넣어 리다이렉트 시킬 것.
@@ -57,6 +59,8 @@ http://repository.transtep.com/repository/thirdparty/H2/1.0.63/docs/html/datatyp
 - 게시글 삭제
   - articleId를 통해 삭제 명령을 보낸다.
   - DELETE FROM ARTICLES WHERE ARTICLEID = '123'; 이런 식으로?
+
+  
 
 
 
