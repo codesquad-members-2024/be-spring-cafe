@@ -3,13 +3,14 @@ package codesquad.springcafe.repository.article;
 import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.dto.ArticleDto;
 import java.util.List;
+import java.util.Optional;
 
 public interface ArticleRepository {
     void createArticle(Article article);
 
     List<Article> findAllArticles();
 
-    Article findById(long id);
+    Optional<Article> findById(long id);
 
     void updateViews(long id);
 
