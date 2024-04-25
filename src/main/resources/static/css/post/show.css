@@ -113,6 +113,11 @@ li {
     margin-bottom: 10px;
 }
 
+.pre-comment-content {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
 .post-write-btn {
     margin-top: 20px;
     align-items: center;
