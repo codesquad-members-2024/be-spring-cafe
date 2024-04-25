@@ -81,7 +81,7 @@ class UserControllerTest {
         given(userService.getUsers()).willReturn(new UserListResponse(userList));
 
         MockHttpSession httpSession = new MockHttpSession();
-        httpSession.setAttribute("userId", 1);
+        httpSession.setAttribute("userCredentials", new UserCredentials(1L, "홍길동"));
 
         //when
         final ResultActions result = mockMvc.perform(get(url)
@@ -117,7 +117,7 @@ class UserControllerTest {
         given(userService.getUser(loginId)).willReturn(new UserResponse(loginId, email, name, createdAt));
 
         MockHttpSession session = new MockHttpSession();
-        session.setAttribute("userId", 1);
+        session.setAttribute("userCredentials", new UserCredentials(1L, "홍길동"));
 
         //when
         final ResultActions result = mockMvc.perform(get(url, loginId).session(session));
