@@ -11,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -108,12 +111,31 @@ public class H2ArticleRepository implements ArticleRepository {
 
 
     @Override
-    public void createReply(Reply reply) {
+    public Reply createReply(Reply reply) {
+        // SQL 쿼리 수정: replyId를 자동 생성하도록 변경
         String sql = "INSERT INTO REPLIES (ARTICLEID, USERID, COMMENT, CREATIONDATE, DELETED) VALUES (?, ?, ?, ?, false)";
 
-        jdbcTemplate.update(sql, reply.getArticleId(), reply.getUserId(), reply.getComment(), reply.getCreationDate().toString());
+        // KeyHolder를 사용하여 생성된 replyId를 저장할 변수를 만듭니다.
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        logger.debug("Reply Comment : '{}' Created At H2 Database", reply.getComment());
+        // jdbcTemplate의 update 메서드에 KeyHolder를 전달하여 생성된 키를 얻습니다.
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"replyId"});
+            ps.setLong(1, reply.getArticleId());
+            ps.setString(2, reply.getUserId());
+            ps.setString(3, reply.getComment());
+            ps.setString(4, reply.getCreationDate().toString());
+            return ps;
+        }, keyHolder);
+
+        // 생성된 replyId를 가져와서 Reply 객체에 설정합니다.
+        long generatedId = keyHolder.getKey().longValue();
+        reply.setReplyId(generatedId);
+
+        logger.debug("Reply Comment : '{}' with replyId: '{}' Created At H2 Database", reply.getComment(), generatedId);
+
+        // 수정된 Reply 객체를 반환합니다.
+        return reply;
     }
 
     @Override

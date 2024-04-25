@@ -22,7 +22,7 @@ public interface ArticleRepository {
 
     void deleteArticle(long articleId);
 
-    void createReply(Reply reply);
+    Reply createReply(Reply reply);
 
     Optional<ArrayList<Reply>> getReplies(long articleId);
 

@@ -60,10 +60,10 @@ public class ArticleService {
         articleRepository.deleteArticle(articleId);
     }
 
-    public void createReply(long articleId, ReplyCreationRequest replyCreationRequest) {
+    public Reply createReply(long articleId, ReplyCreationRequest replyCreationRequest) {
         Reply reply = new Reply(articleId, replyCreationRequest.getWriter(), replyCreationRequest.getComment());
 
-        articleRepository.createReply(reply);
+        return articleRepository.createReply(reply);
     }
 
     public ArrayList<ReplyViewDto> getReplies(String sessionedUserId, long articleId) {

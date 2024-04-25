@@ -57,8 +57,9 @@ public class MemoryArticleRepository implements ArticleRepository {
 
 
     @Override
-    public void createReply(Reply reply) {
+    public Reply createReply(Reply reply) {
         articleDatabase.addReply(reply);
+        return reply;
     }
 
     @Override
