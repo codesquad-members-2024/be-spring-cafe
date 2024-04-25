@@ -13,7 +13,7 @@ class ArticleCreateDtoTest {
 
     @BeforeEach
     void setUp() {
-        articleCreateDto = new ArticleCreateDto("제목", "작성자", "내용", "userId");
+        articleCreateDto = new ArticleCreateDto("제목", "작성자", "내용");
     }
 
     @Test
