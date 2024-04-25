@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -141,5 +142,14 @@ public class UserController {
         return "redirect:/main";
     }
 
+    @PostMapping("/checkUserDuplicate")
+    public ResponseEntity<?> checkDuplicate(@RequestParam String userId) {
+        Optional<User> checkUser = userDatabase.getUserById(userId);
+
+        if(checkUser.isPresent()) { // 중복된 아이디 있음
+            return ResponseEntity.ok().body("{\"duplicate\": true}");
+        }
+        return ResponseEntity.ok().body("{\"duplicate\": false}"); // 중복 없음
+    }
 
 }
