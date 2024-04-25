@@ -35,10 +35,15 @@
                               <a class="link-modify-article" href="/articles/{{article.articleId}}/form">수정</a>
                           </li>
                           <li>
-                              <form class="form-delete" action="/articles/{{article.articleId}}" method="POST">
+                              <form class="form-delete" action="/articles/{{article.articleId}}" method="POST" onsubmit="return confirmDelete();">
                                   <input type="hidden" name="_method" value="DELETE">
                                   <button class="link-delete-article" type="submit">삭제</button>
                               </form>
+                              <script> // 삭제 전 확인 창 띄우기
+                                  function confirmDelete() {
+                                      return confirm("정말로 이 게시물을 삭제하시겠습니까?");
+                                  }
+                              </script>
                           </li>
                           {{/isWriter}}
                           <li>

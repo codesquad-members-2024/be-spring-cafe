@@ -64,4 +64,10 @@ public class ArticleH2Database implements ArticleDatabase {
         String sql = "UPDATE MAIN.ARTICLES SET title = ?, content = ? WHERE articleId = ?";
         jdbcTemplate.update(sql, article.getTitle(), article.getContent(), article.getArticleId());
     }
+
+    @Override
+    public void deleteArticle(long articleId) {
+        String sql = "DELETE FROM MAIN.ARTICLES WHERE articleId = ?";
+        jdbcTemplate.update(sql, articleId);
+    }
 }

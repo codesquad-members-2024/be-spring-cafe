@@ -13,4 +13,6 @@ public interface ArticleDatabase {
     public Article getArticle(long articleId);
 
     public void updateArticle(Article article);
+
+    public void deleteArticle(long articleId);
 }

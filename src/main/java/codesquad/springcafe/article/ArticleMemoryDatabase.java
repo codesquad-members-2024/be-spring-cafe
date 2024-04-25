@@ -35,6 +35,11 @@ public class ArticleMemoryDatabase implements ArticleDatabase{
 
     @Override
     public void updateArticle(Article article) {
+        articleMap.put(article.getArticleId(), article);
+    }
 
+    @Override
+    public void deleteArticle(long articleId) {
+        articleMap.remove(articleId);
     }
 }
