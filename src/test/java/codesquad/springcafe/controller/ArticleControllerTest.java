@@ -3,6 +3,7 @@ package codesquad.springcafe.controller;
 import codesquad.springcafe.WebConfig;
 import codesquad.springcafe.db.article.ArticleDatabase;
 import codesquad.springcafe.model.article.Article;
+import codesquad.springcafe.model.article.dto.ArticleProfileDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -34,18 +36,24 @@ class ArticleControllerTest {
 
     @BeforeEach
     void setUp(){
-        Article article1 = new Article();
-        article1.setSequence(1L);
-        article1.setTitle("title1");
-        article1.setContent("content1");
+        long sequence1 = 1L;
+        String title1 = "title1";
+        String content1 = "content1";
+        String writerNickname1 = "writerNickname1";
+        LocalDateTime publishTime1 = LocalDateTime.now();
+        ArticleProfileDto article1 = new ArticleProfileDto(sequence1, publishTime1, writerNickname1, title1, content1);
 
-        Article article2 = new Article();
-        article2.setSequence(2L);
-        article2.setTitle("title2");
-        article2.setContent("content2");
-        List<Article> articles = Arrays.asList(article1, article2);
+        long sequence2 = 2L;
+        String title2 = "title2";
+        String content2 = "content2";
+        String writerNickname2 = "writerNickname2";
+        LocalDateTime publishTime2 = LocalDateTime.now();
+        ArticleProfileDto article2 = new ArticleProfileDto(sequence2, publishTime2, writerNickname2, title2, content2);
 
-        willDoNothing().given(articleDatabase).addArticle(article1);
+        Article article = new Article(publishTime1, title1, content1);
+        List<ArticleProfileDto> articles = Arrays.asList(article1, article2);
+
+        willDoNothing().given(articleDatabase).addArticle(article);
         given(articleDatabase.findAllArticles()).willReturn(articles);
         given(articleDatabase.getTotalArticleNumber()).willReturn(articles.size());
         given(articleDatabase.findArticleBySequence(1L)).willReturn(Optional.of(article1));

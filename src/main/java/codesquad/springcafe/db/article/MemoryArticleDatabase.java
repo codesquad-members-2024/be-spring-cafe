@@ -1,6 +1,7 @@
 package codesquad.springcafe.db.article;
 
 import codesquad.springcafe.model.article.Article;
+import codesquad.springcafe.model.article.dto.ArticleProfileDto;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -24,14 +25,12 @@ public class MemoryArticleDatabase implements ArticleDatabase {
                 .ifPresent(i -> articleDatabase.set(i, updatedArticle));
     }
 
-    public List<Article> findAllArticles(){
-        return articleDatabase;
+    public List<ArticleProfileDto> findAllArticles(){
+        return null;
     }
 
-    public Optional<Article> findArticleBySequence(long sequence){
-        return articleDatabase.stream()
-                .filter(article -> article.getSequence() == sequence)
-                .findFirst();
+    public Optional<ArticleProfileDto> findArticleBySequence(long sequence){
+        return null;
     }
 
     public void clearDatabase(){

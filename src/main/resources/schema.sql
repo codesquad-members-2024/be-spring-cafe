@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS articles;
+DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -10,11 +10,13 @@ CREATE TABLE users (
     registerTime TIMESTAMP NOT NULL
 );
 
+ALTER TABLE users ADD CONSTRAINT unique_userId UNIQUE (userId);
 
 CREATE TABLE articles (
     sequence BIGINT PRIMARY KEY AUTO_INCREMENT,
     writer VARCHAR(50) NOT NULL,
     title VARCHAR(50) NOT NULL,
     publishTime TIMESTAMP NOT NULL,
-    content VARCHAR(10000) NOT NULL
+    content VARCHAR(10000) NOT NULL,
+    FOREIGN KEY (writer) REFERENCES users(userId)
 );

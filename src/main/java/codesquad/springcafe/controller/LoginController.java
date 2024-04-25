@@ -1,14 +1,10 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.db.user.UserDatabase;
-import codesquad.springcafe.model.user.User;
 import codesquad.springcafe.model.user.dto.UserCredentialDto;
-import codesquad.springcafe.model.user.dto.UserProfileDto;
 import codesquad.springcafe.security.PasswordEncoder;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,9 +40,7 @@ public class LoginController {
             @ModelAttribute UserCredentialDto userInput,
             @RequestParam(defaultValue = "/") String redirectURL,
             HttpSession session,
-            HttpServletResponse response,
-            Model model
-    ) throws IOException
+            Model model)
     {
         Optional<UserCredentialDto> userCredentialsOpt = userDatabase.getUserCredential(userInput.getUserId());
 
@@ -56,14 +50,7 @@ public class LoginController {
             return "users/login";
         }
 
-        Optional<UserProfileDto> userProfileOpt = userDatabase.findUserByUserId(userInput.getUserId());
-        if(userProfileOpt.isEmpty()){
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return null;
-        }
-
-        UserProfileDto userProfile = userProfileOpt.get();
-        session.setAttribute(LOGIN_SESSION_NAME, userProfile);
+        session.setAttribute(LOGIN_SESSION_NAME, userInput.getUserId());
         return "redirect:" + redirectURL;
     }
 
