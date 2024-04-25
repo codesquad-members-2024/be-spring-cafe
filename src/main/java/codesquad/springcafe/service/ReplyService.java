@@ -1,6 +1,7 @@
 package codesquad.springcafe.service;
 
 import codesquad.springcafe.exception.ReplyNotFound;
+import codesquad.springcafe.exception.UnauthorizedAccessException;
 import codesquad.springcafe.model.Reply;
 import codesquad.springcafe.repository.ReplyRepository;
 import org.springframework.stereotype.Service;
@@ -38,8 +39,10 @@ public class ReplyService {
         throw new ReplyNotFound();
     }
 
-    public boolean checkReplyAuthor(Long replyId, String userId) {
+    public void validateReplyAuthor(Long replyId, String userId) {
         Reply reply = findById(replyId);
-        return reply.getAuthor().equals(userId);
+        if (!userId.equals(reply.getAuthor())) {
+            throw new UnauthorizedAccessException("본인의 댓글만 수정/삭제가 가능합니다.");
+        }
     }
 }
