@@ -31,8 +31,8 @@
                                 <p class="article-content" th:text="${article.getViews()}">조회수</p>
                                 <div th:if="${writer}" style="display: flex;">
                                     <a class="black-component" style="margin-left: 10px"
-                                       th:href="@{/articles/{id}/update(id=${article.getId()})}">수정하기</a>
-                                    <form method="post" th:action="@{/articles/{id}(id=${article.getId()})}"
+                                       th:href="@{/articles/{articleId}/update(articleId=${article.getArticleId()})}">수정하기</a>
+                                    <form method="post" th:action="@{/articles/{articleId}(articleId=${article.getArticleId()})}"
                                           style="margin-left: 10px;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button type="submit" class="black-component">삭제하기</button>

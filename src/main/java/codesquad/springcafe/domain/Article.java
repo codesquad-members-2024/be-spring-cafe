@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Article {
-    private long id;
+    private long articleId;
     private String writer;
     private String title;
     private String content;
@@ -13,9 +13,9 @@ public class Article {
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
 
-    public Article(long id, String writer, String title, String content, long views, LocalDateTime createdDate,
+    public Article(long articleId, String writer, String title, String content, long views, LocalDateTime createdDate,
                    LocalDateTime lastModifiedDate) {
-        this.id = id;
+        this.articleId = articleId;
         this.writer = writer;
         this.title = title;
         this.content = content;
@@ -44,8 +44,8 @@ public class Article {
         return this.writer.equals(userId);
     }
 
-    public long getId() {
-        return id;
+    public long getArticleId() {
+        return articleId;
     }
 
     public String getWriter() {
@@ -72,8 +72,8 @@ public class Article {
         return lastModifiedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setArticleId(long articleId) {
+        this.articleId = articleId;
     }
 
     public void setViews(long views) {

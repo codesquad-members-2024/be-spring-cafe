@@ -22,33 +22,33 @@ public class ArticleService {
 
     public void createArticle(Article article) {
         articleRepository.createArticle(article);
-        logger.debug("ID {} 게시글 생성", article.getId());
+        logger.debug("ID {} 게시글 생성", article.getArticleId());
     }
 
     public List<Article> findAllArticles() {
         return articleRepository.findAllArticles();
     }
 
-    public Article findById(long id) {
-        Article article = articleRepository.findById(id)
-                .orElseThrow(() -> new ArticleNotFoundException(id + " ID 게시글이 존재하지 않습니다."));
+    public Article findByArticleId(long articleId) {
+        Article article = articleRepository.findByArticleId(articleId)
+                .orElseThrow(() -> new ArticleNotFoundException(articleId + " ID 게시글이 존재하지 않습니다."));
 
-        logger.debug("ID {} 게시글 조회", id);
+        logger.debug("ID {} 게시글 조회", articleId);
         return article;
     }
 
-    public void updateViews(long id) {
-        articleRepository.updateViews(id);
-        logger.debug("ID {} 게시글 조회수 증가", id);
+    public void updateViews(long articleId) {
+        articleRepository.updateViews(articleId);
+        logger.debug("ID {} 게시글 조회수 증가", articleId);
     }
 
-    public void updateArticle(long id, ArticleDto articleDto) {
-        articleRepository.updateArticle(id, articleDto);
-        logger.debug("ID {} 게시글 수정", id);
+    public void updateArticle(long articleId, ArticleDto articleDto) {
+        articleRepository.updateArticle(articleId, articleDto);
+        logger.debug("ID {} 게시글 수정", articleId);
     }
 
-    public void deleteArticle(long id) {
-        articleRepository.deleteArticle(id);
-        logger.debug("ID {} 게시글 삭제", id);
+    public void deleteArticle(long articleId) {
+        articleRepository.deleteArticle(articleId);
+        logger.debug("ID {} 게시글 삭제", articleId);
     }
 }

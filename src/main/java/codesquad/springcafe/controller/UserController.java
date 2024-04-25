@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public String userProfile(@PathVariable("userId") String userId, Model model) {
+    public String userProfile(@PathVariable String userId, Model model) {
         User user = userService.findByUserId(userId);
         model.addAttribute("user", user);
 
@@ -58,7 +58,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/update")
-    public String updateUserForm(@PathVariable("userId") String userId, HttpSession session) {
+    public String updateUserForm(@PathVariable String userId, HttpSession session) {
         User loginUser = (User) session.getAttribute("user");
 
         // 사용자 ID와 요청 파라미터의 ID가 다르면 권한x
@@ -70,7 +70,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/update")
-    public String updateUser(@PathVariable("userId") String userId, @ModelAttribute UserUpdateDto userUpdateDto,
+    public String updateUser(@PathVariable String userId, @ModelAttribute UserUpdateDto userUpdateDto,
                              Model model, HttpSession session) {
         User loginUser = (User) session.getAttribute("user");
 

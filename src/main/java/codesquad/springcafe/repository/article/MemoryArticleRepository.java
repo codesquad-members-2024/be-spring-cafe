@@ -16,7 +16,7 @@ public class MemoryArticleRepository implements ArticleRepository {
     @Override
     public void createArticle(Article article) {
         long id = articles.size() + 1;
-        article.setId(id);
+        article.setArticleId(id);
         articles.put(id, article);
     }
 
@@ -26,33 +26,25 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Optional<Article> findById(long id) {
-        return Optional.ofNullable(articles.get(id));
+    public Optional<Article> findByArticleId(long articleId) {
+        return Optional.ofNullable(articles.get(articleId));
     }
 
     @Override
-    public void updateViews(long id) {
-        Optional<Article> optionalArticle = findById(id);
-        if (optionalArticle.isPresent()) {
-            Article article = optionalArticle.get();
-            article.setViews(article.getViews() + 1);
-        }
+    public void updateViews(long articleId) {
+        Optional<Article> optionalArticle = findByArticleId(articleId);
+        optionalArticle.ifPresent(article -> article.setViews(article.getViews() + 1));
     }
 
     @Override
-    public void updateArticle(long id, ArticleDto articleDto) {
-        Optional<Article> optionalArticle = findById(id);
-        if (optionalArticle.isPresent()) {
-            Article article = optionalArticle.get();
-            article.update(articleDto);
-        }
+    public void updateArticle(long articleId, ArticleDto articleDto) {
+        Optional<Article> optionalArticle = findByArticleId(articleId);
+        optionalArticle.ifPresent(article -> article.update(articleDto));
     }
 
     @Override
-    public void deleteArticle(long id) {
-        Optional<Article> optionalArticle = findById(id);
-        if (optionalArticle.isPresent()) {
-            articles.remove(id);
-        }
+    public void deleteArticle(long articleId) {
+        Optional<Article> optionalArticle = findByArticleId(articleId);
+        optionalArticle.ifPresent(article -> articles.remove(articleId));
     }
 }

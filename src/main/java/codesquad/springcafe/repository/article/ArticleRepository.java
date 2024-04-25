@@ -10,7 +10,7 @@ public interface ArticleRepository {
 
     List<Article> findAllArticles();
 
-    Optional<Article> findById(long id);
+    Optional<Article> findByArticleId(long articleId);
 
     void updateViews(long id);
 

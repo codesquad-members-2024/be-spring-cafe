@@ -43,11 +43,11 @@ public class ArticleController {
         return "redirect:/";
     }
 
-    @GetMapping("/{id}")
-    public String showArticle(@PathVariable long id, Model model, HttpSession session) {
-        articleService.updateViews(id); // 조회수 먼저 업데이트
+    @GetMapping("/{articleId}")
+    public String showArticle(@PathVariable long articleId, Model model, HttpSession session) {
+        articleService.updateViews(articleId); // 조회수 먼저 업데이트
 
-        Article article = articleService.findById(id);
+        Article article = articleService.findByArticleId(articleId);
         model.addAttribute("article", article);
 
         User loginUser = (User) session.getAttribute("user");
@@ -58,11 +58,11 @@ public class ArticleController {
         return "article/page";
     }
 
-    @GetMapping("/{id}/update")
-    public String updateArticleForm(@PathVariable long id, Model model, HttpSession session) {
+    @GetMapping("/{articleId}/update")
+    public String updateArticleForm(@PathVariable long articleId, Model model, HttpSession session) {
         User loginUser = (User) session.getAttribute("user");
 
-        Article article = articleService.findById(id);
+        Article article = articleService.findByArticleId(articleId);
         if (!article.isWriter(loginUser.getUserId())) {
             throw new AccessDeniedException("게시글 수정에 대한 권한이 없습니다.");
         }
@@ -72,23 +72,23 @@ public class ArticleController {
         return "article/update";
     }
 
-    @PutMapping("/{id}/update")
-    public String updateArticle(@PathVariable long id, @ModelAttribute ArticleDto articleDto) {
-        articleService.updateArticle(id, articleDto);
+    @PutMapping("/{articleId}/update")
+    public String updateArticle(@PathVariable long articleId, @ModelAttribute ArticleDto articleDto) {
+        articleService.updateArticle(articleId, articleDto);
 
-        return "redirect:/articles/{id}";
+        return "redirect:/articles/{articleId}";
     }
 
-    @DeleteMapping("/{id}")
-    public String deleteArticle(@PathVariable long id, HttpSession session) {
+    @DeleteMapping("/{articleId}")
+    public String deleteArticle(@PathVariable long articleId, HttpSession session) {
         User loginUser = (User) session.getAttribute("user");
 
-        Article article = articleService.findById(id);
+        Article article = articleService.findByArticleId(articleId);
         if (!article.isWriter(loginUser.getUserId())) {
             throw new AccessDeniedException("게시글 삭제에 대한 권한이 없습니다.");
         }
 
-        articleService.deleteArticle(id);
+        articleService.deleteArticle(articleId);
 
         return "redirect:/";
     }
