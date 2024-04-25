@@ -6,6 +6,7 @@ import codesquad.springcafe.dto.ArticleForm;
 import codesquad.springcafe.dto.EditArticleForm;
 import codesquad.springcafe.exception.InvalidAccessException;
 import codesquad.springcafe.service.ArticleService;
+import codesquad.springcafe.service.ReplyService;
 import codesquad.springcafe.service.validator.ArticleValidator;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 public class ArticleController {
     private final ArticleService articleService;
     private final ArticleValidator articleValidator;
+    private final ReplyService replyService;
 
     @Autowired
-    public ArticleController(ArticleService articleService, ArticleValidator articleValidator) {
+    public ArticleController(ArticleService articleService, ArticleValidator articleValidator, ReplyService replyService) {
         this.articleService = articleService;
         this.articleValidator = articleValidator;
+        this.replyService = replyService;
     }
 
     @GetMapping("/article")
@@ -47,7 +50,8 @@ public class ArticleController {
     }
 
     /**
-     * 게시글의 상세 정보 페이지를 보여준다. 로그인한 사용자 본인의 게시글이 아닌 경우 수정, 삭제 버튼이 비활성화된다.
+     * 게시글의 상세 정보 페이지를 보여준다.
+     * 로그인한 사용자 본인의 게시글이나 댓글이 아닌 경우 수정, 삭제 버튼이 비활성화된다.
      *
      * @param model
      * @param articleId
@@ -56,14 +60,15 @@ public class ArticleController {
      */
     @GetMapping("/article/{articleId}")
     public String showArticle(Model model, @PathVariable("articleId") String articleId, HttpSession session) {
+        User writer = (User) session.getAttribute("sessionUser");
         try {
-            User writer = (User) session.getAttribute("sessionUser");
             articleValidator.validWriter(writer, articleId);
             model.addAttribute("validWriter", true);
         } catch (InvalidAccessException e) {
             model.addAttribute("validWriter", false);
         }
         model.addAttribute("article", articleService.getArticleDetail(articleId));
+        model.addAttribute("replies", replyService.getReplyBy(articleId, writer.getUserId()));
         return "article/show";
     }
 
