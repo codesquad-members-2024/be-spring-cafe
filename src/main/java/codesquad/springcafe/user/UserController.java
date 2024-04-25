@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -13,19 +14,24 @@ import java.util.List;
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-    UserDatabase userDB;
+    UserDatabase userDatabase;
+    private final UserCrednetialService userCrednetialService;
 
     @Autowired
-    UserController(UserDatabase userDatabaseH) {
-        this.userDB = userDatabaseH;
+    UserController(UserDatabase userDatabase, UserCrednetialService userCrednetialService) {
+        this.userDatabase = userDatabase;
+        this.userCrednetialService = userCrednetialService;
     }
 
     @PostMapping("/users")
-    public String createUser(@ModelAttribute User user) {
-        if (userDB.isExistUser(user.getUserId()) == true) {
-            return "redirect:/users/form/" + user.getUserId();
+    public String createUser(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
+        if (userDatabase.isExistUser(user.getUserId()) == true) {
+            redirectAttributes.addFlashAttribute("existId", true);
+            redirectAttributes.addFlashAttribute("prevName", user.getName());
+            redirectAttributes.addFlashAttribute("prevEmail", user.getEmail());
+            return "redirect:/users/form";
         }
-        userDB.addUser(user);
+        userDatabase.addUser(user);
         logger.debug("add user : {}", user.getUserId());
         return "redirect:/users";
     }
@@ -33,19 +39,19 @@ public class UserController {
     @GetMapping("/users/form/{userid}")
     public String failCreateUser(@PathVariable String userid, Model model) {
         model.addAttribute("outputMessage", "이미 존재하는 회원입니다." + userid);
-        return "user/failed";
+        return "user/create_failed";
     }
 
     @GetMapping("/users")
     public String showUsers(Model model) {
-        List<User> userList = userDB.getUserList();
+        List<User> userList = userDatabase.getUserList();
         model.addAttribute("userList", userList);
         return "user/list";
     }
 
     @GetMapping("/users/{userid}")
     public String showUser(@PathVariable String userid, Model model) {
-        User user = userDB.getUser(userid);
+        User user = userDatabase.getUser(userid);
         model.addAttribute("user", user);
         return "user/profile";
     }
@@ -57,11 +63,17 @@ public class UserController {
     }
 
     @PutMapping("/users/{userid}")
-    public String updateUser(@ModelAttribute User editedUser) {
-        User oldUser = userDB.getUser(editedUser.getUserId());
-        oldUser.updateUser(editedUser.getPassword(), editedUser.getName(), editedUser.getEmail());
-        logger.info("update user : {}", oldUser.getUserId());
+    public String updateUser(@ModelAttribute UserLoginDTO userLoginDTO, // userid, pwd
+                             @ModelAttribute User editedUser, // userid, pwd, name, email
+                             RedirectAttributes redirectAttributes) {
+        if (!userCrednetialService.checkValidCredential(userLoginDTO)) {
+            redirectAttributes.addFlashAttribute("invalidInput", true);
+            redirectAttributes.addFlashAttribute("prevName", editedUser.getName());
+            redirectAttributes.addFlashAttribute("prevEmail", editedUser.getEmail());
+            return "redirect:/users/" + userLoginDTO.getUserid() + "/form";
+        }
+        userDatabase.updateUser(editedUser);
+        logger.info("update user : {}", editedUser.getUserId());
         return "redirect:/users";
     }
-
 }

@@ -10,5 +10,7 @@ public interface UserDatabase {
 
      User getUser(String userId);
 
+     void updateUser(User user);
+
      boolean isExistUser(String userId);
 }

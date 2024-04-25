@@ -27,6 +27,11 @@ public class UserMemoryDatabase implements UserDatabase{
     }
 
     @Override
+    public void updateUser(User user) {
+
+    }
+
+    @Override
     public boolean isExistUser(String userId) {
         return getUser(userId) != null;
     }

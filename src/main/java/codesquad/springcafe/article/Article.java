@@ -22,14 +22,6 @@ public class Article {
         this.createdTime = LocalDateTime.now();
     }
 
-    public Article(String writer, String title, String content, Long articleId, LocalDateTime createdTime) {
-        this.writer = writer;
-        this.title = title;
-        this.content = content;
-        this.articleId = articleId;
-        this.createdTime = createdTime;
-    }
-
     public Long getArticleId() {
         return articleId;
     }
@@ -67,9 +59,9 @@ public class Article {
     public LocalDateTime getCreatedTime() {
         return createdTime;
     }
+
     public String getFormattedTime() {
-        String formattedTime = this.createdTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
-        return formattedTime;
+        return this.createdTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
     }
 
     public void setCreatedTime(LocalDateTime createdTime) {

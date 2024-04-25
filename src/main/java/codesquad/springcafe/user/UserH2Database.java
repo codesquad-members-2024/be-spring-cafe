@@ -1,6 +1,7 @@
 package codesquad.springcafe.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -9,12 +10,13 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
-public class UserDatabaseH implements UserDatabase {
+@Primary
+public class UserH2Database implements UserDatabase {
 
     JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public UserDatabaseH(DataSource dataSource) {
+    public UserH2Database(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
@@ -43,6 +45,12 @@ public class UserDatabaseH implements UserDatabase {
         String sql = "SELECT * FROM MAIN.USERS WHERE userid = ?";
         List<User> userList = jdbcTemplate.query(sql, userRowMapper, userId);
         return userList.isEmpty() ? null : userList.get(0);
+    }
+
+    @Override
+    public void updateUser(User user) {
+        String sql = "UPDATE MAIN.USERS SET password = ?, name = ?, email = ? WHERE userid = ?";
+        jdbcTemplate.update(sql, user.getPassword(), user.getName(), user.getEmail(), user.getUserId());
     }
 
     @Override
