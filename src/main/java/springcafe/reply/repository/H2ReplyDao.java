@@ -36,7 +36,7 @@ public class H2ReplyDao implements ReplyDao {
     @Override
     public Reply findByReplyId(Long replyId) {
         return jdbcTemplate.queryForObject(
-                "SELECT ID, CONTENT, ARTICLE_ID, WRITER, CREATED_AT FROM Reply WHERE ID=? AND IS_DELETED =FALSE",
+                "SELECT ID, CONTENT, ARTICLE_ID, WRITER, CREATE_DATE FROM Reply WHERE ID=? AND IS_DELETED =FALSE",
                 new Object[]{replyId},
                 (rs, rowNum) -> new Reply(
                         rs.getLong("ID"),
