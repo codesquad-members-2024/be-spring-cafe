@@ -53,8 +53,8 @@ public class H2UserDao implements UserDao {
     @Override
     public List<User> findAll() {
         return jdbcTemplate.query(
-                "SELECT USERID, PASSWORD, NAME, EMAIL FROM USERS",
-                (rs, rowNum) -> new User(rs.getString("USERID"), rs.getString("PASSWORD"),
+                "SELECT USERID, NAME, EMAIL, ID FROM USERS",
+                (rs, rowNum) -> new User(rs.getString("USERID"),
                         rs.getString("NAME"), rs.getString("EMAIL"), rs.getLong("ID"))
         );
     }

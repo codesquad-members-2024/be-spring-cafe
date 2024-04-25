@@ -9,7 +9,16 @@ public class User {
     private Long id;
 
 
-    public User(String userId, String name, String email, String password) {
+    public User(String userId, String name, String email,Long id) {
+
+        this.userId = userId;
+        this.name = name;
+        this.email = email;
+        this.id =id;
+    }
+
+    public User(String userId, String name, String email,String password) {
+
         this.userId = userId;
         this.name = name;
         this.email = email;
