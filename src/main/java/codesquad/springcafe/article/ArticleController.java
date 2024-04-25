@@ -1,5 +1,8 @@
 package codesquad.springcafe.article;
 
+import codesquad.springcafe.comment.Comment;
+import codesquad.springcafe.comment.CommentDatabase;
+import codesquad.springcafe.comment.CommentShowDTO;
 import codesquad.springcafe.user.UserDatabase;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -12,19 +15,24 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 public class ArticleController {
 
     private final static Logger logger = LoggerFactory.getLogger(ArticleController.class);
 
-    private final ArticleDatabase articleDatabase;
+        private final ArticleDatabase articleDatabase;
 
-    private final UserDatabase userDatabase;
+        private final UserDatabase userDatabase;
+
+        private final CommentDatabase commentDatabase;
 
     @Autowired
-    public ArticleController(ArticleDatabase articleDatabase, UserDatabase userDatabase) {
-        this.articleDatabase = articleDatabase;
-        this.userDatabase = userDatabase;
+    public ArticleController(ArticleDatabase articleDatabase, UserDatabase userDatabase, CommentDatabase commentDatabase) {
+            this.articleDatabase = articleDatabase;
+            this.userDatabase = userDatabase;
+            this.commentDatabase = commentDatabase;
     }
 
     @PostMapping("/articles")
@@ -51,6 +59,9 @@ public class ArticleController {
             model.addAttribute("isWriter", true);
         else
             model.addAttribute("isWriter", false);
+
+        List<CommentShowDTO> commentList = commentDatabase.getCommentList(articleId);
+        model.addAttribute("commentList", commentList);
         return "article/show";
     }
 

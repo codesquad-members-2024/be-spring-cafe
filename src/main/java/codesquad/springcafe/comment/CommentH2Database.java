@@ -21,7 +21,13 @@ public class CommentH2Database implements CommentDatabase {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-
+    private RowMapper<CommentShowDTO> commentRowMapper = (rs, rowNum) -> {
+        CommentShowDTO commentShowDTO = new CommentShowDTO(rs.getLong("commentId"),
+                rs.getString("writer"),
+                rs.getString("content"),
+                rs.getTimestamp("createdTime").toLocalDateTime());
+        return commentShowDTO;
+    };
 
     @Override
     public void createComment(CommentCreateDTO commentCreateDTO) {
@@ -33,4 +39,9 @@ public class CommentH2Database implements CommentDatabase {
     }
 
 
+    @Override
+    public List<CommentShowDTO> getCommentList(Long articleId) {
+        String sql = "SELECT * FROM MAIN.COMMENTS WHERE articleId = ?";
+        return jdbcTemplate.query(sql, commentRowMapper, articleId);
+    }
 }
