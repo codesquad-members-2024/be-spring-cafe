@@ -25,7 +25,6 @@ public class RestReplyController {
 
     @PostMapping("/create")
     public Reply createReply(ReplyCreateDto replyCreateDto) {
-        log.info(replyCreateDto.getCreatedTime());
         return replyService.save(replyCreateDto);
     }
 
