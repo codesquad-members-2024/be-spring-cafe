@@ -24,7 +24,7 @@
                             </a>
                         </div>
                     </div>
-                    <div  th:utext="${#strings.replace(article.contents, lineSeparator, '&lt;br /&gt;')}"></div>
+                    <div  th:utext="${#strings.replace(article.content, lineSeparator, '&lt;br /&gt;')}"></div>
                     <div class="article-util">
                         <ul class="article-util-list">
                             <li>
@@ -53,7 +53,7 @@
                                     </div>
                                     <div class="article-header-text">
                                         <a href="#" class="article-author-name" th:text="${reply.writer}">글쓴이</a>
-                                        <a href="#" class="article-header-time" th:text="${#temporals.format(reply.createdAt, 'yyyy-MM-dd HH:mm')}">시간</a>
+                                        <a href="#" class="article-header-time" th:text="${#temporals.format(reply.createdDate, 'yyyy-MM-dd HH:mm')}">시간</a>
                                     </div>
                                 </div>
                                 <div class="article-doc comment-doc" th:text="${reply.content}">댓글 내용</div>
