@@ -7,6 +7,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import codesquad.springcafe.article.database.ArticleDatabase;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +33,8 @@ public class ArticleServiceTest {
 
     @BeforeEach
     void setUp() {
-        article1 = new Article(1L, "title", "author", "contents", "userId", false);
+        article1 = new Article(1L, "title", "author", "contents",
+            Timestamp.valueOf(LocalDateTime.now()), false);
     }
 
 

@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import codesquad.springcafe.article.Article;
 import codesquad.springcafe.article.ArticleService;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,9 +31,11 @@ class MainControllerTest {
     @DisplayName("게시글이 2개 저장될 때 index 페이지 테스트")
     void mainIndexTest() throws Exception {
         //Given
-        Article article1 = new Article((long) 1, "title1", "author1", "contents1", "userId1",
+        Article article1 = new Article((long) 1, "title1", "author1", "contents1",
+            Timestamp.valueOf(LocalDateTime.now()),
             false);
-        Article article2 = new Article((long) 2, "title2", "author2", "contents2", "userId2",
+        Article article2 = new Article((long) 2, "title2", "author2", "contents2",
+            Timestamp.valueOf(LocalDateTime.now()),
             false);
 
         //when & then
