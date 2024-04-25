@@ -93,8 +93,8 @@
                           <img src="https://graph.facebook.com/v2.3/100000059371774/picture" class="article-author-thumb" alt="">
                       </div>
                       <div class="article-header-text">
-                          <a href="/users/92/{{writer}}" class="article-author-name">{{writer}}</a>
-                          <a href="/questions/{{id}}" class="article-header-time" title="퍼머링크">
+                          <a href="/users/{{writer}}" class="article-author-name">{{writer}}</a>
+                          <a href="/articles/{{id}}" class="article-header-time" title="퍼머링크">
                               {{getFormattedTimeStamp}}
                               <i class="icon-link"></i>
                           </a>
@@ -106,11 +106,11 @@
                   <div class="article-util">
                       <ul class="article-util-list">
                           <li>
-                              <a class="link-modify-article" href="/questions/{{id}}/form">수정</a>
+                              <a class="link-modify-article" href="/articles/{{id}}/update">수정</a>
                           </li>
                           <li>
-                              <form class="form-delete" action="/questions/{{id}}" method="POST">
-                                  <input type="hidden" name="_method" value="DELETE">
+                              <form class="form-delete" action="/articles/{{id}}" method="post">
+                                  <input type="hidden" name="_method" value="DELETE" />
                                   <button class="link-delete-article" type="submit">삭제</button>
                               </form>
                           </li>
@@ -143,10 +143,10 @@
                               <div class="article-util">
                                   <ul class="article-util-list">
                                       <li>
-                                          <a class="link-modify-article" href="/questions/413/answers/1405/form">수정</a>
+                                          <a class="link-modify-article" href="/articles/413/answers/1405/form">수정</a>
                                       </li>
                                       <li>
-                                          <form class="delete-answer-form" action="/questions/413/answers/1405" method="POST">
+                                          <form class="delete-answer-form" action="/articles/413/answers/1405" method="POST">
                                               <input type="hidden" name="_method" value="DELETE">
                                               <button type="submit" class="delete-answer-button">삭제</button>
                                           </form>
@@ -172,10 +172,10 @@
                               <div class="article-util">
                                   <ul class="article-util-list">
                                       <li>
-                                          <a class="link-modify-article" href="/questions/413/answers/1405/form">수정</a>
+                                          <a class="link-modify-article" href="/articles/413/answers/1405/form">수정</a>
                                       </li>
                                       <li>
-                                          <form class="form-delete" action="/questions/413/answers/1405" method="POST">
+                                          <form class="form-delete" action="/articles/413/answers/1405" method="POST">
                                               <input type="hidden" name="_method" value="DELETE">
                                               <button type="submit" class="delete-answer-button">삭제</button>
                                           </form>
@@ -219,7 +219,7 @@
 				<a class="link-modify-article" href="/api/qna/updateAnswer/{3}">수정</a>
 			</li>
 			<li>
-				<form class="delete-answer-form" action="/api/questions/{3}/answers/{4}" method="POST">
+				<form class="delete-answer-form" action="/api/articles/{3}/answers/{4}" method="POST">
 					<input type="hidden" name="_method" value="DELETE">
                      <button type="submit" class="delete-answer-button">삭제</button>
 				</form>

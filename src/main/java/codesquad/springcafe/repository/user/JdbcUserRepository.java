@@ -44,15 +44,19 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public Optional<User> getById(String userId) {
         String sql = "SELECT * FROM `user` WHERE userId = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{userId}, (resultSet, rowNum) -> {
+        List<User> users = jdbcTemplate.query(sql, new Object[]{userId}, (resultSet, rowNum) -> {
             User user = new User(
                 resultSet.getString("userId"),
                 resultSet.getString("password"),
                 resultSet.getString("name"),
                 resultSet.getString("email")
             );
-            return Optional.ofNullable(user);
+            return user;
         });
+        if (users.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(users.get(0));
     }
 
     @Override

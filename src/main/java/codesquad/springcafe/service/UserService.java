@@ -51,7 +51,7 @@ public class UserService {
         Optional<User> targetUser = userRepository.getById(userLoginDTO.getUserId());
 
         if (targetUser.isPresent() && targetUser.get().isPasswordCorrect(userLoginDTO.getPassword())) {
-            return Optional.of(targetUser.get().toDTO());
+            return Optional.ofNullable(targetUser.get().toDTO());
         }
         return Optional.empty();
     }

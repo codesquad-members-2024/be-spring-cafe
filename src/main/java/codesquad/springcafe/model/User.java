@@ -35,8 +35,8 @@ public class User {
         return this.password.equals(password);
     }
 
-    public UserInfoDTO toDTO(Long index) {
-        return new UserInfoDTO(index, userId, name, email);
+    public UserInfoDTO toDTO(Long order) {
+        return new UserInfoDTO(order, userId, name, email);
     }
 
     public UserInfoDTO toDTO() {

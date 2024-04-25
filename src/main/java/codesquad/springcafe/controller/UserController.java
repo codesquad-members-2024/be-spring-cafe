@@ -74,7 +74,7 @@ public class UserController {
     public String authenticate(@ModelAttribute("user") UserLoginDTO userLoginDTO, @PathVariable String userId) {
         Optional<UserInfoDTO> loggedInUser = userService.authenticate(userLoginDTO);
         if (loggedInUser.isEmpty()) {
-            return "/user/login_needed";
+            return "/user/authenticate_failed";
         }
         return "redirect:/users/" + userId + "/form";
     }
@@ -89,11 +89,11 @@ public class UserController {
     @PostMapping("/login")
     public String login(@ModelAttribute("user") UserLoginDTO userLoginDTO, HttpSession session) {
         Optional<UserInfoDTO> loggedInUser = userService.authenticate(userLoginDTO);
-        if (loggedInUser.isEmpty()) {
-            return "/user/login_failed";
+        if (loggedInUser.isPresent()) {
+            session.setAttribute("loggedInUser", loggedInUser.get());
+            return "redirect:/";
         }
-        session.setAttribute("loggedInUser", loggedInUser.get());
-        return "redirect:/";
+        return "/user/login_failed";
     }
 
     @PostMapping("/logout")

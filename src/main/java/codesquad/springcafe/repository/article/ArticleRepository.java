@@ -10,4 +10,8 @@ public interface ArticleRepository {
     Optional<Article> getById(Long id);
 
     List<Article> getAll();
+
+    void modify(Article modifiedArticle);
+
+    void remove(Long id);
 }
