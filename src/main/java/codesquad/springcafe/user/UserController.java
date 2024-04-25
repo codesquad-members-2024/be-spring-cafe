@@ -22,7 +22,6 @@ public class UserController {
     @GetMapping("/create")
     public String showRegistrationForm(Model model){
         model.addAttribute("user", new User());
-        logger.info("Showing registration form");
         return "users/form";
     }
 
@@ -42,7 +41,6 @@ public class UserController {
     @GetMapping("/list")
     public String showUserListForm(Model model){
         model.addAttribute("users",userService.findAll());
-        logger.info("Showing user list");
         return "users/list";
     }
 
@@ -89,10 +87,7 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String showLoginForm(HttpSession session) {
-        if (session.getAttribute("loggedUser") != null) {
-            return "redirect:/";
-        }
+    public String showLoginForm() {
         return "users/login";
     }
 
@@ -100,7 +95,7 @@ public class UserController {
     public String loginUser(@ModelAttribute("user") User user, HttpSession session, Model model) {
         if(userService.checkUserExists(user.getUserId(), user.getPassword())) {
             session.setAttribute("loggedUser", user.getUserId());
-            session.setMaxInactiveInterval(60);
+            session.setMaxInactiveInterval(1800);
             logger.info("User log-in success {}", user);
             return "redirect:/";
         }
