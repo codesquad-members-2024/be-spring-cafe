@@ -18,7 +18,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User update(User user) {
+    public void update(User user) {
         int updateUserIndex = 0;
         for (int index = 0; index < userDB.size(); index++) {
             if(userDB.get(index).getUserId().equals(user.getUserId())){
@@ -28,7 +28,7 @@ public class UserRepositoryImpl implements UserRepository {
                 break;
             }
         }
-        return userDB.get(updateUserIndex);
+//        return userDB.get(updateUserIndex);
     }
 
     @Override

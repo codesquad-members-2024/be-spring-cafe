@@ -8,7 +8,7 @@ public interface UserRepository {
 
     User create(User user);
 
-    User update(User user);
+    void update(User user);
 
     Optional<User> findById(String id);
 

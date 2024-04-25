@@ -44,5 +44,14 @@ public class User {
         return signUpDate;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+            "email='" + email + '\'' +
+            ", userId='" + userId + '\'' +
+            ", password='" + password + '\'' +
+            ", signUpDate=" + signUpDate +
+            '}';
+    }
 }
 

@@ -21,6 +21,7 @@ public class IndexController {
     @GetMapping
     public String index(Model model) {
         List<Post> posts = postService.findAllPost();
+
         model.addAttribute("posts", posts);
         return "index";
     }

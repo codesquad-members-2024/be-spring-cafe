@@ -1,164 +1,81 @@
 package codesquad.springcafe.Repository;
 
 import codesquad.springcafe.Domain.User;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import javax.sql.DataSource;
-import java.sql.*;
 
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserRepositoryJDBC implements UserRepository{
-    private final DataSource dataSource;
-    Connection conn = null;
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-
+    private final JdbcTemplate jdbcTemplate;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     public UserRepositoryJDBC(DataSource dataSource) {
-        this.dataSource = dataSource;
-
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
     public User create(User user) {
-        String sql = "INSERT INTO users (email, userId, password, signUpDate) VALUES (?, ?, ?, ?)";
-        try {
-            conn = DataSourceUtils.getConnection(dataSource);
-            pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        // SimpleJdbcInsert 객체를 생성하고 JdbcTemplate을 사용하여 데이터베이스에 삽입할 테이블을 지정합니다.
+        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        // 삽입할 테이블을 지정합니다.
+        jdbcInsert.withTableName("users");
+        // 삽입할 데이터를 맵 형태로 변환하여 설정합니다.
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("email", user.getEmail());
+        parameters.put("userId", user.getUserId());
+        parameters.put("password", user.getPassword());
+        parameters.put("signUpDate", user.getSignUpDate());
 
-            pstmt.setString(1, user.getEmail());
-            pstmt.setString(2, user.getUserId());
-            pstmt.setString(3, user.getPassword());
-            pstmt.setDate(4, java.sql.Date.valueOf(user.getSignUpDate()));
+        // 데이터를 삽입합니다.
+        jdbcInsert.execute(parameters);
 
-            pstmt.executeUpdate();
-            rs = pstmt.getGeneratedKeys();
-
-            return user;
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        } finally {
-            close(conn, pstmt, rs);
-        }
+        return user;
     }
 
     @Override
-    public User update(User user) {
-        String sql = "UPDATE users email=?,password=? where userid=?";
-        try {
-            conn = DataSourceUtils.getConnection(dataSource);
-            pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
-            pstmt.setString(1, user.getEmail());
-            pstmt.setString(2, user.getPassword());
-            pstmt.setString(3, user.getUserId());
-
-            pstmt.executeUpdate();
-            rs = pstmt.getGeneratedKeys();
-
-            return user;
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        } finally {
-            close(conn, pstmt, rs);
-        }
+    public void update(User user) {
+        String sql = "UPDATE users SET email=? WHERE userid=?";
+        jdbcTemplate.update(sql, user.getEmail(), user.getUserId());
     }
 
     @Override
     public Optional<User> findById(String id) {
         String sql = "select * from users where userid = ?";
-        return getUser(id, sql);
+        List<User> result = jdbcTemplate.query(sql, userRowMapper(), id);
+        return result.stream().findAny();
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
         String sql = "select * from users where email = ?";
-        return getUser(email, sql);
-    }
-
-    private Optional<User> getUser(String email, String sql) {
-        try {
-            conn = DataSourceUtils.getConnection(dataSource);
-            pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            pstmt.setString(1, email);
-
-            rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                User user = new User();
-                user.setUserId(rs.getString("userid"));
-                user.setEmail(rs.getString("email"));
-                user.setPassword(rs.getString("password"));
-                return Optional.of(user);
-            } else {
-                return Optional.empty();
-            }
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        } finally {
-            close(conn, pstmt, rs);
-        }
+        List<User> result = jdbcTemplate.query(sql, userRowMapper(), email);
+        return result.stream().findAny();
     }
 
     @Override
     public List<User> findAll() {
-        String sql = "select * from users";
-        try {
-            conn = DataSourceUtils.getConnection(dataSource);
-            pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
-            rs = pstmt.executeQuery();
-
-            List<User> users = new ArrayList<>();
-            while(rs.next()) {
-                User user = new User();
-                user.setUserId(rs.getString("userid"));
-                user.setEmail(rs.getString("email"));
-                user.setPassword(rs.getString("password"));
-                user.setSignUpDate(rs.getDate("signUpDate").toLocalDate());
-                users.add(user);
-            }
-            return users;
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        } finally {
-            close(conn, pstmt, rs);
-        }
+        String sql = "SELECT * FROM users";
+        return jdbcTemplate.query(sql, userRowMapper());
     }
 
-    private void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
-        try {
-            if (rs != null) {
-                rs.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            if (pstmt != null) {
-                pstmt.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            if (conn != null) {
-                close(conn);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    private void close(Connection conn) throws SQLException {
-        DataSourceUtils.releaseConnection(conn, dataSource);
+    private RowMapper<User> userRowMapper() {
+        return (rs, rowNum) -> {
+            User user = new User();
+            user.setUserId(rs.getString("userid"));
+            user.setEmail(rs.getString("email"));
+            user.setPassword(rs.getString("password"));
+            user.setSignUpDate(rs.getDate("signUpDate").toLocalDate());
+            return user;
+        };
     }
 }
