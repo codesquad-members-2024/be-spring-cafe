@@ -55,23 +55,39 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}/form")
-    public String showEditArticleForm(@PathVariable long articleId, Model model) {
+    public String showEditArticleForm(@PathVariable long articleId, Model model, HttpServletRequest request) {
         Article article = articleDatabase.getArticle(articleId);
+        if (!isWriter(article.getWriter(), request)) {
+            return "redirect:/error/errorPage";
+        }
         model.addAttribute("article", article);
         return "article/editForm";
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@ModelAttribute Article editedArticle, @PathVariable long articleId) {
+    public String editArticle(@ModelAttribute Article editedArticle, @PathVariable long articleId, HttpServletRequest request) {
         editedArticle.setArticleId(articleId);
-        articleDatabase.updateArticle(editedArticle);
+        Article article = articleDatabase.getArticle(articleId);
+        if (!isWriter(article.getWriter(), request)) {
+            return "redirect:/error/errorPage";
+        }
 
+        articleDatabase.updateArticle(editedArticle);
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable long articleId) {
+    public String deleteArticle(@PathVariable long articleId, HttpServletRequest request) {
+        Article article = articleDatabase.getArticle(articleId);
+        if (!isWriter(article.getWriter(), request)) {
+            return "redirect:/error/errorPage";
+        }
         articleDatabase.deleteArticle(articleId);
         return "redirect:/";
+    }
+
+    private boolean isWriter(String writer, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        return writer.equals(session.getAttribute("loginUserId"));
     }
 }
