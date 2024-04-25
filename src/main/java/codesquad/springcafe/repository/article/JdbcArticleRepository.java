@@ -41,7 +41,7 @@ public class JdbcArticleRepository implements ArticleRepository {
             Article article = jdbcTemplate.queryForObject(SQL, rowMapper(), id);
             return Optional.ofNullable(article);
         } catch (EmptyResultDataAccessException e) {
-            throw new ArticleNotFoundException(id + " ID 게시글이 존재하지 않습니다.");
+            return Optional.empty();
         }
     }
 

@@ -32,6 +32,7 @@ public class UserService {
     public User findByUserId(String userId) {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId + "의 사용자가 존재하지 않습니다."));
+
         logger.debug("ID {} 사용자 조회", userId);
         return user;
     }
