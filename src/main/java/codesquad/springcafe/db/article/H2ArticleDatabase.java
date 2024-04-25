@@ -3,12 +3,10 @@ package codesquad.springcafe.db.article;
 import codesquad.springcafe.model.article.Article;
 import codesquad.springcafe.model.article.dto.ArticleProfileDto;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import javax.sql.DataSource;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,21 +89,4 @@ public class H2ArticleDatabase implements ArticleDatabase {
         return jdbcTemplate.queryForObject("select count(*) from articles", Integer.class);
     }
 
-    private RowMapper<Article> articleRowMapper() {
-        return (rs, rowNum) -> {
-            long sequence = rs.getLong("sequence");
-            String writer = rs.getString("writer");
-            String title = rs.getString("title");
-            String content = rs.getString("content");
-            LocalDateTime publishTime = rs.getTimestamp("publishTime").toLocalDateTime();
-
-            Article article = new Article();
-            article.setSequence(sequence);
-            article.setWriter(writer);
-            article.setTitle(title);
-            article.setContent(content);
-            article.setPublishTime(publishTime);
-            return article;
-        };
-    }
 }
