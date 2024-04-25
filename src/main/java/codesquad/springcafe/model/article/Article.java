@@ -1,7 +1,6 @@
 package codesquad.springcafe.model.article;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class Article {
     private long sequence;
@@ -9,7 +8,6 @@ public class Article {
     private LocalDateTime publishTime;
     private String title;
     private String content;
-    private final String TIME_FORMATTING_PATTERN = "yyyy년 MM월 dd일 HH:mm";
 
     public Article() {
         this.writer = "익명";
@@ -53,10 +51,6 @@ public class Article {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public String getFormattedPublishTime(){
-        return publishTime.format(DateTimeFormatter.ofPattern(TIME_FORMATTING_PATTERN));
     }
 
     public LocalDateTime getPublishTime() {
