@@ -32,7 +32,7 @@ public class QuestionService {
     // 질문 등록
     public Long postQuestion(Long userId, QuestionRequest questionRequest) {
         // 사용자 인증
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        User user = userRepository.findById(userId, false).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
 
         // 질문 게시글 등록
         Question question = questionRequest.toQuestion(user);

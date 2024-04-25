@@ -45,32 +45,44 @@
                         <div class="post-comment-slipp">
                             <p class="post-comment-count">댓글 <span th:text="${totalCommentCnt}">0</span>개</p>
                             <div class="post-comment-slipp-articles">
-                                <article th:each="comment : ${comments}" class="comment">
-                                    <div class="article-text">
-                                        <a th:unless="${comment.isUserWithdrawn()}" th:href="'/profile/' + ${comment.userLoginId}" class="comment-content comment-author-name">
-                                            <span th:text="${comment.userName}"></span>
-                                        </a>
-                                        <a th:if="${comment.isUserWithdrawn()}" class="comment-content comment-author-name">
-                                            <span th:text="${comment.userName}"></span>
-                                        </a>
-                                        <div class="comment-content">
-                                            <p th:text="${comment.content}"></p>
+                                <div th:each="comment : ${comments}">
+                                    <article class="comment">
+                                        <div class="article-text">
+                                            <!-- 작성자 정보 표시 -->
+                                            <a th:unless="${comment.isUserWithdrawn}" th:href="'/profile/' + ${comment.userLoginId}" class="comment-content comment-author-name">
+                                                <span th:text="${comment.getUserName} + ' • ' + ${comment.userLoginId}"></span>
+                                            </a>
+                                            <a th:if="${comment.isUserWithdrawn}" class="comment-content comment-author-name">
+                                                <span th:text="${comment.userName}"></span>
+                                            </a>
+                                            <!-- 댓글 내용 표시 -->
+                                            <div class="comment-content">
+                                                <p th:text="${comment.content}"></p>
+                                            </div>
+                                            <!-- 댓글 작성 시간 표시 -->
+                                            <div class="comment-content comment-doc">
+                                                <p class="comment-content comment-time">
+                                                    <span th:if="${comment.modified}" th:text="${comment.modifiedAt} + ' (수정됨)'"></span>
+                                                    <span th:unless="${comment.modified}" th:text="${comment.modifiedAt}"></span>
+                                                </p>
+                                                <!-- 댓글 수정 및 삭제 버튼 표시 -->
+                                                <a th:if="${comment.isMy}" class="comment-content comment-menu" th:href="'/comment/edit/' + ${comment.commentId}">수정</a>
+                                                <a th:if="${comment.isMy}" class="comment-content comment-menu" href="#" th:onclick="'submitDeleteForm(' + ${comment.commentId} + '); return false;'" role="button">삭제</a>
+                                                <form th:id="'delete-comment-' + ${comment.commentId}" style="display: none" method="post" th:action="'/comments/' + ${comment.commentId}">
+                                                    <input type="hidden" name="_method" value="DELETE" />
+                                                    <input type="hidden" name="questionId" th:value="${question.questionId}" />
+                                                    <button type="submit" style="display: none">삭제</button>
+                                                </form>
+
+                                                <script>
+                                                    function submitDeleteForm(commentId) {
+                                                        document.getElementById('delete-comment-' + commentId).submit();
+                                                    }
+                                                </script>
+                                            </div>
                                         </div>
-                                        <div class="comment-content comment-doc">
-                                            <p class="comment-content comment-time">
-                                                <span th:if="${comment.modified}" th:text="${comment.modifiedAt} + ' (수정됨)'"></span>
-                                                <span th:unless="${comment.modified}" th:text="${comment.modifiedAt}"></span>
-                                            </p>
-                                            <a th:if="${comment.isMy()}" class="comment-content comment-menu" th:href="'/comment/edit/' + ${comment.commentId}">수정</a>
-                                            <a th:if="${comment.isMy()}" class="comment-content comment-menu" href="#" onclick="document.getElementById('delete-comment').submit(); return false;" role="button">삭제</a>
-                                            <form id="delete-comment" style="display: none" method="post" th:action="'/comments/' + ${comment.commentId}">
-                                                <input type="hidden" name="_method" value="DELETE" />
-                                                <input type="hidden" name="questionId" th:value="${question.getQuestionId()}">
-                                                <button type="submit" style="display: none">삭제</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </article>
+                                    </article>
+                                </div>
 
                                 <form th:unless="${question.isUserWithdrawn()}" class="submit-write" method="post" action="/comment">
                                     <div class="comment-writer-container">

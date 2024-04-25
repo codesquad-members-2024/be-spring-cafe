@@ -56,8 +56,8 @@ public class CommentRepositoryH2 implements CommentRepository{
 
     @Override
     public Optional<Comment> findById(Long commentId) {
-        final String sql = "select " + AliasGenerator.generateAliases(Comment.class) + ", " +
-                AliasGenerator.generateAliases(User.class) +
+        final String sql = "select " + AliasGenerator.generateAliases(User.class) + ", " +
+                AliasGenerator.generateAliases(Comment.class) +
                 " from comment left outer join users on comment.userId = users.id " +
                 "where comment.id = ? and comment.deleted = false";
         List<Comment> comments = jdbcTemplate.query(sql, commentRowMapper, commentId);

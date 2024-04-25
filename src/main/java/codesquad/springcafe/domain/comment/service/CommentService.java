@@ -33,7 +33,7 @@ public class CommentService {
     // 댓글 등록
     public Long createComment(Long userId, CommentRequest commentCreateRequest) {
         // 사용자 인증
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자압니다."));
+        User user = userRepository.findById(userId, false).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자압니다."));
 
         // 댓글 달 게시글 조회
         Question question = questionRepository.findById(commentCreateRequest.getQuestionId()).orElseThrow(() -> new NoSuchElementException("존재하지 않는 게시글입니다."));
@@ -66,12 +66,21 @@ public class CommentService {
     }
 
     // 댓글 삭제
-    public void deleteComment(Long userId, Long commentId){
+    public void deleteComment(Long userId, Long questionId, Long commentId){
         // 사용자 인증
-        userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        userRepository.findById(userId, false).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+
+        // 게시글 존재 확인
+        questionRepository.findById(questionId, false).orElseThrow(() -> new NoSuchElementException("존재하지 않는 게시글입니다."));
 
         // 댓글 조회 & 삭제
-        Comment deleteComment = commentRepository.findById(commentId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 댓글입니다.")).delete();
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 댓글입니다."));
+
+        if (!comment.getUser().getId().equals(userId)) {
+            throw new IllegalStateException("다른 사람의 댓글을 삭제할 수 없습니다.");
+        }
+
+        Comment deleteComment = comment.delete();
         commentRepository.softDeleteById(commentId, deleteComment);
     }
 }

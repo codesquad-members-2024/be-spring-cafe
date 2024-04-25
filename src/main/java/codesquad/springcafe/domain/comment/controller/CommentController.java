@@ -39,7 +39,7 @@ public class CommentController {
                                 @PathVariable("commentId") Long commentId,
                                 RedirectAttributes redirectAttributes) {
         Long userId = getUserCredentials(httpSession).getUserId();
-        commentService.deleteComment(userId, commentId);
+        commentService.deleteComment(userId, questionId, commentId);
 
         redirectAttributes.addAttribute("questionId", questionId);
         return "redirect:/question/{questionId}";

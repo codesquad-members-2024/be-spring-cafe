@@ -23,7 +23,15 @@ public class QuestionRepositoryLocal implements QuestionRepository{
     }
 
     public Optional<Question> findById(Long id) {
-        return Optional.ofNullable(questions.get(id));
+        return findById(id, null);
+    }
+
+    public Optional<Question> findById(Long id, Boolean deleted) {
+        Question question = questions.get(id);
+        if (question != null) {
+            return question.getDeleted().equals(deleted) ? Optional.of(question) : Optional.empty();
+        }
+        return Optional.empty();
     }
 
     public Collection<Question> findAll() {

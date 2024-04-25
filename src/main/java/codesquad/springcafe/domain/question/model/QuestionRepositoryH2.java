@@ -57,10 +57,16 @@ public class QuestionRepositoryH2 implements QuestionRepository{
 
     @Override
     public Optional<Question> findById(Long questionId) {
+        return findById(questionId, null);
+    }
+
+    @Override
+    public Optional<Question> findById(Long questionId, Boolean deleted) {
         final String sql = "select " + AliasGenerator.generateAliases(User.class) + ", " +
                 AliasGenerator.generateAliases(Question.class) +
                 " from question left outer join users " +
-                "on question.USERID = users.ID where question.id = ? and question.deleted = false";
+                "on question.USERID = users.ID where question.id = ? " +
+                (deleted == null ? "" : "and question.deleted = " + deleted);
         List<Question> questions = jdbcTemplate.query(sql, questionRowMapper, questionId);
 
         if (questions.size() > 1) {
