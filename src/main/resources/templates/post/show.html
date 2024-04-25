@@ -62,7 +62,12 @@
                                                 <span th:unless="${comment.modified}" th:text="${comment.modifiedAt}"></span>
                                             </p>
                                             <a th:if="${comment.isMy()}" class="comment-content comment-menu" th:href="'/comment/edit/' + ${comment.commentId}">수정</a>
-                                            <a th:if="${comment.isMy()}" class="comment-content comment-menu" th:href="'/comment/delete/' + ${comment.commentId}">삭제</a>
+                                            <a th:if="${comment.isMy()}" class="comment-content comment-menu" href="#" onclick="document.getElementById('delete-comment').submit(); return false;" role="button">삭제</a>
+                                            <form id="delete-comment" style="display: none" method="post" th:action="'/comments/' + ${comment.commentId}">
+                                                <input type="hidden" name="_method" value="DELETE" />
+                                                <input type="hidden" name="questionId" th:value="${question.getQuestionId()}">
+                                                <button type="submit" style="display: none">삭제</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </article>

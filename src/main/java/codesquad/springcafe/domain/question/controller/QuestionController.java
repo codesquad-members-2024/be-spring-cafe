@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class
-QuestionController {
+public class QuestionController {
 
     private final QuestionService questionService;
     private final CommentService commentService;

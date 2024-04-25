@@ -7,8 +7,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -30,6 +29,19 @@ public class CommentController {
         commentService.createComment(userId, commentRequest);
 
         redirectAttributes.addAttribute("questionId", commentRequest.getQuestionId());
+        return "redirect:/question/{questionId}";
+    }
+
+    // 댓글 삭제
+    @DeleteMapping("/comments/{commentId}")
+    public String deleteComment(HttpSession httpSession,
+                                @RequestParam("questionId") Long questionId,
+                                @PathVariable("commentId") Long commentId,
+                                RedirectAttributes redirectAttributes) {
+        Long userId = getUserCredentials(httpSession).getUserId();
+        commentService.deleteComment(userId, commentId);
+
+        redirectAttributes.addAttribute("questionId", questionId);
         return "redirect:/question/{questionId}";
     }
 

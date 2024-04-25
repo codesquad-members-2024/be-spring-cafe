@@ -23,7 +23,7 @@ public class AliasGenerator {
 
     public static String getTableName(Class<?> clazz) {
         return clazz.isAnnotationPresent(Table.class) ?
-                clazz.getAnnotation(Table.class).name() : clazz.getSimpleName();
+                clazz.getAnnotation(Table.class).name() : clazz.getSimpleName().toLowerCase();
     }
 
     private static <T> T[] mergeArrays(T[] array1, T[] array2) {

@@ -64,4 +64,14 @@ public class CommentService {
 
         return new CommentListResponse(comments);
     }
+
+    // 댓글 삭제
+    public void deleteComment(Long userId, Long commentId){
+        // 사용자 인증
+        userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+
+        // 댓글 조회 & 삭제
+        Comment deleteComment = commentRepository.findById(commentId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 댓글입니다.")).delete();
+        commentRepository.softDeleteById(commentId, deleteComment);
+    }
 }
