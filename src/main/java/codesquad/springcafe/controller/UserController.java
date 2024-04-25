@@ -6,6 +6,7 @@ import codesquad.springcafe.model.user.dto.UserCreationDto;
 import codesquad.springcafe.model.user.dto.UserCredentialDto;
 import codesquad.springcafe.model.user.dto.UserProfileDto;
 import codesquad.springcafe.model.user.dto.UserProfileEditDto;
+import codesquad.springcafe.security.PasswordEncoder;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +25,12 @@ import java.util.Optional;
 public class UserController {
 
     private final UserDatabase userDatabase;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserDatabase userDatabase){
+    public UserController(UserDatabase userDatabase, PasswordEncoder passwordEncoder){
         this.userDatabase = userDatabase;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/add")
@@ -58,6 +61,8 @@ public class UserController {
             return "users/form";
         }
 
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
         userDatabase.addUser(user);
         return "redirect:/";
     }
@@ -110,7 +115,7 @@ public class UserController {
         }
 
         UserCredentialDto userCredential = userCredentialOpt.get();
-        if(!userCredential.isPasswordMatches(userInput.getPassword())){
+        if(!passwordEncoder.matches(userInput.getPassword(), userCredential.getPassword())){
             model.addAttribute("user", userInput);
             model.addAttribute("passwordError", true);
             return "users/updateForm";
