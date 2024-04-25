@@ -3,13 +3,10 @@ package codesquad.springcafe.controller;
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.dto.UserDto;
 import codesquad.springcafe.dto.UserUpdateDto;
-import codesquad.springcafe.error.exception.UserNotFoundException;
-import codesquad.springcafe.error.exception.UserUnauthorizedException;
-import codesquad.springcafe.repository.user.UserRepository;
+import codesquad.springcafe.error.exception.AccessDeniedException;
+import codesquad.springcafe.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,69 +21,66 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/users")
 public class UserController {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
     public String userList(Model model) {
-        List<User> users = userRepository.findAllUsers();
+        List<User> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
         return "user/list";
     }
 
     @GetMapping("/create")
-    public String createForm() {
+    public String createUserForm() {
         return "user/create";
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute UserDto userDto) {
-        userRepository.createUser(userDto);
+    public String createUser(@ModelAttribute UserDto userDto) {
+        User user = new User(userDto);
+        userService.createUser(user);
 
         return "redirect:/users";
     }
 
     @GetMapping("/{userId}")
     public String userProfile(@PathVariable("userId") String userId, Model model) {
-        User user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("사용자의 프로필을 조회할 수 없습니다."));
-
+        User user = userService.findByUserId(userId);
         model.addAttribute("user", user);
-        logger.debug("프로필 조회: {}", user.toDto());
 
         return "user/profile";
     }
 
     @GetMapping("/{userId}/update")
-    public String updateForm(@PathVariable("userId") String userId, HttpSession session) {
+    public String updateUserForm(@PathVariable("userId") String userId, HttpSession session) {
         User loginUser = (User) session.getAttribute("user");
-        logger.debug("로그인 사용자: " + loginUser.toDto());
 
-        // 세션에 사용자의 ID가 없거나, 요청 파라미터의 ID와 다르면 /로 리다이렉트
-        if (loginUser == null || !loginUser.matchUserId(userId)) {
-            throw new UserUnauthorizedException("프로필 수정에 대한 접근 권한이 없습니다.");
+        // 사용자 ID와 요청 파라미터의 ID가 다르면 권한x
+        if (!loginUser.matchUserId(userId)) {
+            throw new AccessDeniedException("프로필 수정에 대한 권한이 없습니다.");
         }
 
         return "user/update";
     }
 
     @PutMapping("/{userId}/update")
-    public String update(@PathVariable("userId") String userId, @ModelAttribute UserUpdateDto userUpdateDto,
-                         Model model, HttpSession session) {
+    public String updateUser(@PathVariable("userId") String userId, @ModelAttribute UserUpdateDto userUpdateDto,
+                             Model model, HttpSession session) {
         User loginUser = (User) session.getAttribute("user");
 
-        if (!loginUser.matchPassword(userUpdateDto.getPassword())) {
-            model.addAttribute("errorMessage", "비밀번호가 일치하지 않습니다.");
+        // 기존 비밀번호가 틀리면 업데이트x
+        if (!loginUser.matchPassword(userUpdateDto.getOldPassword())) {
+            model.addAttribute("errorMessage", "기존 비밀번호가 일치하지 않습니다.");
             return "user/update";
         }
 
-        userRepository.updateUser(loginUser.getUserId(), userUpdateDto);
+        userService.updateUser(loginUser.getUserId(), userUpdateDto);
 
         return "redirect:/users";
     }
@@ -98,17 +92,17 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@RequestParam String userId, @RequestParam String password, Model model, HttpSession session) {
-        User user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId + "를 가진 사용자는 존재하지 않습니다."));
+        User user = userService.findByUserId(userId);
 
+        // 비밀번호가 틀리면 로그인x
         if (!user.matchPassword(password)) {
             model.addAttribute("errorMessage", "비밀번호가 올바르지 않습니다.");
             return "user/login";
         }
 
         session.setAttribute("user", user);
-        logger.debug("로그인 성공: {}", user.toDto());
 
+        // 비로그인 상태에서 저장한 redirectUrl이 있으면
         String redirectUrl = (String) session.getAttribute("redirectUrl");
         if (redirectUrl != null) {
             session.removeAttribute("redirectUrl");
@@ -120,8 +114,6 @@ public class UserController {
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        User loginUser = (User) session.getAttribute("user");
-        logger.debug("로그아웃: {}", loginUser.toDto());
         session.invalidate();
 
         return "redirect:/";
