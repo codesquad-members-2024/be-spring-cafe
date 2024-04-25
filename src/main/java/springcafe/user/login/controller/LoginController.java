@@ -9,10 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import springcafe.user.dto.AuthInfo;
 import springcafe.user.login.dto.LoginCommand;
 import springcafe.user.login.service.LoginService;
@@ -42,7 +39,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid LoginCommand loginCommand, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) {
+    public String login(@Valid LoginCommand loginCommand, BindingResult bindingResult, HttpSession session, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
             return "user/login";
         }
@@ -52,10 +49,8 @@ public class LoginController {
 
 
         User user = loginService.loginCheck(userId, password);
-        HttpSession session = request.getSession();
         session.setAttribute("user", user);
 
-        //유저 아이디도 암호화해서 쿠키에 저장
 
         Cookie rememberCookie = new Cookie("REMEMBER", loginCommand.getUserId());
         rememberCookie.setPath("/");
@@ -67,7 +62,7 @@ public class LoginController {
 
         response.addCookie(rememberCookie);
 
-        return "index";
+        return "redirect:/";
     }
 
     @GetMapping("/login_failed")
@@ -76,8 +71,7 @@ public class LoginController {
     }
 
     @PostMapping("/logout")
-    public String logout(HttpServletRequest request){
-        HttpSession session = request.getSession();
+    public String logout(HttpSession session){
         session.invalidate();
 
         return "index";

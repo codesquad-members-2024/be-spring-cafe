@@ -20,7 +20,6 @@ public class DbConfig {
         driverManagerDataSource.setUsername("sa");
         driverManagerDataSource.setPassword("");
 
-
         return driverManagerDataSource;
     }
 

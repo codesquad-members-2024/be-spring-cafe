@@ -27,7 +27,7 @@ public class UserService {
 
     public User create(String id, String password, String username, String email) {
         String hashPassword = passwordHashing.hashPassword(password);
-        User user = new User(id, hashPassword, username, email);
+        User user = new User(id,username, email, hashPassword);
         userDao.insert(user);
 
         return user;

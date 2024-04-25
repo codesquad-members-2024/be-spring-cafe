@@ -6,19 +6,41 @@ public class User {
     private String name;
     private String email;
     private String password;
+    private Long id;
 
-    public User(String userId, String password, String name, String email) {
+    public String getPassword() {
+        return password;
+    }
+
+    public User(String userId, String name, String email, Long id) {
+
         this.userId = userId;
-        this.password = password;
         this.name = name;
         this.email = email;
+        this.id =id;
     }
 
-    public boolean isIdMatched(String id) {
-        return this.userId.equals(id);
+    public User(String userId, String name, String email,String password) {
+
+        this.userId = userId;
+        this.name = name;
+        this.email = email;
+        this.password = password;
     }
 
-    public void updateName(String name){
+    public User(String userId, String name, String email, String password, Long Id) {
+        this.userId = userId;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.id = Id;
+    }
+
+    public boolean matchPassword(String password) {
+        return this.password.equals(password);
+    }
+
+    public void updateName(String name) {
         this.name = name;
     }
 
@@ -26,16 +48,8 @@ public class User {
         this.email = email;
     }
 
-    public void updatePassword(String password){
-        this.password = password;
-    }
-
     public String getUserId() {
         return userId;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getName() {
@@ -46,5 +60,10 @@ public class User {
         return email;
     }
 
-
+    public Long getId() {
+        return id;
+    }
+    public boolean matchUserId(String writer) {
+        return this.userId.equals(writer);
+    }
 }

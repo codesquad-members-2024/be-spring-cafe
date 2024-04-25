@@ -1,6 +1,7 @@
 package springcafe.user.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -40,7 +41,7 @@ public class UserController {
     public String updateInfo(@PathVariable String userId, Model model) {
         User user = userService.findById(userId);
         model.addAttribute("user", user);
-        return "user/updateform";
+        return "user/update";
     }
 
     @GetMapping("/profile/{userId}")
@@ -75,21 +76,21 @@ public class UserController {
     }
 
     @GetMapping("/update")
-    public String updateForm(ChageInfoForm chageInfoForm, HttpServletRequest request, Model model) {
-        User user = (User) request.getSession().getAttribute("user");
+    public String updateForm(ChageInfoForm chageInfoForm, HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
         return "user/update";
     }
 
 
     @PostMapping("/update")
-    public String updateInfo(@Valid ChageInfoForm chageInfoForm, BindingResult bindingResult, HttpServletRequest request) {
+    public String updateInfo(@Valid ChageInfoForm chageInfoForm, BindingResult bindingResult, HttpSession session) {
 
         if (bindingResult.hasErrors()) {
             return "redirect:/user/update";
         }
 
-        User user = (User) request.getSession().getAttribute("user");
+        User user = (User) session.getAttribute("user");
         if (!userService.checkHashPassword(chageInfoForm, user.getPassword())) {
             throw new WrongPasswordException("비밀번호가 잘못됐습니다.");
         }

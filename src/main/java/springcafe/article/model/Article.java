@@ -1,28 +1,47 @@
 package springcafe.article.model;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 
 public class Article {
 
-    @NotEmpty(message = "글쓴이는 필수 항목입니다.")
-    private final String writer;
-    @NotEmpty(message = "제목은 필수 항목입니다.")
-    @Size(max = 200)
-    private final String title;
-    @NotEmpty(message = "내용은 필수 항목입니다.")
-    private final String contents;
-    private final LocalDateTime createDate;
-    private final Long id;
+    private String writer;
+    private String title;
+    private String content;
+    private LocalDateTime createDate;
+    private Long id;
+    private Long userId;
 
-    public Article(String writer, String title, String contents, LocalDateTime createDate, Long id) {
+    public Article() {
+    }
+
+    public Article(String writer, String title, String content) {
         this.writer = writer;
         this.title = title;
-        this.contents = contents;
+        this.content = content;
+    }
+
+    public Article(String writer, String title, String content, LocalDateTime createDate, Long id, Long userId) {
+        this.writer = writer;
+        this.title = title;
+        this.content = content;
         this.createDate = createDate;
         this.id = id;
+        this.userId = userId;
+    }
+
+    public boolean matchesWriter(String writer){
+        return this.writer.equals(writer);
+    }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateContent(String contents) {
+        this.content = contents;
     }
 
     public String getWriter() {
@@ -33,12 +52,16 @@ public class Article {
         return title;
     }
 
-    public String getContents() {
-        return contents;
+    public String getContent() {
+        return content;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 
     public LocalDateTime getCreateDate() {

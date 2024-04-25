@@ -1,0 +1,32 @@
+CREATE TABLE ARTICLES (
+                          ID INT AUTO_INCREMENT PRIMARY KEY,
+                          WRITER VARCHAR(255) NOT NULL,
+                          TITLE VARCHAR(255) NOT NULL,
+                          CONTENTS TEXT,
+                          CREATE_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                          IS_DELETED BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE REPLY (
+                       ID INT AUTO_INCREMENT PRIMARY KEY,
+                       CONTENT TEXT,
+                       WRITER VARCHAR(255) NOT NULL,
+                       CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                       IS_DELETED BOOLEAN DEFAULT FALSE
+);
+
+
+CREATE TABLE USERS (
+                       ID INT AUTO_INCREMENT PRIMARY KEY,
+                       USERID VARCHAR(255) NOT NULL,
+                       PASSWORD VARCHAR(255) NOT NULL,
+                       NAME VARCHAR(255) NOT NULL,
+                       EMAIL VARCHAR(255) NOT NULL
+);
+
+ALTER TABLE ARTICLES
+    ADD COLUMN USER_ID INT NOT NULL;
+
+ALTER TABLE ARTICLES
+    ADD CONSTRAINT FK_USER_ID
+        FOREIGN KEY(USER_ID) REFERENCES USERS(ID);
