@@ -74,16 +74,16 @@ public class UserController {
     //    비밀번호가 일치하는 경우에만 수정 가능하다.
     @PutMapping("/update")
     public String update(@ModelAttribute User updateUser, HttpSession httpSession) {
-        String userId = (String)httpSession.getAttribute("loginUserId");
+        String userId = (String) httpSession.getAttribute("loginUserId");
 
         //유저 정보가 없거나, 유저아이디와 변경할 아이디가 같지 않은경우 에러페이지 출력
         if (userId.isEmpty() || !updateUser.getUserId().equals(userId)) {
             return "redirect:/index";
         }
 
-        try{
+        try {
             userService.update(updateUser);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("User update failed: {}", e.getMessage());
             return "redirect:/index";
         }
@@ -102,11 +102,17 @@ public class UserController {
         return "user/login_success";
     }
 
+    @GetMapping("/loginForm")
+    public String login(@RequestParam(defaultValue = "/") String redirectURL,Model model) {
+        model.addAttribute("redirectURL", redirectURL);
+        return "user/login";
+    }
     @PostMapping("/login")
     public String login(@RequestParam("email") String email,
         @RequestParam("password") String password,
+        @RequestParam(defaultValue = "/") String redirectURL,
         HttpSession httpSession) {
-
+        System.out.println("redirectURL = "+redirectURL);
         try {
             String loginUserId = userService.login(email, password);
 
@@ -116,7 +122,7 @@ public class UserController {
             //로그인 성공시 httpSession에 정보를 넣는다
             httpSession.setAttribute("loginUserId", loginUserId);
 
-            return "redirect:/";
+            return "redirect:" + redirectURL;
         } catch (NoSuchElementException e) { //에러 발생하면
             logger.error("User login failed: {}", e.getMessage());
             return "redirect:/users/loginForm";

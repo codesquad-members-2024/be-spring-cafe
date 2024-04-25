@@ -22,7 +22,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         if (httpSession == null || httpSession.getAttribute("loginUserId") == null) {
             logger.info("미인증 사용자 요청");
-            //로그인으로
+            //로그인으로 리다이렉트
             response.sendRedirect("/users/loginForm?redirectURL=" + requestURI);
             return false;
         }
