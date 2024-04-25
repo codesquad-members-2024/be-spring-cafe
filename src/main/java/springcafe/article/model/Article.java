@@ -1,6 +1,8 @@
 package springcafe.article.model;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.time.LocalDateTime;
 
 public class Article {
@@ -11,6 +13,9 @@ public class Article {
     private LocalDateTime createDate;
     private Long id;
     private Long userId;
+
+    public Article() {
+    }
 
     public Article(String writer, String title, String content) {
         this.writer = writer;
@@ -25,6 +30,10 @@ public class Article {
         this.createDate = createDate;
         this.id = id;
         this.userId = userId;
+    }
+
+    public boolean matchesWriter(String writer){
+        return this.writer.equals(writer);
     }
 
     public void updateTitle(String title) {
