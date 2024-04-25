@@ -1,7 +1,6 @@
 package codesquad.springcafe.model.user;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class User {
     private String userId;
@@ -10,7 +9,6 @@ public class User {
     private String email;
     private LocalDateTime registerTime;
 
-    private final String TIME_FORMATTING_PATTERN = "yyyy년 MM월 dd일";
 
     public User(){
         this.registerTime = LocalDateTime.now();
@@ -67,20 +65,12 @@ public class User {
         this.password = password;
     }
 
-    public boolean isPasswordInputCorrect(String passwordInput){
-        return passwordInput.equals(password);
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getFormattedRegisterTime(){
-        return registerTime.format(DateTimeFormatter.ofPattern(TIME_FORMATTING_PATTERN));
     }
 
     public LocalDateTime getRegisterTime(){
