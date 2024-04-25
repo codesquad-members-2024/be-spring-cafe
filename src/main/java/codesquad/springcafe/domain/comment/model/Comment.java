@@ -1,5 +1,7 @@
 package codesquad.springcafe.domain.comment.model;
 
+import codesquad.springcafe.domain.user.model.User;
+import codesquad.springcafe.global.annotation.AssociatedClass;
 import codesquad.springcafe.global.model.BaseTime;
 
 public class Comment extends BaseTime {
@@ -10,15 +12,19 @@ public class Comment extends BaseTime {
     private Boolean modified;
     private Boolean deleted;
 
+    @AssociatedClass(User.class)
+    private User user;
+
     public Comment() {
 
     }
 
-    public Comment(Long userId, Long questionId, String content) {
+    public Comment(User user, Long questionId, String content) {
         super();
-        this.userId = userId;
+        this.userId = user.getId();
         this.questionId = questionId;
         this.content = content;
+        this.user = user;
     }
 
     public Long getId() {
@@ -47,6 +53,10 @@ public class Comment extends BaseTime {
 
     public Boolean getDeleted() {
         return deleted;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public Comment update(String content) {

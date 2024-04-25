@@ -29,11 +29,19 @@
 
 ### JdbcTemplate 사용
 - 자원을 관리하고 중복 코드를 줄이는 데 탁월
-- 
+- 기존 JDBC 로직에서는 모든 메서드에서 Connection을 가져오고, PreparedStatement를 가져와서 sql을 수행하고 자원을 해제해주는 로직 작성해 주어야 함
+- 이럴 때 도입할 수 있는 DB 접근 기술 중 하나
 
-## DELETE vs TRUNCATE vs DROP
-- 
+### PreparedStatement와 Statement의 차이?
+- 일반적인 Statement를 사용해 select 쿼리를 입력했을 때에는 매번 parse부터 fetch까지 모든 과정을 수행한다
+- PreparedStatement를 사용하는 경우는 효율을 높이기 위해 parse 과정을 최초 1회만 실행하고 이후에는 생략 가능
+- parse를 모두 거친 후에 생성된 결과는 메모리 어딘가에 저장해두고 필요할 때마다 사용
+- PreparedStatement에서 바인딩 변수를 사용할 때 쿼리의 문법 처리과정이 미리 수행되기 때문에 바인딩 데이터는 SQL 문법적인 의미를 가질 수 없다
+- 따라서 PreparedStatement를 사용하면 SQL Injection에 안전하게 구현 가능
 
 ## 참고 링크
 - https://giron.tistory.com/142
 - https://codingwell.tistory.com/23
+- https://velog.io/@nimoh/Spring-JdbcTemplate%EC%9D%98-%EA%B8%B0%EB%B3%B8
+- https://giron.tistory.com/142
+- https://blog.naver.com/skinfosec2000/220482240245

@@ -38,7 +38,7 @@ public class QuestionRepositoryH2 implements QuestionRepository{
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setLong(1, question.getUserId());
+            ps.setLong(1, question.getUser().getId());
             ps.setString(2, question.getTitle());
             ps.setString(3, question.getContent());
             ps.setInt(4, question.getViewCnt());
@@ -55,7 +55,7 @@ public class QuestionRepositoryH2 implements QuestionRepository{
 
     @Override
     public Optional<Question> findById(Long questionId) {
-        final String sql = "select * from question where id = ? and deleted = false";
+        final String sql = "select * from question q left outer join users u on q.USERID = u.ID where q.id = ? and q.deleted = false";
         List<Question> questions = jdbcTemplate.query(sql, questionRowMapper, questionId);
 
         if (questions.size() > 1) {
@@ -99,8 +99,8 @@ public class QuestionRepositoryH2 implements QuestionRepository{
 
     @Override
     public Collection<Question> findAll() {
-        final String sql = "select * from question where deleted = false order by createdAt desc";
-        logger.info("Find All Questions | query : {}", sql);
+        final String sql = "select * from question q left outer join users u on q.USERID = u.ID where q.deleted = false order by q.createdAt desc";
+        logger.info("Find All Questions with writer | query : {}", sql);
         return jdbcTemplate.query(sql, questionRowMapper);
     }
 

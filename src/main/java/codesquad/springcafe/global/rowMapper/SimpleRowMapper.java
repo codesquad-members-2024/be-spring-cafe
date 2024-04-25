@@ -1,5 +1,6 @@
 package codesquad.springcafe.global.rowMapper;
 
+import codesquad.springcafe.global.annotation.AssociatedClass;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.lang.reflect.Field;
@@ -32,17 +33,42 @@ public class SimpleRowMapper<T> implements RowMapper<T> {
         }
     }
 
-    private void mapFields(ResultSet rs, T instance, Field[] fields) throws SQLException, IllegalAccessException {
+    private void mapFields(ResultSet rs, Object instance, Field[] fields) throws SQLException, IllegalAccessException {
         for (Field field : fields) {
             String fieldName = field.getName();
+            field.setAccessible(true);
+            if (field.isAnnotationPresent(AssociatedClass.class)) {
+                Class<?> associatedClass = field.getAnnotation(AssociatedClass.class).value();
+                if (associatedClass.isAssignableFrom(field.getType())) {
+                    Object associatedInstance = mapRow(rs, associatedClass);
+                    field.set(instance, associatedInstance);
+                    continue;
+                }
+            }
+
             Object value = rs.getObject(fieldName);
 
             if (value instanceof Timestamp) {
                 value = ((Timestamp) value).toLocalDateTime();
             }
 
-            field.setAccessible(true);
             field.set(instance, value);
+        }
+    }
+
+    private Object mapRow(ResultSet rs, Class<?> clazz) throws SQLException {
+        try {
+            Object instance = clazz.getDeclaredConstructor().newInstance();
+
+            Field[] superFields = clazz.getSuperclass().getDeclaredFields();
+            Field[] subFields = clazz.getDeclaredFields();
+
+            mapFields(rs, instance, superFields);
+            mapFields(rs, instance, subFields);
+
+            return instance;
+        } catch (Exception e) {
+            throw new SQLException("매핑에 실패했습니다.", e);
         }
     }
 }

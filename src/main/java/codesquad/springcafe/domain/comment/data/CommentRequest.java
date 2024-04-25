@@ -29,6 +29,6 @@ public class CommentRequest {
     }
 
     public Comment toComment(User user, Question question) {
-        return new Comment(user.getId(), question.getId(), this.content);
+        return new Comment(user, question.getId(), this.content);
     }
 }

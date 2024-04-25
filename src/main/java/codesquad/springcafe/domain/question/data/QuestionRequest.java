@@ -30,6 +30,6 @@ public class QuestionRequest {
     }
 
     public Question toQuestion(User user) {
-        return new Question(user.getId(), this.title, this.content, 0);
+        return new Question(user, this.title, this.content, 0);
     }
 }

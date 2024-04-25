@@ -38,7 +38,7 @@ public class CommentRepositoryH2 implements CommentRepository{
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setLong(1, comment.getUserId());
+            ps.setLong(1, comment.getUser().getId());
             ps.setLong(2, comment.getQuestionId());
             ps.setString(3, comment.getContent());
             return ps;
@@ -68,8 +68,8 @@ public class CommentRepositoryH2 implements CommentRepository{
 
     @Override
     public Collection<Comment> findByQuestionId(Long questionId) {
-        final String sql = "select * from comment where questionId = ? and deleted = false";
-        logger.info("Find All Comments By QuestionId | questionId : {} | query : {}", questionId, sql);
+        final String sql = "select * from comment left outer join users on comment.USERID = users.ID where questionId = ? and comment.deleted = false";
+        logger.info("Find All Comments By QuestionId Join users | questionId : {} | query : {}", questionId, sql);
         return jdbcTemplate.query(sql, commentRowMapper, questionId);
     }
 
@@ -88,7 +88,7 @@ public class CommentRepositoryH2 implements CommentRepository{
 
     @Override
     public void update(Long commentId, Comment updateComment) {
-        final String sql = "update comment set comment = ?, modified = ? where commentId = ?";
+        final String sql = "update comment set CONTENT = ?, modified = ? where id = ?";
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql);

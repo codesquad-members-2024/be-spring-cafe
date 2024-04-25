@@ -44,14 +44,10 @@ public class QuestionService {
     // 질문 목록 조회
     public QuestionListResponse getQuestions(Object userId) {
         List<QuestionResponse> questions = questionRepository.findAll().stream()
-                .map(q -> {
-                    User writer = userRepository.findById(q.getUserId()).orElseThrow(() -> new NoSuchElementException(("존재하지 않는 사용자입니다.")));
-
-                    return new QuestionResponse(q.getId(), writer.getDeleted() ? "탈퇴한 사용자" : writer.getName(),
-                            writer.getDeleted() ? "탈퇴한 사용자" : writer.getLoginId(), q.getTitle(),
-                            q.getContent(), DateUtils.convertLocalDateTimeToString(q.getCreatedAt()), q.getViewCnt(),
-                            q.getModified(), q.getUserId().equals(userId), writer.getDeleted());
-                })
+                .map(q -> new QuestionResponse(q.getId(), q.getUser().getDeleted() ? "탈퇴한 사용자" : q.getUser().getName(),
+                        q.getUser().getDeleted() ? "탈퇴한 사용자" : q.getUser().getLoginId(), q.getTitle(),
+                        q.getContent(), DateUtils.convertLocalDateTimeToString(q.getCreatedAt()), q.getViewCnt(),
+                        q.getModified(), q.getUser().getId().equals(userId), q.getUser().getDeleted()))
                 .toList();
 
         return new QuestionListResponse(questions);
@@ -64,17 +60,15 @@ public class QuestionService {
 
         // 질문 게시글 조회
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문 게시글입니다."));
-        // 작성자 조회
-        User writer = userRepository.findById(question.getUserId()).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
 
         // 게시글 조회 수 up
         question.viewCntUp();
         questionRepository.viewCntUp(questionId, question);
 
-        return new QuestionResponse(question.getId(), writer.getDeleted() ? "탈퇴한 사용자" : writer.getName(),
-                writer.getDeleted() ? "탈퇴한 사용자" : writer.getLoginId(), question.getTitle(),
+        return new QuestionResponse(question.getId(), question.getUser().getDeleted() ? "탈퇴한 사용자" : question.getUser().getName(),
+                question.getUser().getDeleted() ? "탈퇴한 사용자" : question.getUser().getLoginId(), question.getTitle(),
                 question.getContent(), DateUtils.convertLocalDateTimeToString(question.getCreatedAt()), question.getViewCnt(),
-                question.getModified(), question.getUserId().equals(userId), writer.getDeleted());
+                question.getModified(), question.getUser().getId().equals(userId), question.getUser().getDeleted());
     }
 
     // 수정할 게시글 조회
@@ -85,7 +79,7 @@ public class QuestionService {
         // 질문 게시글 조회
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문 게시글입니다."));
 
-        if (!question.getUserId().equals(userId)) {
+        if (!question.getUser().getId().equals(userId)) {
             throw new IllegalStateException("다른 사람의 글을 수정할 수 없습니다.");
         }
 
@@ -98,7 +92,7 @@ public class QuestionService {
         User user = userRepository.findById(userId, false).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문 게시글입니다."));
 
-        if (!question.getUserId().equals(user.getId())) {
+        if (!question.getUser().getId().equals(user.getId())) {
             throw new IllegalStateException("다른 사람의 글을 수정할 수 없습니다.");
         }
 
@@ -114,7 +108,7 @@ public class QuestionService {
         // 질문 게시글 조회
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문 게시글입니다."));
 
-        if (!question.getUserId().equals(userId)) {
+        if (!question.getUser().getId().equals(userId)) {
             throw new IllegalStateException("다른 사람의 글을 삭제할 수 없습니다.");
         }
 
@@ -126,7 +120,7 @@ public class QuestionService {
         User user = userRepository.findById(userId, false).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문 게시글입니다."));
 
-        if (!question.getUserId().equals(user.getId())) {
+        if (!question.getUser().getId().equals(user.getId())) {
             throw new IllegalStateException("다른 사람의 글을 삭제할 수 없습니다.");
         }
 

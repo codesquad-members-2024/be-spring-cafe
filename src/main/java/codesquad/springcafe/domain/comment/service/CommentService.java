@@ -49,12 +49,9 @@ public class CommentService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
         // 댓글 목록 조회
         List<CommentResponse> comments = commentRepository.findByQuestionId(questionId)
-                .stream().map(c -> {
-                    User writer = userRepository.findById(c.getUserId()).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
-
-                    return new CommentResponse(c.getId(), writer.getLoginId(), writer.getName(), c.getContent(), DateUtils.convertLocalDateTimeToString(c.getModifiedAt()),
-                            c.getModified(), c.getUserId().equals(userId));
-                }).toList();
+                .stream().map(c -> new CommentResponse(c.getId(), c.getUser().getLoginId(), c.getUser().getName(), c.getContent(),
+                        DateUtils.convertLocalDateTimeToString(c.getModifiedAt()),
+                        c.getModified(), c.getUserId().equals(userId))).toList();
 
         return new CommentListResponse(comments);
     }
