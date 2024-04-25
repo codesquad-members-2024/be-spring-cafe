@@ -41,7 +41,7 @@ public class UserService {
         userRepository.update(user);
     }
 
-    public boolean isValidUser(String userId, String password) {
+    public boolean isPasswordMatch(String userId, String password) {
         User user = findUserById(userId);
         return user.validatePassword(password);
     }
