@@ -1,6 +1,8 @@
 package codesquad.springcafe.domain.comment.model;
 
+import codesquad.springcafe.domain.user.model.User;
 import codesquad.springcafe.global.rowMapper.SimpleRowMapper;
+import codesquad.springcafe.global.utils.AliasGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +70,10 @@ public class CommentRepositoryH2 implements CommentRepository{
 
     @Override
     public Collection<Comment> findByQuestionId(Long questionId) {
-        final String sql = "select * from comment left outer join users on comment.USERID = users.ID where questionId = ? and comment.deleted = false";
+        final String sql = "select " + AliasGenerator.generateAliases(User.class) + ", " +
+                AliasGenerator.generateAliases(Comment.class) +
+                " from comment left outer join users on comment.USERID = users.ID " +
+                "where comment.questionId = ? and comment.deleted = false";
         logger.info("Find All Comments By QuestionId Join users | questionId : {} | query : {}", questionId, sql);
         return jdbcTemplate.query(sql, commentRowMapper, questionId);
     }

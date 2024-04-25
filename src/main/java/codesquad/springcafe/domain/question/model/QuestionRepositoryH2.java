@@ -1,6 +1,8 @@
 package codesquad.springcafe.domain.question.model;
 
+import codesquad.springcafe.domain.user.model.User;
 import codesquad.springcafe.global.rowMapper.SimpleRowMapper;
+import codesquad.springcafe.global.utils.AliasGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +57,10 @@ public class QuestionRepositoryH2 implements QuestionRepository{
 
     @Override
     public Optional<Question> findById(Long questionId) {
-        final String sql = "select * from question q left outer join users u on q.USERID = u.ID where q.id = ? and q.deleted = false";
+        final String sql = "select " + AliasGenerator.generateAliases(User.class) + ", " +
+                AliasGenerator.generateAliases(Question.class) +
+                " from question left outer join users " +
+                "on question.USERID = users.ID where question.id = ? and question.deleted = false";
         List<Question> questions = jdbcTemplate.query(sql, questionRowMapper, questionId);
 
         if (questions.size() > 1) {
@@ -99,7 +104,10 @@ public class QuestionRepositoryH2 implements QuestionRepository{
 
     @Override
     public Collection<Question> findAll() {
-        final String sql = "select * from question q left outer join users u on q.USERID = u.ID where q.deleted = false order by q.createdAt desc";
+        final String sql = "select " + AliasGenerator.generateAliases(User.class) + ", " +
+                AliasGenerator.generateAliases(Question.class) +
+                " from question left outer join users on question.USERID = users.ID " +
+                "where question.deleted = false order by question.createdAt desc";
         logger.info("Find All Questions with writer | query : {}", sql);
         return jdbcTemplate.query(sql, questionRowMapper);
     }

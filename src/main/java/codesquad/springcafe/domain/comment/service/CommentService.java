@@ -38,6 +38,11 @@ public class CommentService {
         // 댓글 달 게시글 조회
         Question question = questionRepository.findById(commentCreateRequest.getQuestionId()).orElseThrow(() -> new NoSuchElementException("존재하지 않는 게시글입니다."));
 
+        // 게시글 작성자가 탈퇴한 사용자인 경우 댓글 등록 불가
+        if (question.getUser().getDeleted()) {
+            throw new IllegalStateException("작성자가 탈퇴한 게시글에는 댓글을 달 수 없습니다.");
+        }
+
         // 댓글 등록
         Comment saved = commentRepository.save(commentCreateRequest.toComment(user, question));
         return saved.getId();
@@ -49,9 +54,13 @@ public class CommentService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
         // 댓글 목록 조회
         List<CommentResponse> comments = commentRepository.findByQuestionId(questionId)
-                .stream().map(c -> new CommentResponse(c.getId(), c.getUser().getLoginId(), c.getUser().getName(), c.getContent(),
-                        DateUtils.convertLocalDateTimeToString(c.getModifiedAt()),
-                        c.getModified(), c.getUserId().equals(userId))).toList();
+                .stream().map(c -> {
+                    boolean isUserWithdrawn = c.getUser().getDeleted();
+                    return new CommentResponse(c.getId(), isUserWithdrawn ? "탈퇴한 사용자" : c.getUser().getLoginId(),
+                            isUserWithdrawn ? "탈퇴한 사용자" : c.getUser().getName(), c.getContent(),
+                            DateUtils.convertLocalDateTimeToString(c.getModifiedAt()),
+                            c.getModified(), c.getUser().getId().equals(user.getId()), isUserWithdrawn);
+                }).toList();
 
         return new CommentListResponse(comments);
     }

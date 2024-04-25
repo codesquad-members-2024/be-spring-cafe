@@ -1,6 +1,7 @@
 package codesquad.springcafe.domain.user.model;
 
 import codesquad.springcafe.global.rowMapper.SimpleRowMapper;
+import codesquad.springcafe.global.utils.AliasGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,8 @@ public class UserRepositoryH2 implements UserRepository{
 
     @Override
     public Optional<User> findById(Long userId, Boolean deleted) {
-        final String sql = "select * from users where id = ?" + (deleted == null ? "" : " and deleted = " + deleted);
+        final String sql = "select " + AliasGenerator.generateAliases(User.class) +
+                " from users where users.id = ?" + (deleted == null ? "" : " and users.deleted = " + deleted);
         List<User> users = jdbcTemplate.query(sql, userRowMapper, userId);
 
         if (users.size() > 1) {
@@ -73,7 +75,8 @@ public class UserRepositoryH2 implements UserRepository{
 
     @Override
     public List<User> findAll() {
-        final String sql = "select * from users where deleted = false";
+        final String sql = "select " + AliasGenerator.generateAliases(User.class) +
+                " from users where users.deleted = false";
         logger.info("Find All Users | query : {}", sql);
         return jdbcTemplate.query(sql, userRowMapper);
     }
@@ -85,7 +88,8 @@ public class UserRepositoryH2 implements UserRepository{
 
     @Override
     public Optional<User> findByLoginId(String loginId, Boolean deleted) {
-        final String sql = "select * from users where loginId = ?" + (deleted == null ? "" : " and deleted = " + deleted);
+        final String sql = "select " + AliasGenerator.generateAliases(User.class) +
+                " from users where users.loginId = ?" + (deleted == null ? "" : " and users.deleted = " + deleted);
         List<User> users = jdbcTemplate.query(sql, userRowMapper, loginId);
 
         if (users.size() > 1) {

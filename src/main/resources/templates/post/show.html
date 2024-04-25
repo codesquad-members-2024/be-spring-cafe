@@ -47,7 +47,10 @@
                             <div class="post-comment-slipp-articles">
                                 <article th:each="comment : ${comments}" class="comment">
                                     <div class="article-text">
-                                        <a th:href="'/profile/' + ${comment.userLoginId}" class="comment-content comment-author-name">
+                                        <a th:unless="${comment.isUserWithdrawn()}" th:href="'/profile/' + ${comment.userLoginId}" class="comment-content comment-author-name">
+                                            <span th:text="${comment.userName}"></span>
+                                        </a>
+                                        <a th:if="${comment.isUserWithdrawn()}" class="comment-content comment-author-name">
                                             <span th:text="${comment.userName}"></span>
                                         </a>
                                         <div class="comment-content">
@@ -64,7 +67,7 @@
                                     </div>
                                 </article>
 
-                                <form class="submit-write" method="post" action="/comment">
+                                <form th:unless="${question.isUserWithdrawn()}" class="submit-write" method="post" action="/comment">
                                     <div class="comment-writer-container">
                                         <label for="questionId">
                                             <input type="hidden" id="questionId" name="questionId" th:value="${question.getQuestionId()}">

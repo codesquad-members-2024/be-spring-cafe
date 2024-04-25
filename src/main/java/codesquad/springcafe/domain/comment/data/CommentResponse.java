@@ -8,8 +8,9 @@ public class CommentResponse {
     private final String modifiedAt;
     private final boolean isModified;
     private final boolean isMy;
+    private final boolean isUserWithdrawn;
 
-    public CommentResponse(Long commentId, String userLoginId, String userName, String content, String modifiedAt, boolean isModified, boolean isMy) {
+    public CommentResponse(Long commentId, String userLoginId, String userName, String content, String modifiedAt, boolean isModified, boolean isMy, boolean isUserWithdrawn) {
         this.commentId = commentId;
         this.userLoginId = userLoginId;
         this.userName = userName;
@@ -17,6 +18,7 @@ public class CommentResponse {
         this.modifiedAt = modifiedAt;
         this.isModified = isModified;
         this.isMy = isMy;
+        this.isUserWithdrawn = isUserWithdrawn;
     }
 
     public Long getCommentId() {
@@ -45,5 +47,9 @@ public class CommentResponse {
 
     public boolean isMy() {
         return isMy;
+    }
+
+    public boolean isUserWithdrawn() {
+        return isUserWithdrawn;
     }
 }

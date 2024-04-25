@@ -1,6 +1,7 @@
 package codesquad.springcafe.global.rowMapper;
 
 import codesquad.springcafe.global.annotation.AssociatedClass;
+import codesquad.springcafe.global.utils.AliasGenerator;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.lang.reflect.Field;
@@ -24,8 +25,10 @@ public class SimpleRowMapper<T> implements RowMapper<T> {
             Field[] superFields = clazz.getSuperclass().getDeclaredFields();
             Field[] subFields = clazz.getDeclaredFields();
 
-            mapFields(rs, instance, superFields);
-            mapFields(rs, instance, subFields);
+            String tableName = AliasGenerator.getTableName(clazz);
+
+            mapFields(rs, instance, superFields, tableName);
+            mapFields(rs, instance, subFields, tableName);
 
             return instance;
         } catch (Exception e) {
@@ -33,7 +36,7 @@ public class SimpleRowMapper<T> implements RowMapper<T> {
         }
     }
 
-    private void mapFields(ResultSet rs, Object instance, Field[] fields) throws SQLException, IllegalAccessException {
+    private void mapFields(ResultSet rs, Object instance, Field[] fields, String tableName) throws SQLException, IllegalAccessException {
         for (Field field : fields) {
             String fieldName = field.getName();
             field.setAccessible(true);
@@ -46,7 +49,7 @@ public class SimpleRowMapper<T> implements RowMapper<T> {
                 }
             }
 
-            Object value = rs.getObject(fieldName);
+            Object value = rs.getObject(tableName + "_" + fieldName);
 
             if (value instanceof Timestamp) {
                 value = ((Timestamp) value).toLocalDateTime();
@@ -63,8 +66,10 @@ public class SimpleRowMapper<T> implements RowMapper<T> {
             Field[] superFields = clazz.getSuperclass().getDeclaredFields();
             Field[] subFields = clazz.getDeclaredFields();
 
-            mapFields(rs, instance, superFields);
-            mapFields(rs, instance, subFields);
+            String tableName = AliasGenerator.getTableName(clazz);
+
+            mapFields(rs, instance, superFields, tableName);
+            mapFields(rs, instance, subFields, tableName);
 
             return instance;
         } catch (Exception e) {

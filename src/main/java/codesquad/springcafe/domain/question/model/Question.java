@@ -6,15 +6,14 @@ import codesquad.springcafe.global.model.BaseTime;
 
 public class Question extends BaseTime {
     private Long id;
-    private Long userId;
+    @AssociatedClass(User.class)
+    private User user;
     private String title;
     private String content;
     private Integer viewCnt;
     private Boolean modified;
     private Boolean deleted;
 
-    @AssociatedClass(User.class)
-    private User user;
 
     public Question() {
 
@@ -22,7 +21,6 @@ public class Question extends BaseTime {
 
     public Question(User user, String title, String content, Integer viewCnt) {
         super();
-        this.userId = user.getId();
         this.title = title;
         this.content = content;
         this.viewCnt = viewCnt;
@@ -35,10 +33,6 @@ public class Question extends BaseTime {
 
     public Long getId() {
         return id;
-    }
-
-    public Long getUserId() {
-        return userId;
     }
 
     public String getTitle() {

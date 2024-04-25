@@ -1,8 +1,10 @@
 package codesquad.springcafe.domain.user.model;
 
+import codesquad.springcafe.global.annotation.Table;
 import codesquad.springcafe.global.model.BaseTime;
 
 // TODO: 빌더 패턴 사용
+@Table(name = "users")
 public class User extends BaseTime {
     private Long id;
     private String loginId; //unique
