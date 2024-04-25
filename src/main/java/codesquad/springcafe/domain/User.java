@@ -10,14 +10,14 @@ public class User {
     private String nickname;
     private String email;
     private String password;
-    private LocalDateTime created;
+    private LocalDateTime createdDate;
 
-    public User(String userId, String nickname, String email, String password, LocalDateTime created) {
+    public User(String userId, String nickname, String email, String password, LocalDateTime createdDate) {
         this.userId = userId;
         this.nickname = nickname;
         this.email = email;
         this.password = password;
-        this.created = created;
+        this.createdDate = createdDate;
     }
 
     public User(UserDto userDto) {
@@ -25,7 +25,7 @@ public class User {
         this.nickname = userDto.getNickname();
         this.email = userDto.getEmail();
         this.password = userDto.getPassword();
-        this.created = LocalDateTime.now();
+        this.createdDate = LocalDateTime.now();
     }
 
     public void update(UserUpdateDto userUpdateDto) {
@@ -58,8 +58,8 @@ public class User {
         return password;
     }
 
-    public String getCreated() {
-        return created.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    public String getCreatedDate() {
+        return createdDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     @Override
@@ -69,7 +69,7 @@ public class User {
                 ", nickname='" + nickname + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", created=" + created +
+                ", createdDate=" + createdDate +
                 '}';
     }
 }
