@@ -33,7 +33,7 @@ public class ReplyJdbcRepository implements ReplyRepository {
         parameters.put("article_id", reply.getArticleId());
         parameters.put("author", reply.getAuthor());
         parameters.put("content", reply.getContent());
-        parameters.put("createdAt", reply.getCreatedAt());
+        parameters.put("created_at", reply.getCreatedAt());
         parameters.put("deleted", reply.isDeleted());
 
         Number key = jdbcInsert.executeAndReturnKey(parameters);
@@ -44,7 +44,7 @@ public class ReplyJdbcRepository implements ReplyRepository {
 
     @Override
     public Optional<Reply> findById(Long replyId) {
-        String sql = "SELECT reply_id, article_id, author, content, createdAt, deleted FROM reply WHERE reply_id = ?";
+        String sql = "SELECT reply_id, article_id, author, content, created_at, deleted FROM reply WHERE reply_id = ?";
         try {
             Reply reply = jdbcTemplate.queryForObject(sql, replyRowMapper(), replyId);
             return Optional.ofNullable(reply);
@@ -55,7 +55,7 @@ public class ReplyJdbcRepository implements ReplyRepository {
 
     @Override
     public List<Reply> findRepliesByArticleId(Long articleId) {
-        String sql = "SELECT reply_id, article_id, author, content, createdAt, deleted FROM reply";
+        String sql = "SELECT reply_id, article_id, author, content, created_at, deleted FROM reply";
         List<Reply> replies = jdbcTemplate.query(sql, replyRowMapper());
 
         return replies.stream()
@@ -80,7 +80,7 @@ public class ReplyJdbcRepository implements ReplyRepository {
             long articleId = rs.getLong("article_id");
             String author = rs.getString("author");
             String content = rs.getString("content");
-            LocalDateTime createdAt = rs.getTimestamp("createdAt").toLocalDateTime();
+            LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
             boolean deleted = rs.getBoolean("deleted");
 
             return new Reply(replyId, articleId, author, content, createdAt, deleted);
