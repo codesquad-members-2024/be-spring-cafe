@@ -3,11 +3,12 @@ package codesquad.springcafe.service;
 import codesquad.springcafe.dto.article.ArticleInfoDTO;
 import codesquad.springcafe.dto.article.ArticleUpdateDTO;
 import codesquad.springcafe.dto.article.ArticleUploadDTO;
+import codesquad.springcafe.dto.reply.ReplyInfoDTO;
 import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.Reply;
 import codesquad.springcafe.repository.article.ArticleRepository;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalLong;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,13 @@ public class ArticleService {
         return targetArticle.map(Article::toDTO).orElse(null);
     }
 
+    public List<ReplyInfoDTO> findRepliesById(Long id) {
+        List<Reply> replies = articleRepository.getRepliesById(id);
+        return replies.stream()
+            .map(Reply::toDTO)
+            .collect(Collectors.toList());
+    }
+
     public ArticleInfoDTO updateInfo(Long id, ArticleUpdateDTO updateInfo) {
         ArticleInfoDTO originalArticle = findById(id);
         Article modifiedArticle = updateInfo.toArticle(id, originalArticle.getTimestamp(), originalArticle.getWriter());
@@ -54,10 +62,8 @@ public class ArticleService {
     }
 
     private Long initTotalId() {
-        OptionalLong maxId = articleRepository.getAll().stream().mapToLong(Article::getId).max();
-        if (maxId.isEmpty()) {
-            return 0L;
-        }
-        return maxId.getAsLong();
+        return articleRepository.getAll().stream()
+            .mapToLong(Article::getId)
+            .max().orElse(0L);
     }
 }

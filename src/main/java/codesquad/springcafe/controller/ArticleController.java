@@ -3,6 +3,7 @@ package codesquad.springcafe.controller;
 import codesquad.springcafe.dto.article.ArticleInfoDTO;
 import codesquad.springcafe.dto.article.ArticleUploadDTO;
 import codesquad.springcafe.dto.article.ArticleUpdateDTO;
+import codesquad.springcafe.dto.reply.ReplyInfoDTO;
 import codesquad.springcafe.dto.user.UserInfoDTO;
 import codesquad.springcafe.service.ArticleService;
 import jakarta.servlet.http.HttpSession;
@@ -44,7 +45,10 @@ public class ArticleController {
     @GetMapping("articles/{id}")
     public String showArticle(@PathVariable("id") Long id, Model model) {
         ArticleInfoDTO targetArticle = articleService.findById(id);
+        List<ReplyInfoDTO> repliesOfArticle = articleService.findRepliesById(id);
         model.addAttribute("article", targetArticle);
+        model.addAttribute("replies", repliesOfArticle);
+        model.addAttribute("numberOfReplies", repliesOfArticle.size());
         return "/article/show";
     }
 

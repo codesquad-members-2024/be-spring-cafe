@@ -1,6 +1,7 @@
 package codesquad.springcafe.repository.article;
 
 import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.Reply;
 import codesquad.springcafe.model.User;
 import java.sql.Timestamp;
 import java.util.List;
@@ -39,6 +40,22 @@ public class JdbcArticleRepository implements ArticleRepository {
                 resultSet.getString("content")
             );
             return article;
+        });
+    }
+
+    @Override
+    public List<Reply> getRepliesById(Long id) {
+        String sql = "SELECT reply.articleId, reply.index, reply.writer, reply.timestamp, reply.content "
+            + "FROM `article` LEFT JOIN `reply` WHERE `article`.id = ? AND `article`.id = `reply`.articleId";
+        return jdbcTemplate.query(sql, new Object[]{id}, (resultSet, rowNum) -> {
+            Reply reply = new Reply(
+                resultSet.getLong("articleId"),
+                resultSet.getLong("index"),
+                resultSet.getString("writer"),
+                resultSet.getTimestamp("timestamp").toLocalDateTime(),
+                resultSet.getString("content")
+            );
+            return reply;
         });
     }
 

@@ -1,6 +1,7 @@
 package codesquad.springcafe.repository.article;
 
 import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.Reply;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,6 +23,14 @@ public class MemoryArticleRepository implements ArticleRepository {
     @Override
     public Optional<Article> getById(Long id) {
         return Optional.ofNullable(articles.get(id));
+    }
+
+    /**
+     * 수정 필요
+     * **/
+    @Override
+    public List<Reply> getRepliesById(Long id) {
+        return new ArrayList<>();
     }
 
     @Override
