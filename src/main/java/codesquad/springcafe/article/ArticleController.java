@@ -36,7 +36,7 @@ public class ArticleController {
 
     @PostMapping("/form")
     public String createArticle(ArticleCreateDto articleCreateDto, HttpServletRequest request) {
-        articleService.save(articleCreateDto.toEntity());
+        articleService.save(articleCreateDto);
         log.info(request.getSession().getAttribute("nickname") + " created article");
         return "redirect:/";
     }
