@@ -71,6 +71,7 @@
                                                 <form th:id="'delete-comment-' + ${comment.commentId}" style="display: none" method="post" th:action="'/comments/' + ${comment.commentId}">
                                                     <input type="hidden" name="_method" value="DELETE" />
                                                     <input type="hidden" name="questionId" th:value="${question.questionId}" />
+                                                    <input type="hidden" name="CSRF_TOKEN" th:value="${session.CSRF_TOKEN}">
                                                     <button type="submit" style="display: none">삭제</button>
                                                 </form>
 
@@ -85,6 +86,7 @@
                                 </div>
 
                                 <form th:unless="${question.isUserWithdrawn()}" class="submit-write" method="post" action="/comment">
+                                    <input type="hidden" name="CSRF_TOKEN" th:value="${session.CSRF_TOKEN}">
                                     <div class="comment-writer-container">
                                         <label for="questionId">
                                             <input type="hidden" id="questionId" name="questionId" th:value="${question.getQuestionId()}">

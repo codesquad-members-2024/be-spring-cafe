@@ -150,7 +150,6 @@ public class UserController {
 
     private void setSession(HttpSession httpSession, UserCredentials userCredentials) {
         httpSession.setAttribute("userCredentials", userCredentials);
-        httpSession.setAttribute("CSRF_TOKEN", UUID.randomUUID());
         httpSession.setMaxInactiveInterval(3600);
     }
 

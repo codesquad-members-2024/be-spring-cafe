@@ -38,7 +38,7 @@ public class AppConfig implements WebMvcConfigurer {
 
         // CSRF 토큰 인터셉터
         registry.addInterceptor(new CsrfTokenIntercetor())
-                .addPathPatterns("/post", "/user/logout", "/question/edit/**", "/question/delete/**", "/user/withdraw/**")
+                .addPathPatterns("/**")
                 .excludePathPatterns("/user", "/user/login");
 
         // 인가 이후 인터셉터

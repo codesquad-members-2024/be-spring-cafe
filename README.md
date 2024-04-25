@@ -241,3 +241,12 @@
     - 예를 들어 현재 경로가 /user/withdraw/hello고, @{goBack}이 href였다면, /user/withdraw/goBack으로 이동했을 것
   - ${...} 표현식
     - 변수 표현식으로 타임리프에서 변수를 평가하고 해당 값을 출력하는 데 사용됨
+
+### CSRF TOKEN이 항상 똑같다?
+- 문제:
+  - 회원가입, 로그인 시에만 CSRF 토큰을 전송하므로, 모든 POST요청 시 전송되는 CSRF 토큰이 같다
+  - 또한 POST말고도 PUT, DELETE에서도 검증이 필요
+- 해결:
+  - postHandle로 응답이 갈 때마다 session에 CSRF_TOKEN 값을 생성해 담아 전송
+  - 들어올때 POST, PUT, DELETE면 검증. session에서 해당 값 삭제
+  - AppConfig에서 로그인, 회원가입 외 모든 url에서 검증하도록 패턴 추가
