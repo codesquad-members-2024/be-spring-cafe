@@ -4,22 +4,22 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ArticleInfoDTO {
-    private final Long index;
+    private final Long id;
     private final LocalDateTime timestamp;
     private final String writer;
     private final String title;
     private final String content;
 
-    public ArticleInfoDTO(Long index, LocalDateTime timestamp, String writer, String title, String content) {
-        this.index = index;
+    public ArticleInfoDTO(Long id, LocalDateTime timestamp, String writer, String title, String content) {
+        this.id = id;
         this.timestamp = timestamp;
         this.writer = writer;
         this.title = title;
         this.content = content;
     }
 
-    public Long getIndex() {
-        return index;
+    public Long getId() {
+        return id;
     }
 
     public String getFormattedTimeStamp() {

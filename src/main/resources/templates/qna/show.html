@@ -64,10 +64,16 @@
         <div class="collapse navbar-collapse" id="navbar-collapse2">
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="/">Posts</a></li>
-                <li><a href="/users/login" role="button">로그인</a></li>
+                {{^loggedInUser}}
+                <li><a href="/login" role="button">로그인</a></li>
                 <li><a href="/users/form" role="button">회원가입</a></li>
-                <li><a href="#" role="button">로그아웃</a></li>
-                <li><a href="/users/{userId}/form" role="button">개인정보수정</a></li>
+                {{/loggedInUser}}
+                {{#loggedInUser}}
+                <li><a href="#" onclick="document.getElementById('logoutForm').submit();" role="button">
+                    <form action="/users/logout" method="post" id="logoutForm">로그아웃</form>
+                </a></li>
+                <li><a href="/users/authenticate" role="button">개인정보수정</a></li>
+                {{/loggedInUser}}
             </ul>
         </div>
     </div>
@@ -88,7 +94,7 @@
                       </div>
                       <div class="article-header-text">
                           <a href="/users/92/{{writer}}" class="article-author-name">{{writer}}</a>
-                          <a href="/questions/{{index}}" class="article-header-time" title="퍼머링크">
+                          <a href="/questions/{{id}}" class="article-header-time" title="퍼머링크">
                               {{getFormattedTimeStamp}}
                               <i class="icon-link"></i>
                           </a>
@@ -100,10 +106,10 @@
                   <div class="article-util">
                       <ul class="article-util-list">
                           <li>
-                              <a class="link-modify-article" href="/questions/{{index}}/form">수정</a>
+                              <a class="link-modify-article" href="/questions/{{id}}/form">수정</a>
                           </li>
                           <li>
-                              <form class="form-delete" action="/questions/{{index}}" method="POST">
+                              <form class="form-delete" action="/questions/{{id}}" method="POST">
                                   <input type="hidden" name="_method" value="DELETE">
                                   <button class="link-delete-article" type="submit">삭제</button>
                               </form>

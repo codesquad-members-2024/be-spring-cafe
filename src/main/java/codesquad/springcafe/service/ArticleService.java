@@ -1,7 +1,7 @@
 package codesquad.springcafe.service;
 
 import codesquad.springcafe.dto.article.ArticleInfoDTO;
-import codesquad.springcafe.dto.article.UploadDTO;
+import codesquad.springcafe.dto.article.ArticleUploadDTO;
 import codesquad.springcafe.model.Article;
 import codesquad.springcafe.repository.article.ArticleRepository;
 import java.util.List;
@@ -14,15 +14,15 @@ import org.springframework.stereotype.Service;
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
-    private Long totalIndex = 0L;
+    private Long totalId = 0L;
 
     @Autowired
     public ArticleService(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
 
-    public ArticleInfoDTO upload(UploadDTO uploadDTO) {
-        Article newArticle = uploadDTO.toArticle(++totalIndex);
+    public ArticleInfoDTO upload(ArticleUploadDTO articleUploadDTO) {
+        Article newArticle = articleUploadDTO.toArticle(++totalId);
         articleRepository.save(newArticle);
         return newArticle.toDTO();
     }
@@ -34,8 +34,8 @@ public class ArticleService {
             .collect(Collectors.toList());
     }
 
-    public ArticleInfoDTO findByIndex(Long index) {
-        Optional<Article> targetArticle = articleRepository.getByIndex(index);
+    public ArticleInfoDTO findById(Long id) {
+        Optional<Article> targetArticle = articleRepository.getById(id);
         return targetArticle.map(Article::toDTO).orElse(null);
     }
 }

@@ -64,10 +64,16 @@
         <div class="collapse navbar-collapse" id="navbar-collapse2">
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="../">Posts</a></li>
-                <li><a href="/users/login" role="button">로그인</a></li>
+                {{^loggedInUser}}
+                <li><a href="/login" role="button">로그인</a></li>
                 <li><a href="/users/form" role="button">회원가입</a></li>
-                <li><a href="#" role="button">로그아웃</a></li>
-                <li><a href="/users/{userId}/form" role="button">개인정보수정</a></li>
+                {{/loggedInUser}}
+                {{#loggedInUser}}
+                <li><a href="#" onclick="document.getElementById('logoutForm').submit();" role="button">
+                    <form action="/users/logout" method="post" id="logoutForm">로그아웃</form>
+                </a></li>
+                <li><a href="/users/authenticate" role="button">개인정보수정</a></li>
+                {{/loggedInUser}}
             </ul>
         </div>
     </div>

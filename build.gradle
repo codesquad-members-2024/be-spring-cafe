@@ -20,7 +20,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mustache'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation group: 'com.h2database', name: 'h2', version: '2.2.222'
-	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

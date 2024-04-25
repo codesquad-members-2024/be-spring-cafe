@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface ArticleRepository {
     void save(Article article);
 
-    Optional<Article> getByIndex(Long index);
+    Optional<Article> getById(Long id);
 
     List<Article> getAll();
 }

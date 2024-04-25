@@ -31,6 +31,10 @@ public class User {
         return email;
     }
 
+    public boolean isPasswordCorrect(String password) {
+        return this.password.equals(password);
+    }
+
     public UserInfoDTO toDTO(Long index) {
         return new UserInfoDTO(index, userId, name, email);
     }
