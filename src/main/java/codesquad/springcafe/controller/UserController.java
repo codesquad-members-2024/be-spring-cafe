@@ -1,6 +1,7 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.db.user.UserDatabase;
+import codesquad.springcafe.exceptions.UserNotFoundException;
 import codesquad.springcafe.model.user.User;
 import codesquad.springcafe.model.user.dto.UserCreationDto;
 import codesquad.springcafe.model.user.dto.UserCredentialDto;
@@ -75,10 +76,9 @@ public class UserController {
         return "users/list";
     }
 
-    private boolean profilePopulationSucceed(String userId, Model model, HttpServletResponse response) throws IOException {
+    private boolean profilePopulationSucceed(String userId, Model model)  {
         Optional<UserProfileDto> userProfileOpt = userDatabase.findUserByUserId(userId);
         if (userProfileOpt.isEmpty()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return false;
         }
         model.addAttribute("user", userProfileOpt.get());
@@ -86,35 +86,26 @@ public class UserController {
     }
 
     @GetMapping("detail/{userId}")
-    public String userProfile(@PathVariable String userId, HttpServletResponse response, Model model) throws IOException {
-        if(!profilePopulationSucceed(userId, model, response)){
-           return null;
+    public String userProfile(@PathVariable String userId, Model model) {
+        if(!profilePopulationSucceed(userId, model)){
+           throw new UserNotFoundException();
         }
         return "users/profile";
     }
 
     @GetMapping("detail/{userId}/update")
-    public String getProfileEditPage(@PathVariable String userId, Model model, HttpServletResponse response) throws IOException {
-        if(!profilePopulationSucceed(userId, model, response)){
-            return null;
+    public String getProfileEditPage(@PathVariable String userId, Model model) {
+        if(!profilePopulationSucceed(userId, model)){
+            throw new UserNotFoundException();
         }
         return "users/updateForm";
     }
 
     @PutMapping("detail/{userId}/update")
-    public String updateProfile(
-            @PathVariable String userId,
-            @ModelAttribute UserProfileEditDto userInput,
-            Model model,
-            HttpServletResponse response) throws IOException
-    {
-        Optional<UserCredentialDto> userCredentialOpt = userDatabase.getUserCredential(userId);
-        if(userCredentialOpt.isEmpty()){
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            return null;
-        }
+    public String updateProfile(@PathVariable String userId, @ModelAttribute UserProfileEditDto userInput, Model model) {
+        UserCredentialDto userCredential = userDatabase.getUserCredential(userId)
+                .orElseThrow(UserNotFoundException::new);
 
-        UserCredentialDto userCredential = userCredentialOpt.get();
         if(!passwordEncoder.matches(userInput.getPassword(), userCredential.getPassword())){
             model.addAttribute("user", userInput);
             model.addAttribute("passwordError", true);
