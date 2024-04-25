@@ -36,7 +36,7 @@ public class ReplyService {
     public Long deleteReply(Long replyId, String userId){
 
         Reply replyToDelete = replyDao.findByReplyId(replyId);
-        if(replyToDelete == null|| replyToDelete.matchesWriter(userId)){
+        if(replyToDelete == null|| !replyToDelete.matchesWriter(userId)){
             throw new WrongWriterException("권한이 없습니다.");
         }
         replyDao.delete(replyId);
