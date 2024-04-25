@@ -3,6 +3,7 @@ package codesquad.springcafe.service;
 import codesquad.springcafe.dto.ArticleRequestDto;
 import codesquad.springcafe.exception.ArticleNotFountException;
 import codesquad.springcafe.exception.CannotDeleteArticleWithRepliesException;
+import codesquad.springcafe.exception.UnauthorizedAccessException;
 import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.Reply;
 import codesquad.springcafe.repository.ArticleRepository;
@@ -50,5 +51,12 @@ public class ArticleService {
             throw new CannotDeleteArticleWithRepliesException();
         }
         articleRepository.delete(articleId);
+    }
+
+    public void validateArticleWriter(Long articleId, String userId) {
+        Article article = findById(articleId);
+        if (!article.checkWriter(userId)) {
+            throw new UnauthorizedAccessException("다른 사람의 게시글에 접근할 수 없습니다.");
+        }
     }
 }
