@@ -58,17 +58,16 @@ public class ArticleController {
     @GetMapping("/update/{articleId}")
     public String getArticleUpdateForm(@PathVariable Long articleId, HttpSession session, Model model) {
         String userId = (String) session.getAttribute(LOGIN_USER_ID);
-        if (articleService.checkArticleWriter(articleId, userId)) {
-            log.debug("게시물 수정 성공 {}", userId);
-            model.addAttribute(ARTICLE_ID, articleId);
-            return "qna/update_form";
-        }
-        log.debug("게시물 수정 실패 {}", userId);
-        throw new UnauthorizedAccessException("본인의 게시글만 수정할 수 있습니다.");
+        articleService.validateArticleWriter(articleId, userId);
+
+        model.addAttribute(ARTICLE_ID, articleId);
+        return "qna/update_form";
     }
 
     @PutMapping("/{articleId}")
-    public String updateArticle(@PathVariable Long articleId, @ModelAttribute ArticleRequestDto articleRequestDto) {
+    public String updateArticle(@PathVariable Long articleId, @ModelAttribute ArticleRequestDto articleRequestDto, HttpSession session) {
+        String userId = (String) session.getAttribute(LOGIN_USER_ID);
+        articleService.validateArticleWriter(articleId, userId);
         articleService.update(articleId, articleRequestDto);
         return "redirect:/question/" + articleId;
     }
@@ -76,12 +75,10 @@ public class ArticleController {
     @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable Long articleId, HttpSession session){
         String userId = (String) session.getAttribute(LOGIN_USER_ID);
-        if (articleService.checkArticleWriter(articleId, userId)) {
-            log.debug("게시물 삭제 성공 {}", userId);
-            articleService.delete(articleId);
-            return "redirect:/";
-        }
-        log.debug("게시물 삭제 실패 {}", userId);
-        throw new UnauthorizedAccessException("본인의 게시글만 삭제할 수 있습니다.");
+        articleService.validateArticleWriter(articleId, userId);
+
+        log.debug("게시물 삭제 성공 {}", userId);
+        articleService.delete(articleId);
+        return "redirect:/";
     }
 }
