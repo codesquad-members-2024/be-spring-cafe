@@ -138,6 +138,20 @@ li {
     margin-bottom: 10px;
 }
 
+.article-content-header {
+    display: flex;
+    align-items: center;
+}
+
+.reply-btn {
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-left: 10px;
+    cursor: pointer; /* 마우스 커서를 손가락 모양으로 변경 */
+    padding: 5px;
+}
+
+
 .post-write-btn {
     margin-top: 20px;
     align-items: center;

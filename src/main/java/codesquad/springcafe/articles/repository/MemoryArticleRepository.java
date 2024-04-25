@@ -1,5 +1,6 @@
 package codesquad.springcafe.articles.repository;
 
+import codesquad.springcafe.articles.model.Reply;
 import codesquad.springcafe.articles.model.dto.ArticleUpdateDto;
 import codesquad.springcafe.db.ArticleDatabase;
 import codesquad.springcafe.articles.model.Article;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Optional;
+
 
 @Repository
 public class MemoryArticleRepository implements ArticleRepository {
@@ -52,4 +54,27 @@ public class MemoryArticleRepository implements ArticleRepository {
     public void deleteArticle(long articleId) {
         articleDatabase.deleteArticle(articleId);
     }
+
+
+    @Override
+    public void createReply(Reply reply) {
+        articleDatabase.addReply(reply);
+    }
+
+    @Override
+    public Optional<ArrayList<Reply>> getReplies(long articleId) {
+        return Optional.of(articleDatabase.getReplies(articleId));
+    }
+
+    @Override
+    public void deleteReply(long replyId) {
+        articleDatabase.deleteReply(replyId);
+    }
+
+    @Override
+    public Optional<Reply> findReplyById(long replyId) {
+        return Optional.of(articleDatabase.findReplyById(replyId));
+    }
 }
+
+
