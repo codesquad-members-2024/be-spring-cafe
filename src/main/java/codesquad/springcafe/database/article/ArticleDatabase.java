@@ -13,6 +13,8 @@ public interface ArticleDatabase {
 
     List<Article> findAll();
 
+    List<Article> findPageArticles(Long offset, int articlesPerPage);
+
     void update(Article article);
 
     void increaseViews(Long id);
@@ -24,4 +26,5 @@ public interface ArticleDatabase {
 
     List<Long> findAllId();
 
+    Long countTotalArticles();
 }

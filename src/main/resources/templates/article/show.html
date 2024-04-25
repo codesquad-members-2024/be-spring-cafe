@@ -40,7 +40,7 @@
                     <!--                    코멘트-->
                     <div class="post-comment">
                         <div class="post-comment-slipp">
-                            <p class="post-comment-count" th:text="'댓글 ' + ${#lists.size(comments)} + '개'">댓글 2개</p>
+                            <p class="post-comment-count" th:text="'댓글 ' + ${commentCount} + '개'">댓글 2개</p>
                             <div class="post-comment-slipp-articles" id="comments-container">
                                 <article class="comment" th:each="comment : ${comments}">
                                     <div class="article-text">
@@ -58,7 +58,15 @@
                                         </div>
                                     </div>
                                 </article>
+
+                                <div th:if="${commentCount} > 15" class="show-more-container">
+                                    <button type="button"
+                                            class="show-more-button">댓글 더보기
+                                    </button>
+                                </div>
                             </div>
+
+
                             <div class="submit-write" th:object="${commentWriteForm}"
                                  th:classappend="${#fields.hasErrors('content')} ? 'field-error'" method="post"
                                  th:action="@{/articles/detail/{articleId}/comments(articleId=${article.id})}"
@@ -76,7 +84,8 @@
                             $('#submitCommentButton').click(function () {
                                 submitComment();
                             });
-                            var articleId = [[${article.id}]];
+                            let articleId = [[${article.id}]];
+                            let totalCommentCount = [[${commentCount}]]
 
                             function submitComment() {
 
@@ -91,14 +100,7 @@
                                     contentType: 'application/json',
                                     data: JSON.stringify({content: content}),
                                     success: function (comment) {
-                                        var newCommentHtml = '<article class="comment" id="comment-' + comment.id + '">' +
-                                            '<div class="article-text">' +
-                                            '<p class="comment-content comment-author-name">' + comment.writer + '</p>' +
-                                            '<div class="comment-content comment-doc"><p>' + comment.content + '</p></div>' +
-                                            '<p class="comment-content comment-time">' + formatWriteDate(comment.writeDate) + '</p>' +
-                                            '<button type="button" data-comment-id="' + comment.id + '" class="delete-button">삭제</button>' +
-                                            '</div>' +
-                                            '</article>';
+                                        var newCommentHtml = getCommentHtml(comment);
                                         $('#comments-container').append(newCommentHtml);
                                         $('#commentContent').val('');
                                         updateCommentCount();
@@ -134,8 +136,54 @@
 
                             // 댓글 개수 업데이트 함수
                             function updateCommentCount() {
-                                var count = $('#comments-container').children('article').length;
-                                $('.post-comment-count').text('댓글 ' + count + '개');
+                                var text = $('.post-comment-count').text(); // "댓글 2개" 같은 현재 텍스트를 가져옴
+                                var currentCount = parseInt(text.replace(/[^\d]/g, '')); // 숫자만 추출
+                                $('.post-comment-count').text('댓글 ' + (currentCount + 1) + '개'); // 댓글 수를 1 증가시켜서 업데이트
+                            }
+
+                            $(document).on('click', '.show-more-button', function () {
+                                var button = $(this);
+                                var offset = getExposedCommentsCount();
+                                $.ajax({
+                                    url: `/api/articles/detail/${articleId}/comments?offset=${offset}`,
+                                    type: 'GET',
+                                    success: function (comments) {
+                                        // 'comments'는 배열로 각 요소가 하나의 댓글을 나타냄
+                                        comments.forEach(function (comment) {
+                                            // 각 댓글에 대해 필요한 작업 수행
+                                            var commentHtml = getCommentHtml(comment);
+                                            $('#comments-container').append(commentHtml);
+                                        });
+                                        button.remove();
+                                        if (getExposedCommentsCount() < `${totalCommentCount}`) {
+                                            addShowMoreButton();
+                                        }
+                                    },
+                                    error: function () {
+                                        alert('댓글 불러오기에 실패했습니다.');
+                                    }
+                                });
+                            });
+
+                            function getCommentHtml(comment) {
+                                return '<article class="comment" id="comment-' + comment.id + '">' +
+                                    '<div class="article-text">' +
+                                    '<p class="comment-content comment-author-name">' + comment.writer + '</p>' +
+                                    '<div class="comment-content comment-doc"><p>' + comment.content + '</p></div>' +
+                                    '<p class="comment-content comment-time">' + formatWriteDate(comment.writeDate) + '</p>' +
+                                    '<button type="button" data-comment-id="' + comment.id + '" class="delete-button">삭제</button>' +
+                                    '</div>' +
+                                    '</article>';
+                            }
+
+                            function getExposedCommentsCount() {
+                                return $('.comment').length;
+
+                            }
+
+                            function addShowMoreButton() {
+                                let button = '<div class="show-more-container"><button type="button" class="show-more-button">댓글 더보기 </button></div>';
+                                $('#comments-container').append(button);
                             }
                         });
 

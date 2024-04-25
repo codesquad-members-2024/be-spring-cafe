@@ -11,6 +11,8 @@ public interface CommentDatabase {
 
     List<Comment> findAll(Long articleId);
 
+    List<Comment> findPageComments(Long articleId, Long offset, int commentsPerPage);
+
     void update(Comment comment);
 //    void deleteArticle(Long id);
 

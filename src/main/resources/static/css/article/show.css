@@ -22,6 +22,12 @@
     font-size: 14px;
 }
 
+.show-more-container {
+    display: flex;
+    justify-content: center; /* 가로 중앙 정렬 */
+    margin-bottom: 20px;
+}
+
 li {
     margin: 3px;
 }

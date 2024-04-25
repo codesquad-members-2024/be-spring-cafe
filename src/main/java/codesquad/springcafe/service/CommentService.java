@@ -1,9 +1,9 @@
 package codesquad.springcafe.service;
 
-import codesquad.springcafe.database.article.ArticleDatabase;
 import codesquad.springcafe.database.comment.CommentDatabase;
 import codesquad.springcafe.exception.CommentNotFoundException;
 import codesquad.springcafe.form.comment.CommentWriteForm;
+import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.Comment;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,12 +16,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CommentService {
+    public static final int commentsPerPage = 15;
     private final Logger logger = LoggerFactory.getLogger(CommentService.class);
-    private final ArticleDatabase articleDatabase;
     private final CommentDatabase commentDatabase;
 
-    public CommentService(ArticleDatabase articleDatabase, CommentDatabase commentDatabase) {
-        this.articleDatabase = articleDatabase;
+    public CommentService(CommentDatabase commentDatabase) {
         this.commentDatabase = commentDatabase;
     }
 
@@ -37,6 +36,10 @@ public class CommentService {
         return commentDatabase.findAll(articleId);
     }
 
+    public List<Comment> getCommentsByOffset(Long articleId, Long offset) {
+        return commentDatabase.findPageComments(articleId, offset, commentsPerPage);
+    }
+
     public void deleteComments(Long articleId) {
         commentDatabase.findAll(articleId)
                 .forEach(comment -> deleteComment(comment.getId()));
@@ -50,9 +53,13 @@ public class CommentService {
         return comment;
     }
 
-    public Map<Long, Long> getCommentCounts() {
-        List<Long> allArticleId = articleDatabase.findAllId();
-        return allArticleId.stream()
+    public Long getCommentCount(Article article) {
+        return commentDatabase.count(article.getId());
+    }
+
+    public Map<Long, Long> getCommentCounts(List<Article> articles) {
+        return articles.stream()
+                .map(Article::getId)
                 .collect(Collectors.toMap(Function.identity(), commentDatabase::count));
     }
 

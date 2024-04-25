@@ -1,6 +1,7 @@
 package codesquad.springcafe.database.article;
 
 import codesquad.springcafe.model.Article;
+import jakarta.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +61,13 @@ public class ArticleJdbcDatabase implements ArticleDatabase {
     }
 
     @Override
+    public List<Article> findPageArticles(Long offset, int articlesPerPage) {
+        String sql = "SELECT id, writer, title, content, write_date, views, is_Deleted FROM articles WHERE is_deleted = false ORDER BY id DESC LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(sql, articleRowMapper(), articlesPerPage, offset);
+    }
+
+
+    @Override
     public void update(Article article) {
         String sql = "UPDATE articles SET title = ?, content = ?, writer = ?, views = ?, is_deleted = ? WHERE id = ?";
         jdbcTemplate.update(sql, article.getTitle(), article.getContent(), article.getWriter(), article.getViews()
@@ -98,6 +106,12 @@ public class ArticleJdbcDatabase implements ArticleDatabase {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"));
     }
 
+    @Override
+    public Long countTotalArticles() {
+        String sql = "SELECT COUNT(id) FROM articles WHERE is_deleted = false";
+        return jdbcTemplate.queryForObject(sql, Long.class);
+    }
+
     private RowMapper<Article> articleRowMapper() {
         return (rs, rowNum) -> {
 
@@ -110,5 +124,16 @@ public class ArticleJdbcDatabase implements ArticleDatabase {
             article.setViews(rs.getLong("views"));
             return article;
         };
+    }
+
+    @PostConstruct
+    public void makeTestArticles() {
+        if (countTotalArticles() != 0) {
+            return;
+        }
+        for (int i = 1; i <= 100; i++) {
+            Article article = new Article("상추", String.valueOf(i), String.valueOf(i), LocalDateTime.now());
+            add(article);
+        }
     }
 }
