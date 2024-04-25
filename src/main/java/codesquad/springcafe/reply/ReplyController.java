@@ -2,6 +2,7 @@ package codesquad.springcafe.reply;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,12 +27,12 @@ public class ReplyController {
     }
 
     @DeleteMapping("/{replyId}/delete")
-    public String deleteReply(@PathVariable Long replyId, HttpSession httpSession) {
+    public ResponseEntity<?> deleteReply(@PathVariable Long replyId, HttpSession httpSession) {
         String userId = httpSession.getAttribute("userId").toString();
         if (!replyService.isAutehnticated(userId, replyId)) {
-            return "redirect:/";
+            return ResponseEntity.badRequest().build();
         }
         replyService.delete(replyId);
-        return "redirect:/";
+        return ResponseEntity.ok().build();
     }
 }
