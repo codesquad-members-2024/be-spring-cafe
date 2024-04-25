@@ -1,7 +1,7 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.db.article.ArticleDatabase;
-import codesquad.springcafe.model.article.Article;
+import codesquad.springcafe.model.article.dto.ArticleProfileDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,8 +21,8 @@ public class HomeController {
 
     @GetMapping(value = {"/", "/index.html"})
     public String showArticleList(Model model){
-        List<Article> articles = articleDatabase.findAllArticles();
-        model.addAttribute("articles", articles);
+        List<ArticleProfileDto> articleProfiles = articleDatabase.findAllArticles();
+        model.addAttribute("articles", articleProfiles);
         model.addAttribute("totalArticleNumber", articleDatabase.getTotalArticleNumber());
         return "article/list";
     }

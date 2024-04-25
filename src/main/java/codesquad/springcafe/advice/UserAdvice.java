@@ -1,7 +1,5 @@
 package codesquad.springcafe.advice;
 
-import codesquad.springcafe.model.user.User;
-import codesquad.springcafe.model.user.dto.UserProfileDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.ui.Model;
@@ -19,8 +17,8 @@ public class UserAdvice {
         boolean isLoggedIn = session != null && session.getAttribute(LOGIN_SESSION_NAME) != null;
         model.addAttribute("loginUser", isLoggedIn);
         if(isLoggedIn){
-            UserProfileDto userProfile = (UserProfileDto) session.getAttribute(LOGIN_SESSION_NAME);
-            model.addAttribute("userId", userProfile.getUserId());
+            String userId = (String) session.getAttribute(LOGIN_SESSION_NAME);
+            model.addAttribute("userId", userId);
         }
     }
 }

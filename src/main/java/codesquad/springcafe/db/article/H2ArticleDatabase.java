@@ -1,6 +1,7 @@
 package codesquad.springcafe.db.article;
 
 import codesquad.springcafe.model.article.Article;
+import codesquad.springcafe.model.article.dto.ArticleProfileDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -39,15 +40,45 @@ public class H2ArticleDatabase implements ArticleDatabase {
     }
 
     @Override
-    public List<Article> findAllArticles() {
-        return jdbcTemplate.query("select * from articles", articleRowMapper());
+    public List<ArticleProfileDto> findAllArticles() {
+        String sql = """
+                select sequence, publishtime, u.nickname as writerNickname, title, content
+                from articles a
+                left outer join users u
+                on a.writer = u.userId
+                """;
+        return jdbcTemplate.query(
+                sql, (rs, rowNum) -> new ArticleProfileDto(
+                        rs.getLong("sequence"),
+                        rs.getTimestamp("publishtime").toLocalDateTime(),
+                        rs.getString("writernickname"),
+                        rs.getString("title"),
+                        rs.getString("content")
+                )
+        );
     }
 
     @Override
-    public Optional<Article> findArticleBySequence(long sequence) {
-        List<Article> result = jdbcTemplate.query("select * from articles where sequence = ?",
-                articleRowMapper(), sequence);
-        return result.stream().findAny();
+    public Optional<ArticleProfileDto> findArticleBySequence(long sequence) {
+        String sql = """
+                select sequence, publishtime, u.nickname as writerNickname, title, content
+                from articles a
+                left outer join users u
+                on a.writer = u.userId
+                where sequence = ?
+                """;
+        return jdbcTemplate.query(
+                sql, new Object[]{sequence}, rs -> {
+                    if(rs.next()){
+                        return Optional.of(new ArticleProfileDto(
+                                sequence,
+                                rs.getTimestamp("publishtime").toLocalDateTime(),
+                                rs.getString("writernickname"),
+                                rs.getString("title"),
+                                rs.getString("content")));
+                    }
+                    return Optional.empty();
+                });
     }
 
     @Override

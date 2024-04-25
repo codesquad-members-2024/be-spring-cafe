@@ -3,7 +3,7 @@ package codesquad.springcafe.controller;
 import codesquad.springcafe.db.article.ArticleDatabase;
 import codesquad.springcafe.model.article.Article;
 import codesquad.springcafe.model.article.dto.ArticleCreationDto;
-import codesquad.springcafe.model.user.dto.UserProfileDto;
+import codesquad.springcafe.model.article.dto.ArticleProfileDto;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +36,9 @@ public class ArticleController {
     @PostMapping("/add")
     public String createArticle(@ModelAttribute ArticleCreationDto articleCreationDto, HttpSession session) {
         Article article = articleCreationDto.toEntity();
-        UserProfileDto userProfile = (UserProfileDto) session.getAttribute(LOGIN_SESSION_NAME);
         long seq = sequence.incrementAndGet();
         article.setSequence(seq);
-        article.setWriter(userProfile.getNickname());
+        article.setWriter((String) session.getAttribute(LOGIN_SESSION_NAME));
         articleDatabase.addArticle(article);
         return "redirect:/";
     }
@@ -49,12 +48,12 @@ public class ArticleController {
     public String loadArticleContent(@PathVariable long sequence,
                                      Model model,
                                      HttpServletResponse response) throws IOException {
-        Optional<Article> article = articleDatabase.findArticleBySequence(sequence);
-        if(article.isEmpty()){
+        Optional<ArticleProfileDto> articleProfile = articleDatabase.findArticleBySequence(sequence);
+        if(articleProfile.isEmpty()){
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return null;
         }
-        model.addAttribute("article", article.get());
+        model.addAttribute("article", articleProfile.get());
         return "article/show";
     }
 }
