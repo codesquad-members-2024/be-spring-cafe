@@ -8,7 +8,7 @@ public class Reply {
     private String content;
     private Long articleId;
     private String writer;
-    private LocalDateTime createdAt;
+    private LocalDateTime createdDate;
 
 
     public Reply(String content, Long articleId, String writer) {
@@ -17,12 +17,12 @@ public class Reply {
         this.writer = writer;
     }
 
-    public Reply(Long id, String content, Long articleId, String writer, LocalDateTime createdAt) {
+    public Reply(Long id, String content, Long articleId, String writer, LocalDateTime createdDate) {
         this.id = id;
         this.content = content;
         this.articleId = articleId;
         this.writer = writer;
-        this.createdAt = createdAt;
+        this.createdDate = createdDate;
     }
 
     public boolean matchesWriter(String writer){
@@ -46,7 +46,7 @@ public class Reply {
         return writer;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 }

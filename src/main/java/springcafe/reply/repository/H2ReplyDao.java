@@ -30,7 +30,7 @@ public class H2ReplyDao implements ReplyDao {
                         , rs.getString("CONTENT")
                         , rs.getLong("ARTICLE_ID")
                         , rs.getString("WRITER")
-                        , rs.getTimestamp("CREATED_AT").toLocalDateTime()));
+                        , rs.getTimestamp("CREATE_DATE").toLocalDateTime()));
     }
 
     @Override
@@ -43,7 +43,7 @@ public class H2ReplyDao implements ReplyDao {
                         rs.getString("CONTENT"),
                         rs.getLong("ARTICLE_ID"),
                         rs.getString("WRITER"),
-                        rs.getTimestamp("CREATED_AT").toLocalDateTime()
+                        rs.getTimestamp("CREATE_DATE").toLocalDateTime()
                 )
         );
     }
