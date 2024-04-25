@@ -8,8 +8,11 @@ public class User {
     private String password;
     private Long id;
 
+    public String getPassword() {
+        return password;
+    }
 
-    public User(String userId, String name, String email,Long id) {
+    public User(String userId, String name, String email, Long id) {
 
         this.userId = userId;
         this.name = name;
@@ -47,10 +50,6 @@ public class User {
 
     public String getUserId() {
         return userId;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getName() {
