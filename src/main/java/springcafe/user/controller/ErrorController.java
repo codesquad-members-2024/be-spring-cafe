@@ -39,6 +39,6 @@ public class ErrorController {
     @ExceptionHandler(WrongWriterException.class)
     public String handleWrongwriterException(WrongWriterException e){
 
-        return "qna/writererror";
+        return "qna/error";
     }
 }
