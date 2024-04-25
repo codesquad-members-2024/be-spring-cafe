@@ -24,26 +24,18 @@ public class ReplyController {
     }
 
     @PostMapping("/create/{id}")
-    public String create(@PathVariable("id") Long id, @RequestParam(value = "content") String content, HttpSession session) {
-        Article article = this.articleService.findById(id);
+    public String processReplyCreation(@PathVariable("id") Long id, @RequestParam(value = "content") String content, HttpSession session) {
+        Article article = this.articleService.findByArticleId(id);
         User user = (User) session.getAttribute("user");
 
-        replyService.create(article, content, user.getUserId());
+        replyService.saveReply(article, content, user.getUserId());
         return "redirect:/qna/show/" + id;
     }
 
     @DeleteMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id, HttpSession session) {
-        Reply replyToDelete = replyService.findByReplyId(id);
+    public String deleteReply(@PathVariable("id") Long id, HttpSession session) {
         User user = (User) session.getAttribute("user");
-
-        if (!replyToDelete.matchesWriter(user.getUserId())) {
-            throw new WrongWriterException("권한이 없습니다.");
-        }
-
-        Long articleId = replyToDelete.getArticleId();
-        replyService.delete(id);
-
+        Long articleId = replyService.deleteReply(id, user.getUserId());
         return "redirect:/qna/show/" + articleId;
     }
 }
