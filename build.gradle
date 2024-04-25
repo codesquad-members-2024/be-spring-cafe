@@ -2,10 +2,20 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.4'
 	id 'io.spring.dependency-management' version '1.1.4'
+	id 'org.hidetake.ssh' version '2.11.2'
 }
 
 group = 'codesquad'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.2-SNAPSHOT'
+
+remotes {
+	ec2 {
+		role 'webServer'
+		host = project.ec2Host
+		user = project.ec2User
+		identity = file(project.pemFilePath)
+	}
+}
 
 java {
 	sourceCompatibility = '17'
@@ -32,4 +42,14 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+task deploy {
+	doLast {
+		ssh.run {
+			session(remotes.ec2) {
+				put from:"${projectDir}/build/libs/${rootProject.name}-${version}.jar" , into:'./app'
+			}
+		}
+	}
 }
