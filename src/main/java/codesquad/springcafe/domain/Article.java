@@ -10,6 +10,7 @@ public class Article {
     private LocalDateTime time;
     private Long id;
     private boolean edited;
+    private boolean deleted;
 
     public Article(String writer, String title, String contents, LocalDateTime time, boolean edited) {
         this.writer = writer;
@@ -65,6 +66,14 @@ public class Article {
 
     public boolean getEdited() {
         return edited;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override

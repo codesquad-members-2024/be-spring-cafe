@@ -117,6 +117,10 @@ public class ArticleController {
     public String deleteArticle(@PathVariable("articleId") String articleId, HttpSession session) {
         User writer = (User) session.getAttribute("sessionUser");
         articleValidator.validWriter(writer, articleId);
+        if (replyService.existReply(articleId) && replyService.existOtherReply(articleId, writer.getUserId())) {
+            throw new InvalidAccessException("게시글을 삭제 불가능합니다.");
+        }
+        replyService.deleteAllReply(articleId);
         articleService.delete(articleId);
         return "redirect:/";
     }
