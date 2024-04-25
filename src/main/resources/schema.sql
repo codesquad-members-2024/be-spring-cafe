@@ -32,3 +32,5 @@
      foreign key (articleId) references `article`(id),
      foreign key (writer) references `user`(userId)
  );
+
+alter table `article` add deleted boolean default false;

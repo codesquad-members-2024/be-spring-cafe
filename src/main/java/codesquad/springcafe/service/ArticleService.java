@@ -58,7 +58,7 @@ public class ArticleService {
     }
 
     public void delete(Long id) {
-        articleRepository.remove(id);
+        articleRepository.removeSoft(id);
     }
 
     private Long initTotalId() {

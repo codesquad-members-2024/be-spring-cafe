@@ -22,7 +22,11 @@ public class MemoryArticleRepository implements ArticleRepository {
 
     @Override
     public Optional<Article> getById(Long id) {
-        return Optional.ofNullable(articles.get(id));
+        Article article = articles.get(id);
+        if (article == null || !article.isValid()) {
+            return Optional.empty();
+        }
+        return Optional.of(article);
     }
 
     /**
@@ -35,16 +39,23 @@ public class MemoryArticleRepository implements ArticleRepository {
 
     @Override
     public List<Article> getAll() {
-        return new ArrayList<>(articles.values());
+        return new ArrayList<>(articles.values().stream().filter(Article::isValid).toList());
     }
 
     @Override
     public void modify(Article modifiedArticle) {
-        articles.put(modifiedArticle.getId(), modifiedArticle);
+        if (modifiedArticle.isValid()) {
+            articles.put(modifiedArticle.getId(), modifiedArticle);
+        }
     }
 
     @Override
-    public void remove(Long id) {
+    public void removeHard(Long id) {
         articles.remove(id);
+    }
+
+    @Override
+    public void removeSoft(Long id) {
+        articles.get(id).setDeleted(true);
     }
 }

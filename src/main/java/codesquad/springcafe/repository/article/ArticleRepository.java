@@ -16,5 +16,7 @@ public interface ArticleRepository {
 
     void modify(Article modifiedArticle);
 
-    void remove(Long id);
+    void removeHard(Long id);
+
+    void removeSoft(Long id);
 }

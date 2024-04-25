@@ -79,9 +79,15 @@ public class ArticleController {
     @DeleteMapping("articles/{id}")
     public String delete(@PathVariable Long id, HttpSession session) {
         ArticleInfoDTO article = articleService.findById(id);
+        List<ReplyInfoDTO> replies = articleService.findRepliesById(id);
         UserInfoDTO user = (UserInfoDTO) session.getAttribute("loggedInUser");
+
         if (!article.isWriter(user.getUserId())) {
-            return "/article/delete_failed";
+            return "/article/delete_failed_user";
+        }
+
+        if (!replies.isEmpty() && !replies.stream().allMatch(reply -> reply.isWriter(user.getUserId()))) {
+            return "/article/delete_failed_reply";
         }
         articleService.delete(id);
         return "redirect:/";

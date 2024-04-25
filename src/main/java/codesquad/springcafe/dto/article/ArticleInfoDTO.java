@@ -31,7 +31,6 @@ public class ArticleInfoDTO {
         return timestamp.format(formatter);
     }
 
-
     public boolean isWriter(String userId) {
         return writer.equals(userId);
     }

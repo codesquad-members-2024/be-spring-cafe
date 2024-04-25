@@ -14,6 +14,6 @@ public class ArticleUpdateDTO {
     }
 
     public Article toArticle(Long id, LocalDateTime timestamp, String writer) {
-        return new Article(id, timestamp, writer, title, content);
+        return new Article(id, timestamp, writer, title, content, false);
     }
 }
