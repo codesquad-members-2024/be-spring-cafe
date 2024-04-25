@@ -1,6 +1,7 @@
 package codesquad.springcafe.article;
 
 import codesquad.springcafe.article.database.ArticleDatabase;
+import codesquad.springcafe.article.dto.ArticleCreateDto;
 import codesquad.springcafe.article.dto.ArticleUpdateDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,8 @@ public class ArticleService {
         this.articleDatabase = articleDatabase;
     }
 
-    public void save(Article article) {
-        articleDatabase.save(article);
+    public void save(ArticleCreateDto articleCreateDto) {
+        articleDatabase.save(articleCreateDto.toEntity());
     }
 
     public Article findById(Long articleId) {
