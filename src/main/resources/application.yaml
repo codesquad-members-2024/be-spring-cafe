@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: spring-cafe
+  thymeleaf:
+    suffix: .html
+    cache: false
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: ${DATASOURCE_URL}
+    username: root
+    password: ${DATASOURCE_PASSWORD}
+  sql:
+    init:
+      data-locations: classpath:/sql/schema.sql
+      mode: always
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
+

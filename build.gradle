@@ -22,6 +22,7 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-jdbc'
   implementation 'org.springframework.boot:spring-boot-starter-aop'
   implementation group: 'com.h2database', name: 'h2', version: '2.2.224'
+  implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33'
 
   developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
