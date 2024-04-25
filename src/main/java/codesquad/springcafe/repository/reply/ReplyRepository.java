@@ -10,4 +10,6 @@ public interface ReplyRepository {
     Optional<Reply> getByArticleIdAndIndex(Long articleId, Long index);
 
     List<Reply> getAllByArticleId(Long articleId);
+
+    void remove(Long articleId, Long index);
 }

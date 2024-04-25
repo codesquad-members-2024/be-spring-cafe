@@ -30,4 +30,10 @@ public class MemoryReplyRepository implements ReplyRepository {
             .sorted().toList();
         return new ArrayList<>(repliesByArticleId);
     }
+
+    @Override
+    public void remove(Long articleId, Long index) {
+        Optional<Reply> targetReply = getByArticleIdAndIndex(articleId, index);
+        targetReply.ifPresent(replies::remove);
+    }
 }

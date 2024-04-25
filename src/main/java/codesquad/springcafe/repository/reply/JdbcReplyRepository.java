@@ -56,4 +56,10 @@ public class JdbcReplyRepository implements ReplyRepository {
             return Optional.ofNullable(reply);
         });
     }
+
+    @Override
+    public void remove(Long articleId, Long index) {
+        String sql = "DELETE FROM `reply` WHERE articleId = ? AND index = ?";
+        jdbcTemplate.update(sql, articleId, index);
+    }
 }

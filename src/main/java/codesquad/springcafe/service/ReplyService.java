@@ -43,4 +43,8 @@ public class ReplyService {
             .mapToLong(Reply::getIndex).max().orElse(0L);
         return ++maxIndex;
     }
+
+    public void delete(Long articleId, Long index) {
+        replyRepository.remove(articleId, index);
+    }
 }

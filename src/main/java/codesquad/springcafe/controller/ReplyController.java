@@ -29,4 +29,15 @@ public class ReplyController {
         model.addAttribute("reply", newReply);
         return "redirect:/articles/{articleId}";
     }
+
+    @DeleteMapping("articles/{articleId}/replies/{index}")
+    public String delete(@PathVariable Long articleId, @PathVariable Long index, HttpSession session) {
+        ReplyInfoDTO reply = replyService.findByArticleIdAndIndex(articleId, index);
+        UserInfoDTO user = (UserInfoDTO) session.getAttribute("loggedInUser");
+        if (!reply.isWriter(user.getUserId())) {
+            return "/reply/delete_failed";
+        }
+        replyService.delete(articleId, index);
+        return "redirect:/articles/{articleId}";
+    }
 }
