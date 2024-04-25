@@ -19,7 +19,7 @@ public class H2ArticleDao implements ArticleDao {
 
     @Override
     public void save(Article article, Long id) {
-        jdbcTemplate.update("INSERT into ARTICLES (WRITER, TITLE, CONTENTS, USERS_ID) values (?,?,?,?)",
+        jdbcTemplate.update("INSERT into ARTICLES (WRITER, TITLE, CONTENTS, USER_ID) values (?,?,?,?)",
                 article.getWriter(), article.getTitle(), article.getContents(), id);
     }
 
@@ -27,7 +27,7 @@ public class H2ArticleDao implements ArticleDao {
     public Article findById(Long id) {
 
         return jdbcTemplate.queryForObject(
-                "SELECT ID, WRITER, TITLE, CONTENTS, CREATE_DATE, USERS_ID FROM ARTICLES WHERE ID =? AND IS_DELETED =FALSE",
+                "SELECT ID, WRITER, TITLE, CONTENTS, CREATE_DATE, USER_ID FROM ARTICLES WHERE ID =? AND IS_DELETED =FALSE",
                 new Object[]{id},
                 (rs, rowNum) ->new Article(
                         rs.getString("WRITER"),
@@ -35,7 +35,7 @@ public class H2ArticleDao implements ArticleDao {
                         rs.getString("CONTENTS"),
                         rs.getTimestamp("CREATE_DATE").toLocalDateTime(),
                         rs.getLong("ID"),
-                        rs.getLong("USERS_ID")
+                        rs.getLong("USER_ID")
                         )
         );
     }
@@ -43,7 +43,7 @@ public class H2ArticleDao implements ArticleDao {
     @Override
     public List<Article> findAll() {
         return jdbcTemplate.query(
-                "SELECT ID, WRITER, TITLE, CONTENTS, CREATE_DATE, USERS_ID FROM ARTICLES WHERE IS_DELETED =FALSE",
+                "SELECT ID, WRITER, TITLE, CONTENTS, CREATE_DATE, USER_ID FROM ARTICLES WHERE IS_DELETED =FALSE",
                 (rs) -> {
                     List<Article> articleList = new ArrayList();
                     while (rs.next()) {
@@ -52,9 +52,9 @@ public class H2ArticleDao implements ArticleDao {
                         String contents = rs.getString("CONTENTS");
                         LocalDateTime createDate = rs.getTimestamp("CREATE_DATE").toLocalDateTime();
                         Long id = rs.getLong("ID");
-                        long usersId = rs.getLong("USERS_ID");
+                        long userId = rs.getLong("USER_ID");
 
-                        Article article = new Article(writer, title, contents, createDate, id, usersId);
+                        Article article = new Article(writer, title, contents, createDate, id, userId);
                         articleList.add(article);
 
                     }

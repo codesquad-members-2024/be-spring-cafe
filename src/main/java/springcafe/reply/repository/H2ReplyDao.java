@@ -17,7 +17,7 @@ public class H2ReplyDao implements ReplyDao {
     @Override
     public void save(Article article, String content, Reply reply) {
         jdbcTemplate.update(
-                "INSERT into REPLY(CONTENT, ARTICLEID, WRITER) values (?,?,?)"
+                "INSERT into REPLY(CONTENT, ARTICLE_ID, WRITER) values (?,?,?)"
                 ,content, article.getId(), reply.getWriter()
         );
     }
@@ -25,10 +25,10 @@ public class H2ReplyDao implements ReplyDao {
     @Override
     public List<Reply> findByArticleId(Long articleId) {
         return jdbcTemplate.query(
-                "SELECT * FROM REPLY WHERE ARTICLEID=? AND IS_DELETED =FALSE", new Object[]{articleId},
+                "SELECT * FROM REPLY WHERE ARTICLE_ID=? AND IS_DELETED =FALSE", new Object[]{articleId},
                 (rs, rowNum) -> new Reply(rs.getLong("id")
                         , rs.getString("CONTENT")
-                        , rs.getLong("ARTICLEID")
+                        , rs.getLong("ARTICLE_ID")
                         , rs.getString("WRITER")
                         , rs.getTimestamp("CREATED_AT").toLocalDateTime()));
     }
@@ -36,12 +36,12 @@ public class H2ReplyDao implements ReplyDao {
     @Override
     public Reply findByReplyId(Long replyId) {
         return jdbcTemplate.queryForObject(
-                "SELECT ID, CONTENT, ARTICLEID, WRITER, CREATED_AT FROM Reply WHERE ID=? AND IS_DELETED =FALSE",
+                "SELECT ID, CONTENT, ARTICLE_ID, WRITER, CREATED_AT FROM Reply WHERE ID=? AND IS_DELETED =FALSE",
                 new Object[]{replyId},
                 (rs, rowNum) -> new Reply(
                         rs.getLong("ID"),
                         rs.getString("CONTENT"),
-                        rs.getLong("ARTICLEID"),
+                        rs.getLong("ARTICLE_ID"),
                         rs.getString("WRITER"),
                         rs.getTimestamp("CREATED_AT").toLocalDateTime()
                 )
