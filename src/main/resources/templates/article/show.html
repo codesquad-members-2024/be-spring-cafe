@@ -78,8 +78,8 @@
                            th:href="@{/article/{articleId}/update_form(articleId=${article.articleId})}">수정</a>
                       </li>
                       <li>
-                        <button class="link-delete-article"
-                                th:onclick="'confirmDeleteReply(' + ${reply.replyId} + ')'">삭제
+                        <button class="link-delete-comment"
+                                type="button" th:data-replyId="${reply.replyId}">삭제
                         </button>
                       </li>
                       <li>
@@ -156,7 +156,7 @@
   $(document).ready(function () {
     $('.submit-write').submit(updateReply);
 
-    function formatDateTimeToMinute(dateTimeString) {
+    function formatDateTime(dateTimeString) {
       const date = new Date(dateTimeString);
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -198,7 +198,7 @@
                 <a class="link-modify-article" href="/article/{articleId}/update_form">수정</a>
               </li>
               <li>
-                <button class="link-delete-article" onclick="confirmDeleteReply({replyId})">삭제</button>
+                <button class="link-delete-comment" type="button" data-replyId="{replyId}">삭제</button>
               </li>
               <li>
                 <a class="link-modify-article" href="/templates/index.html">목록</a>
@@ -219,7 +219,7 @@
             return;
           }
           if (data.createdTime) {
-            data.createdTime = formatDateTimeToMinute(data.createdTime);
+            data.createdTime = formatDateTime(data.createdTime);
           }
           let formattedTemplate = template.formatJson(data);
           $(".submit-write").before($(formattedTemplate));
@@ -231,10 +231,25 @@
       });
     }
 
+    $(document).on("click", ".link-delete-comment", deleteReply);
+
+    function deleteReply(e) {
+      let replyId = $(this).attr('data-replyId');
+      let target = $(this).closest('.article');
+      $.ajax({
+        type: 'DELETE',
+        url: '/api/reply/' + replyId + '/delete',
+        success: function () {
+          target.remove();
+        },
+        error: function (xhr, status, error) {
+          console.log("Error: " + error);
+        }
+      });
+    }
   });
 
+
 </script>
-
-
 </body>
 </html>
