@@ -25,7 +25,7 @@ public class UserController {
 
     @PostMapping("/users")
     public String createUser(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
-        if (userDatabase.isExistUser(user.getUserId()) == true) {
+        if (userDatabase.isExistUser(user.getUserId())) {
             redirectAttributes.addFlashAttribute("existId", true);
             redirectAttributes.addFlashAttribute("prevName", user.getName());
             redirectAttributes.addFlashAttribute("prevEmail", user.getEmail());
@@ -33,7 +33,7 @@ public class UserController {
         }
         userDatabase.addUser(user);
         logger.debug("add user : {}", user.getUserId());
-        return "redirect:/users";
+        return "redirect:/";
     }
 
     @GetMapping("/users/form/{userid}")
@@ -42,7 +42,7 @@ public class UserController {
         return "user/create_failed";
     }
 
-    @GetMapping("/users")
+    @GetMapping("/users/list")
     public String showUsers(Model model) {
         List<User> userList = userDatabase.getUserList();
         model.addAttribute("userList", userList);
@@ -74,6 +74,6 @@ public class UserController {
         }
         userDatabase.updateUser(editedUser);
         logger.info("update user : {}", editedUser.getUserId());
-        return "redirect:/users";
+        return "redirect:/users/{userid}";
     }
 }
