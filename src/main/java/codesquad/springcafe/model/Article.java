@@ -3,7 +3,6 @@ package codesquad.springcafe.model;
 public class Article {
 
     private Long id;
-
     private String writer;
     private String title;
     private String contents;

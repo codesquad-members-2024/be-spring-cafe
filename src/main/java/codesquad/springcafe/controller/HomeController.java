@@ -1,7 +1,7 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.model.Article;
-import codesquad.springcafe.repository.ArticleRepository;
+import codesquad.springcafe.repository.article.ArticleRepository;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,10 +16,10 @@ public class HomeController {
         this.articleRepository = articleRepository;
     }
 
-    @GetMapping("/")
+    @GetMapping(value = {"/index.html", "/"})
     public String home(Model model) {
         List<Article> articles = articleRepository.findAll();
         model.addAttribute(articles);
-        return "/index";
+        return "index";
     }
 }

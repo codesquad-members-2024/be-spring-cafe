@@ -1,10 +1,13 @@
 package codesquad.springcafe.controller;
 
 
+import codesquad.UserProfileData;
 import codesquad.springcafe.model.User;
-import codesquad.springcafe.repository.UserRepository;
+import codesquad.springcafe.repository.user.UserRepository;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -28,7 +32,7 @@ public class UserController {
 
     @PostMapping("/user/add")
     public String create(@ModelAttribute User user) {
-        userRepository.add(user);
+        userRepository.save(user);
         return "redirect:/users";
     }
 
@@ -45,9 +49,15 @@ public class UserController {
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            model.addAttribute(user);
-            return "/user/profile";
+            UserProfileData dto = new UserProfileData();
+            dto.setUserId(user.getUserId());
+            dto.setName(user.getName());
+            dto.setEmail(user.getEmail());
+            model.addAttribute(dto);
+            return "user/profile";
         }
+        //todo 해당 아이디의 user 없을 시 예외 처리
+        // 누군가 url을 임의로 입력 했을 경우이다
         return null;
     }
 }
