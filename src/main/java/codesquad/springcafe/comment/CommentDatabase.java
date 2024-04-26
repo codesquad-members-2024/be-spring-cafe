@@ -6,6 +6,10 @@ public interface CommentDatabase {
 
     void createComment(CommentCreateDTO comment);
 
+    String getCommentWriter(Long commentId);
+
     List<CommentShowDTO> getCommentList(Long articleId);
+
+    void deleteComment(Long commentId);
 
 }

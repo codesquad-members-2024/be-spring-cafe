@@ -38,10 +38,23 @@ public class CommentH2Database implements CommentDatabase {
                 commentCreateDTO.getCreatedTime());
     }
 
+    @Override
+    public String getCommentWriter(Long commentId) {
+        String sql =  "SELECT writer FROM MAIN.COMMENTS WHERE commentId = ?";
+        String result = (String) jdbcTemplate.queryForObject(sql, String.class, commentId);
+        System.out.println(result);
+        return result;
+    }
 
     @Override
     public List<CommentShowDTO> getCommentList(Long articleId) {
         String sql = "SELECT * FROM MAIN.COMMENTS WHERE articleId = ?";
         return jdbcTemplate.query(sql, commentRowMapper, articleId);
+    }
+
+    @Override
+    public void deleteComment(Long commentId) {
+        String sql = "DELETE FROM MAIN.COMMENTS WHERE commentId = ?";
+        jdbcTemplate.update(sql, commentId);
     }
 }

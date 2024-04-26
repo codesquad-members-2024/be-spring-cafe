@@ -1,6 +1,5 @@
 package codesquad.springcafe.article;
 
-import codesquad.springcafe.comment.Comment;
 import codesquad.springcafe.comment.CommentDatabase;
 import codesquad.springcafe.comment.CommentShowDTO;
 import codesquad.springcafe.user.UserDatabase;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -68,7 +66,7 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}/form")
     public String showEditArticleForm(@PathVariable long articleId, Model model, HttpServletRequest request) {
         Article article = articleDatabase.getArticle(articleId);
-        if (!isWriter(article.getWriter(), request)) {
+        if (!isArticleWriter(article.getWriter(), request)) {
             return "redirect:/error/errorPage";
         }
         model.addAttribute("article", article);
@@ -79,7 +77,7 @@ public class ArticleController {
     public String editArticle(@ModelAttribute Article editedArticle, @PathVariable long articleId, HttpServletRequest request) {
         editedArticle.setArticleId(articleId);
         Article article = articleDatabase.getArticle(articleId);
-        if (!isWriter(article.getWriter(), request)) {
+        if (!isArticleWriter(article.getWriter(), request)) {
             return "redirect:/error/errorPage";
         }
 
@@ -90,14 +88,16 @@ public class ArticleController {
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable long articleId, HttpServletRequest request) {
         Article article = articleDatabase.getArticle(articleId);
-        if (!isWriter(article.getWriter(), request)) {
+        if (!isArticleWriter(article.getWriter(), request)) {
             return "redirect:/error/errorPage";
         }
+
         articleDatabase.deleteArticle(articleId);
         return "redirect:/";
     }
 
-    private boolean isWriter(String writer, HttpServletRequest request) {
+    // 버튼 노출 여부와 상관없이 직접 경로접근을 막기 위한 확인과정
+    private boolean isArticleWriter(String writer, HttpServletRequest request) {
         HttpSession session = request.getSession();
         return writer.equals(session.getAttribute("loginUserId"));
     }
