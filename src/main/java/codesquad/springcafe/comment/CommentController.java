@@ -36,11 +36,18 @@ public class CommentController {
     }
 
     @PutMapping("/articles/{articleId}/comments/{commentId}")
-    public String updateComment(@ModelAttribute CommentEditDTO commentEditDTO, @PathVariable Long articleId, @PathVariable Long commentId) {
+    public String updateComment(@ModelAttribute CommentEditDTO commentEditDTO,
+                                @PathVariable Long articleId,
+                                @PathVariable Long commentId,
+                                HttpServletRequest request) {
+        if (!isCommentWriter(commentDatabase.getCommentWriter(commentId), request)) {
+            return "redirect:/error/errorPage";
+        }
         commentDatabase.editComment(commentEditDTO);
         return "redirect:/articles/" + articleId;
     }
 
+    // 버튼 노출 여부와 상관없이 직접 경로접근을 막기 위한 확인과정
     private boolean isCommentWriter(String writer, HttpServletRequest request) {
         HttpSession session = request.getSession();
         return writer.equals(session.getAttribute("loginUserId"));
