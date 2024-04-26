@@ -25,7 +25,8 @@ public class CommentH2Database implements CommentDatabase {
         CommentShowDTO commentShowDTO = new CommentShowDTO(rs.getLong("commentId"),
                 rs.getString("writer"),
                 rs.getString("content"),
-                rs.getTimestamp("createdTime").toLocalDateTime());
+                rs.getTimestamp("lastEditTime").toLocalDateTime(),
+                rs.getBoolean("isEdited"));
         return commentShowDTO;
     };
 
@@ -59,7 +60,7 @@ public class CommentH2Database implements CommentDatabase {
 
     @Override
     public void editComment(CommentEditDTO comment) {
-        String sql = "UPDATE MAIN.COMMENTS SET content = ?, lastEditTime = ? WHERE commentId = ?";
+        String sql = "UPDATE MAIN.COMMENTS SET content = ?, lastEditTime = ?, isEdited = TRUE WHERE commentId = ?";
         jdbcTemplate.update(sql, comment.getContent(), comment.getEditedTime(), comment.getCommentId());
     }
 }

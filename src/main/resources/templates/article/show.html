@@ -65,7 +65,7 @@
                                       <div class="article-header-text">
                                           <a href="/users/{{writer}}" class="article-author-name">{{writer}}</a>
                                           <a href="#comment-{commentId}" class="article-header-time" title="퍼머링크">
-                                              {{createdTime}}
+                                              {{getFormattedTime}} {{#isEdited}} (수정됨) {{/isEdited}}
                                           </a>
                                       </div>
                                   </div>
@@ -76,7 +76,7 @@
                                   <div class="article-util">
                                       <ul class="article-util-list">
                                           <li>
-                                              <a href="javascript:void(0);" onclick="toggleEditForm('editForm')">수정</a>
+                                              <a href="javascript:void(0);" onclick="toggleEditForm('editForm{{commentId}}')">수정</a>
                                           </li>
                                           <li>
                                               <form class="delete-answer-form" action="/articles/{{article.articleId}}/comments/{{commentId}}" method="POST" onsubmit="return confirmDeleteComment()">
@@ -85,7 +85,7 @@
                                               </form>
                                           </li>
                                           <!-- 수정 폼 -->
-                                          <form id="editForm" class="submit-write" method="POST" action="/articles/{{article.articleId}}/comments/{{commentId}}" style="display: none;">
+                                          <form id="editForm{{commentId}}" class="submit-write" method="POST" action="/articles/{{article.articleId}}/comments/{{commentId}}" style="display: none;">
                                               <input name="_method" value="PUT" type="hidden"/>
                                               <input id="editCommentId" name="commentId" value="{{commentId}}" type="hidden"/>
                                               <input id="editWriter" name="writer" value="{{writer}}" type="hidden"/>
