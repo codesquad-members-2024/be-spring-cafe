@@ -34,8 +34,8 @@ public class JdbcReplyRepository implements ReplyRepository {
             Reply reply = new Reply(
                 resultSet.getLong("articleId"),
                 resultSet.getLong("index"),
-                resultSet.getString("writer"),
                 resultSet.getTimestamp("timestamp").toLocalDateTime(),
+                resultSet.getString("writer"),
                 resultSet.getString("content")
             );
             return reply;
@@ -45,16 +45,20 @@ public class JdbcReplyRepository implements ReplyRepository {
     @Override
     public Optional<Reply> getByArticleIdAndIndex(Long articleId, Long index) {
         String sql = "SELECT * FROM `reply` WHERE articleId = ? AND index = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{articleId, index}, (resultSet, rowNum) -> {
+        List<Reply> replies = jdbcTemplate.query(sql, new Object[]{articleId, index}, (resultSet, rowNum) -> {
             Reply reply = new Reply(
                 resultSet.getLong("articleId"),
                 resultSet.getLong("index"),
-                resultSet.getString("writer"),
                 resultSet.getTimestamp("timestamp").toLocalDateTime(),
+                resultSet.getString("writer"),
                 resultSet.getString("content")
             );
-            return Optional.ofNullable(reply);
+            return reply;
         });
+        if (replies.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(replies.get(0));
     }
 
     @Override

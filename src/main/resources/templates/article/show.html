@@ -10,6 +10,8 @@
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link href="/css/styles.css" rel="stylesheet">
+    <script src="/js/addReply.js"></script>
+    <script src="/js/deleteReply.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-fixed-top header">
@@ -160,25 +162,19 @@
                           <form class="submit-write" action="/articles/{{id}}/replies" method="post">
                               <input type="hidden" class="form-control" id="articleId" name="articleId" value={{id}} />
                               {{/article}}
-                              {{#loggedInUser}}
-                              <input type="hidden" class="form-control" id="writer" name="writer" value={{userId}} />
-                              {{/loggedInUser}}
+                              <input type="hidden" class="form-control" id="writer" name="writer" value={{loggedInUser}} />
                               <div class="form-group" style="padding:14px;">
-                                  <label for="content">답변</label>
+                                  <label for="content">{{loggedInUser}}</label>
                                   <textarea name="content" id="content" class="form-control" placeholder="Update your status"></textarea>
                               </div>
                               <button type="submit" class="btn btn-success clearfix pull-right">답변하기</button>
                               <div class="clearfix" />
                           </form>
-
-
                       </div>
                   </div>
               </div>
           </div>
         </div>
-
-
 
     </div>
 </div>

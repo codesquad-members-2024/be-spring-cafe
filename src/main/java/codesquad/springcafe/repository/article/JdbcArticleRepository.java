@@ -45,25 +45,9 @@ public class JdbcArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public List<Reply> getRepliesById(Long id) {
-        String sql = "SELECT reply.articleId, reply.index, reply.writer, reply.timestamp, reply.content "
-            + "FROM `article` LEFT JOIN `reply` WHERE article.id = ? AND article.deleted = FALSE AND article.id = reply.articleId";
-        return jdbcTemplate.query(sql, new Object[]{id}, (resultSet, rowNum) -> {
-            Reply reply = new Reply(
-                resultSet.getLong("articleId"),
-                resultSet.getLong("index"),
-                resultSet.getString("writer"),
-                resultSet.getTimestamp("timestamp").toLocalDateTime(),
-                resultSet.getString("content")
-            );
-            return reply;
-        });
-    }
-
-    @Override
     public Optional<Article> getById(Long id) {
         String sql = "SELECT * FROM `article` WHERE id = ? AND deleted = FALSE";
-        return jdbcTemplate.queryForObject(sql, new Object[]{id}, (resultSet, rowNum) -> {
+        List<Article> articles = jdbcTemplate.query(sql, new Object[]{id}, (resultSet, rowNum) -> {
             Article article = new Article(
                 resultSet.getLong("id"),
                 resultSet.getTimestamp("timestamp").toLocalDateTime(),
@@ -72,7 +56,27 @@ public class JdbcArticleRepository implements ArticleRepository {
                 resultSet.getString("content"),
                 resultSet.getBoolean("deleted")
             );
-            return Optional.ofNullable(article);
+            return article;
+        });
+        if (articles.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(articles.get(0));
+    }
+
+    @Override
+    public List<Reply> getRepliesById(Long id) {
+        String sql = "SELECT reply.articleId, reply.index, reply.timestamp, reply.writer, reply.content "
+            + "FROM `article` LEFT JOIN `reply` WHERE article.id = ? AND article.deleted = FALSE AND article.id = reply.articleId";
+        return jdbcTemplate.query(sql, new Object[]{id}, (resultSet, rowNum) -> {
+            Reply reply = new Reply(
+                resultSet.getLong("articleId"),
+                resultSet.getLong("index"),
+                resultSet.getTimestamp("timestamp").toLocalDateTime(),
+                resultSet.getString("writer"),
+                resultSet.getString("content")
+            );
+            return reply;
         });
     }
 

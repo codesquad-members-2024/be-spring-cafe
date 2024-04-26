@@ -44,6 +44,10 @@ public class Article {
         return !deleted;
     }
 
+    public boolean isWrittenBy(String userId) {
+        return this.writer.equals(userId);
+    }
+
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }

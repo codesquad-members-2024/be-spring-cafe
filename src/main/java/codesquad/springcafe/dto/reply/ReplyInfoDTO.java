@@ -22,16 +22,8 @@ public class ReplyInfoDTO {
         return articleId;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
     public String getFormattedTimeStamp() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return timestamp.format(formatter);
-    }
-
-    public boolean isWriter(String userId) {
-        return writer.equals(userId);
     }
 }

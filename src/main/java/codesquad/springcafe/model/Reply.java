@@ -6,16 +6,15 @@ import java.time.LocalDateTime;
 public class Reply implements Comparable<Reply> {
     private final Long articleId;
     private final Long index;
-    private final String writer;
     private final LocalDateTime timestamp;
+    private final String writer;
     private final String content;
 
-
-    public Reply(Long articleId, Long index, String writer, LocalDateTime timestamp, String content) {
+    public Reply(Long articleId, Long index, LocalDateTime timestamp, String writer, String content) {
         this.articleId = articleId;
         this.index = index;
-        this.writer = writer;
         this.timestamp = timestamp;
+        this.writer = writer;
         this.content = content;
     }
 
@@ -37,6 +36,10 @@ public class Reply implements Comparable<Reply> {
 
     public String getContent() {
         return content;
+    }
+
+    public boolean isWrittenBy(String userId) {
+        return writer.equals(userId);
     }
 
     public boolean isRightInfo(Long articleId) {

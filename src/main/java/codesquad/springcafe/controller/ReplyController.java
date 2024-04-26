@@ -1,13 +1,11 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.dto.reply.ReplyInfoDTO;
 import codesquad.springcafe.dto.reply.ReplyUploadDTO;
-import codesquad.springcafe.dto.user.UserInfoDTO;
+import codesquad.springcafe.model.Reply;
 import codesquad.springcafe.service.ReplyService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,20 +22,26 @@ public class ReplyController {
     }
 
     @PostMapping("articles/{articleId}/replies")
-    public String upload(@ModelAttribute("reply") ReplyUploadDTO replyUploadDTO, @PathVariable Long articleId, Model model) {
-        ReplyInfoDTO newReply = replyService.upload(replyUploadDTO);
-        model.addAttribute("reply", newReply);
+    public String upload(@ModelAttribute("reply") ReplyUploadDTO replyUploadDTO) {
+        Long lastIndex = getLastIndex(replyUploadDTO.getArticleId());
+        Reply newReply = replyUploadDTO.toReply(++lastIndex);
+        replyService.upload(newReply);
         return "redirect:/articles/{articleId}";
     }
 
     @DeleteMapping("articles/{articleId}/replies/{index}")
     public String delete(@PathVariable Long articleId, @PathVariable Long index, HttpSession session) {
-        ReplyInfoDTO reply = replyService.findByArticleIdAndIndex(articleId, index);
-        UserInfoDTO user = (UserInfoDTO) session.getAttribute("loggedInUser");
-        if (!reply.isWriter(user.getUserId())) {
+        Reply reply = replyService.findByArticleIdAndIndex(articleId, index);
+        String loggedInUser = (String) session.getAttribute("loggedInUser");
+        if (!reply.isWrittenBy(loggedInUser)) {
             return "/reply/delete_failed";
         }
         replyService.delete(articleId, index);
         return "redirect:/articles/{articleId}";
+    }
+
+    private Long getLastIndex(Long articleId) {
+        return replyService.findAllByArticleId(articleId).stream()
+            .mapToLong(Reply::getIndex).max().orElse(0L);
     }
 }

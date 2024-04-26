@@ -26,7 +26,8 @@ public class MemoryReplyRepository implements ReplyRepository {
 
     @Override
     public List<Reply> getAllByArticleId(Long articleId) {
-        List<Reply> repliesByArticleId = replies.stream().filter(reply -> reply.isRightInfo(articleId))
+        List<Reply> repliesByArticleId = replies.stream()
+            .filter(reply -> reply.isRightInfo(articleId))
             .sorted().toList();
         return new ArrayList<>(repliesByArticleId);
     }

@@ -21,6 +21,11 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
+    public List<Article> getAll() {
+        return new ArrayList<>(articles.values().stream().filter(Article::isValid).toList());
+    }
+
+    @Override
     public Optional<Article> getById(Long id) {
         Article article = articles.get(id);
         if (article == null || !article.isValid()) {
@@ -35,11 +40,6 @@ public class MemoryArticleRepository implements ArticleRepository {
     @Override
     public List<Reply> getRepliesById(Long id) {
         return new ArrayList<>();
-    }
-
-    @Override
-    public List<Article> getAll() {
-        return new ArrayList<>(articles.values().stream().filter(Article::isValid).toList());
     }
 
     @Override

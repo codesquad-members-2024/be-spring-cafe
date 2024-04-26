@@ -25,8 +25,8 @@
  (
      articleId BIGINT not null,
      index BIGINT not null,
-     writer VARCHAR(255) not null,
      timestamp TIMESTAMP not null,
+     writer VARCHAR(255) not null,
      content TEXT not null,
      primary key (articleId, index),
      foreign key (articleId) references `article`(id),
