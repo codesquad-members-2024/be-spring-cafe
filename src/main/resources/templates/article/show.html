@@ -37,6 +37,7 @@
                                   <input type="hidden" name="_method" value="DELETE">
                                   <button class="link-delete-article" type="submit">삭제</button>
                               </form>
+                              {{#hasOtherComment}} 다른 사용자의 댓글이 있는 게시글은 삭제할 수 없습니다. {{/hasOtherComment}}
                               <script> // 삭제 전 확인 창 띄우기
                                   function confirmDeleteArticle() {
                                       return confirm("정말로 이 게시물을 삭제하시겠습니까?");
@@ -78,12 +79,7 @@
                                           <li>
                                               <a href="javascript:void(0);" onclick="toggleEditForm('editForm{{commentId}}')">수정</a>
                                           </li>
-                                          <li>
-                                              <form class="delete-answer-form" action="/articles/{{article.articleId}}/comments/{{commentId}}" method="POST" onsubmit="return confirmDeleteComment()">
-                                                  <input type="hidden" name="_method" value="DELETE">
-                                                  <button type="submit" class="delete-answer-button">삭제</button>
-                                              </form>
-                                          </li>
+
                                           <!-- 수정 폼 -->
                                           <form id="editForm{{commentId}}" class="submit-write" method="POST" action="/articles/{{article.articleId}}/comments/{{commentId}}" style="display: none;">
                                               <input name="_method" value="PUT" type="hidden"/>
@@ -117,9 +113,6 @@
         </div>
     </div>
 </div>
-
-
-
 
 <script>
     // 폼 토글 함수

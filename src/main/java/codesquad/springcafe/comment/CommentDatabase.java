@@ -10,6 +10,8 @@ public interface CommentDatabase {
 
     List<CommentShowDTO> getCommentList(Long articleId);
 
+    boolean hasOtherComment(Long articleId, String writer);
+
     void deleteComment(Long commentId);
 
     void editComment(CommentEditDTO comment);

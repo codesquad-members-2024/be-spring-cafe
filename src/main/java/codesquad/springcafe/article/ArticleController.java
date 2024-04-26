@@ -62,7 +62,7 @@ public class ArticleController {
 
         List<CommentShowDTO> commentList = commentDatabase.getCommentList(articleId);
         for (CommentShowDTO commentShowDTO : commentList) {
-            authorizeCommentMod(commentShowDTO, request);
+            authorizeCommentMod(commentShowDTO, session);
         }
         model.addAttribute("commentList", commentList);
         return "article/show";
@@ -70,8 +70,10 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}/form")
     public String showEditArticleForm(@PathVariable long articleId, Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
         Article article = articleDatabase.getArticle(articleId);
-        if (!isArticleWriter(article.getWriter(), request)) {
+        if (!isArticleWriter(article.getWriter(), session)) {
+
             return "redirect:/error/errorPage";
         }
         model.addAttribute("article", article);
@@ -80,9 +82,10 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public String editArticle(@ModelAttribute Article editedArticle, @PathVariable long articleId, HttpServletRequest request) {
+        HttpSession session = request.getSession();
         editedArticle.setArticleId(articleId);
         Article article = articleDatabase.getArticle(articleId);
-        if (!isArticleWriter(article.getWriter(), request)) {
+        if (!isArticleWriter(article.getWriter(), session)) {
             return "redirect:/error/errorPage";
         }
 
@@ -91,25 +94,34 @@ public class ArticleController {
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable long articleId, HttpServletRequest request) {
+    public String deleteArticle(@PathVariable long articleId, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        HttpSession session = request.getSession();
         Article article = articleDatabase.getArticle(articleId);
-        if (!isArticleWriter(article.getWriter(), request)) {
+        if (!isArticleWriter(article.getWriter(), session)) {
             return "redirect:/error/errorPage";
+        }
+
+        // 다른 사용자의 댓글이 있는지 확인
+        if (hasOtherComment(articleId, session)) {
+            redirectAttributes.addFlashAttribute("hasOtherComment", true);
+            return "redirect:/articles/" + articleId;
         }
 
         articleDatabase.deleteArticle(articleId);
         return "redirect:/";
     }
 
+    private boolean hasOtherComment(long articleId, HttpSession session) {
+        return commentDatabase.hasOtherComment(articleId, (String) session.getAttribute("loginUserId"));
+    }
+
     // 버튼 노출 여부와 상관없이 직접 경로접근을 막기 위한 확인과정
-    private boolean isArticleWriter(String writer, HttpServletRequest request) {
-        HttpSession session = request.getSession();
+    private boolean isArticleWriter(String writer, HttpSession session) {
         return writer.equals(session.getAttribute("loginUserId"));
     }
 
     // 게시글 조회 시, 댓글의 작성자에게만 수정 및 삭제 버튼을 노출하기 위한 설정
-    private void authorizeCommentMod(CommentShowDTO commentShowDTO, HttpServletRequest request) {
-        HttpSession session = request.getSession();
+    private void authorizeCommentMod(CommentShowDTO commentShowDTO, HttpSession session) {
         if (session.getAttribute("loginUserId").equals(commentShowDTO.getWriter())) {
             commentShowDTO.setIsLoginUserWriter(true);
         }

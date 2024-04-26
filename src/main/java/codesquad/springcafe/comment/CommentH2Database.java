@@ -1,6 +1,5 @@
 package codesquad.springcafe.comment;
 
-import codesquad.springcafe.article.Article;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -50,6 +49,12 @@ public class CommentH2Database implements CommentDatabase {
     public List<CommentShowDTO> getCommentList(Long articleId) {
         String sql = "SELECT * FROM MAIN.COMMENTS WHERE articleId = ? AND isDeleted = FALSE";
         return jdbcTemplate.query(sql, commentRowMapper, articleId);
+    }
+
+    @Override
+    public boolean hasOtherComment(Long articleId, String writer) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM MAIN.COMMENTS WHERE articleId = ? AND writer != ? AND isDeleted = FALSE)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, articleId, writer));
     }
 
     @Override
