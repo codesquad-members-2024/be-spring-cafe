@@ -12,4 +12,6 @@ public interface CommentDatabase {
 
     void deleteComment(Long commentId);
 
+    void editComment(CommentEditDTO comment);
+
 }

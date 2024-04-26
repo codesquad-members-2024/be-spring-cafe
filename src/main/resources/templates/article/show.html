@@ -33,12 +33,12 @@
                               <a class="link-modify-article" href="/articles/{{article.articleId}}/form">수정</a>
                           </li>
                           <li>
-                              <form class="form-delete" action="/articles/{{article.articleId}}" method="POST" onsubmit="return confirmDelete();">
+                              <form class="form-delete" action="/articles/{{article.articleId}}" method="POST" onsubmit="return confirmDeleteArticle();">
                                   <input type="hidden" name="_method" value="DELETE">
                                   <button class="link-delete-article" type="submit">삭제</button>
                               </form>
                               <script> // 삭제 전 확인 창 띄우기
-                                  function confirmDelete() {
+                                  function confirmDeleteArticle() {
                                       return confirm("정말로 이 게시물을 삭제하시겠습니까?");
                                   }
                               </script>
@@ -76,14 +76,25 @@
                                   <div class="article-util">
                                       <ul class="article-util-list">
                                           <li>
-                                              <a class="link-modify-article" href="/articles/{{article.articleId}}/comments/{{commentId}}/form">수정</a>
+                                              <a href="javascript:void(0);" onclick="toggleEditForm('editForm')">수정</a>
                                           </li>
                                           <li>
-                                              <form class="delete-answer-form" action="/articles/{{article.articleId}}/comments/{{commentId}}" method="POST">
+                                              <form class="delete-answer-form" action="/articles/{{article.articleId}}/comments/{{commentId}}" method="POST" onsubmit="return confirmDeleteComment()">
                                                   <input type="hidden" name="_method" value="DELETE">
                                                   <button type="submit" class="delete-answer-button">삭제</button>
                                               </form>
                                           </li>
+                                          <!-- 수정 폼 -->
+                                          <form id="editForm" class="submit-write" method="POST" action="/articles/{{article.articleId}}/comments/{{commentId}}" style="display: none;">
+                                              <input name="_method" value="PUT" type="hidden"/>
+                                              <input id="editCommentId" name="commentId" value="{{commentId}}" type="hidden"/>
+                                              <input id="editWriter" name="writer" value="{{writer}}" type="hidden"/>
+                                              <div class="form-group" style="padding:14px;">
+                                                  <label for="editedContent">댓글 수정</label><textarea class="form-control" id="editedContent" name="content" placeholder="Update your status">{{content}}</textarea>
+                                              </div>
+                                              <button class="btn btn-success pull-right" type="submit">수정 완료</button>
+                                              <div class="clearfix"></div>
+                                          </form>
                                       </ul>
                                   </div>
                                   {{/isLoginUserWriter}}
@@ -106,6 +117,27 @@
         </div>
     </div>
 </div>
+
+
+
+
+<script>
+    // 폼 토글 함수
+    function toggleEditForm(formId) {
+        var form = document.getElementById(formId);
+        if (form.style.display === "none") {
+            form.style.display = "block";  // 폼을 보여줌
+        } else {
+            form.style.display = "none";   // 폼을 숨김
+        }
+    }
+</script>
+
+<script> // 삭제 전 확인 창 띄우기
+function confirmDeleteComment() {
+    return confirm("정말로 이 댓글을 삭제하시겠습니까?");
+}
+</script>
 
 <script type="text/template" id="answerTemplate">
 	<article class="article">

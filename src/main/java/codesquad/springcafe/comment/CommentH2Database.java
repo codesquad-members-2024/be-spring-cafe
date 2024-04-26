@@ -31,11 +31,12 @@ public class CommentH2Database implements CommentDatabase {
 
     @Override
     public void createComment(CommentCreateDTO commentCreateDTO) {
-        String sql = "INSERT INTO MAIN.COMMENTS (articleId, writer, content, createdTime) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO MAIN.COMMENTS (articleId, writer, content, createdTime, lastEditTime) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql, commentCreateDTO.getArticleId(),
                 commentCreateDTO.getWriter(),
                 commentCreateDTO.getContent(),
-                commentCreateDTO.getCreatedTime());
+                commentCreateDTO.getCreatedTime(),
+                commentCreateDTO.getCreatedTime()); // 댓글 생성 시의 마지막 수정시간 = 생성시간
     }
 
     @Override
@@ -54,5 +55,11 @@ public class CommentH2Database implements CommentDatabase {
     public void deleteComment(Long commentId) {
         String sql = "DELETE FROM MAIN.COMMENTS WHERE commentId = ?";
         jdbcTemplate.update(sql, commentId);
+    }
+
+    @Override
+    public void editComment(CommentEditDTO comment) {
+        String sql = "UPDATE MAIN.COMMENTS SET content = ?, lastEditTime = ? WHERE commentId = ?";
+        jdbcTemplate.update(sql, comment.getContent(), comment.getEditedTime(), comment.getCommentId());
     }
 }

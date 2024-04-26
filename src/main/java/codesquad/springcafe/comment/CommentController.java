@@ -6,10 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class CommentController {
@@ -36,7 +33,12 @@ public class CommentController {
         logger.debug("댓글 삭제, commentId : {}", commentId);
         commentDatabase.deleteComment(commentId);
         return "redirect:/articles/" + articleId;
+    }
 
+    @PutMapping("/articles/{articleId}/comments/{commentId}")
+    public String updateComment(@ModelAttribute CommentEditDTO commentEditDTO, @PathVariable Long articleId, @PathVariable Long commentId) {
+        commentDatabase.editComment(commentEditDTO);
+        return "redirect:/articles/" + articleId;
     }
 
     private boolean isCommentWriter(String writer, HttpServletRequest request) {

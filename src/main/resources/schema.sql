@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS main.comments (
     articleId int,
     content varchar(65535),
     createdtime timestamp,
+    lastEditTime timestamp,
     isdeleted boolean default FALSE,
     foreign key (writer) references users(userid),
     foreign key (articleId) references articles(articleId)
