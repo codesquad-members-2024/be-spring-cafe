@@ -58,11 +58,14 @@
 ### 🎡 실수
 #### - DB에 값을 넣을 때 default 값을 설정해주었음에도 불구하고 계속 null값이 들어가는 현상
 - 문제상황
-  - 테이블에 edited, deleted 컬럼은 default로 false값이 설정되어 있었다.
-  - 그런데 데이터를 insert 하면 해당 컬럼이 false이 아닌 null이 된다.
+  - Articles 테이블에 edited, deleted 컬럼은 기본값으로 false이 설정되어 있었다.
+  - 그런데 데이터를 SimpleJdbcInsert를 이용해 insert 하면 해당 컬럼이 false이 아닌 null이 된다..
 - 원인
-  - SimpleJdbcInsert를 사용하는 경우에는 parameters Map을 사용하는데, 여기에 아무것도 명시해주지 않을 경우
-  default값이 설정되어 있더라도 null 값이 들어간다고 한다.
+  - SimpleJdbcInsert를 사용하면서 컬럼과의 매핑에 parameter Map을 사용했는데, 여기에 아무것도 명시해주지 않을 경우
+  기본값이 설정되어 있더라도 null 값이 들어간다고 한다.
+- 해결
+  - parameter Map에 명시적으로 값을 넣어주는 것으로 해결.
 - 이유
   - 디버깅해서 따라가봤는데 확인해 봐도 잘 모르겠다 😂
-  - 내부적으로 쿼리문을 만들어서 Map의 값으로 insert 하는 것인데 왜 콘솔창에서 insert 하는 것과 다를까?
+  - 내부적으로 쿼리문을 만들어서 Map의 값으로 insert 하는 것으로 보이는데 왜 콘솔창에서 insert 하는 것과 다를까?
+  - 방학때 마저 확인 필요
