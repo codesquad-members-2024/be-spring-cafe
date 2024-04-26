@@ -1,5 +1,6 @@
 package codesquad.springcafe.web.controller;
 
+import codesquad.springcafe.domain.user.User;
 import codesquad.springcafe.service.ArticleService;
 import codesquad.springcafe.web.dto.ArticleCreateDto;
 import codesquad.springcafe.web.validation.ArticleCreateValidator;
@@ -33,11 +34,14 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/create")
-    public String quest(@Validated @ModelAttribute("create") ArticleCreateDto articleCreateDto, BindingResult bindingResult) {
+    public String quest(
+            @SessionAttribute(name = "loginUser", required = false) User loginUser,
+            @Validated @ModelAttribute("create") ArticleCreateDto articleCreateDto,
+            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "qna/form";
         }
-        articleService.saveArticle(articleCreateDto);
+        articleService.saveArticle(loginUser, articleCreateDto);
         return "redirect:/";
     }
 
