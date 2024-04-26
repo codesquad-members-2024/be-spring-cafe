@@ -48,13 +48,13 @@ public class CommentH2Database implements CommentDatabase {
 
     @Override
     public List<CommentShowDTO> getCommentList(Long articleId) {
-        String sql = "SELECT * FROM MAIN.COMMENTS WHERE articleId = ?";
+        String sql = "SELECT * FROM MAIN.COMMENTS WHERE articleId = ? AND isDeleted = FALSE";
         return jdbcTemplate.query(sql, commentRowMapper, articleId);
     }
 
     @Override
     public void deleteComment(Long commentId) {
-        String sql = "DELETE FROM MAIN.COMMENTS WHERE commentId = ?";
+        String sql = "UPDATE MAIN.COMMENTS SET isDeleted = TRUE WHERE commentId = ?";
         jdbcTemplate.update(sql, commentId);
     }
 

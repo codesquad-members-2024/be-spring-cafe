@@ -45,7 +45,7 @@ public class ArticleH2Database implements ArticleDatabase {
     // 인덱스가 있는 PrimaryKey인 ArticleID를 통해 정렬한 뒤 가져오도록 했습니다.
     @Override
     public List<Article> getReversedArticleList() {
-        String sql = "SELECT * FROM MAIN.ARTICLES ORDER BY ARTICLEID DESC LIMIT 10";
+        String sql = "SELECT * FROM MAIN.ARTICLES WHERE ISDELETED = FALSE ORDER BY ARTICLEID DESC LIMIT 10";
         return jdbcTemplate.query(sql, articleRowMapper);
     }
 
@@ -64,7 +64,7 @@ public class ArticleH2Database implements ArticleDatabase {
 
     @Override
     public void deleteArticle(long articleId) {
-        String sql = "DELETE FROM MAIN.ARTICLES WHERE articleId = ?";
+        String sql = "UPDATE MAIN.ARTICLES SET isDeleted = TRUE WHERE articleId = ?";
         jdbcTemplate.update(sql, articleId);
     }
 }
