@@ -148,10 +148,11 @@ public class H2ArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public void deleteReply(long replyId) {
+    public boolean deleteReply(long replyId) {
         String sql = "UPDATE REPLIES SET DELETED = TRUE WHERE REPLYID = ?";
-        jdbcTemplate.update(sql, replyId);
+        int updatedRow = jdbcTemplate.update(sql, replyId);
         logger.debug("Reply ID : {} Deleted", replyId);
+        return updatedRow > 0;
     }
 
     @Override

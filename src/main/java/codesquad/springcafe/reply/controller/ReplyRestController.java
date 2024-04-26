@@ -23,19 +23,19 @@ public class ReplyRestController {
     public ResponseEntity<ReplyViewDto> createReply(@PathVariable long articleId, @RequestBody ReplyCreationRequest replyCreationRequest) {
         Reply reply = articleService.createReply(articleId, replyCreationRequest);
 
-        // 필요한 것
-        /*
-         * 1) replyId
-         * 2) userId
-         * 3) creationDate
-         * 4) comment
-         * 5) articleId
-         * */
-
         ReplyViewDto replyViewDto = new ReplyViewDto(reply, true);
 
         replyViewDto.setArticleId(articleId);
 
         return ResponseEntity.ok(replyViewDto);
     }
+
+    @DeleteMapping("/delete/{replyId}")
+    public ResponseEntity<Boolean> deleteReply(@PathVariable long replyId) {
+        boolean result = articleService.deleteReply(replyId);
+
+        return ResponseEntity.ok(result);
+    }
+
+
 }

@@ -4,9 +4,9 @@
         <span class="article-content-header">
             <p class="comment-content comment-author-name">{userId}</p>
             <button class="reply-btn adjust-btn-color">수정</button>
-                <form id="deleteForm" method="POST" action="/articles/{articleId}/answers/{replyId}">
+                <form id="deleteForm" method="POST" action="/api/articles/{articleId}/replies/delete/{replyId}">
                     <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" class="reply-btn delete-btn-color">삭제</button>
+                    <button type="submit" class="reply-btn delete-btn-color" id="reply-delete-btn">삭제</button>
                 </form>
         </span>
             <div class="comment-content comment-doc">

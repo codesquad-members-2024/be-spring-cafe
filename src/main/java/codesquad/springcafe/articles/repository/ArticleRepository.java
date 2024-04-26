@@ -28,5 +28,5 @@ public interface ArticleRepository {
 
     Optional<Reply> findReplyById(long replyId);
 
-    void deleteReply(long replyId);
+    boolean deleteReply(long replyId);
 }

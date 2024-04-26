@@ -78,9 +78,13 @@ public class ArticleDatabase {
         logger.debug("Article ID '{}' Deleted", articleId);
     }
 
-    public void deleteReply(long replyId) {
-        replies.remove(replyId);
-        logger.debug("Reply ID '{}' Deleted", replyId);
+    public boolean deleteReply(long replyId) {
+        if (replies.containsKey(replyId)) {
+            replies.remove(replyId);
+            logger.debug("Reply ID '{}' Deleted", replyId);
+            return true;
+        }
+        return false;
     }
 
     public Reply findReplyById(long replyId) {

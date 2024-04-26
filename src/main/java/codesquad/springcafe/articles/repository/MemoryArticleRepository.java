@@ -68,8 +68,8 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public void deleteReply(long replyId) {
-        articleDatabase.deleteReply(replyId);
+    public boolean deleteReply(long replyId) {
+        return articleDatabase.deleteReply(replyId);
     }
 
     @Override

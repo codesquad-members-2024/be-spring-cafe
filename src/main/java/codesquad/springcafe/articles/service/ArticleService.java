@@ -84,8 +84,8 @@ public class ArticleService {
         return articleRepository.findReplyById(replyId).orElseThrow(() -> new ReplyNotFoundException("해당하는 댓글을 찾을 수 없습니다."));
     }
 
-    public void deleteReply(long replyId) {
-        articleRepository.deleteReply(replyId);
+    public boolean deleteReply(long replyId) {
+        return articleRepository.deleteReply(replyId);
     }
 
     private void validateArticleAccess(ArrayList<Reply> replies, String userId) {
