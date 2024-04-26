@@ -104,7 +104,7 @@
                                         var newCommentHtml = getCommentHtml(comment);
                                         $('#comments-container').append(newCommentHtml);
                                         $('#commentContent').val('');
-                                        updateCommentCount();
+                                        increaseCommentCount();
                                     },
                                     error: function () {
                                         alert('댓글을 등록하지 못했습니다.');
@@ -126,7 +126,7 @@
                                     type: 'DELETE',
                                     success: function () {
                                         commentElement.remove(); // DOM에서 요소 제거
-                                        updateCommentCount();
+                                        decreaseCommentCount();
                                         alert('댓글이 삭제되었습니다.');
                                     },
                                     error: function () {
@@ -136,10 +136,16 @@
                             });
 
                             // 댓글 개수 업데이트 함수
-                            function updateCommentCount() {
+                            function increaseCommentCount() {
                                 var text = $('.post-comment-count').text(); // "댓글 2개" 같은 현재 텍스트를 가져옴
                                 var currentCount = parseInt(text.replace(/[^\d]/g, '')); // 숫자만 추출
                                 $('.post-comment-count').text('댓글 ' + (currentCount + 1) + '개'); // 댓글 수를 1 증가시켜서 업데이트
+                            }
+
+                            function decreaseCommentCount() {
+                                var text = $('.post-comment-count').text(); // "댓글 2개" 같은 현재 텍스트를 가져옴
+                                var currentCount = parseInt(text.replace(/[^\d]/g, '')); // 숫자만 추출
+                                $('.post-comment-count').text('댓글 ' + (currentCount - 1) + '개'); // 댓글 수를 1 증가시켜서 업데이트
                             }
 
                             $(document).on('click', '.show-more-button', function () {

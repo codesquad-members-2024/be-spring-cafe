@@ -7,8 +7,6 @@ import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.Comment;
 import codesquad.springcafe.service.ArticleService;
 import codesquad.springcafe.service.CommentService;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,8 +56,7 @@ public class ArticleController {
             return "article/form";
         }
 
-        Article article = articleService.writeArticle(articleWriteForm, loginUser.getNickname()); // 게시글 업데이트
-        loginUser.addOwnArticle(article.getId()); // 세션정보 업데이트
+        articleService.writeArticle(articleWriteForm, loginUser.getNickname()); // 게시글 업데이트
 
         return "redirect:/";
     }
@@ -86,7 +83,10 @@ public class ArticleController {
      * id와 일치하는 게시글을 찾고 수정 폼을 보여줍니다.
      */
     @GetMapping("/edit/{id}")
-    public String updateForm(@PathVariable Long id, Model model) {
+    public String updateForm(@PathVariable Long id, Model model,
+                             @SessionAttribute(LoginController.LOGIN_SESSION_NAME) LoginUser loginUser) {
+        articleService.findArticle(id);
+        articleService.validateAccess(id, loginUser.getNickname());
         ArticleWriteForm articleUpdateForm = articleService.getArticleUpdateForm(id);
         model.addAttribute("articleWriteForm", articleUpdateForm);
         return "article/update";
@@ -97,11 +97,12 @@ public class ArticleController {
      */
     @PutMapping("/edit/{id}")
     public String updateArticle(@PathVariable Long id, @Validated @ModelAttribute ArticleWriteForm articleWriteForm,
-                                BindingResult bindingResult) {
+                                BindingResult bindingResult,
+                                @SessionAttribute(LoginController.LOGIN_SESSION_NAME) LoginUser loginUser) {
         if (bindingResult.hasErrors()) {
             return "article/update";
         }
-        articleService.updateArticle(id, articleWriteForm);
+        articleService.updateArticle(id, articleWriteForm, loginUser.getNickname());
 
         return "redirect:/articles/detail/" + id;
     }
@@ -110,7 +111,11 @@ public class ArticleController {
      * id와 일치하는 게시글을 찾아 삭제 폼을 보여줍니다.
      */
     @GetMapping("/delete/{id}")
-    public String deleteForm(@PathVariable Long id, Model model) {
+    public String deleteForm(@PathVariable Long id, Model model,
+                             @SessionAttribute(LoginController.LOGIN_SESSION_NAME) LoginUser loginUser) {
+        articleService.findArticle(id);
+        articleService.validateAccess(id, loginUser.getNickname());
+        articleService.validateOtherComment(id, loginUser.getNickname());
         model.addAttribute("articleId", id);
         return "article/delete";
     }
@@ -119,55 +124,9 @@ public class ArticleController {
      * 게시물의 작성자와 다른 유저가 작성한 코멘트가 존재할 경우 게시물을 삭제할 수 없습니다.
      */
     @DeleteMapping("/delete/{id}")
-    public String deleteArticle(@PathVariable Long id) {
-        articleService.deleteArticle(id);
-        commentService.deleteComments(id);
-
+    public String deleteArticle(@PathVariable Long id,
+                                @SessionAttribute(LoginController.LOGIN_SESSION_NAME) LoginUser loginUser) {
+        articleService.deleteArticle(id, loginUser.getNickname());
         return "redirect:/";
-    }
-
-    /**
-     * 코멘트를 작성합니다. 게시글이 존재하지 않으면 홈으로 리다이렉트하고 댓글 폼에서 에러가 발생하면 게시물 상세 조회 페이지로 리다이렉트합니다.
-     */
-    @PostMapping("/detail/{articleId}/comments")
-    public String writeComment(@PathVariable Long articleId,
-                               @Validated @ModelAttribute CommentWriteForm commentWriteForm,
-                               BindingResult bindingResult, Model model,
-                               @SessionAttribute(LoginController.LOGIN_SESSION_NAME) LoginUser loginUser) {
-        Article article = articleService.getArticle(articleId);
-
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("article", article);
-            model.addAttribute("comments", commentService.getComments(articleId));
-            return "article/show";
-        }
-
-        commentService.writeComment(articleId, loginUser.getNickname(), commentWriteForm);
-
-        return "redirect:/articles/detail/" + articleId;
-    }
-
-    /**
-     * 코멘트를 삭제합니다. 아티클 id나 코멘트 id가 유효하지 않으면 홈으로 이동합니다. 로그인 유저가 아닌 사용자가 요청을 보낼 경우 403 응답을 내보냅니다.
-     */
-    @DeleteMapping("/detail/{articleId}/comments/{id}")
-    public String deleteComment(@PathVariable Long articleId, @PathVariable Long id,
-                                @SessionAttribute(LoginController.LOGIN_SESSION_NAME) LoginUser loginUser,
-                                HttpServletResponse response)
-            throws IOException {
-        articleService.getArticle(articleId);
-        if (isNotWriter(id, loginUser)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
-            return null;
-        }
-
-        commentService.deleteComment(id);
-
-        return "redirect:/articles/detail/" + articleId;
-    }
-
-    private boolean isNotWriter(Long id, LoginUser loginUser) {
-        Comment comment = commentService.getComment(id);
-        return !loginUser.hasSameNickname(comment.getWriter());
     }
 }

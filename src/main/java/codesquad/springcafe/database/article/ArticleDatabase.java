@@ -23,8 +23,8 @@ public interface ArticleDatabase {
 //    void deleteArticle(Long id);
 
     void clear();
-
-    List<Long> findAllId();
-
+    
     Long countTotalArticles();
+
+    String findWriter(Long id);
 }

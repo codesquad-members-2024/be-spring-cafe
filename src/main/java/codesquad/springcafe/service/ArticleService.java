@@ -2,14 +2,13 @@ package codesquad.springcafe.service;
 
 import codesquad.springcafe.database.article.ArticleDatabase;
 import codesquad.springcafe.database.comment.CommentDatabase;
+import codesquad.springcafe.exception.ArticleAccessException;
 import codesquad.springcafe.exception.ArticleHasCommentsException;
 import codesquad.springcafe.exception.ArticleNotFoundException;
 import codesquad.springcafe.form.article.ArticleWriteForm;
 import codesquad.springcafe.model.Article;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -41,23 +40,17 @@ public class ArticleService {
         return articleDatabase.findPageArticles(offset, articlesPerPage);
     }
 
-    public Set<Long> getArticleIds(String writer) {
-        List<Article> articles = articleDatabase.findAll(writer);
-        return articles.stream()
-                .map(Article::getId)
-                .collect(Collectors.toSet());
-    }
-
     public Article viewArticle(Long id) {
-        Article article = getArticle(id);
+        Article article = findArticle(id);
         articleDatabase.increaseViews(id);
         article.increaseViews();
         return article;
     }
 
 
-    public Article updateArticle(Long id, ArticleWriteForm articleWriteForm) {
-        Article article = getArticle(id);
+    public Article updateArticle(Long id, ArticleWriteForm articleWriteForm, String writer) {
+        validateAccess(id, writer);
+        Article article = findArticle(id);
 
         String newTitle = articleWriteForm.getTitle();
         String newContent = articleWriteForm.getContent();
@@ -68,23 +61,27 @@ public class ArticleService {
         return updatedArticle;
     }
 
-    public Article deleteArticle(Long id) {
-        Article article = getArticle(id);
-        if (hasOtherWriterComment(article)) {
-            throw new ArticleHasCommentsException(id);
-        }
+    /**
+     * 유저의 리소스 접근권 확인 및 다른 사용자의 댓글이 없는지 확인한 후 삭제한다.
+     */
+    public Article deleteArticle(Long id, String userNickname) {
+        Article article = findArticle(id);
+        validateAccess(id, userNickname);
+        validateOtherComment(id, userNickname);
+
         articleDatabase.softDelete(id);
+        commentDatabase.softDeleteComments(id);
         article.delete();
         logger.info("게시글이 삭제 되었습니다. {}", article);
         return article;
     }
 
     public ArticleWriteForm getArticleUpdateForm(Long id) {
-        Article article = getArticle(id);
+        Article article = findArticle(id);
         return new ArticleWriteForm(article.getTitle(), article.getContent());
     }
 
-    public Article getArticle(Long id) {
+    public Article findArticle(Long id) {
         return articleDatabase.findBy(id).orElseThrow(() -> new ArticleNotFoundException(id));
     }
 
@@ -96,10 +93,19 @@ public class ArticleService {
         return articleDatabase.countTotalArticles();
     }
 
-    private boolean hasOtherWriterComment(Article article) {
-        String articleWriter = article.getWriter();
-        return commentDatabase.findAll(article.getId())
-                .stream()
-                .anyMatch(comment -> !comment.hasSameWriter(articleWriter)); // 게시물의 작성자가 아닌 다른 유저가 쓴 댓글이 존재하는지 확인
+    public void validateAccess(Long id, String userNickname) {
+        String writer = articleDatabase.findWriter(id);
+        if (!writer.equals(userNickname)) {
+            throw new ArticleAccessException();
+        }
+    }
+
+    public void validateOtherComment(Long articleId, String userNickname) {
+        List<String> commentWriters = commentDatabase.findWriters(articleId);
+        boolean hasOtherComment = commentWriters.stream()
+                .anyMatch(commentWriter -> !commentWriter.equals(userNickname));
+        if (hasOtherComment) {
+            throw new ArticleHasCommentsException(articleId);
+        }
     }
 }

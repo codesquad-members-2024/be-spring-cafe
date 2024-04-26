@@ -33,7 +33,7 @@ public class CommentApiController {
     @PostMapping
     public ResponseEntity<Comment> addComment(@PathVariable Long articleId, @Valid @RequestBody CommentWriteForm form,
                                               @SessionAttribute(LoginController.LOGIN_SESSION_NAME) LoginUser loginUser) {
-        articleService.getArticle(articleId); // 아티클이 존재하는지 확인
+        articleService.findArticle(articleId); // 아티클이 존재하는지 확인
         Comment comment = commentService.writeComment(articleId, loginUser.getNickname(), form);
         return new ResponseEntity<>(comment, HttpStatus.CREATED);
     }
@@ -41,21 +41,14 @@ public class CommentApiController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Comment> deleteComment(@PathVariable Long articleId, @PathVariable Long id,
                                                  @SessionAttribute(LoginController.LOGIN_SESSION_NAME) LoginUser loginUser) {
-        articleService.getArticle(articleId); // 아티클이 존재하는지 확인
-        if (isWriter(id, loginUser)) {
-            commentService.deleteComment(id);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        articleService.findArticle(articleId); // 아티클이 존재하는지 확인
+        commentService.deleteComment(id, loginUser.getNickname());
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping
     public ResponseEntity<List<Comment>> showMoreComments(@PathVariable Long articleId, @RequestParam Long offset) {
         return ResponseEntity.ok(commentService.getCommentsByOffset(articleId, offset));
-    }
-
-    private boolean isWriter(Long id, LoginUser loginUser) {
-        Comment comment = commentService.getComment(id);
-        return loginUser.hasSameNickname(comment.getWriter());
     }
 }

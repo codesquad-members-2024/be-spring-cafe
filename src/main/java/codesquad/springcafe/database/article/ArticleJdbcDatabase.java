@@ -86,14 +86,6 @@ public class ArticleJdbcDatabase implements ArticleDatabase {
         jdbcTemplate.update(sql, id);
     }
 
-//
-//    @Override
-//    public void deleteArticle(Long id) {
-//        String sql = "DELETE FROM articles WHERE id = ?";
-//        jdbcTemplate.updateArticle(sql, id);
-//    }
-
-
     @Override
     public void clear() {
         String sql = "delete from articles";
@@ -101,15 +93,15 @@ public class ArticleJdbcDatabase implements ArticleDatabase {
     }
 
     @Override
-    public List<Long> findAllId() {
-        String sql = "SELECT id FROM articles WHERE is_deleted = false";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"));
-    }
-
-    @Override
     public Long countTotalArticles() {
         String sql = "SELECT COUNT(id) FROM articles WHERE is_deleted = false";
         return jdbcTemplate.queryForObject(sql, Long.class);
+    }
+
+    @Override
+    public String findWriter(Long id) {
+        String sql = "SELECT writer FROM articles WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, id);
     }
 
     private RowMapper<Article> articleRowMapper() {
