@@ -5,12 +5,14 @@ import java.time.LocalDateTime;
 public class Article {
 
     private Long id;
+    private Long userId;
     private String writer;
     private String title;
     private String contents;
     private final LocalDateTime currentTime;
 
-    public Article(String writer, String title, String contents, LocalDateTime currentTime) {
+    public Article(Long userId, String writer, String title, String contents, LocalDateTime currentTime) {
+        this.userId = userId;
         this.writer = writer;
         this.title = title;
         this.contents = contents;
@@ -23,6 +25,10 @@ public class Article {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 
     public String getWriter() {

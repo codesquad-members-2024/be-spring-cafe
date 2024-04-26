@@ -26,6 +26,7 @@ public class JdbcArticleRepository implements ArticleRepository {
         jdbcInsert.withTableName("article").usingGeneratedKeyColumns("id");
 
         Map<String, Object> parameters = new HashMap<>();
+        parameters.put("user_id", article.getUserId());
         parameters.put("writer", article.getWriter());
         parameters.put("title", article.getTitle());
         parameters.put("contents", article.getContents());
@@ -50,6 +51,7 @@ public class JdbcArticleRepository implements ArticleRepository {
     private RowMapper<Article> articleRowMapper() {
         return (rs, rowNum) -> {
             Article article = new Article(
+                    rs.getLong("user_id"),
                     rs.getString("writer"),
                     rs.getString("title"),
                     rs.getString("contents"),
