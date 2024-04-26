@@ -7,6 +7,7 @@ public class CommentShowDTO {
     private final String writer;
     private final String content;
     private final LocalDateTime createdTime;
+    private boolean isLoginUserWriter = false;
 
     public CommentShowDTO(Long commentId, String writer, String content, LocalDateTime createdTime) {
         this.commentId = commentId;
@@ -29,5 +30,13 @@ public class CommentShowDTO {
 
     public LocalDateTime getCreatedTime() {
         return createdTime;
+    }
+
+    public void setIsLoginUserWriter(boolean isLoginUserWriter) {
+        this.isLoginUserWriter = isLoginUserWriter;
+    }
+
+    public boolean getIsLoginUserWriter() {
+        return isLoginUserWriter;
     }
 }

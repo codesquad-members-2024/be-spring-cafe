@@ -41,9 +41,7 @@ public class CommentH2Database implements CommentDatabase {
     @Override
     public String getCommentWriter(Long commentId) {
         String sql =  "SELECT writer FROM MAIN.COMMENTS WHERE commentId = ?";
-        String result = (String) jdbcTemplate.queryForObject(sql, String.class, commentId);
-        System.out.println(result);
-        return result;
+        return jdbcTemplate.queryForObject(sql, String.class, commentId);
     }
 
     @Override

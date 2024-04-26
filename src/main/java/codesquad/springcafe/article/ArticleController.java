@@ -1,5 +1,7 @@
 package codesquad.springcafe.article;
 
+import codesquad.springcafe.comment.Comment;
+import codesquad.springcafe.comment.CommentCreateDTO;
 import codesquad.springcafe.comment.CommentDatabase;
 import codesquad.springcafe.comment.CommentShowDTO;
 import codesquad.springcafe.user.UserDatabase;
@@ -20,17 +22,17 @@ public class ArticleController {
 
     private final static Logger logger = LoggerFactory.getLogger(ArticleController.class);
 
-        private final ArticleDatabase articleDatabase;
+    private final ArticleDatabase articleDatabase;
 
-        private final UserDatabase userDatabase;
+    private final UserDatabase userDatabase;
 
-        private final CommentDatabase commentDatabase;
+    private final CommentDatabase commentDatabase;
 
     @Autowired
     public ArticleController(ArticleDatabase articleDatabase, UserDatabase userDatabase, CommentDatabase commentDatabase) {
-            this.articleDatabase = articleDatabase;
-            this.userDatabase = userDatabase;
-            this.commentDatabase = commentDatabase;
+        this.articleDatabase = articleDatabase;
+        this.userDatabase = userDatabase;
+        this.commentDatabase = commentDatabase;
     }
 
     @PostMapping("/articles")
@@ -59,6 +61,9 @@ public class ArticleController {
             model.addAttribute("isWriter", false);
 
         List<CommentShowDTO> commentList = commentDatabase.getCommentList(articleId);
+        for (CommentShowDTO commentShowDTO : commentList) {
+            authorizeCommentMod(commentShowDTO, request);
+        }
         model.addAttribute("commentList", commentList);
         return "article/show";
     }
@@ -100,5 +105,13 @@ public class ArticleController {
     private boolean isArticleWriter(String writer, HttpServletRequest request) {
         HttpSession session = request.getSession();
         return writer.equals(session.getAttribute("loginUserId"));
+    }
+
+    // 게시글 조회 시, 댓글의 작성자에게만 수정 및 삭제 버튼을 노출하기 위한 설정
+    private void authorizeCommentMod(CommentShowDTO commentShowDTO, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        if (session.getAttribute("loginUserId").equals(commentShowDTO.getWriter())) {
+            commentShowDTO.setIsLoginUserWriter(true);
+        }
     }
 }

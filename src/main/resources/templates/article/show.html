@@ -72,6 +72,7 @@
                                   <div class="article-doc comment-doc">
                                       <p>{{content}}</p>
                                   </div>
+                                  {{#isLoginUserWriter}}
                                   <div class="article-util">
                                       <ul class="article-util-list">
                                           <li>
@@ -85,6 +86,7 @@
                                           </li>
                                       </ul>
                                   </div>
+                                  {{/isLoginUserWriter}}
                               </article>
                           {{/commentList}}
 
