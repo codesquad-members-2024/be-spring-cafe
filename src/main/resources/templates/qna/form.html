@@ -19,12 +19,6 @@
       <div class="panel panel-default content-main">
           <form name="question" method="post" action="/articles/create" th:object="${create}">
               <div class="form-group">
-                  <label for="writer">작성자</label>
-                  <input class="form-control" id="writer" name="writer" placeholder="작성자"
-                         th:field="*{writer}" th:errorclass="field-error-input"/>
-                  <div class="field-error" th:errors="*{writer}">작성자 에러</div>
-              </div>
-              <div class="form-group">
                   <label for="title">제목</label>
                   <input type="text" class="form-control" id="title" name="title" placeholder="제목"
                          th:field="*{title}" th:errorclass="field-error-input"/>
