@@ -1,11 +1,14 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.domain.Article;
+import codesquad.springcafe.domain.Reply;
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.dto.ArticleDto;
 import codesquad.springcafe.error.exception.AccessDeniedException;
 import codesquad.springcafe.service.ArticleService;
+import codesquad.springcafe.service.ReplyService;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,10 +24,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/articles")
 public class ArticleController {
     private final ArticleService articleService;
+    private final ReplyService replyService;
 
     @Autowired
-    public ArticleController(ArticleService articleService) {
+    public ArticleController(ArticleService articleService, ReplyService replyService) {
         this.articleService = articleService;
+        this.replyService = replyService;
     }
 
     @GetMapping("/create")
@@ -49,6 +54,8 @@ public class ArticleController {
 
         Article article = articleService.findByArticleId(articleId);
         model.addAttribute("article", article);
+        List<Reply> replies = replyService.findAllReplies(articleId);
+        model.addAttribute("replies", replies);
 
         User loginUser = (User) session.getAttribute("user");
         if (loginUser != null && article.isWriter(loginUser.getUserId())) {
