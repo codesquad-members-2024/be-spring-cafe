@@ -3,6 +3,7 @@ package codesquad.springcafe.web.controller;
 import codesquad.springcafe.domain.user.User;
 import codesquad.springcafe.service.ArticleService;
 import codesquad.springcafe.web.dto.ArticleCreateDto;
+import codesquad.springcafe.web.dto.ArticleUpdateDto;
 import codesquad.springcafe.web.validation.ArticleCreateValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,5 +57,21 @@ public class ArticleController {
     public String questionList(Model model) {
         model.addAttribute("articles", articleService.getArticles());
         return "index";
+    }
+
+    @GetMapping("/articles/{id}/update")
+    public String updateArticle(@PathVariable Long id, Model model) {
+        model.addAttribute("article", articleService.findById(id));
+        return "qna/updateForm";
+    }
+
+    @PutMapping("/articles/{id}/update")
+    public String updateArticle(
+            @SessionAttribute(name = "loginUser", required = false) User loginUser,
+            @PathVariable Long id,
+            @ModelAttribute ArticleUpdateDto articleUpdateDto) {
+        // 로그인된 사용자가 글의 주인인지 검증하는 로직 추가 예정
+        articleService.updateArticle(id, articleUpdateDto);
+        return "redirect:/";
     }
 }
