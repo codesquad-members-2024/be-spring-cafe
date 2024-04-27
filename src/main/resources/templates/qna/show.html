@@ -32,9 +32,8 @@
                           <li th:if="${session.loginUser.getId() == article.getUserId()}">
                               <a class="link-modify-article" th:href="@{/articles/{id}/update(id=${article.getId()})}">수정</a>
                           </li>
-                          <li>
-                              <form class="form-delete" action="/questions/423" method="POST">
-                                  <input type="hidden" name="_method" value="DELETE">
+                          <li th:if="${session.loginUser.getId() == article.getUserId()}">
+                              <form class="form-delete" th:action="@{/articles/{id}/delete(id=${article.getId()})}" th:method="delete">
                                   <button class="link-delete-article" type="submit">삭제</button>
                               </form>
                           </li>
