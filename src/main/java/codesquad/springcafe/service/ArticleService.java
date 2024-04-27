@@ -4,6 +4,7 @@ import codesquad.springcafe.domain.article.Article;
 import codesquad.springcafe.domain.article.ArticleRepository;
 import codesquad.springcafe.domain.user.User;
 import codesquad.springcafe.web.dto.ArticleCreateDto;
+import codesquad.springcafe.web.dto.ArticleUpdateDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +26,10 @@ public class ArticleService {
                 articleCreateDto.getContents(),
                 articleCreateDto.getCurrentTime()
         ));
+    }
+
+    public void updateArticle(Long id, ArticleUpdateDto articleUpdateDto) {
+        articleRepository.update(id, articleUpdateDto);
     }
 
     public Article findById(Long id) {

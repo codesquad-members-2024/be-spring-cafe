@@ -1,5 +1,6 @@
 package codesquad.springcafe.domain.article;
 
+import codesquad.springcafe.web.dto.ArticleUpdateDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -34,6 +35,12 @@ public class JdbcArticleRepository implements ArticleRepository {
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         article.setId(key.longValue());
+    }
+
+    @Override
+    public void update(Long id, ArticleUpdateDto articleUpdateDto) {
+        jdbcTemplate.update("update article set title = ?, contents = ? where id = ?",
+                articleUpdateDto.getTitle(), articleUpdateDto.getContents(), id);
     }
 
     @Override
