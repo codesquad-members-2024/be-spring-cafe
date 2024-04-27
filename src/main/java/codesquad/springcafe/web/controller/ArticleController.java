@@ -74,4 +74,10 @@ public class ArticleController {
         articleService.updateArticle(id, articleUpdateDto);
         return "redirect:/";
     }
+
+    @DeleteMapping("/articles/{id}/delete")
+    public String deleteArticle(@PathVariable Long id) {
+        articleService.deleteArticle(id);
+        return "redirect:/";
+    }
 }
