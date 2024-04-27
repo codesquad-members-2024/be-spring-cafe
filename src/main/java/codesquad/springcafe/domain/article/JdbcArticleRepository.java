@@ -44,6 +44,11 @@ public class JdbcArticleRepository implements ArticleRepository {
     }
 
     @Override
+    public void delete(Long id) {
+        jdbcTemplate.update("delete from article where id = ?", id);
+    }
+
+    @Override
     public Optional<Article> findById(Long id) {
         return jdbcTemplate.query("select * from article where id = ?", articleRowMapper(), id)
                 .stream()

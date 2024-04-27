@@ -26,6 +26,11 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
+    public void delete(Long id) {
+
+    }
+
+    @Override
     public Optional<Article> findById(Long id) {
         return Optional.ofNullable(articles.get((int) (id - 1)));
     }

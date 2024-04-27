@@ -32,6 +32,10 @@ public class ArticleService {
         articleRepository.update(id, articleUpdateDto);
     }
 
+    public void deleteArticle(Long id) {
+        articleRepository.delete(id);
+    }
+
     public Article findById(Long id) {
         return articleRepository.findById(id).get();
     }
