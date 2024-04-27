@@ -29,8 +29,8 @@
                   <div class="article-doc" th:utext="${#strings.replace(article.getContents(), nlString, '&lt;br /&gt;')}">contents</div>
                   <div class="article-util">
                       <ul class="article-util-list">
-                          <li>
-                              <a class="link-modify-article" href="/questions/423/form">수정</a>
+                          <li th:if="${session.loginUser.getId() == article.getUserId()}">
+                              <a class="link-modify-article" th:href="@{/articles/{id}/update(id=${article.getId()})}">수정</a>
                           </li>
                           <li>
                               <form class="form-delete" action="/questions/423" method="POST">
