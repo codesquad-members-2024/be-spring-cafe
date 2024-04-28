@@ -89,6 +89,7 @@ public class ArticleController {
         // 로그인된 사용자가 글의 주인인지 검증하는 로직 추가 예정
         if (commentService.isDeletableComments(articleId, loginUser.getId())) {
             articleService.deleteArticle(articleId);
+            commentService.deleteCommentByArticleId(articleId);
         }
         return "redirect:/";
     }
@@ -106,7 +107,7 @@ public class ArticleController {
     public String deleteComment(
             @PathVariable Long articleId,
             @PathVariable Long commentId) {
-        commentService.deleteComment(commentId);
+        commentService.deleteCommentByCommentId(commentId);
         return "redirect:/articles/" + articleId;
     }
 }
