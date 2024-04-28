@@ -9,6 +9,7 @@ public class Article {
     private String writer;
     private String title;
     private String contents;
+    private boolean deleted;
     private final LocalDateTime currentTime;
 
     public Article(Long userId, String writer, String title, String contents, LocalDateTime currentTime) {
@@ -41,6 +42,14 @@ public class Article {
 
     public String getContents() {
         return contents;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public LocalDateTime getCurrentTime() {
