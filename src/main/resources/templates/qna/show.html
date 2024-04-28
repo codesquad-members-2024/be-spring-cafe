@@ -49,7 +49,7 @@
                       <p class="qna-comment-count"><strong th:text="${comments.size()}">?</strong>개의 댓글</p>
                       <div class="qna-comment-slipp-articles">
                           <tr th:each="comment : ${comments}">
-                              <article class="article" id="answer-1405">
+                              <article class="article" id="answer-1405" th:if="${!comment.isDeleted()}">
                                   <div class="article-header">
                                       <div class="article-header-thumb">
                                           <img src="https://graph.facebook.com/v2.3/1324855987/picture" class="article-author-thumb" alt="">
