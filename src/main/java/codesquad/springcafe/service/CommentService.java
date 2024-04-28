@@ -26,4 +26,9 @@ public class CommentService {
     public List<Comment> getCommentsByArticleId(Long id) {
         return commentRepository.findAllByArticleId(id);
     }
+
+    public boolean isDeletableComments(Long articleId, Long userId) {
+        return !commentRepository.findAllByArticleId(articleId).stream()
+                .anyMatch(c -> !c.getUserId().equals(userId));
+    }
 }
