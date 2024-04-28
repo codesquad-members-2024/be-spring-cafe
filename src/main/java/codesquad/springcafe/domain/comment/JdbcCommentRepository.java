@@ -33,6 +33,10 @@ public class JdbcCommentRepository {
         jdbcInsert.execute(new MapSqlParameterSource(parameters));
     }
 
+    public void delete(Long commentId) {
+        jdbcTemplate.update("delete from comment where id = ?", commentId);
+    }
+
     public List<Comment> findAllByArticleId(Long id) {
         return jdbcTemplate.query("select * from comment where article_id = ?", commentRowMapper(), id);
     }
