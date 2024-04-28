@@ -4,6 +4,8 @@ import codesquad.springcafe.domain.comment.Comment;
 import codesquad.springcafe.domain.comment.JdbcCommentRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CommentService {
 
@@ -15,5 +17,9 @@ public class CommentService {
 
     public void saveComment(Comment comment) {
         commentRepository.save(comment);
+    }
+
+    public List<Comment> getCommentsByArticleId(Long id) {
+        return commentRepository.findAllByArticleId(id);
     }
 }

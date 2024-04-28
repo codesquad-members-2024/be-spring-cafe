@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -30,6 +31,10 @@ public class JdbcCommentRepository {
         parameters.put("currentTime", comment.getCurrentTime());
 
         jdbcInsert.execute(new MapSqlParameterSource(parameters));
+    }
+
+    public List<Comment> findAllByArticleId(Long id) {
+        return jdbcTemplate.query("select * from comment where article_id = ?", commentRowMapper(), id);
     }
 
     public RowMapper<Comment> commentRowMapper() {
