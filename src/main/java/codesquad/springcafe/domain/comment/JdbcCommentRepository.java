@@ -28,13 +28,18 @@ public class JdbcCommentRepository {
         parameters.put("article_id", comment.getArticleId());
         parameters.put("writer", comment.getWriter());
         parameters.put("content", comment.getContent());
+        parameters.put("deleted", comment.isDeleted());
         parameters.put("currentTime", comment.getCurrentTime());
 
         jdbcInsert.execute(new MapSqlParameterSource(parameters));
     }
 
-    public void delete(Long commentId) {
-        jdbcTemplate.update("delete from comment where id = ?", commentId);
+    public void deleteByCommentId(Long commentId) {
+        jdbcTemplate.update("update comment set deleted = ? where id = ?", true, commentId);
+    }
+
+    public void deleteByArticleId(Long articleId) {
+        jdbcTemplate.update("update comment set deleted = ? where article_id = ?", true, articleId);
     }
 
     public List<Comment> findAllByArticleId(Long id) {
@@ -51,6 +56,7 @@ public class JdbcCommentRepository {
                     rs.getTimestamp("currentTime").toLocalDateTime()
             );
             comment.setId(rs.getLong("id"));
+            comment.setDeleted(rs.getBoolean("deleted"));
             return comment;
         };
     }
