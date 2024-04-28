@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReplyRepository {
-
     void createReply(Reply reply);
 
     void deleteReply(long replyId);
@@ -13,5 +12,4 @@ public interface ReplyRepository {
     List<Reply> findAllReplies(long articleId);
 
     Optional<Reply> findByReplyId(long replyId);
-
 }

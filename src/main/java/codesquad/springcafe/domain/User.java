@@ -1,6 +1,6 @@
 package codesquad.springcafe.domain;
 
-import codesquad.springcafe.dto.UserDto;
+import codesquad.springcafe.dto.UserCreateDto;
 import codesquad.springcafe.dto.UserUpdateDto;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,11 +20,11 @@ public class User {
         this.createdDate = createdDate;
     }
 
-    public User(UserDto userDto) {
-        this.userId = userDto.getUserId();
-        this.nickname = userDto.getNickname();
-        this.email = userDto.getEmail();
-        this.password = userDto.getPassword();
+    public User(UserCreateDto userCreateDto) {
+        this.userId = userCreateDto.getUserId();
+        this.nickname = userCreateDto.getNickname();
+        this.email = userCreateDto.getEmail();
+        this.password = userCreateDto.getPassword();
         this.createdDate = LocalDateTime.now();
     }
 

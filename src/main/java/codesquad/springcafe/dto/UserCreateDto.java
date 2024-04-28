@@ -1,12 +1,12 @@
 package codesquad.springcafe.dto;
 
-public class UserDto {
+public class UserCreateDto {
     private String userId;
     private String nickname;
     private String email;
     private String password;
 
-    public UserDto(String userId, String nickname, String email, String password) {
+    public UserCreateDto(String userId, String nickname, String email, String password) {
         this.userId = userId;
         this.nickname = nickname;
         this.email = email;

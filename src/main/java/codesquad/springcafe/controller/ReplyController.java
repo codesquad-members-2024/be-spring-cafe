@@ -25,14 +25,10 @@ public class ReplyController {
 
     @PostMapping("/{articleId}/reply")
     public String createReply(@PathVariable long articleId, @RequestParam String content, HttpSession session) {
-        System.out.println("here");
         User user = (User) session.getAttribute("user");
 
         Reply reply = new Reply(articleId, user.getUserId(), content);
         replyService.createReply(reply);
-
-        System.out.println("reply = " + reply);
-        System.out.println("user = " + user);
 
         return "redirect:/articles/{articleId}";
     }
@@ -43,5 +39,4 @@ public class ReplyController {
 
         return "redirect:/articles/{articleId}";
     }
-
 }

@@ -29,6 +29,6 @@ public class MemoryUserRepository implements UserRepository {
     @Override
     public void updateUser(String userId, UserUpdateDto userUpdateDto) {
         Optional<User> optionalUser = findByUserId(userId);
-        optionalUser.ifPresent(user->user.update(userUpdateDto));
+        optionalUser.ifPresent(user -> user.update(userUpdateDto));
     }
 }

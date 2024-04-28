@@ -35,6 +35,7 @@ public class ReplyService {
     }
 
     public Reply findByReplyId(long replyId) {
-        return replyRepository.findByReplyId(replyId).orElseThrow(() -> new ReplyNotFoundException("댓글 없음"));
+        return replyRepository.findByReplyId(replyId)
+                .orElseThrow(() -> new ReplyNotFoundException(replyId + " ID 댓글이 존재하지 않습니다."));
     }
 }
