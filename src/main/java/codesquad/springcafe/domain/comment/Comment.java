@@ -9,6 +9,7 @@ public class Comment {
     private Long articleId;
     private String writer;
     private String content;
+    private boolean deleted;
     private final LocalDateTime currentTime;
 
     public Comment(Long userId, Long articleId, String writer, String content, LocalDateTime currentTime) {
@@ -41,6 +42,14 @@ public class Comment {
 
     public String getContent() {
         return content;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public LocalDateTime getCurrentTime() {
