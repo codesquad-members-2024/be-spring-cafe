@@ -1,5 +1,6 @@
 package codesquad.springcafe.web.controller;
 
+import codesquad.springcafe.domain.comment.Comment;
 import codesquad.springcafe.domain.user.User;
 import codesquad.springcafe.service.ArticleService;
 import codesquad.springcafe.service.CommentService;
@@ -12,6 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @Controller
 public class ArticleController {
@@ -83,5 +86,22 @@ public class ArticleController {
     public String deleteArticle(@PathVariable Long id) {
         articleService.deleteArticle(id);
         return "redirect:/";
+    }
+
+    @PostMapping("/articles/{articleId}/comments/create")
+    public String writeComment(
+            @SessionAttribute(name = "loginUser", required = false) User loginUser,
+            @PathVariable Long articleId,
+            @RequestParam String content) {
+        commentService.saveComment(new Comment(loginUser.getId(), articleId, loginUser.getUserId(), content, LocalDateTime.now()));
+        return "redirect:/articles/" + articleId;
+    }
+
+    @DeleteMapping("/articles/{articleId}/comments/{commentId}")
+    public String deleteComment(
+            @PathVariable Long articleId,
+            @PathVariable Long commentId) {
+        commentService.deleteComment(commentId);
+        return "redirect:/articles/" + articleId;
     }
 }
