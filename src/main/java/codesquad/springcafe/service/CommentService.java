@@ -19,8 +19,12 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    public void deleteComment(Long commentId) {
-        commentRepository.delete(commentId);
+    public void deleteCommentByCommentId(Long commentId) {
+        commentRepository.deleteByCommentId(commentId);
+    }
+
+    public void deleteCommentByArticleId(Long articleId) {
+        commentRepository.deleteByArticleId(articleId);
     }
 
     public List<Comment> getCommentsByArticleId(Long id) {
