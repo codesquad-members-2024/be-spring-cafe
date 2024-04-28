@@ -82,9 +82,14 @@ public class ArticleController {
         return "redirect:/";
     }
 
-    @DeleteMapping("/articles/{id}/delete")
-    public String deleteArticle(@PathVariable Long id) {
-        articleService.deleteArticle(id);
+    @DeleteMapping("/articles/{articleId}/delete")
+    public String deleteArticle(
+            @SessionAttribute(name = "loginUser", required = false) User loginUser,
+            @PathVariable Long articleId) {
+        // 로그인된 사용자가 글의 주인인지 검증하는 로직 추가 예정
+        if (commentService.isDeletableComments(articleId, loginUser.getId())) {
+            articleService.deleteArticle(articleId);
+        }
         return "redirect:/";
     }
 
