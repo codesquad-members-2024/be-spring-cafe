@@ -2,6 +2,7 @@ package codesquad.springcafe.web.controller;
 
 import codesquad.springcafe.domain.user.User;
 import codesquad.springcafe.service.ArticleService;
+import codesquad.springcafe.service.CommentService;
 import codesquad.springcafe.web.dto.ArticleCreateDto;
 import codesquad.springcafe.web.dto.ArticleUpdateDto;
 import codesquad.springcafe.web.validation.ArticleCreateValidator;
@@ -17,10 +18,12 @@ public class ArticleController {
 
     private final ArticleService articleService;
     private final ArticleCreateValidator articleCreateValidator;
+    private final CommentService commentService;
 
-    public ArticleController(ArticleService articleService, ArticleCreateValidator articleCreateValidator) {
+    public ArticleController(ArticleService articleService, ArticleCreateValidator articleCreateValidator, CommentService commentService) {
         this.articleService = articleService;
         this.articleCreateValidator = articleCreateValidator;
+        this.commentService = commentService;
     }
 
     @InitBinder("create")
@@ -46,10 +49,11 @@ public class ArticleController {
         return "redirect:/";
     }
 
-    @GetMapping("/articles/{sequence}")
-    public String articleDetails(@PathVariable Long sequence, Model model) {
+    @GetMapping("/articles/{id}")
+    public String articleDetails(@PathVariable Long id, Model model) {
         model.addAttribute("nlString", System.lineSeparator());
-        model.addAttribute("article", articleService.findById(sequence));
+        model.addAttribute("article", articleService.findById(id));
+        model.addAttribute("comments", commentService.getCommentsByArticleId(id));
         return "qna/show";
     }
 
