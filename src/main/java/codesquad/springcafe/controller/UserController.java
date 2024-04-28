@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/users")
@@ -97,7 +98,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute UserLoginDto userLoginDto, Model model, HttpSession session) {
+    public String login(@ModelAttribute UserLoginDto userLoginDto,
+                        Model model, HttpSession session) {
         try {
             User user = userService.loginUser(userLoginDto);
             session.setAttribute("user", user);
@@ -106,13 +108,12 @@ public class UserController {
             return "user/login";
         }
 
-        // 비로그인 상태에서 저장한 redirectUrl이 있으면
-        String redirectUrl = (String) session.getAttribute("redirectUrl");
-        if (redirectUrl != null) {
-            session.removeAttribute("redirectUrl");
-            return "redirect:" + redirectUrl;
+        // 비로그인 상태에서 저장한 redirectUri이 있으면
+        String redirectUri = (String) session.getAttribute("redirectUri");
+        if (redirectUri != null) {
+            session.removeAttribute("redirectUri");
+            return "redirect:" + redirectUri;
         }
-
         return "redirect:/";
     }
 
