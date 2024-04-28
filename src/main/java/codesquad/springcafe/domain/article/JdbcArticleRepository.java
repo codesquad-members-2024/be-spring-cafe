@@ -33,8 +33,7 @@ public class JdbcArticleRepository implements ArticleRepository {
         parameters.put("contents", article.getContents());
         parameters.put("currentTime", article.getCurrentTime());
 
-        Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
-        article.setId(key.longValue());
+        jdbcInsert.execute(new MapSqlParameterSource(parameters));
     }
 
     @Override
