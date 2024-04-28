@@ -56,9 +56,9 @@ public class ArticleController {
         articleService.updateViews(articleId); // 조회수 먼저 업데이트
 
         Article article = articleService.findByArticleId(articleId);
-        model.addAttribute("article", article);
+        List<Reply> replies = replyService.findRepliesByArticleId(articleId);
 
-        List<Reply> replies = replyService.findAllReplies(articleId);
+        model.addAttribute("article", article);
         model.addAttribute("replies", replies);
 
         User loginUser = (User) session.getAttribute("user");
@@ -67,8 +67,9 @@ public class ArticleController {
         }
 
         if (article.isWriter(loginUser.getUserId())) {
-            model.addAttribute("writer", true);
+            model.addAttribute("isWriter", true);
         }
+        model.addAttribute("user", loginUser);
 
         return "article/page";
     }
@@ -77,7 +78,7 @@ public class ArticleController {
     public String updateArticleForm(@PathVariable long articleId, Model model, HttpSession session) {
         validateAuth(session, articleId);
 
-        Article article = articleService.findByArticleId  (articleId);
+        Article article = articleService.findByArticleId(articleId);
         model.addAttribute("article", article);
 
         return "article/update";

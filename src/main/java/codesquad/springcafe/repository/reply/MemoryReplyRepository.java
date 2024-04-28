@@ -19,7 +19,7 @@ public class MemoryReplyRepository implements ReplyRepository {
     }
 
     @Override
-    public List<Reply> findAllReplies(long articleId) {
+    public List<Reply> findRepliesByArticleId(long articleId) {
         return null;
     }
 

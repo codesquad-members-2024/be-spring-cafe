@@ -9,7 +9,7 @@ public interface ReplyRepository {
 
     void deleteReply(long replyId);
 
-    List<Reply> findAllReplies(long articleId);
+    List<Reply> findRepliesByArticleId(long articleId);
 
     Optional<Reply> findByReplyId(long replyId);
 }

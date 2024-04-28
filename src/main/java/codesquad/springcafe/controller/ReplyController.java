@@ -26,8 +26,8 @@ public class ReplyController {
     @PostMapping("/{articleId}/reply")
     public String createReply(@PathVariable long articleId, @RequestParam String content, HttpSession session) {
         User user = (User) session.getAttribute("user");
-
         Reply reply = new Reply(articleId, user.getUserId(), content);
+
         replyService.createReply(reply);
 
         return "redirect:/articles/{articleId}";

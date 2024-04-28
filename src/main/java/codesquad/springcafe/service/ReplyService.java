@@ -30,8 +30,8 @@ public class ReplyService {
         logger.debug("ID {} 댓글 삭제", replyId);
     }
 
-    public List<Reply> findAllReplies(long articleId) {
-        return replyRepository.findAllReplies(articleId);
+    public List<Reply> findRepliesByArticleId(long articleId) {
+        return replyRepository.findRepliesByArticleId(articleId);
     }
 
     public Reply findByReplyId(long replyId) {

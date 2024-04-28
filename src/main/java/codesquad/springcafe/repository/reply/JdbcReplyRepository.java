@@ -37,7 +37,7 @@ public class JdbcReplyRepository implements ReplyRepository {
     }
 
     @Override
-    public List<Reply> findAllReplies(long articleId) {
+    public List<Reply> findRepliesByArticleId(long articleId) {
         String SQL = "SELECT * FROM reply WHERE article_id = ?";
         return jdbcTemplate.query(SQL, rowMapper(), articleId);
     }
