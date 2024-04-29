@@ -8,7 +8,7 @@ String.prototype.format = function() {
   });
 };
 
-$(".delete-answer-form button[type='submit']").click(deleteAnswer);
+$(".qna-comment-slipp-articles").on("click", ".delete-answer-form button[type='submit']", deleteAnswer);
 
 function deleteAnswer(e) {
   e.preventDefault();
