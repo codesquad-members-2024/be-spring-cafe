@@ -26,7 +26,7 @@ public class ArticleInfoDTO {
         return timestamp;
     }
 
-    public String getFormattedTimeStamp() {
+    public String getFormattedTimestamp() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return timestamp.format(formatter);
     }

@@ -21,6 +21,14 @@ public class ReplyUploadDTO {
         return articleId;
     }
 
+    public String getWriter() {
+        return writer;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
     public Reply toReply(Long index) {
         return new Reply(articleId, index, timestamp, writer, content);
     }

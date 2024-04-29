@@ -22,8 +22,20 @@ public class ReplyInfoDTO {
         return articleId;
     }
 
-    public String getFormattedTimeStamp() {
+    public Long getIndex() {
+        return index;
+    }
+
+    public String getWriter() {
+        return writer;
+    }
+
+    public String getFormattedTimestamp() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return timestamp.format(formatter);
+    }
+
+    public String getContent() {
+        return content;
     }
 }
