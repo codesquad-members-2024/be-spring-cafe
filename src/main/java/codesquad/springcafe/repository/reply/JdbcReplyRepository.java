@@ -1,6 +1,5 @@
 package codesquad.springcafe.repository.reply;
 
-import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.Reply;
 import java.sql.Timestamp;
 import java.util.List;
@@ -22,7 +21,7 @@ public class JdbcReplyRepository implements ReplyRepository {
 
     @Override
     public void save(Reply reply) {
-        String sql = "INSERT INTO `reply` (articleId, index, writer, timestamp, content) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO `reply` (articleId, `index`, writer, timestamp, content) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
             reply.getArticleId(), reply.getIndex(), reply.getWriter(), Timestamp.valueOf(reply.getTimestamp()), reply.getContent());
     }
@@ -44,7 +43,7 @@ public class JdbcReplyRepository implements ReplyRepository {
 
     @Override
     public Optional<Reply> getByArticleIdAndIndex(Long articleId, Long index) {
-        String sql = "SELECT * FROM `reply` WHERE articleId = ? AND index = ?";
+        String sql = "SELECT * FROM `reply` WHERE articleId = ? AND `index` = ?";
         List<Reply> replies = jdbcTemplate.query(sql, new Object[]{articleId, index}, (resultSet, rowNum) -> {
             Reply reply = new Reply(
                 resultSet.getLong("articleId"),
@@ -63,7 +62,7 @@ public class JdbcReplyRepository implements ReplyRepository {
 
     @Override
     public boolean remove(Long articleId, Long index) {
-        String sql = "DELETE FROM `reply` WHERE articleId = ? AND index = ?";
+        String sql = "DELETE FROM `reply` WHERE articleId = ? AND `index` = ?";
         Long deletedCounts = (long) jdbcTemplate.update(sql, articleId, index);
         return deletedCounts > 0;
     }

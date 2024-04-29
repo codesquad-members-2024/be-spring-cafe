@@ -23,12 +23,12 @@
  drop table if exists `reply` CASCADE;
  create table `reply`
  (
-     articleId BIGINT not null,
-     index BIGINT not null,
-     timestamp TIMESTAMP not null,
-     writer VARCHAR(255) not null,
+     articleId BIGINT,
+     `index` BIGINT,
+     timestamp TIMESTAMP,
+     writer VARCHAR(255),
      content TEXT not null,
-     primary key (articleId, index),
+     primary key (articleId, `index`),
      foreign key (articleId) references `article`(id),
      foreign key (writer) references `user`(userId)
  );
