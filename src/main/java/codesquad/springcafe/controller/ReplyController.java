@@ -22,9 +22,13 @@ public class ReplyController {
     }
 
     @PostMapping("articles/{articleId}/replies")
-    public String upload(@ModelAttribute("reply") ReplyUploadDTO replyUploadDTO) {
+    public String upload(@ModelAttribute("reply") ReplyUploadDTO replyUploadDTO, HttpSession session) {
         Long lastIndex = getLastIndex(replyUploadDTO.getArticleId());
         Reply newReply = replyUploadDTO.toReply(++lastIndex);
+        String loggedInUser = (String) session.getAttribute("loggedInUser");
+        if (loggedInUser == null || !newReply.isWrittenBy(loggedInUser)) {
+            return null;
+        }
         replyService.upload(newReply);
         return "redirect:/articles/{articleId}";
     }

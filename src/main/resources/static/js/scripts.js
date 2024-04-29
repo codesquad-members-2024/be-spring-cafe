@@ -47,9 +47,9 @@ function deleteReply(e) {
       if (data.valid) {
         deleteBtn.closest("article").remove();
         updateReplyCount(articleId);
-      } else {
-        alert(data.errorMessage);
+        return;
       }
+      alert(data.errorMessage);
     }
   });
 }

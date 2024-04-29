@@ -44,12 +44,14 @@ public class ApiReplyController {
     }
 
     @DeleteMapping("/{index}")
-    public Result delete(@PathVariable("articleId") Long articleId, @PathVariable("index") Long index) {
-        boolean success = replyService.delete(articleId, index);
+    public Result delete(@PathVariable("articleId") Long articleId, @PathVariable("index") Long index, HttpSession session) {
+        Reply targetReply = replyService.findByArticleIdAndIndex(articleId, index);
+        String loggedInUser = (String) session.getAttribute("loggedInUser");
+        boolean success = loggedInUser != null && targetReply.isWrittenBy(loggedInUser) && replyService.delete(articleId, index);
         if (success) {
             return Result.ok();
         }
-        return Result.fail("reply deletion failed");
+        return Result.fail("다른 사용자의 댓글을 삭제할 수 없습니다.");
     }
 
     private Long getLastIndex(Long articleId) {
