@@ -146,7 +146,7 @@
                                           <a class="link-modify-article" href="/articles/{{articleId}}/replies/{{index}}/form">수정</a>
                                       </li>
                                       <li>
-                                          <form class="delete-answer-form" action="/articles/{{articleId}}/replies/{{index}}" method="POST">
+                                          <form class="delete-answer-form" action="/api/articles/{{articleId}}/replies/{{index}}" method="POST">
                                               <input type="hidden" name="_method" value="DELETE">
                                               <button type="submit" class="delete-answer-button">삭제</button>
                                           </form>

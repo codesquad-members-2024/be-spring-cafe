@@ -3,9 +3,11 @@ package codesquad.springcafe.controller;
 import codesquad.springcafe.dto.reply.ReplyInfoDTO;
 import codesquad.springcafe.dto.reply.ReplyUploadDTO;
 import codesquad.springcafe.model.Reply;
+import codesquad.springcafe.model.Result;
 import codesquad.springcafe.service.ReplyService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +41,15 @@ public class ApiReplyController {
     @GetMapping("/count")
     public Long getTotalCount(@PathVariable Long articleId) {
         return (long) replyService.findAllByArticleId(articleId).size();
+    }
+
+    @DeleteMapping("/{index}")
+    public Result delete(@PathVariable("articleId") Long articleId, @PathVariable("index") Long index) {
+        boolean success = replyService.delete(articleId, index);
+        if (success) {
+            return Result.ok();
+        }
+        return Result.fail("reply deletion failed");
     }
 
     private Long getLastIndex(Long articleId) {

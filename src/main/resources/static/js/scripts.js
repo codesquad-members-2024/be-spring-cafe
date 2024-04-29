@@ -7,3 +7,29 @@ String.prototype.format = function() {
         ;
   });
 };
+
+$(".delete-answer-form button[type='submit']").click(deleteAnswer);
+
+function deleteAnswer(e) {
+  e.preventDefault();
+
+  var deleteBtn = $(this);
+  var url = deleteBtn.closest(".delete-answer-form").attr("action");
+
+  $.ajax({
+    type : 'delete',
+    url : url,
+    dataType : 'json',
+    error : function (xhr, status) {
+      console.alert('error');
+    },
+    success : function (data, status) {
+      console.log(data);
+      if (data.valid) {
+        deleteBtn.closest("article").remove();
+      } else {
+        alert(data.errorMessage);
+      }
+    }
+  });
+}
