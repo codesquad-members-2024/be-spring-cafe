@@ -7,7 +7,6 @@ import codesquad.springcafe.dto.ReplyForm;
 import codesquad.springcafe.dto.ShowReply;
 import codesquad.springcafe.exception.NotFoundException;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -40,7 +39,7 @@ public class ReplyService {
     public List<ShowReply> getReplyBy(String articleId, String writerId) {
         List<ShowReply> result = replyRepository.getReplyBy(articleId);
         checkWriter(result, writerId);
-        return checkDeletedReply(result);
+        return result;
     }
 
     /**
@@ -70,17 +69,6 @@ public class ReplyService {
     }
 
     /**
-     * 게시글에 달린 전체 댓글에서 삭제 상태가 아닌 댓글만 걸러낸다.
-     * @param showReplies
-     * @return
-     */
-    public List<ShowReply> checkDeletedReply(List<ShowReply> showReplies) {
-        return showReplies.stream()
-                .filter(showReply -> !showReply.getDeleted())
-                .collect(Collectors.toList());
-    }
-
-    /**
      * 해당 댓글을 삭제한다.
      * @param replyId
      */
@@ -103,7 +91,7 @@ public class ReplyService {
      * @return
      */
     public boolean existReply(String articleId) {
-        return replyRepository.getReplyBy(articleId).size() > 0;
+        return replyRepository.getReplyCount(articleId).orElse(0) > 0;
     }
 
     /**

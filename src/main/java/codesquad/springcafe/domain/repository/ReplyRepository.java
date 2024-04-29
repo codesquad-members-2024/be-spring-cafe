@@ -16,4 +16,6 @@ public interface ReplyRepository extends DbRepository<Reply> {
     void delete(String replyId);
 
     void edit(String articleId, String contents);
+
+    Optional<Integer> getReplyCount(String articleId);
 }

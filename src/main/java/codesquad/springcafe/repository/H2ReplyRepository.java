@@ -59,8 +59,18 @@ public class H2ReplyRepository implements ReplyRepository {
 
     @Override
     public List<ShowReply> getReplyBy(String articleId) {
-        String SELECT_REPLY = "SELECT * FROM REPLY where articleid=?";
+        String SELECT_REPLY = "SELECT * FROM REPLY where articleid=? AND deleted=false";
         return jdbcTemplate.query(SELECT_REPLY, showReplyRowMapper, articleId);
+    }
+
+    @Override
+    public Optional<Integer> getReplyCount(String articleId) {
+        String SELECT_REPLY = "SELECT COUNT(*) FROM REPLY WHERE articleId=?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_REPLY, Integer.class, articleId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
