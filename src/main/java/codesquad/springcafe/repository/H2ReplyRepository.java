@@ -63,6 +63,17 @@ public class H2ReplyRepository implements ReplyRepository {
         return jdbcTemplate.query(SELECT_REPLY, showReplyRowMapper, articleId);
     }
 
+    // 댓글의 갯수를 count로 가져온다.
+    @Override
+    public Optional<Integer> getReplyCount(String articleId) {
+        String SELECT_REPLY = "SELECT COUNT(*) FROM REPLY WHERE articleId=?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_REPLY, Integer.class, articleId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     @Override
     public Optional<Integer> getReplyCount(String articleId) {
         String SELECT_REPLY = "SELECT COUNT(*) FROM REPLY WHERE articleId=?";

@@ -19,6 +19,7 @@ public class ReplyService {
 
     /**
      * 댓글을 등록한다.
+     *
      * @param replyForm
      * @param writerId
      * @param articleId
@@ -32,6 +33,7 @@ public class ReplyService {
 
     /**
      * 해당하는 글에 달린 삭제되지 않은 댓글을 모두 가져온다.
+     *
      * @param articleId
      * @param writerId
      * @return
@@ -43,8 +45,8 @@ public class ReplyService {
     }
 
     /**
-     * 현재 로그인한 사용자와 댓글의 작성자가 일치하는 경우 sameWriter 값을 변경한다.
-     * 해당 값을 통해 수정, 삭제할 수 있는 기능을 화면에 표시하게 된다.
+     * 현재 로그인한 사용자와 댓글의 작성자가 일치하는 경우 sameWriter 값을 변경한다. 해당 값을 통해 수정, 삭제할 수 있는 기능을 화면에 표시하게 된다.
+     *
      * @param showReplies
      * @param writerId
      */
@@ -56,6 +58,7 @@ public class ReplyService {
 
     /**
      * 해당하는 글에 작성자가 아닌 다른 사용자의 댓글이 달려있는지 확인한다.
+     *
      * @param articleId
      * @param writer
      * @return
@@ -70,6 +73,7 @@ public class ReplyService {
 
     /**
      * 해당 댓글을 삭제한다.
+     *
      * @param replyId
      */
     public void deleteReply(String replyId) {
@@ -78,6 +82,7 @@ public class ReplyService {
 
     /**
      * 해당 댓글을 가져온다.
+     *
      * @param replyId
      * @return
      */
@@ -87,6 +92,7 @@ public class ReplyService {
 
     /**
      * 해당 게시글에 댓글이 존재하는지 여부를 확인한다.
+     *
      * @param articleId
      * @return
      */
@@ -96,6 +102,7 @@ public class ReplyService {
 
     /**
      * 해당 게시글을 삭제 시, 게시글에 달려있는 댓글의 삭제 상태를 true로 변경한다.
+     *
      * @param articleId
      * @return
      */
@@ -108,6 +115,7 @@ public class ReplyService {
 
     /**
      * 해당 댓글을 수정한다.
+     *
      * @param editReply
      * @param replyId
      */
