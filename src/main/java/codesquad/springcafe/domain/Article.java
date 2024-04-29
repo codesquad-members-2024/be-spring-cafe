@@ -10,16 +10,18 @@ public class Article {
     private String title;
     private String content;
     private long views;
+    private boolean deleted;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
 
-    public Article(long articleId, String writer, String title, String content, long views, LocalDateTime createdDate,
-                   LocalDateTime lastModifiedDate) {
+    public Article(long articleId, String writer, String title, String content, long views, boolean deleted,
+                   LocalDateTime createdDate, LocalDateTime lastModifiedDate) {
         this.articleId = articleId;
         this.writer = writer;
         this.title = title;
         this.content = content;
         this.views = views;
+        this.deleted = deleted;
         this.createdDate = createdDate;
         this.lastModifiedDate = lastModifiedDate;
     }
@@ -29,6 +31,7 @@ public class Article {
         this.title = articleDto.getTitle();
         this.content = articleDto.getContent();
         this.views = 0;
+        this.deleted = false;
         this.createdDate = LocalDateTime.now();
         this.lastModifiedDate = LocalDateTime.now();
     }
@@ -62,6 +65,10 @@ public class Article {
 
     public long getViews() {
         return views;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
     }
 
     public String getCreatedDate() {

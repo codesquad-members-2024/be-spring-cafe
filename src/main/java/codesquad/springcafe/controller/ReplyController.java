@@ -34,8 +34,13 @@ public class ReplyController {
     }
 
     @DeleteMapping("/{articleId}/reply/{replyId}")
-    public String deleteReply(@PathVariable long articleId, @PathVariable long replyId, HttpSession session) {
-        replyService.deleteReply(replyId);
+    public String deleteReply(@PathVariable long articleId, @PathVariable long replyId, Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        Reply reply = replyService.findByReplyId(replyId);
+
+        if (reply.getWriter().equals(user.getUserId())) {
+            replyService.deleteReply(replyId);
+        }
 
         return "redirect:/articles/{articleId}";
     }

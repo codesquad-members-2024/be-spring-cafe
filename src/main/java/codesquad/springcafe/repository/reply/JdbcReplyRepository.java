@@ -29,16 +29,13 @@ public class JdbcReplyRepository implements ReplyRepository {
 
     @Override
     public void deleteReply(long replyId) {
-        String SQL = "DELETE FROM reply WHERE reply_id = ?";
-        int update = jdbcTemplate.update(SQL, replyId);
-        if (update == 0) {
-            throw new ReplyNotFoundException(replyId + " ID 댓글이 존재하지 않습니다.");
-        }
+        String SQL = "UPDATE reply SET deleted = true WHERE reply_id = ?";
+        jdbcTemplate.update(SQL, replyId);
     }
 
     @Override
     public List<Reply> findRepliesByArticleId(long articleId) {
-        String SQL = "SELECT * FROM reply WHERE article_id = ?";
+        String SQL = "SELECT * FROM reply WHERE article_id = ? AND deleted = false";
         return jdbcTemplate.query(SQL, rowMapper(), articleId);
     }
 

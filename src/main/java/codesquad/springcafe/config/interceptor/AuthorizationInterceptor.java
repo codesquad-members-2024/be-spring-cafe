@@ -1,4 +1,4 @@
-package codesquad.springcafe.interceptor;
+package codesquad.springcafe.config.interceptor;
 
 import codesquad.springcafe.domain.User;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,8 +15,8 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             String redirectUri = request.getRequestURI();
             request.getSession().setAttribute("redirectUri", redirectUri);
             response.sendRedirect("/users/login");
-            return false;
+            return false; // 요청 처리 중단
         }
-        return true;
+        return true; // 요청 처리 계속
     }
 }

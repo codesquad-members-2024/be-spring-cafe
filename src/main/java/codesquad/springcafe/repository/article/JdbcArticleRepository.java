@@ -3,6 +3,7 @@ package codesquad.springcafe.repository.article;
 import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.dto.ArticleDto;
 import codesquad.springcafe.error.exception.ArticleNotFoundException;
+import codesquad.springcafe.error.exception.ReplyNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -23,14 +24,14 @@ public class JdbcArticleRepository implements ArticleRepository {
 
     @Override
     public void createArticle(Article article) {
-        String SQL = "INSERT INTO article (writer, title, content, views, createdDate, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?)";
+        String SQL = "INSERT INTO article (writer, title, content, views, deleted, createdDate, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(SQL, article.getWriter(), article.getTitle(), article.getContent(), article.getViews(),
-                article.getCreatedDate(), article.getLastModifiedDate());
+                false, article.getCreatedDate(), article.getLastModifiedDate());
     }
 
     @Override
     public List<Article> findAllArticles() {
-        String SQL = "SELECT * FROM article";
+        String SQL = "SELECT * FROM article WHERE deleted = false";
         return jdbcTemplate.query(SQL, rowMapper());
     }
 
@@ -65,11 +66,14 @@ public class JdbcArticleRepository implements ArticleRepository {
 
     @Override
     public void deleteArticle(long articleId) {
-        String SQL = "DELETE FROM article WHERE article_id = ?";
+        String SQL = "UPDATE article SET deleted = true WHERE article_id = ?";
         int update = jdbcTemplate.update(SQL, articleId);
         if (update == 0) {
             throw new ArticleNotFoundException(articleId + " ID 게시글이 존재하지 않습니다.");
         }
+
+        String SQL2 = "UPDATE reply SET deleted = true WHERE article_Id = ?";
+        jdbcTemplate.update(SQL2, articleId);
     }
 
     private RowMapper<Article> rowMapper() {
@@ -79,9 +83,10 @@ public class JdbcArticleRepository implements ArticleRepository {
             String title = rs.getString("title");
             String content = rs.getString("content");
             long views = rs.getLong("views");
+            boolean deleted = rs.getBoolean("deleted");
             LocalDateTime createdDate = rs.getTimestamp("createdDate").toLocalDateTime();
             LocalDateTime lastModifiedDate = rs.getTimestamp("lastModifiedDate").toLocalDateTime();
-            return new Article(articleId, writer, title, content, views, createdDate, lastModifiedDate);
+            return new Article(articleId, writer, title, content, views, deleted, createdDate, lastModifiedDate);
         };
     }
 }

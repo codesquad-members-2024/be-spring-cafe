@@ -56,9 +56,9 @@ public class ArticleController {
         articleService.updateViews(articleId); // 조회수 먼저 업데이트
 
         Article article = articleService.findByArticleId(articleId);
-        List<Reply> replies = replyService.findRepliesByArticleId(articleId);
-
         model.addAttribute("article", article);
+
+        List<Reply> replies = replyService.findRepliesByArticleId(articleId);
         model.addAttribute("replies", replies);
 
         User loginUser = (User) session.getAttribute("user");

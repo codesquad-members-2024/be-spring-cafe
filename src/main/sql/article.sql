@@ -5,6 +5,7 @@ create table article
     title            VARCHAR(255) NOT NULL,
     content          TEXT         NOT NULL,
     views            BIGINT       NOT NULL,
+    deleted          BOOLEAN      NOT NULL,
     createdDate      TIMESTAMP    NOT NULL,
     lastModifiedDate TIMESTAMP    NOT NULL,
     FOREIGN KEY (writer) REFERENCES users (user_id)
