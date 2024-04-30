@@ -210,6 +210,15 @@ li {
     transition: background-color 0.3s;
 }
 
+.article-images {
+    margin-top: 20px;
+}
+
+.article-image {
+    max-width: 100%; /* 이미지가 컨테이너 너비를 넘지 않도록 */
+    height: auto; /* 비율 유지 */
+    margin-bottom: 20px; /* 이미지 간 간격 */
+}
 
 
 
