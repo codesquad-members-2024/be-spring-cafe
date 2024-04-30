@@ -80,7 +80,10 @@ public class ArticleService {
 
     public ArticleWriteForm getArticleUpdateForm(Long id) {
         Article article = findArticle(id);
-        return new ArticleWriteForm(article.getTitle(), article.getContent());
+        ArticleWriteForm articleWriteForm = new ArticleWriteForm();
+        articleWriteForm.setTitle(article.getTitle());
+        articleWriteForm.setContent(article.getContent());
+        return articleWriteForm;
     }
 
     public Article findArticle(Long id) {

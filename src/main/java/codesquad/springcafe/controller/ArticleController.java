@@ -5,8 +5,11 @@ import codesquad.springcafe.form.comment.CommentWriteForm;
 import codesquad.springcafe.form.user.LoginUser;
 import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.Comment;
+import codesquad.springcafe.model.UploadFile;
 import codesquad.springcafe.service.ArticleService;
 import codesquad.springcafe.service.CommentService;
+import codesquad.springcafe.service.FileStoreService;
+import java.io.IOException;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +34,13 @@ public class ArticleController {
 
     private final ArticleService articleService;
     private final CommentService commentService;
+    private final FileStoreService fileStoreService;
 
-    public ArticleController(ArticleService articleService, CommentService commentService) {
+    public ArticleController(ArticleService articleService, CommentService commentService,
+                             FileStoreService fileStoreService) {
         this.articleService = articleService;
         this.commentService = commentService;
+        this.fileStoreService = fileStoreService;
     }
 
     /**
@@ -50,13 +56,15 @@ public class ArticleController {
      */
     @PostMapping("/add")
     public String addArticle(@Validated @ModelAttribute ArticleWriteForm articleWriteForm, BindingResult bindingResult,
-                             @SessionAttribute(LoginController.LOGIN_SESSION_NAME) LoginUser loginUser) {
+                             @SessionAttribute(LoginController.LOGIN_SESSION_NAME) LoginUser loginUser)
+            throws IOException {
         if (bindingResult.hasErrors()) {
             logger.error("errors ={}", bindingResult);
             return "article/form";
         }
 
-        articleService.writeArticle(articleWriteForm, loginUser.getNickname()); // 게시글 업데이트
+        Article article = articleService.writeArticle(articleWriteForm, loginUser.getNickname());// 게시글 업데이트
+        fileStoreService.storeFile(article.getId(), articleWriteForm.getFile()); // 파일 업데이트
 
         return "redirect:/";
     }
@@ -71,10 +79,12 @@ public class ArticleController {
         Article article = articleService.viewArticle(id);
         List<Comment> comments = commentService.getCommentsByOffset(id, FIRST_OFFSET);
         Long commentCount = commentService.getCommentCount(article);
+        List<UploadFile> uploadFiles = fileStoreService.findFilesByArticleId(id);
 
         model.addAttribute("article", article);
         model.addAttribute("comments", comments);
         model.addAttribute("commentCount", commentCount);
+        model.addAttribute("uploadFiles", uploadFiles);
 
         return "article/show";
     }

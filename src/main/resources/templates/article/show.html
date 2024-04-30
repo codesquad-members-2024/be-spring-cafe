@@ -32,10 +32,30 @@
                                 <p class="article-content" th:text="|조회 *{views}|">조회 4</p>
                             </div>
                         </div>
+                        <div class="article-images">
+                            <div th:each="file : ${uploadFiles}"
+                                 th:if="${#strings.endsWith(file.getUploadFileName(), '.jpg') or #strings.endsWith(file.getUploadFileName(), '.png') or #strings.endsWith(file.getUploadFileName(), '.jpeg')}">
+                                <img th:src="@{/api/file/download/{fileId}(fileId=${file.id})}"
+                                     th:alt="${file.getUploadFileName()}" class="article-image"/>
+                            </div>
+                        </div>
+
                         <div class="article-doc">
                             <p style="white-space: pre-wrap;" th:text="*{content}">호눅스가 요청하신 페이지의 디자인입니다.<br>각각의 글의 상세
                                 페이지는 이런 느낌이네요!</p>
                         </div>
+
+                        <div th:unless="${uploadFiles.isEmpty()}" class="file-section">
+                            <ul class="file-list">
+                                <li th:each="file : ${uploadFiles}">
+                                    <a th:href="@{/api/file/download/{fileId}(fileId=${file.id})}" class="file-link">
+                                        <span th:text="${file.getUploadFileName()}">example.jpg</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+
                     </article>
 
                     <!--                    코멘트-->

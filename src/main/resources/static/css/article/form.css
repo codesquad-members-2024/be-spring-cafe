@@ -181,3 +181,14 @@ li {
     color: #dc3545;
 }
 
+/* 파일 입력 필드 스타일링 */
+.form-group input[type="file"] {
+    border: 1px solid lightgray;
+    padding: 10px;
+    background-color: white;
+    margin-top: 5px;
+    width: calc(50% - 22px); /* 패딩과 보더를 고려한 너비 조정 */
+}
+
+
+
