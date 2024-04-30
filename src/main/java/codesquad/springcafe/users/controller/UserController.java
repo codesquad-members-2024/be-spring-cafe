@@ -76,7 +76,7 @@ public class UserController {
         throw new UserAccessException("수정할 수 있는 권한이 없습니다.");
     }
 
-    @PutMapping("/update/{userId}")
+    @PutMapping("/{userId}")
     public String updateUser(@PathVariable String userId, UserUpdateRequest updateData, Model model) {
         try {
             userService.updateUser(userId, updateData);

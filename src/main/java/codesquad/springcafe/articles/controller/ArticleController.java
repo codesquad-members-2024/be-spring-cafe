@@ -78,7 +78,7 @@ public class ArticleController {
         return "article/updateForm";
     }
 
-    @PutMapping("/update/{articleId}")
+    @PutMapping("/{articleId}")
     public String updateArticle(@PathVariable long articleId, HttpSession session, ArticleUpdateDto articleUpdateDto) {
         Article article = articleService.findArticleById(articleId);    // articleId에 해당하는 Article 객체
 
@@ -89,7 +89,7 @@ public class ArticleController {
         return "redirect:/articles/{articleId}";
     }
 
-    @DeleteMapping("/delete/{articleId}")
+    @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable long articleId, HttpSession session, Model model) {
         Article article = articleService.findArticleById(articleId);    // articleId에 해당하는 Article 객체
 

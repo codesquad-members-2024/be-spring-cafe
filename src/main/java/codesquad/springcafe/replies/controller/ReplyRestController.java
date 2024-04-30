@@ -1,11 +1,10 @@
-package codesquad.springcafe.reply.controller;
+package codesquad.springcafe.replies.controller;
 
 import codesquad.springcafe.articles.model.Reply;
 import codesquad.springcafe.articles.model.dto.ReplyCreationRequest;
 import codesquad.springcafe.articles.model.dto.ReplyViewDto;
 import codesquad.springcafe.articles.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +29,7 @@ public class ReplyRestController {
         return ResponseEntity.ok(replyViewDto);
     }
 
-    @DeleteMapping("/delete/{replyId}")
+    @DeleteMapping("/{replyId}")
     public ResponseEntity<Boolean> deleteReply(@PathVariable long replyId) {
         boolean result = articleService.deleteReply(replyId);
 
