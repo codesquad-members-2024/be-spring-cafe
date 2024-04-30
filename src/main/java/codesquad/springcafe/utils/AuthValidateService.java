@@ -35,7 +35,9 @@ public class AuthValidateService {
         }
     }
 
-    public void validateReplyAuth(Reply reply, String sessionedUser) {
+    public void validateReplyAuth(HttpSession session, Reply reply) {
+        String sessionedUser = getSessionUser(session);
+
         if (!reply.getUserId().equals(sessionedUser)) {
             throw new ReplyAccessException("댓글에 접근할 수 있는 권한이 없습니다.");
         }
