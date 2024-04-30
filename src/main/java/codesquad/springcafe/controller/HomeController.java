@@ -4,11 +4,13 @@ import codesquad.springcafe.model.Article;
 import codesquad.springcafe.service.ArticleService;
 import codesquad.springcafe.service.CommentService;
 import codesquad.springcafe.web.PageGroup;
+import codesquad.springcafe.web.Search;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -42,13 +44,13 @@ public class HomeController {
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam String keyword, @RequestParam(defaultValue = "1") Long page, Model model) {
-        Long totalArticleSize = articleService.getSearchedCount(keyword);
-        List<Article> articles = articleService.getSearchedArticlesByPage(keyword, page);
+    public String search(@ModelAttribute("search") Search search, @RequestParam(defaultValue = "1") Long page,
+                         Model model) {
+        Long totalArticleSize = articleService.getSearchedCount(search);
+        List<Article> articles = articleService.getSearchedArticlesByPage(search, page);
         Map<Long, Long> commentCounts = commentService.getCommentCounts(articles);
         PageGroup pageGroup = getPageGroup(page, totalArticleSize);
 
-        model.addAttribute("keyword", keyword);
         model.addAttribute("totalArticleSize", totalArticleSize);
         model.addAttribute("articles", articles);
         model.addAttribute("commentCounts", commentCounts);

@@ -77,6 +77,11 @@
 
     <div class="search-container">
         <form th:action="@{/search}" method="get">
+            <select name="searchType">
+                <option value="titleContent">제목+내용</option>
+                <option value="writer">작성자</option>
+            </select>
+
             <input type="text" name="keyword" placeholder="검색어를 입력하세요" required>
             <button type="submit">검색</button>
         </form>

@@ -5,8 +5,10 @@ import codesquad.springcafe.database.comment.CommentDatabase;
 import codesquad.springcafe.exception.ArticleAccessException;
 import codesquad.springcafe.exception.ArticleHasCommentsException;
 import codesquad.springcafe.exception.ArticleNotFoundException;
+import codesquad.springcafe.exception.InvalidSearchTypeException;
 import codesquad.springcafe.form.article.ArticleWriteForm;
 import codesquad.springcafe.model.Article;
+import codesquad.springcafe.web.Search;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.slf4j.Logger;
@@ -109,12 +111,27 @@ public class ArticleService {
         }
     }
 
-    public Long getSearchedCount(String keyword) {
-        return articleDatabase.countSearchedArticles(keyword);
+    public Long getSearchedCount(Search search) {
+        String keyword = search.getKeyword();
+        if (search.isTitleContentType()) {
+            return articleDatabase.countSearchedArticlesByTitleContent(keyword);
+        }
+        if (search.isWriterType()) {
+            return articleDatabase.countSearchedArticlesByWriter(keyword);
+        }
+        throw new InvalidSearchTypeException();
     }
 
-    public List<Article> getSearchedArticlesByPage(String keyword, Long page) {
+    public List<Article> getSearchedArticlesByPage(Search search, Long page) {
+        String keyword = search.getKeyword();
         Long offset = (page - 1) * articlesPerPage;
-        return articleDatabase.findSearchedPageArticles(keyword, offset, articlesPerPage);
+
+        if (search.isTitleContentType()) {
+            return articleDatabase.findSearchedPageArticlesByTitleContent(keyword, offset, articlesPerPage);
+        }
+        if (search.isWriterType()) {
+            return articleDatabase.findSearchedPageArticlesByWriter(keyword, offset, articlesPerPage);
+        }
+        throw new InvalidSearchTypeException();
     }
 }

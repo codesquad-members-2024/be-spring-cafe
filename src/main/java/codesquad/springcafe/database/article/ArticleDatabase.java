@@ -28,8 +28,11 @@ public interface ArticleDatabase {
 
     String findWriter(Long id);
 
-    Long countSearchedArticles(String keyword);
+    Long countSearchedArticlesByTitleContent(String keyword);
 
-    List<Article> findSearchedPageArticles(String keyword, Long offset, int articlesPerPage);
+    List<Article> findSearchedPageArticlesByTitleContent(String keyword, Long offset, int articlesPerPage);
 
+    Long countSearchedArticlesByWriter(String keyword);
+
+    List<Article> findSearchedPageArticlesByWriter(String keyword, Long offset, int articlesPerPage);
 }

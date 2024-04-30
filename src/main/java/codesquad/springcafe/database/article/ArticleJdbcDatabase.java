@@ -105,17 +105,31 @@ public class ArticleJdbcDatabase implements ArticleDatabase {
     }
 
     @Override
-    public Long countSearchedArticles(String keyword) {
+    public Long countSearchedArticlesByTitleContent(String keyword) {
         String sqlLikeKeyword = SearchUtils.formatForSqlLike(keyword);
         String sql = "SELECT COUNT(id) FROM articles WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = false";
         return jdbcTemplate.queryForObject(sql, Long.class, sqlLikeKeyword, sqlLikeKeyword);
     }
 
     @Override
-    public List<Article> findSearchedPageArticles(String keyword, Long offset, int articlesPerPage) {
+    public List<Article> findSearchedPageArticlesByTitleContent(String keyword, Long offset, int articlesPerPage) {
         String sqlLikeKeyword = SearchUtils.formatForSqlLike(keyword);
         String sql = "SELECT id, writer, title, content, write_date, views, is_Deleted FROM articles WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = false ORDER BY id DESC LIMIT ? OFFSET ?";
         return jdbcTemplate.query(sql, articleRowMapper(), sqlLikeKeyword, sqlLikeKeyword, articlesPerPage, offset);
+    }
+
+    @Override
+    public Long countSearchedArticlesByWriter(String keyword) {
+        String sqlLikeKeyword = SearchUtils.formatForSqlLike(keyword);
+        String sql = "SELECT COUNT(id) FROM articles WHERE writer LIKE ? AND is_deleted = false";
+        return jdbcTemplate.queryForObject(sql, Long.class, sqlLikeKeyword);
+    }
+
+    @Override
+    public List<Article> findSearchedPageArticlesByWriter(String keyword, Long offset, int articlesPerPage) {
+        String sqlLikeKeyword = SearchUtils.formatForSqlLike(keyword);
+        String sql = "SELECT id, writer, title, content, write_date, views, is_Deleted FROM articles WHERE writer LIKE ? AND is_deleted = false ORDER BY id DESC LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(sql, articleRowMapper(), sqlLikeKeyword, articlesPerPage, offset);
     }
 
     private RowMapper<Article> articleRowMapper() {
