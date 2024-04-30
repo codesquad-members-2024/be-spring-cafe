@@ -29,7 +29,7 @@ public class HomeController {
     @GetMapping
     public String home(@RequestParam(defaultValue = "1") Long page, Model model) {
 
-        Long totalArticleSize = articleService.getTotalCount();
+        Long totalArticleSize = articleService.getSearchedCount();
         List<Article> articles = articleService.getArticlesByPage(page);
         Map<Long, Long> commentCounts = commentService.getCommentCounts(articles);
         PageGroup pageGroup = getPageGroup(page, totalArticleSize);
@@ -39,6 +39,21 @@ public class HomeController {
         model.addAttribute("commentCounts", commentCounts);
         model.addAttribute("pageGroup", pageGroup);
         return "home/index";
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam String keyword, @RequestParam(defaultValue = "1") Long page, Model model) {
+        Long totalArticleSize = articleService.getSearchedCount(keyword);
+        List<Article> articles = articleService.getSearchedArticlesByPage(keyword, page);
+        Map<Long, Long> commentCounts = commentService.getCommentCounts(articles);
+        PageGroup pageGroup = getPageGroup(page, totalArticleSize);
+
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("totalArticleSize", totalArticleSize);
+        model.addAttribute("articles", articles);
+        model.addAttribute("commentCounts", commentCounts);
+        model.addAttribute("pageGroup", pageGroup);
+        return "home/search";
     }
 
     private PageGroup getPageGroup(Long page, Long totalArticleSize) {

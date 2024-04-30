@@ -23,8 +23,13 @@ public interface ArticleDatabase {
 //    void deleteArticle(Long id);
 
     void clear();
-    
+
     Long countTotalArticles();
 
     String findWriter(Long id);
+
+    Long countSearchedArticles(String keyword);
+
+    List<Article> findSearchedPageArticles(String keyword, Long offset, int articlesPerPage);
+
 }

@@ -1,13 +1,13 @@
 package codesquad.springcafe.database.article;
 
 import codesquad.springcafe.model.Article;
+import codesquad.springcafe.util.SearchUtils;
 import jakarta.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -17,8 +17,8 @@ import org.springframework.stereotype.Repository;
 public class ArticleJdbcDatabase implements ArticleDatabase {
     private final JdbcTemplate jdbcTemplate;
 
-    public ArticleJdbcDatabase(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public ArticleJdbcDatabase(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -102,6 +102,20 @@ public class ArticleJdbcDatabase implements ArticleDatabase {
     public String findWriter(Long id) {
         String sql = "SELECT writer FROM articles WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, String.class, id);
+    }
+
+    @Override
+    public Long countSearchedArticles(String keyword) {
+        String sqlLikeKeyword = SearchUtils.formatForSqlLike(keyword);
+        String sql = "SELECT COUNT(id) FROM articles WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = false";
+        return jdbcTemplate.queryForObject(sql, Long.class, sqlLikeKeyword, sqlLikeKeyword);
+    }
+
+    @Override
+    public List<Article> findSearchedPageArticles(String keyword, Long offset, int articlesPerPage) {
+        String sqlLikeKeyword = SearchUtils.formatForSqlLike(keyword);
+        String sql = "SELECT id, writer, title, content, write_date, views, is_Deleted FROM articles WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = false ORDER BY id DESC LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(sql, articleRowMapper(), sqlLikeKeyword, sqlLikeKeyword, articlesPerPage, offset);
     }
 
     private RowMapper<Article> articleRowMapper() {

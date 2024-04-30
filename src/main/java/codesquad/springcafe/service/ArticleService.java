@@ -89,7 +89,7 @@ public class ArticleService {
         return (int) Math.ceil((double) totalArticleSize / articlesPerPage);
     }
 
-    public Long getTotalCount() {
+    public Long getSearchedCount() {
         return articleDatabase.countTotalArticles();
     }
 
@@ -107,5 +107,14 @@ public class ArticleService {
         if (hasOtherComment) {
             throw new ArticleHasCommentsException(articleId);
         }
+    }
+
+    public Long getSearchedCount(String keyword) {
+        return articleDatabase.countSearchedArticles(keyword);
+    }
+
+    public List<Article> getSearchedArticlesByPage(String keyword, Long page) {
+        Long offset = (page - 1) * articlesPerPage;
+        return articleDatabase.findSearchedPageArticles(keyword, offset, articlesPerPage);
     }
 }
