@@ -3,6 +3,7 @@ package codesquad.springcafe.articles.model.dto;
 import codesquad.springcafe.articles.model.Reply;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class ReplyViewDto {
     private final Reply reply;
@@ -39,7 +40,7 @@ public class ReplyViewDto {
         return reply.getComment();
     }
 
-    public LocalDate getCreationDate() {
+    public String getCreationDate() {
         return reply.getCreationDate();
     }
 

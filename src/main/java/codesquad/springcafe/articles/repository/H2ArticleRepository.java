@@ -19,6 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -68,12 +69,12 @@ public class H2ArticleRepository implements ArticleRepository {
                 String userId = rs.getString(USERID);
                 String title = rs.getString(TITLE);
                 String content = rs.getString(CONTENT);
-                String creationDate = rs.getString(CREATIONDATE);
+                LocalDateTime creationDate = rs.getTimestamp(CREATIONDATE).toLocalDateTime();
                 long pageViews = rs.getLong(PAGEVIEWS);
 
                 Article article = new Article(userId, title, content);
                 article.setArticleId(articleId);
-                article.setCreationDate(LocalDate.parse(creationDate));
+                article.setCreationDate(creationDate);
                 article.setPageViews(pageViews);
                 return Optional.of(article);
             }
@@ -124,7 +125,7 @@ public class H2ArticleRepository implements ArticleRepository {
             ps.setLong(1, reply.getArticleId());
             ps.setString(2, reply.getUserId());
             ps.setString(3, reply.getComment());
-            ps.setString(4, reply.getCreationDate().toString());
+            ps.setString(4, reply.getCreationDate());
             return ps;
         }, keyHolder);
 
@@ -171,12 +172,12 @@ public class H2ArticleRepository implements ArticleRepository {
             String userId = rs.getString(USERID);
             String title = rs.getString(TITLE);
             String content = rs.getString(CONTENT);
-            String creationDate = rs.getString(CREATIONDATE);
+            LocalDateTime creationDate = rs.getTimestamp(CREATIONDATE).toLocalDateTime();
             long pageViews = rs.getLong(PAGEVIEWS);
 
             Article article = new Article(userId, title, content);
             article.setArticleId(articleId);
-            article.setCreationDate(LocalDate.parse(creationDate));
+            article.setCreationDate(creationDate);
             article.setPageViews(pageViews);
             return article;
         }
@@ -189,12 +190,12 @@ public class H2ArticleRepository implements ArticleRepository {
             long articleId = rs.getLong(ARTICLEID);
             String userId = rs.getString(USERID);
             String comment = rs.getString(COMMENT);
-            String creationDate = rs.getString(CREATIONDATE);
+            LocalDateTime creationDate = rs.getTimestamp(CREATIONDATE).toLocalDateTime();
 
             Reply reply = new Reply(articleId, userId, comment);
 
             reply.setReplyId(replyId);
-            reply.setCreationDate(LocalDate.parse(creationDate));
+            reply.setCreationDate(creationDate);
 
             return reply;
         }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -38,7 +39,7 @@ public class H2UserRepository implements UserRepository {
     @Override
     public void createUser(User user) {
         String sql = "INSERT INTO USERS (USERID, EMAIL, NAME, HASHEDPASSWORD, CREATIONDATE) VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, user.getUserId(), user.getEmail(), user.getName(), user.getHashedPassword(), user.getCreationDate().toString());
+        jdbcTemplate.update(sql, user.getUserId(), user.getEmail(), user.getName(), user.getHashedPassword(), user.getCreationDate());
     }
 
     @Override
@@ -55,7 +56,7 @@ public class H2UserRepository implements UserRepository {
             if (rs.next()) {
                 String name = rs.getString(NAME);
                 String email = rs.getString(EMAIL);
-                String creationDate = rs.getString(CREATIONDATE);
+                LocalDateTime creationDate = rs.getTimestamp(CREATIONDATE).toLocalDateTime();
                 return Optional.of(new UserPreviewDto(userId, name, email, creationDate));
             }
             return Optional.empty();
@@ -85,7 +86,7 @@ public class H2UserRepository implements UserRepository {
             String userId = rs.getString(USERID);
             String name = rs.getString(NAME);
             String email = rs.getString(EMAIL);
-            String creationDate = rs.getString(CREATIONDATE);
+            LocalDateTime creationDate = rs.getTimestamp(CREATIONDATE).toLocalDateTime();
             return new UserPreviewDto(userId, name, email, creationDate);
         }
     }
