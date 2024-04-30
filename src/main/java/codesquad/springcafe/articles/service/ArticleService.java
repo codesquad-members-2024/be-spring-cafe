@@ -43,7 +43,9 @@ public class ArticleService {
     }
 
     public void incrementPageViews(long articleId) {
-        articleRepository.incrementPageView(articleId);
+        if (articleRepository.findArticleById(articleId).isPresent()) { // articleID에 해당하는 Article이 DB에 저장되어 있는 경우에만 조회수 증가
+            articleRepository.incrementPageView(articleId);
+        }
     }
 
     public void updateArticle(long articleId, ArticleUpdateDto articleUpdateDto) {

@@ -10,6 +10,7 @@ import codesquad.springcafe.articles.model.dto.ArticleCreationRequest;
 import codesquad.springcafe.exception.ArticleAccessException;
 import codesquad.springcafe.exception.ReplyAccessException;
 import codesquad.springcafe.users.model.dto.UserPreviewDto;
+import codesquad.springcafe.utils.AuthValidateService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,29 +24,42 @@ import java.util.ArrayList;
 @RequestMapping("/articles")
 public class ArticleController {
 
+    private static final String SESSION_USER = "sessionedUser";
+
     private final ArticleService articleService;
+    private final AuthValidateService authValidateService;
 
     @Autowired
-    public ArticleController(ArticleService articleService) {
+    public ArticleController(ArticleService articleService, AuthValidateService authValidateService) {
         this.articleService = articleService;
+        this.authValidateService = authValidateService;
     }
 
     @PostMapping
-    public String postArticle(ArticleCreationRequest articleCreationRequest) {
+    public String postArticle(HttpSession session, ArticleCreationRequest articleCreationRequest) {
+        // 게시글 생성 시 권한 확인
+
+        // * [VALIDATE] 로그인이 되어 있는 유저야 한다
+        authValidateService.validateSession(session);
+
+        // * [VALIDATE] 세션 작성자와 creationRequest의 작성자가 일치해야 한다
+        authValidateService.validateWriterMatch(session, articleCreationRequest.getUserId());
+
+        // * article 생성
         articleService.createArticle(articleCreationRequest);
 
         return "redirect:/";
     }
 
     @GetMapping("/{articleId}")
-    public String showArticle(@PathVariable long articleId, HttpServletRequest request, Model model) {
-        articleService.incrementPageViews(articleId);
+    public String showArticle(@PathVariable long articleId, HttpSession session, Model model) {
+        articleService.incrementPageViews(articleId);   // 게시글 조회수 증가
 
-        Article article = articleService.findArticleById(articleId);
+        Article article = articleService.findArticleById(articleId);    // 증가된 조회수가 반영된 Article 객체
 
-        String sessionedUserId = ((UserPreviewDto) request.getSession().getAttribute("sessionedUser")).getUserId();
+        String sessionedUserId = ((UserPreviewDto) session.getAttribute(SESSION_USER)).getUserId(); // 세션의 userId 확인
 
-        ArrayList<ReplyViewDto> replies = articleService.getReplies(sessionedUserId, articleId);
+        ArrayList<ReplyViewDto> replies = articleService.getReplies(sessionedUserId, articleId);    // article에 해당하는 replies를 가져옴
 
         model.addAttribute("article", article);
         model.addAttribute("totalReplies", replies.size());
@@ -55,70 +69,35 @@ public class ArticleController {
     }
 
     @GetMapping("/update/{articleId}")
-    public String showArticleUpdatePage(@PathVariable long articleId, HttpServletRequest request, Model model) {
-        validateArticleAuth(request, articleId);
+    public String showArticleUpdatePage(@PathVariable long articleId, HttpSession session, Model model) {
+        Article article = articleService.findArticleById(articleId);    // articleId에 해당하는 Article 객체
 
-        Article article = articleService.findArticleById(articleId);
+        authValidateService.validateArticleAuth(session, article);  // session 값과 article 간의 권한 검증 [ 작성자 검증 ]
 
         model.addAttribute("article", article);
         return "article/updateForm";
     }
 
     @PutMapping("/update/{articleId}")
-    public String updateArticle(@PathVariable long articleId, HttpServletRequest request, ArticleUpdateDto articleUpdateDto) {
-        validateArticleAuth(request, articleId);
+    public String updateArticle(@PathVariable long articleId, HttpSession session, ArticleUpdateDto articleUpdateDto) {
+        Article article = articleService.findArticleById(articleId);    // articleId에 해당하는 Article 객체
 
-        articleService.updateArticle(articleId, articleUpdateDto);
+        authValidateService.validateArticleAuth(session, article);      // session 값과 article 간의 권한 검증 [ 작성자 검증 ]
+
+        articleService.updateArticle(articleId, articleUpdateDto);      // articleId에 해당하는 article 레코드 수정
 
         return "redirect:/articles/{articleId}";
     }
 
     @DeleteMapping("/delete/{articleId}")
-    public String deleteArticle(@PathVariable long articleId, HttpServletRequest request, Model model) {
-        validateArticleAuth(request, articleId);
+    public String deleteArticle(@PathVariable long articleId, HttpSession session, Model model) {
+        Article article = articleService.findArticleById(articleId);    // articleId에 해당하는 Article 객체
+
+        authValidateService.validateArticleAuth(session, article);      // session 값과 article 간의 권한 검증 [ 작성자 검증 ]
 
         articleService.deleteArticle(articleId);
 
         return "redirect:/";
     }
 
-    @PostMapping("/{articleId}/answers")
-    public String createReply(@PathVariable long articleId, ReplyCreationRequest replyCreationRequest) {
-        articleService.createReply(articleId, replyCreationRequest);
-
-        return "redirect:/articles/{articleId}";
-    }
-
-    @DeleteMapping("/{articleId}/answers/{replyId}")
-    public String deleteReply(@PathVariable long replyId, HttpServletRequest request) {
-        validateReplyAuth(request, replyId);
-
-        articleService.deleteReply(replyId);
-
-        return "redirect:/articles/{articleId}";
-    }
-
-    private void validateArticleAuth(HttpServletRequest request, long articleId) {
-        HttpSession session = request.getSession();
-        UserPreviewDto userPreviewDto = (UserPreviewDto) session.getAttribute("sessionedUser");
-        String sessionedUserId = userPreviewDto.getUserId();
-
-        String ownerId = articleService.findArticleById(articleId).getUserId();
-
-        if (!sessionedUserId.equals(ownerId)) {
-            throw new ArticleAccessException("게시글에 접근할 수 있는 권한이 없습니다.");
-        }
-    }
-
-    private void validateReplyAuth(HttpServletRequest request, long replyId) {
-        HttpSession session = request.getSession();
-        UserPreviewDto userPreviewDto = (UserPreviewDto) session.getAttribute("sessionedUser");
-        String sessionedUserId = userPreviewDto.getUserId();
-
-        String ownerId = articleService.findReplyById(replyId).getUserId();
-
-        if (!sessionedUserId.equals(ownerId)) {
-            throw new ReplyAccessException("댓글에 접근할 수 있는 권한이 없습니다.");
-        }
-    }
 }
