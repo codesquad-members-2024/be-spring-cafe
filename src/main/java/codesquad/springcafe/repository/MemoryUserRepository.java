@@ -16,8 +16,9 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public void add(User user) {
+    public User add(User user) {
         database.addUser(user);
+        return user;
     }
 
     @Override
