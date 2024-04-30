@@ -1,17 +1,14 @@
 package codesquad.springcafe.articles.service;
 
-import codesquad.springcafe.articles.model.Reply;
+import codesquad.springcafe.replies.model.Reply;
 import codesquad.springcafe.articles.model.dto.ArticleUpdateDto;
-import codesquad.springcafe.articles.model.dto.ReplyCreationRequest;
-import codesquad.springcafe.articles.model.dto.ReplyViewDto;
 import codesquad.springcafe.articles.repository.ArticleRepository;
 import codesquad.springcafe.exception.ArticleAccessException;
 import codesquad.springcafe.exception.ArticleNotFoundException;
 import codesquad.springcafe.articles.model.Article;
 import codesquad.springcafe.articles.model.dto.ArticleCreationRequest;
 import codesquad.springcafe.exception.ReplyNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import codesquad.springcafe.replies.repository.ReplyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +18,12 @@ import java.util.Optional;
 @Service
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final ReplyRepository replyRepository;
 
     @Autowired
-    public ArticleService(ArticleRepository articleRepository) {
+    public ArticleService(ArticleRepository articleRepository, ReplyRepository replyRepository) {
         this.articleRepository = articleRepository;
+        this.replyRepository = replyRepository;
     }
 
     public void createArticle(ArticleCreationRequest articleCreationRequest) {
@@ -55,39 +54,11 @@ public class ArticleService {
     public void deleteArticle(long articleId) {
         Article article = articleRepository.findArticleById(articleId).orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
 
-        ArrayList<Reply> replies = articleRepository.getReplies(articleId).orElseThrow(() -> new ReplyNotFoundException("댓글을 찾을 수 업습니다."));
+        ArrayList<Reply> replies = replyRepository.getReplies(articleId).orElseThrow(() -> new ReplyNotFoundException("댓글을 찾을 수 업습니다."));
 
         validateArticleAccess(replies, article.getUserId());
 
         articleRepository.deleteArticle(articleId);
-    }
-
-    public Reply createReply(long articleId, ReplyCreationRequest replyCreationRequest) {
-        Reply reply = new Reply(articleId, replyCreationRequest.getWriter(), replyCreationRequest.getComment());
-
-        return articleRepository.createReply(reply);
-    }
-
-    public ArrayList<ReplyViewDto> getReplies(String sessionedUserId, long articleId) {
-        ArrayList<Reply> replies = articleRepository.getReplies(articleId).orElseThrow(() -> new ReplyNotFoundException("댓글을 찾을 수 없습니다."));
-
-        ArrayList<ReplyViewDto> replyViews = new ArrayList<>(replies.size());
-
-        for (Reply reply : replies) {
-            boolean editRight = reply.getUserId().equals(sessionedUserId);
-            ReplyViewDto replyViewDto = new ReplyViewDto(reply, editRight);
-            replyViews.add(replyViewDto);
-        }
-
-        return replyViews;
-    }
-
-    public Reply findReplyById(long replyId) {
-        return articleRepository.findReplyById(replyId).orElseThrow(() -> new ReplyNotFoundException("해당하는 댓글을 찾을 수 없습니다."));
-    }
-
-    public boolean deleteReply(long replyId) {
-        return articleRepository.deleteReply(replyId);
     }
 
     private void validateArticleAccess(ArrayList<Reply> replies, String userId) {

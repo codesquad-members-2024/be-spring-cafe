@@ -1,9 +1,6 @@
-package codesquad.springcafe.articles.model.dto;
+package codesquad.springcafe.replies.model.dto;
 
-import codesquad.springcafe.articles.model.Reply;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import codesquad.springcafe.replies.model.Reply;
 
 public class ReplyViewDto {
     private final Reply reply;

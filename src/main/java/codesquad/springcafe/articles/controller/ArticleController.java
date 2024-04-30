@@ -2,16 +2,13 @@ package codesquad.springcafe.articles.controller;
 
 
 import codesquad.springcafe.articles.model.dto.ArticleUpdateDto;
-import codesquad.springcafe.articles.model.dto.ReplyCreationRequest;
-import codesquad.springcafe.articles.model.dto.ReplyViewDto;
+import codesquad.springcafe.replies.model.dto.ReplyViewDto;
 import codesquad.springcafe.articles.service.ArticleService;
 import codesquad.springcafe.articles.model.Article;
 import codesquad.springcafe.articles.model.dto.ArticleCreationRequest;
-import codesquad.springcafe.exception.ArticleAccessException;
-import codesquad.springcafe.exception.ReplyAccessException;
+import codesquad.springcafe.replies.service.ReplyService;
 import codesquad.springcafe.users.model.dto.UserPreviewDto;
 import codesquad.springcafe.utils.AuthValidateService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,11 +24,13 @@ public class ArticleController {
     private static final String SESSION_USER = "sessionedUser";
 
     private final ArticleService articleService;
+    private final ReplyService replyService;
     private final AuthValidateService authValidateService;
 
     @Autowired
-    public ArticleController(ArticleService articleService, AuthValidateService authValidateService) {
+    public ArticleController(ArticleService articleService, ReplyService replyService, AuthValidateService authValidateService) {
         this.articleService = articleService;
+        this.replyService = replyService;
         this.authValidateService = authValidateService;
     }
 
@@ -59,7 +58,7 @@ public class ArticleController {
 
         String sessionedUserId = ((UserPreviewDto) session.getAttribute(SESSION_USER)).getUserId(); // 세션의 userId 확인
 
-        ArrayList<ReplyViewDto> replies = articleService.getReplies(sessionedUserId, articleId);    // article에 해당하는 replies를 가져옴
+        ArrayList<ReplyViewDto> replies = replyService.getReplies(sessionedUserId, articleId);    // article에 해당하는 replies를 가져옴
 
         model.addAttribute("article", article);
         model.addAttribute("totalReplies", replies.size());

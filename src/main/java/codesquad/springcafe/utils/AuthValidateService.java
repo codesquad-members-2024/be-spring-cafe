@@ -1,7 +1,7 @@
 package codesquad.springcafe.utils;
 
 import codesquad.springcafe.articles.model.Article;
-import codesquad.springcafe.articles.model.Reply;
+import codesquad.springcafe.replies.model.Reply;
 import codesquad.springcafe.exception.ArticleAccessException;
 import codesquad.springcafe.exception.ArticleCreationException;
 import codesquad.springcafe.exception.ReplyAccessException;

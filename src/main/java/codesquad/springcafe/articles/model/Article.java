@@ -1,8 +1,6 @@
 package codesquad.springcafe.articles.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class Article {
