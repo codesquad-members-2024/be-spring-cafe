@@ -3,13 +3,16 @@ package codesquad.springcafe.repository;
 import codesquad.springcafe.domain.Reply;
 import codesquad.springcafe.domain.repository.ReplyRepository;
 import codesquad.springcafe.dto.ShowReply;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -26,9 +29,8 @@ public class H2ReplyRepository implements ReplyRepository {
     private RowMapper<ShowReply> showReplyRowMapper = (rs, rowNum) -> {
         ShowReply showReply = new ShowReply(
                 rs.getString(WRITERID_KEY),
-                rs.getTimestamp(TIME_KEY).toLocalDateTime(),
-                rs.getString(CONTENTS_KEY),
-                rs.getBoolean(DELETED_KEY)
+                rs.getTimestamp(TIME_KEY).toString(),
+                rs.getString(CONTENTS_KEY)
         );
         showReply.setId(rs.getLong(ID_KEY));
         return showReply;
@@ -51,10 +53,25 @@ public class H2ReplyRepository implements ReplyRepository {
     }
 
     @Override
-    public void add(Reply reply) {
-        String INSERT_REPLY = "INSERT INTO REPLY (contents, writerid, deleted, articleid, time) VALUES (?,?,?,?,?)";
-        jdbcTemplate.update(INSERT_REPLY, reply.getContents(), reply.getWriterId(), reply.getDeleted(),
-                reply.getArticleId(), reply.getTime());
+    public Reply add(Reply reply) {
+//        String INSERT_REPLY = "INSERT INTO REPLY (contents, writerid, deleted, articleid, time) VALUES (?,?,?,?,?)";
+//        jdbcTemplate.update(INSERT_REPLY, reply.getContents(), reply.getWriterId(), reply.getDeleted(),
+//                reply.getArticleId(), reply.getTime());
+
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("Reply")
+                .usingGeneratedKeyColumns("id");
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("contents", reply.getContents());
+        parameters.put("articleId", reply.getArticleId());
+        parameters.put("deleted", reply.getDeleted());
+        parameters.put("writerId", reply.getWriterId());
+        parameters.put("time", reply.getTime());
+
+        Long key = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+        reply.setId(key);
+        return reply;
     }
 
     @Override

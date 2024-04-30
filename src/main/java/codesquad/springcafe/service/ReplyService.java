@@ -2,6 +2,7 @@ package codesquad.springcafe.service;
 
 import codesquad.springcafe.domain.Reply;
 import codesquad.springcafe.domain.repository.ReplyRepository;
+import codesquad.springcafe.dto.AjaxTemplateReply;
 import codesquad.springcafe.dto.EditReply;
 import codesquad.springcafe.dto.ReplyForm;
 import codesquad.springcafe.dto.ShowReply;
@@ -24,11 +25,15 @@ public class ReplyService {
      * @param writerId
      * @param articleId
      */
-    public void register(ReplyForm replyForm, String writerId, String articleId) {
+    public AjaxTemplateReply register(ReplyForm replyForm, String writerId, String articleId) {
         Reply reply = new Reply(
                 replyForm.getContents(), writerId, replyForm.getTime(),
                 false, Long.parseLong(articleId));
         replyRepository.add(reply);
+        AjaxTemplateReply ajaxTemplateReply = new AjaxTemplateReply(
+                reply.getWriterId(), reply.getId().toString(), reply.getTime(), reply.getContents(),reply.getArticleId().toString()
+        );
+        return ajaxTemplateReply;
     }
 
     /**
