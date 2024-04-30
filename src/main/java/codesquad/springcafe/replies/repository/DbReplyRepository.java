@@ -1,7 +1,7 @@
 package codesquad.springcafe.replies.repository;
 
 import codesquad.springcafe.replies.model.Reply;
-import codesquad.springcafe.articles.repository.H2ArticleRepository;
+import codesquad.springcafe.articles.repository.DbArticleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class H2ReplyRepository implements ReplyRepository {
-    private static final Logger logger = LoggerFactory.getLogger(H2ArticleRepository.class);
+public class DbReplyRepository implements ReplyRepository {
+    private static final Logger logger = LoggerFactory.getLogger(DbArticleRepository.class);
 
     private static final String ARTICLEID = "ARTICLEID";
     private static final String USERID = "USERID";
@@ -32,7 +32,7 @@ public class H2ReplyRepository implements ReplyRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public H2ReplyRepository(JdbcTemplate jdbcTemplate) {
+    public DbReplyRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -69,7 +69,7 @@ public class H2ReplyRepository implements ReplyRepository {
         String sql = "SELECT REPLYID, ARTICLEID, USERID, COMMENT, CREATIONDATE FROM REPLIES WHERE ARTICLEID = ? AND DELETED = FALSE";
         Object[] params = new Object[]{articleId};
 
-        ArrayList<Reply> replies = (ArrayList<Reply>) jdbcTemplate.query(sql, params, new H2ReplyRepository.ReplyRowMapper());
+        ArrayList<Reply> replies = (ArrayList<Reply>) jdbcTemplate.query(sql, params, new DbReplyRepository.ReplyRowMapper());
         return Optional.of(replies);
     }
 
@@ -86,7 +86,7 @@ public class H2ReplyRepository implements ReplyRepository {
         String sql = "SELECT REPLYID, ARTICLEID, USERID, COMMENT, CREATIONDATE FROM REPLIES WHERE REPLYID = ? AND DELETED = FALSE";
         Object[] params = new Object[]{replyId};
 
-        List<Reply> replies = jdbcTemplate.query(sql, params, new H2ReplyRepository.ReplyRowMapper());
+        List<Reply> replies = jdbcTemplate.query(sql, params, new DbReplyRepository.ReplyRowMapper());
         return Optional.of(replies.get(0));
     }
 

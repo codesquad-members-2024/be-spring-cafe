@@ -20,8 +20,8 @@ import java.util.Optional;
 
 @Primary
 @Repository
-public class H2UserRepository implements UserRepository {
-    private static final Logger logger = LoggerFactory.getLogger(H2UserRepository.class);
+public class DbUserRepository implements UserRepository {
+    private static final Logger logger = LoggerFactory.getLogger(DbUserRepository.class);
     private static final String USERID = "USERID";
     private static final String NAME = "NAME";
     private static final String EMAIL = "EMAIL";
@@ -31,7 +31,7 @@ public class H2UserRepository implements UserRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public H2UserRepository(JdbcTemplate jdbcTemplate) {
+    public DbUserRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

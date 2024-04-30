@@ -19,8 +19,8 @@ import java.util.Optional;
 
 @Primary
 @Repository
-public class H2ArticleRepository implements ArticleRepository {
-    private static final Logger logger = LoggerFactory.getLogger(H2ArticleRepository.class);
+public class DbArticleRepository implements ArticleRepository {
+    private static final Logger logger = LoggerFactory.getLogger(DbArticleRepository.class);
     private static final String ARTICLEID = "ARTICLEID";
     private static final String USERID = "USERID";
     private static final String TITLE = "TITLE";
@@ -32,7 +32,7 @@ public class H2ArticleRepository implements ArticleRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public H2ArticleRepository(JdbcTemplate jdbcTemplate) {
+    public DbArticleRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
