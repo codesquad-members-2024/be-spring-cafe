@@ -1,7 +1,7 @@
 package codesquad.springcafe.repository.article;
 
 import codesquad.springcafe.model.Article;
-import codesquad.springcafe.model.Reply;
+import codesquad.springcafe.util.PageRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +11,8 @@ public interface ArticleRepository {
     Optional<Article> getById(Long id);
 
     List<Article> getAll();
+
+    List<Article> getAllByPaging(PageRequest pageRequest);
 
     void modify(Article modifiedArticle);
 

@@ -1,10 +1,8 @@
 package codesquad.springcafe.repository.article;
 
 import codesquad.springcafe.model.Article;
-import codesquad.springcafe.model.Reply;
-import codesquad.springcafe.model.User;
+import codesquad.springcafe.util.PageRequest;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
@@ -31,7 +29,25 @@ public class JdbcArticleRepository implements ArticleRepository {
 
     @Override
     public List<Article> getAll() {
-        String sql = "SELECT * FROM `article` WHERE deleted = FALSE";
+        String sql = "SELECT * FROM `article`";
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
+            Article article = new Article(
+                resultSet.getLong("id"),
+                resultSet.getTimestamp("timestamp").toLocalDateTime(),
+                resultSet.getString("writer"),
+                resultSet.getString("title"),
+                resultSet.getString("content"),
+                resultSet.getBoolean("deleted")
+            );
+            return article;
+        });
+    }
+
+    @Override
+    public List<Article> getAllByPaging(PageRequest pageRequest) {
+        String sql = "SELECT * FROM ("
+            + "SELECT * FROM `article` WHERE deleted = FALSE ORDER BY id DESC) as TEMP "
+            + "LIMIT " + pageRequest.getSize() + " OFFSET " + pageRequest.getSkip();
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
             Article article = new Article(
                 resultSet.getLong("id"),
