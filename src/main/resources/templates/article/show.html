@@ -10,6 +10,7 @@
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link href="/css/styles.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-fixed-top header">
@@ -53,13 +54,13 @@
                 <li class="nav-divider"></li>
                 <li><a href="#"><i class="glyphicon glyphicon-cog" style="color:#dd1111;"></i> Settings</a></li>
             </ul>
-            
+
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse2">
             	<span class="sr-only">Toggle navigation</span>
             	<span class="icon-bar"></span>
             	<span class="icon-bar"></span>
             	<span class="icon-bar"></span>
-            </button>            
+            </button>
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse2">
             <ul class="nav navbar-nav navbar-right">
@@ -110,7 +111,7 @@
                           </li>
                           <li>
                               <form class="form-delete" action="/articles/{{id}}" method="post">
-                                  <input type="hidden" name="_method" value="DELETE" />
+                                  <input type="hidden" name="_method" value="delete" />
                                   <button class="link-delete-article" type="submit">삭제</button>
                               </form>
                           </li>
@@ -122,55 +123,104 @@
               </article>
               {{/article}}
 
+
               <div class="qna-comment">
                     <div class="qna-comment-slipp">
                         <p id="numberOfReplies" class="qna-comment-count">댓글 <strong>{{numberOfReplies}}</strong></p>
-                          <div class="qna-comment-slipp-articles">
-                              {{#replies}}
-                              <article class="article">
-                                  <div class="article-header">
-                                      <div class="article-header-thumb">
-                                          <img src="https://graph.facebook.com/v2.3/1324855987/picture" class="article-author-thumb" alt="">
-                                      </div>
-                                      <div class="article-header-text">
-                                          <a href="/users/{{writer}}" class="article-author-name">{{writer}}</a>
-                                          <a href="#" class="article-header-time" title="퍼머링크">{{getFormattedTimestamp}}</a>
-                                      </div>
-                                  </div>
-                                  <div class="article-doc comment-doc">
-                                      <p>{{content}}</p>
-                                  </div>
-                                  <div class="article-util">
-                                      <ul class="article-util-list">
-                                          <li>
-                                              <a class="link-modify-article" href="/articles/{{articleId}}/replies/{{index}}/form">수정</a>
-                                          </li>
-                                          <li>
-                                              <form class="delete-answer-form" action="/api/articles/{{articleId}}/replies/{{index}}" method="POST">
-                                                  <input type="hidden" name="_method" value="DELETE">
-                                                  <button type="submit" class="delete-answer-button">삭제</button>
-                                              </form>
-                                          </li>
-                                      </ul>
-                                  </div>
-                              </article>
-                              {{/replies}}
-                          </div>
                         <form class="submit-write" action="/api/articles/{{id}}/replies" method="post">
                             {{#article}}
                             <input type="hidden" class="form-control" id="articleId" name="articleId" value={{id}} />
                             {{/article}}
                             <input type="hidden" class="form-control" id="writer" name="writer" value={{loggedInUser}} />
-                            <div class="form-group" style="padding:14px;">
+                            <div class="form-group" style="padding: 10px 10px 0;">
                                 <label for="content">{{loggedInUser}}</label>
                                 <textarea name="content" id="content" class="form-control" placeholder="Update your status"></textarea>
                             </div>
                             <button type="submit" class="btn btn-success clearfix pull-right">답변하기</button>
+
                             <div class="clearfix"></div>
                         </form>
-                  </div>
+                        <p></p>
+                        <p></p>
+                          <div class="qna-comment-slipp-articles" id="commentSection">
+
+                          </div>
+                        <div class="text-right" style="margin-top: 10px; padding-right: 10px;">
+                            <button id="loadMoreButton" class="btn btn-success" style="background-color: #f2f2f2; color: #333333; border: 0.5px solid #808080; border-radius: 5px; padding: 4px 7px; cursor: pointer; font-size: 13px;">댓글 더보기</button>
+                            <script>
+                                $(document).ready(function() {
+                                    var pageNumber = 1; // 페이지 번호 초기값 설정
+                                    var pageSize = 15; // 페이지당 댓글 수
+
+                                    // 초기 댓글 로드
+                                    loadComments();
+
+                                    // 댓글 더보기 버튼 클릭 시
+                                    $('#loadMoreButton').click(function() {
+                                        // 다음 페이지의 댓글 로드
+                                        loadComments();
+                                    });
+
+                                    // 댓글을 가져와서 화면에 표시하는 함수
+                                    function loadComments() {
+                                        // AJAX를 통해 서버에 댓글을 요청
+                                        $.ajax({
+                                            url: '/api/articles/{{article.id}}/replies?pageNumber=' + pageNumber,
+                                            type: 'GET',
+                                            success: function(data) {
+                                                // 받은 댓글 데이터를 반복하여 템플릿에 추가
+                                                data.forEach(function(reply) {
+                                                    var html = '<article class="article">' +
+                                                        '<div class="article-header">' +
+                                                        '<div class="article-header-thumb">' +
+                                                        '<img src="https://graph.facebook.com/v2.3/1324855987/picture" class="article-author-thumb" alt="">' +
+                                                        '</div>' +
+                                                        '<div class="article-header-text">' +
+                                                        '<a href="/users/' + reply.writer + '" class="article-author-name">' + reply.writer + '</a>' +
+                                                        '<a href="#" class="article-header-time" title="퍼머링크">' + reply.formattedTimestamp + '</a>' +
+                                                        '</div>' +
+                                                        '</div>' +
+                                                        '<div class="article-doc comment-doc">' +
+                                                        '<p>' + reply.content + '</p>' +
+                                                        '</div>' +
+                                                        '<div class="article-util">' +
+                                                        '<ul class="article-util-list">' +
+                                                        '<li>' +
+                                                        '<a class="link-modify-article" href="/articles/' + reply.articleId + '/replies/' + reply.index + '/form">수정</a>' +
+                                                        '</li>' +
+                                                        '<li>' +
+                                                        '<form class="delete-answer-form" action="/api/articles/' + reply.articleId + '/replies/' + reply.index + '" method="POST">' +
+                                                        '<input type="hidden" name="_method" value="DELETE">' +
+                                                        '<button type="submit" class="delete-answer-button">삭제</button>' +
+                                                        '</form>' +
+                                                        '</li>' +
+                                                        '</ul>' +
+                                                        '</div>' +
+                                                        '</article>';
+                                                    $('#commentSection').append(html);
+                                                });
+                                                // 페이지 번호 증가
+                                                pageNumber++;
+                                                // 댓글 더보기 버튼 표시 여부 설정
+                                                if (data.length < pageSize) {
+                                                    $('#loadMoreButton').hide();
+                                                }
+                                            },
+                                            error: function(xhr, status, error) {
+                                                console.error('Error:', error);
+                                            }
+                                        });
+                                    }
+                                });
+                            </script>
+                        </div>
+
+
+                    </div>
+
               </div>
           </div>
+
         </div>
 
     </div>

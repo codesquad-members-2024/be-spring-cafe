@@ -3,14 +3,14 @@ package codesquad.springcafe.util;
 import java.util.List;
 import java.util.stream.LongStream;
 
-public class Page {
+public class ArticlePage {
     private final PageRequest pageRequest;
     private final Long totalLastPage;
     private final Long firstPage;
     private final Long lastPage;
 
 
-    public Page(PageRequest pageRequest, Long totalCount) {
+    public ArticlePage(PageRequest pageRequest, Long totalCount) {
         int pageSize = pageRequest.getSize();
         int buttonCount = pageRequest.getButtonCount();
         Long originalLastPage = (long) (Math.ceil(pageRequest.getNumber()*1.0/buttonCount))*buttonCount;

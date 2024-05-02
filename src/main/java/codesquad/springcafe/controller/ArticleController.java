@@ -8,10 +8,9 @@ import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.Reply;
 import codesquad.springcafe.service.ArticleService;
 import codesquad.springcafe.service.ReplyService;
-import codesquad.springcafe.util.Page;
+import codesquad.springcafe.util.ArticlePage;
 import codesquad.springcafe.util.PageRequest;
 import jakarta.servlet.http.HttpSession;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,10 +52,10 @@ public class ArticleController {
 
         List<ArticleInfoDTO> articles = articleService.findAllByPaging(pageRequest).stream()
             .map(Article::toDTO).toList();
-        Page targetPage = new Page(pageRequest, articleService.getTotalCount());
+        ArticlePage targetArticlePage = new ArticlePage(pageRequest, articleService.getTotalCount());
 
         model.addAttribute("articles", articles);
-        model.addAttribute("pageInfo", targetPage);
+        model.addAttribute("pageInfo", targetArticlePage);
 
         return "index";
     }
