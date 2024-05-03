@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class ArticleService {
+    public static final int articlesPerPage = 15;
     private final Logger logger = LoggerFactory.getLogger(ArticleService.class);
     private final ArticleDatabase articleDatabase;
     private final CommentDatabase commentDatabase;
@@ -35,8 +36,9 @@ public class ArticleService {
         return article;
     }
 
-    public List<Article> getArticles() {
-        return articleDatabase.findAll();
+    public List<Article> getArticlesByPage(Long page) {
+        Long offset = (page - 1) * articlesPerPage;
+        return articleDatabase.findPageArticles(offset, articlesPerPage);
     }
 
     public Set<Long> getArticleIds(String writer) {
@@ -84,6 +86,14 @@ public class ArticleService {
 
     public Article getArticle(Long id) {
         return articleDatabase.findBy(id).orElseThrow(() -> new ArticleNotFoundException(id));
+    }
+
+    public int getTotalPages(Long totalArticleSize) {
+        return (int) Math.ceil((double) totalArticleSize / articlesPerPage);
+    }
+
+    public Long getTotalCount() {
+        return articleDatabase.countTotalArticles();
     }
 
     private boolean hasOtherWriterComment(Article article) {

@@ -53,6 +53,12 @@ public class CommentJdbcDatabase implements CommentDatabase {
     }
 
     @Override
+    public List<Comment> findPageComments(Long articleId, Long offset, int pagePerComments) {
+        String sql = "SELECT id, writer, content, write_date, article_id, is_deleted FROM comments WHERE article_id = ? and is_deleted=false LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(sql, commentRowMapper(), articleId, pagePerComments, offset);
+    }
+
+    @Override
     public void update(Comment comment) {
         String sql = "UPDATE comments SET writer = ?, content = ?, write_date = ?, article_id = ?, is_deleted = ? WHERE id = ?";
         jdbcTemplate.update(sql, comment.getWriter(), comment.getContent(), comment.getWriteDate(),

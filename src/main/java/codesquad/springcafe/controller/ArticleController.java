@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
+    public static final long FIRST_OFFSET = 0L;
     private final Logger logger = LoggerFactory.getLogger(ArticleController.class);
 
     private final ArticleService articleService;
@@ -71,9 +72,12 @@ public class ArticleController {
                               @ModelAttribute("commentWriteForm") CommentWriteForm commentWriteForm) {
 
         Article article = articleService.viewArticle(id);
-        List<Comment> comments = commentService.getComments(id);
+        List<Comment> comments = commentService.getCommentsByOffset(id, FIRST_OFFSET);
+        Long commentCount = commentService.getCommentCount(article);
+
         model.addAttribute("article", article);
         model.addAttribute("comments", comments);
+        model.addAttribute("commentCount", commentCount);
 
         return "article/show";
     }

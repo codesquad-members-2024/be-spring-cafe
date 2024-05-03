@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <p class="total_num" th:text="|전체 글 ${articles.size()}개|">전체 글 10명</p>
+    <p class="total_num" th:text="|전체 글 ${totalArticleSize}개|">전체 글 10명</p>
 
     <div class="container" id="main">
         <div class="col-md-10 col-md-offset-1">
@@ -53,6 +53,26 @@
     <div class="post-btn-container">
         <a href="articles/add" class="post-write-btn btn btn-primary pull-right"
            role="button">글쓰기</a>
+    </div>
+
+    <div class="pagination-container">
+        <ul class="pagination">
+            <!-- 이전 페이지 그룹으로 이동 -->
+            <li th:if="${pageGroup.startPage > pageGroup.pageSize}">
+                <a th:href="@{/(page=${pageGroup.startPage - 1})}">&laquo;</a>
+            </li>
+
+            <!-- 페이지 번호 -->
+            <li th:each="pageNum : ${#numbers.sequence(pageGroup.startPage, pageGroup.endPage)}">
+                <a th:href="@{/(page=${pageNum})}" th:text="${pageNum}"
+                   th:class="${pageNum == pageGroup.currentPage ? 'active-page' : ''}">1</a>
+            </li>
+
+            <!-- 다음 페이지 그룹으로 이동 -->
+            <li th:if="${pageGroup.endPage < pageGroup.totalPages}">
+                <a th:href="@{/(page=${pageGroup.endPage + 1})}">&raquo;</a>
+            </li>
+        </ul>
     </div>
 
 </div>
