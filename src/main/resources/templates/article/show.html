@@ -176,6 +176,7 @@
                     var template = answerTemplate.format(data.writerId, data.time, data.contents, editUrl, deleteUrl);
                     $(".submit-write").prepend(template);
                     $("textarea[name=contents]").val("");
+                    updateCommentCount();
                 },
                 error: function (xhr, status, error) {
                     console.error('댓글 작성 중 오류가 발생했습니다: ' + error);
@@ -200,6 +201,7 @@
                 console.log(data);
                 if (data.valid) {
                     deleteBtn.closest("article").remove();
+                    updateCommentCount();
                 } else {
                     alert(data.message);
                 }
@@ -209,6 +211,12 @@
             }
         });
     }
+
+    function updateCommentCount() {
+        var count = $(".qna-comment-slipp-articles").find(".article").length;
+        $(".qna-comment-count").text(count + '개의 의견');
+    }
+
 </script>
 <div th:replace="~{fragment/script.html :: fragment-script}"></div>
 </body>
