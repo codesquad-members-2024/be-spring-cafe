@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}"></head>
+<body>
+<nav class="navbar navbar-fixed-top header" th:replace="~{fragments/headernav :: headernav}"></nav>
+<div class="navbar navbar-default" id="subnav" th:replace="~{fragments/subnav :: subnav}"></div>
+
+<div class="container" id="main">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="alert alert-danger text-center" role="alert" style="font-size: 24px; font-weight: bold;">
+                다른 사람의 글을 수정할 수 없습니다!
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/script :: scripts}"></div>
+</body>
+</html>

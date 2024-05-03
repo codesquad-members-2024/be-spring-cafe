@@ -17,7 +17,7 @@ public class PostMemoryRepository implements PostRepository {
     }
 
     @Override
-    public void save(Post post) {
+    public void save(String userId, Post post) {
         if (post.getId() == null) {
             post.setId(nextId++);
         }
@@ -33,5 +33,15 @@ public class PostMemoryRepository implements PostRepository {
                 .filter(post -> post.getId().equals(id))
                 .findAny()
                 .orElse(null);
+    }
+
+    @Override
+    public void updatePost(Post post, long id) {
+
+    }
+
+    @Override
+    public void deletePost(Long id) {
+
     }
 }
