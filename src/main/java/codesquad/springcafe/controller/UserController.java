@@ -2,6 +2,7 @@ package codesquad.springcafe.controller;
 
 import codesquad.springcafe.dto.UserProfileDto;
 import codesquad.springcafe.dto.UserUpdateDto;
+import codesquad.springcafe.exception.UnauthorizedAccessException;
 import codesquad.springcafe.model.UpdateUser;
 import codesquad.springcafe.model.User;
 import codesquad.springcafe.service.UserService;
@@ -65,12 +66,12 @@ public class UserController {
             @RequestParam(defaultValue = "/") String redirectUri,
             HttpSession httpSession) {
 
-        if (userService.isValidUser(userId, password)) {
-            httpSession.setAttribute(LOGIN_USER_ID, userId);
-            log.debug("로그인 성공: {}", userId);
-            return "redirect:" + redirectUri;
+        if (!userService.isPasswordMatch(userId, password)) {
+            return "redirect:/users/login";
         }
-        return "redirect:/users/login";
+        httpSession.setAttribute(LOGIN_USER_ID, userId);
+        log.debug("로그인 성공: {}", userId);
+        return "redirect:" + redirectUri;
     }
 
     @GetMapping("/join")
@@ -79,24 +80,25 @@ public class UserController {
     }
 
     @GetMapping("update/{userId}")
-    public String getUserUpdateForm(@PathVariable String userId, Model model) {
+    public String getUserUpdateForm(@PathVariable String userId, Model model, HttpSession session) {
+        String loginUserId = (String) session.getAttribute(LOGIN_USER_ID);
+        checkAuthority(userId, loginUserId);
+
         model.addAttribute("userId", userId);
         return "user/updateForm";
     }
 
     @PutMapping("/{userId}")
-    public String updateUser(@PathVariable String userId, @ModelAttribute UserUpdateDto userUpdateDto, HttpSession httpSession) {
-        String loginUserId = (String) httpSession.getAttribute(LOGIN_USER_ID);
-        if (!loginUserId.equals(userId)) {
-            return "redirect:/";
-        }
-        UpdateUser updateUser = userUpdateDto.toEntity(userId);
-        try {
-            userService.update(updateUser);
-        } catch (IllegalArgumentException e) {
-            log.debug("user {} password does not match", loginUserId);
+    public String updateUser(@PathVariable String userId, @ModelAttribute UserUpdateDto userUpdateDto, HttpSession session) {
+        String loginUserId = (String) session.getAttribute(LOGIN_USER_ID);
+        checkAuthority(userId, loginUserId);
+
+        if (!userService.isPasswordMatch(userId, userUpdateDto.getPassword())) {
             return "redirect:/users/" + userId + "/form";
         }
+        UpdateUser updateUser = userUpdateDto.toEntity(userId);
+        userService.update(updateUser);
+
         log.debug("user {} update", loginUserId);
         return "redirect:/users";
     }
@@ -106,4 +108,11 @@ public class UserController {
         httpSession.invalidate();
         return "redirect:/";
     }
+
+    public void checkAuthority(String userId, String loginUserId) {
+        if (!userId.equals(loginUserId)) {
+            throw new UnauthorizedAccessException("접근 권한이 없습니다.");
+        }
+    }
+
 }
