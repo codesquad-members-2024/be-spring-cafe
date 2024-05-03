@@ -2,10 +2,12 @@ package codesquad.springcafe.repository.article;
 
 import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.dto.ArticleDto;
+import codesquad.springcafe.error.exception.ArticleNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,14 +21,11 @@ public class JdbcArticleRepository implements ArticleRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    //update article set point = article.point+1 where id = ?
-
     @Override
-    public void createArticle(ArticleDto articleDto) {
-        Article article = articleDto.toEntity();
-        String SQL = "INSERT INTO article (writer, title, content, views, created) VALUES (?, ?, ?, ?, ?)";
+    public void createArticle(Article article) {
+        String SQL = "INSERT INTO article (writer, title, content, views, createdDate, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(SQL, article.getWriter(), article.getTitle(), article.getContent(), article.getViews(),
-                article.getCreated());
+                article.getCreatedDate(), article.getLastModifiedDate());
     }
 
     @Override
@@ -38,7 +37,39 @@ public class JdbcArticleRepository implements ArticleRepository {
     @Override
     public Optional<Article> findById(long id) {
         String SQL = "SELECT * FROM article WHERE id = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(SQL, rowMapper(), id));
+        try {
+            Article article = jdbcTemplate.queryForObject(SQL, rowMapper(), id);
+            return Optional.ofNullable(article);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ArticleNotFoundException(id + " ID 게시글이 존재하지 않습니다.");
+        }
+    }
+
+    @Override
+    public void updateViews(long id) {
+        String SQL = "UPDATE article SET views = views+1 WHERE id = ?";
+        int update = jdbcTemplate.update(SQL, id);
+        if (update == 0) {
+            throw new ArticleNotFoundException(id + " ID 게시글이 존재하지 않습니다.");
+        }
+    }
+
+    @Override
+    public void updateArticle(long id, ArticleDto articleDto) {
+        String SQL = "UPDATE article SET title = ?, content = ? WHERE id = ?";
+        int update = jdbcTemplate.update(SQL, articleDto.getTitle(), articleDto.getContent(), id);
+        if (update == 0) {
+            throw new ArticleNotFoundException(id + " ID 게시글이 존재하지 않습니다.");
+        }
+    }
+
+    @Override
+    public void deleteArticle(long id) {
+        String SQL = "DELETE FROM article WHERE id = ?";
+        int update = jdbcTemplate.update(SQL, id);
+        if (update == 0) {
+            throw new ArticleNotFoundException(id + " ID 게시글이 존재하지 않습니다.");
+        }
     }
 
     private RowMapper<Article> rowMapper() {
@@ -48,8 +79,9 @@ public class JdbcArticleRepository implements ArticleRepository {
             String title = rs.getString("title");
             String content = rs.getString("content");
             long views = rs.getLong("views");
-            LocalDateTime created = rs.getTimestamp("created").toLocalDateTime();
-            return new Article(id, writer, title, content, views, created);
+            LocalDateTime createdDate = rs.getTimestamp("createdDate").toLocalDateTime();
+            LocalDateTime lastModifiedDate = rs.getTimestamp("lastModifiedDate").toLocalDateTime();
+            return new Article(id, writer, title, content, views, createdDate, lastModifiedDate);
         };
     }
 }

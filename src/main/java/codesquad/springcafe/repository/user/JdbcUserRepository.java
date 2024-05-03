@@ -1,8 +1,8 @@
 package codesquad.springcafe.repository.user;
 
 import codesquad.springcafe.domain.User;
-import codesquad.springcafe.dto.UserDto;
 import codesquad.springcafe.dto.UserUpdateDto;
+import codesquad.springcafe.error.exception.UserNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -22,19 +22,10 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     @Override
-    public void createUser(UserDto userDto) {
-        User user = userDto.toEntity();
-        String SQL = "INSERT INTO users (user_id, nickname, email, password, created) VALUES (?, ?, ?, ?, ?)";
+    public void createUser(User user) {
+        String SQL = "INSERT INTO users (user_id, nickname, email, password, createdDate) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(SQL, user.getUserId(), user.getNickname(), user.getEmail(), user.getPassword(),
-                user.getCreated());
-    }
-
-    @Override
-    public void updateUser(String userId, UserUpdateDto userUpdateDto) {
-        String SQL = "UPDATE users SET password = ?, nickname = ?, email = ? WHERE user_id = ?";
-        jdbcTemplate.update(SQL, userUpdateDto.getNewPassword(), userUpdateDto.getNewNickname(),
-                userUpdateDto.getNewEmail(),
-                userId);
+                user.getCreatedDate());
     }
 
     @Override
@@ -49,8 +40,16 @@ public class JdbcUserRepository implements UserRepository {
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(SQL, rowMapper(), userId));
         } catch (EmptyResultDataAccessException ex) {
-            return Optional.empty();
+            throw new UserNotFoundException(userId + "의 사용자가 존재하지 않습니다.");
         }
+    }
+
+    @Override
+    public void updateUser(String userId, UserUpdateDto userUpdateDto) {
+        String SQL = "UPDATE users SET password = ?, nickname = ?, email = ? WHERE user_id = ?";
+        jdbcTemplate.update(SQL, userUpdateDto.getPassword(), userUpdateDto.getNickname(),
+                userUpdateDto.getEmail(),
+                userId);
     }
 
     private RowMapper<User> rowMapper() {
@@ -59,8 +58,8 @@ public class JdbcUserRepository implements UserRepository {
             String nickname = rs.getString("nickname");
             String email = rs.getString("email");
             String password = rs.getString("password");
-            LocalDateTime created = rs.getTimestamp("created").toLocalDateTime();
-            return new User(userId, nickname, email, password, created);
+            LocalDateTime createdDate = rs.getTimestamp("createdDate").toLocalDateTime();
+            return new User(userId, nickname, email, password, createdDate);
         };
     }
 }

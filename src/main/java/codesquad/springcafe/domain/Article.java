@@ -10,35 +10,38 @@ public class Article {
     private String title;
     private String content;
     private long views;
-    private LocalDateTime created;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModifiedDate;
 
-    public Article(long id, String writer, String title, String content, long views, LocalDateTime created) {
+    public Article(long id, String writer, String title, String content, long views, LocalDateTime createdDate,
+                   LocalDateTime lastModifiedDate) {
         this.id = id;
         this.writer = writer;
         this.title = title;
         this.content = content;
         this.views = views;
-        this.created = created;
+        this.createdDate = createdDate;
+        this.lastModifiedDate = lastModifiedDate;
     }
 
-    public Article(String writer, String title, String content) {
-        this.writer = writer;
-        this.title = title;
-        this.content = content;
+    public Article(String userId, ArticleDto articleDto) {
+        this.writer = userId;
+        this.title = articleDto.getTitle();
+        this.content = articleDto.getContent();
         this.views = 0;
-        this.created = LocalDateTime.now();
+        this.createdDate = LocalDateTime.now();
+        this.lastModifiedDate = LocalDateTime.now();
     }
 
-    public ArticleDto toDto() {
-        return new ArticleDto(title, content);
+    public Article update(ArticleDto articleDto) {
+        this.title = articleDto.getTitle();
+        this.content = articleDto.getContent();
+        this.lastModifiedDate = LocalDateTime.now();
+        return this;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void increaseViews() {
-        views++;
+    public boolean isWriter(String userId) {
+        return this.writer.equals(userId);
     }
 
     public long getId() {
@@ -57,11 +60,23 @@ public class Article {
         return content;
     }
 
-    public String getCreated() {
-        return created.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
-
     public long getViews() {
         return views;
+    }
+
+    public String getCreatedDate() {
+        return createdDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public String getLastModifiedDate() {
+        return lastModifiedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setViews(long views) {
+        this.views = views;
     }
 }

@@ -10,6 +10,10 @@
 
             </div>
             <ul class="nav navbar-nav navbar-right">
+
+                <li th:if="${session.user != null}" style="margin-top: 10px; font-weight: bold;"><span
+                        th:text="${session.user.getUserId()} + ' 님, 안녕하세요!'"></span>
+                </li>
                 <li class="active"><a th:href="@{/users}">멤버 리스트</a></li>
                 <li th:if="${session.user == null}"><a class="black-component" th:href="@{/users/login}" role="button">로그인</a>
                 </li>
