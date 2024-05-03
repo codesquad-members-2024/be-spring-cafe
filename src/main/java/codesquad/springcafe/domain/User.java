@@ -1,4 +1,4 @@
-package codesquad.springcafe.Domain;
+package codesquad.springcafe.domain;
 
 import java.time.LocalDate;
 
@@ -54,4 +54,3 @@ public class User {
             '}';
     }
 }
-

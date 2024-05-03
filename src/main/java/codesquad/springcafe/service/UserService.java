@@ -1,7 +1,7 @@
-package codesquad.springcafe.Service;
+package codesquad.springcafe.service;
 
-import codesquad.springcafe.Domain.User;
-import codesquad.springcafe.Repository.UserRepository;
+import codesquad.springcafe.domain.User;
+import codesquad.springcafe.repository.UserRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;

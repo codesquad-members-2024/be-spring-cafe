@@ -1,8 +1,8 @@
-package codesquad.springcafe.Repository;
+package codesquad.springcafe.repository;
 
 import static org.assertj.core.api.Assertions.*;
 
-import codesquad.springcafe.Domain.User;
+import codesquad.springcafe.domain.User;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

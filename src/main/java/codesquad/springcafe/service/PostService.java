@@ -1,7 +1,7 @@
-package codesquad.springcafe.Service;
+package codesquad.springcafe.service;
 
-import codesquad.springcafe.Domain.Post;
-import codesquad.springcafe.Repository.PostRepository;
+import codesquad.springcafe.domain.Post;
+import codesquad.springcafe.repository.PostRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +27,17 @@ public class PostService {
 
     public List<Post> findAllPost() {
         return postRepository.findAll();
+    }
+
+    public int findPostSize() {
+        return postRepository.findSize();
+    }
+
+    public void update(Post post) {
+        postRepository.update(post);
+    }
+
+    public void deletePost(String postId) {
+        postRepository.delete(postId);
     }
 }

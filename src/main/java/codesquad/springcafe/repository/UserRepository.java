@@ -1,6 +1,6 @@
-package codesquad.springcafe.Repository;
+package codesquad.springcafe.repository;
 
-import codesquad.springcafe.Domain.User;
+import codesquad.springcafe.domain.User;
 import java.util.List;
 import java.util.Optional;
 

@@ -1,10 +1,9 @@
-package codesquad.springcafe.Repository;
+package codesquad.springcafe.repository;
 
-import codesquad.springcafe.Domain.Post;
+import codesquad.springcafe.domain.Post;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.stereotype.Repository;
 
 public class PostRepositoryImpl implements PostRepository {
 
@@ -24,5 +23,18 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public List<Post> findAll() {
         return postDB;
+    }
+
+    @Override
+    public int findSize() {
+        return postDB.size();
+    }
+
+    @Override
+    public void update(Post post) {
+    }
+
+    @Override
+    public void delete(String id) {
     }
 }

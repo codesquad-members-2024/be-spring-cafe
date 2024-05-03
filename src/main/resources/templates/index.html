@@ -15,7 +15,7 @@
         </div>
     </div>
 
-    <p class="total_num">전체 글 10명</p>
+    <p class="total_num">전체 글 {{postSize}}명</p>
 
     <div class="container" id="main">
         <div class="col-md-10 col-md-offset-1">
@@ -29,12 +29,9 @@
                     <tbody>
                     {{#posts}}
                     <tr>
-                        <td><a href="post/{{id}}">{{title}}</a></td> <td>닉네임 1</td> <td>{{createdAt}}</td> <td>0</td>
+                        <td><a href="post/{{id}}">{{title}}</a></td> <td>{{userId}}</td> <td>{{createdAt}}</td> <td>{{viewCount}}</td>
                     </tr>
                     {{/posts}}
-                    <tr>
-                        <td><a href="post/show.html">국내에서 Ruby on Rails와 Play가 활성화되기 힘든 이유는 뭘까?</a></td> <td>닉네임 1</td> <td>2021-12-14</td> <td>0</td>
-                    </tr>
                     </tbody>
                 </table>
             </div>

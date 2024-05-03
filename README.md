@@ -145,3 +145,21 @@ protected ConcurrentMap<String,Object> attributes = new ConcurrentHashMap<>();
 
 18. Facade 패턴
 - Facade 패턴은 복잡한 서브시스템의 일부 또는 전체를 단순화된 인터페이스로 래핑하는 구조를 갖는다. 이를 통해 클라이언트는 단일 인터페이스를 통해 복잡한 시스템을 사용할 수 있다.
+
+19. 세션 생성 방식
+```
+import org.apache.catalina.util.StandardSessionIdGenerator; // 세션 ID 생성기
+import org.apache.catalina.session.ManagerBase; //세션 매니저 구현체
+```
+//아래는 Manager 구현체인 ManagerBase의 시그니처
+```
+public abstract class ManagerBase extends LifecycleMBeanBase implements Manager {}
+```
+20. 인터셉터를 사용하여 인증
+- 애플리케이션 여러 로직에서 공통으로 관심이 있는 있는 것을 공통 관심사(cross-cutting concern)
+- 웹과 관련된 공통 관심사를 처리할 때는 HTTP의 헤더나 URL의 정보들 이 필요한데, 서블릿 필터나 스프링 인터셉터는 `HttpServletRequest` 를 제공한다.
+- HTTP 요청 ->WAS-> 필터 -> 서블릿 -> 스프링 인터셉터 -> 컨트롤러 
+- 스프링 인터셉터는 스프링 MVC가 제공하는 기능이기 때문에 결국 디스패처 서블릿 이후에 등장하게 된다. 스프 링 MV    C의 시작점이 디스패처 서블릿이라고 생각해보면 이해가 될 것.
+- 스프링 인터셉터는 체인으로 구성                     
+- preHandle, postHandle, afterCompletion 메서드로 구성됨
+-  
