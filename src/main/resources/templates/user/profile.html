@@ -33,6 +33,7 @@
             </form>
             <ul class="nav navbar-nav navbar-right">
                 <li>
+                <li><a th:href="@{/user/profile}" class="btn-block" th:text="${loginUser.name}">테스터</a></li>
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-bell"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="https://slipp.net" target="_blank">SLiPP</a></li>
@@ -64,7 +65,6 @@
         <div class="collapse navbar-collapse" id="navbar-collapse2">
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a th:href="@{/}" href="../index.html">Posts</a></li>>
-                <li><a th:href="@{/user/login.html}" href="../../static/user/login.html" role="button">로그인</a></li>
                 <li><a th:href="@{/user/form.html}" href="../../static/user/form.html" role="button">회원가입</a></li>
                 <li><a th:href="@{/user/logout}" href="#" role="button">로그아웃</a></li>
                 <li><a th:href="@{/user/update}" href="#" role="button">개인정보수정</a></li>
@@ -97,8 +97,8 @@
 </div>
 
 <!-- script references -->
-<script src="../../static/js/jquery-2.2.0.min.js"></script>
-<script src="../../static/js/bootstrap.min.js"></script>
-<script src="../../static/js/scripts.js"></script>
+<script src="/js/jquery-2.2.0.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/scripts.js"></script>
 	</body>
 </html>
