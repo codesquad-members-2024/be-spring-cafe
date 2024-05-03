@@ -26,6 +26,8 @@ public class H2ArticleRepository implements ArticleRepository {
     private final static String TIME_KEY = "time";
     private final static String ID_KEY = "id";
     private final static String EDITED_KEY = "edited";
+    private final static String DELETE_KEY = "deleted";
+
     private final Logger logger = LoggerFactory.getLogger(H2ArticleRepository.class);
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Article> articleRowMapper = (resultSet, rowNum) -> {
@@ -55,6 +57,8 @@ public class H2ArticleRepository implements ArticleRepository {
         parameters.put(TITLE_KEY, article.getTitle());
         parameters.put(CONTENTS_KEY, article.getContents());
         parameters.put(TIME_KEY, article.getTime());
+        parameters.put(EDITED_KEY, false);
+        parameters.put(DELETE_KEY, false);
 
         Long key = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
         article.setId(key);
@@ -63,7 +67,7 @@ public class H2ArticleRepository implements ArticleRepository {
 
     @Override
     public List<Article> getAll() {
-        return jdbcTemplate.query("SELECT * FROM Articles", articleRowMapper);
+        return jdbcTemplate.query("SELECT * FROM Articles WHERE deleted=false", articleRowMapper);
     }
 
     @Override
@@ -84,7 +88,7 @@ public class H2ArticleRepository implements ArticleRepository {
     }
 
     public void delete(String articleId) {
-        final String DELETE_ARTICLE = "DELETE FROM Articles WHERE id=?";
+        final String DELETE_ARTICLE = "UPDATE Articles SET DELETED = true WHERE id=?";
         jdbcTemplate.update(DELETE_ARTICLE, articleId);
     }
 }
