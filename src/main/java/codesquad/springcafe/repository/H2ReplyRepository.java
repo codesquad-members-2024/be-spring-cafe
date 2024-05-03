@@ -54,10 +54,6 @@ public class H2ReplyRepository implements ReplyRepository {
 
     @Override
     public Reply add(Reply reply) {
-//        String INSERT_REPLY = "INSERT INTO REPLY (contents, writerid, deleted, articleid, time) VALUES (?,?,?,?,?)";
-//        jdbcTemplate.update(INSERT_REPLY, reply.getContents(), reply.getWriterId(), reply.getDeleted(),
-//                reply.getArticleId(), reply.getTime());
-
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("Reply")
                 .usingGeneratedKeyColumns("id");
