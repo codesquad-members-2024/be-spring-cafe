@@ -5,15 +5,15 @@ import java.time.format.DateTimeFormatter;
 
 public class Article {
     private int id;
-    private String writer;
+    private String userId;
     private String title;
     private String content;
     private LocalDateTime time;
     private int views;
 
     // ArticleCreateDto를 통해 사용자가 입력한 Article을 저장할 때 사용
-    public Article(String writer, String title, String content) {
-        this.writer = writer;
+    public Article(String userId, String title, String content) {
+        this.userId = userId;
         this.title = title;
         this.content = content;
         this.time = LocalDateTime.now();
@@ -21,9 +21,9 @@ public class Article {
     }
 
     // h2에서 Article 값을 가져올 때 사용하는 생성자
-    public Article(Integer id, String writer, String title, String content, LocalDateTime time, int views) {
+    public Article(Integer id, String userId, String title, String content, LocalDateTime time, int views) {
         this.id = id;
-        this.writer = writer;
+        this.userId = userId;
         this.title = title;
         this.content = content;
         this.time = time;
@@ -38,8 +38,8 @@ public class Article {
         this.views += 1;
     }
 
-    public String getWriter(){
-        return writer;
+    public String getUserId(){
+        return userId;
     }
 
     public String getTitle(){
@@ -70,7 +70,7 @@ public class Article {
 
     @Override
     public String toString() {
-        return "[id:" + id + "] " + "writer: " + writer + ", title: " + title + ", content: " + content;
+        return "[id:" + id + "] " + "writer: " + userId + ", title: " + title + ", content: " + content;
     }
 
 }

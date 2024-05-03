@@ -1,6 +1,7 @@
 package codesquad.springcafe.database.article;
 
 import codesquad.springcafe.domain.Article;
+import codesquad.springcafe.domain.UpdateArticle;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,16 @@ public class MemoryArticleDatabase implements ArticleDatabase {
     public void saveArticle(Article article) {
         article.setId(articles.size()+1);  // article id 설정
         articles.add(article);
+    }
+
+    @Override
+    public void updateArticle(int id, UpdateArticle updateArticle) {
+        // TODO
+    }
+
+    @Override
+    public void deleteArticle(int id) {
+        articles.remove(id);
     }
 
     @Override

@@ -12,8 +12,7 @@
         <div class="col-md-12">
             {{> repeatedHtml/navbar_header}}
             <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="list.html">멤버 리스트</a></li>
-                {{> repeatedHtml/basic_button}}
+                {{> repeatedHtml/navbar_button}}
             </ul>
         </div>
     </nav>
@@ -22,20 +21,37 @@
         <div class="col-md-12 col-sm-12 col-lg-12">
             <div class="panel panel-default">
                 <header class="post-header-main">
-                    <p class="post-title-main">{{ getTitle }}</p>
-                    <p class="post-info-main">{{ getFormattedTime }}</p>
+                    <p class="post-title-main">{{ article.getTitle }}</p>
+                    <p class="post-info-main">{{ article.getFormattedTime }}</p>
                 </header>
                 <div class="content-main">
                     <article class="article">
                         <div class="article-header-main">
                             <div class="article-header-text-main">
-                                <p class="article-content-main">{{ getContent }}</p>
+                                <p class="article-content-main">{{ article.getContent }}</p>
                             </div>
                         </div>
                     </article>
 
+                    <div style="display: flex; margin-top: 30px; margin-left: 5px; margin-bottom: 10px">
+                        <a href="/article/update/{{article.getUserId}}/{{article.getId}}" style="color: grey; font-size: 15px; line-height: 1.5;">수정</a>
+                        <form action="/article/delete/{{article.getUserId}}/{{article.getId}}" method="POST" onsubmit="return confirmDelete();">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" style="color: grey; font-size: 15px; background-color: transparent; border: transparent; padding: 0; line-height: 1.5; margin-left: 5px; cursor: pointer;">삭제</button>
+                        </form>
+                    </div>
+                    <script> // 삭제 전 확인 창 띄우기
+                        function confirmDelete() {
+                            return confirm("정말로 이 게시물을 삭제하시겠습니까?");
+                        }
+                    </script>
+
+                    {{#noPermission}}
+                    <h4 style="color:red">다른 사람의 글은 수정할 수 없습니다.</h4>
+                    {{/noPermission}}
+
                     <div class="post-comment-main">
-                        <p class="post-comment-count-main post-info-main">댓글 2개</p>
+                        <p class="post-comment-count-main post-info-main" style="margin: 0 10px 10px;">댓글 2개</p>
                         <div class="comment-divider-main"></div>
                         <div class="post-comment-slipp">
                             <div class="post-comment-slipp-articles">

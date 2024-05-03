@@ -1,0 +1,7 @@
+{{^sessionUser}}
+    {{> repeatedHtml/navbar_button_login}}
+{{/sessionUser}}
+
+{{#sessionUser}}
+    {{> repeatedHtml/navbar_button_logout}}
+{{/sessionUser}}

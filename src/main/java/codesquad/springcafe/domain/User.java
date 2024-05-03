@@ -1,23 +1,41 @@
 package codesquad.springcafe.domain;
 
 public class User {
-    private String id;
+    private int id;
+    private String userId;
     private String nickname;
     private String email;
     private String password;
 
-    public User(String id, String nickname, String email, String password) {
-        this.id = id;
+    // UserCreateDto를 통해 사용자가 입력한 User을 저장할 때 사용
+    public User(String userId, String nickname, String email, String password) {
+        this.userId = userId;
         this.nickname = nickname;
         this.email = email;
         this.password = password;
     }
 
+    // h2에서 User 값을 가져올 때 사용하는 생성자
+    public User(Integer id, String userId, String nickname, String email, String password) {
+        this.id = id;
+        this.userId = userId;
+        this.nickname = nickname;
+        this.email = email;
+        this.password = password;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+    public String getUserId() {
+        return userId;
+    }
     public String getNickname() {
         return nickname;
-    }
-    public String getId() {
-        return id;
     }
     public String getEmail() {
         return email;
@@ -42,6 +60,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "id: " + id + ", nickname: " + nickname + ", email: " + email;
+        return "userId: " + userId + ", nickname: " + nickname + ", email: " + email;
     }
 }

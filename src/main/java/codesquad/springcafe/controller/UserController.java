@@ -3,14 +3,20 @@ package codesquad.springcafe.controller;
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.domain.UpdatedUser;
 import codesquad.springcafe.database.user.UserDatabase;
+import codesquad.springcafe.dto.UserCreateDto;
+import codesquad.springcafe.dto.UserLoginDto;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Controller
@@ -41,12 +47,13 @@ public class UserController {
 
     @PostMapping("/user/create")
     // @ModelAttribute 어노테이션 을 통해 Post body를 파싱해 user객체로 반환한다.
-    public String saveUser(@ModelAttribute User user) {
-        userDatabase.saveUser(user);
-        logger.debug("new user: " + user.toString());
+    public String saveUser(@ModelAttribute UserCreateDto userCreateDto) {
+        User newUser = userCreateDto.makeUser(); // dto User로 변환
+        userDatabase.saveUser(newUser);
+        logger.debug("new user: " + newUser.toString());
 
         // login success 페이지를 위해 쿼리로 userId 전달
-        return "redirect:/users/success"+"?userId="+user.getId();
+        return "redirect:/users/success"+"?userId="+newUser.getUserId();
     }
 
     @GetMapping("/users/list")
@@ -98,8 +105,51 @@ public class UserController {
         }
 
         userDatabase.updateUser(id, updatedUser);
-        logger.debug("user update: " + user.toString());
+        logger.debug("user update: {}", user.toString());
         return "redirect:/users/list";
+    }
+
+    @PostMapping("/user/login")
+    public String userLogin(HttpServletRequest request, @ModelAttribute UserLoginDto userLoginDto, Model model) {
+        try {
+            Optional<User> optionalUser = userDatabase.getUserById(userLoginDto.getId());
+            User loginUser = optionalUser.orElseThrow(() -> new NoSuchElementException("해당 아이디로 등록된 사용자가 없습니다."));
+
+            if(!loginUser.comparePassword(userLoginDto.getPassword())){
+                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            }
+
+            HttpSession session = request.getSession();
+            session.setAttribute("sessionUser", loginUser);
+
+        } catch (NoSuchElementException e){
+            // 아이디가 잘못 된 경우
+            model.addAttribute("errorMsg", "해당 아이디로 등록된 사용자가 없습니다.");
+            return "user/login";
+        }catch (IllegalArgumentException e) {
+            // 비밀번호가 잘못 된 경우
+            model.addAttribute("errorMsg", "비밀번호가 일치하지 않습니다.");
+            return "user/login";
+        }
+
+        return "redirect:/main";
+    }
+
+    @GetMapping("/user/logout")
+    // 로그아웃, 현재 세션 삭제
+    public String userLogout(HttpServletRequest request) {
+        request.getSession().invalidate();
+        return "redirect:/main";
+    }
+
+    @PostMapping("/checkUserDuplicate")
+    public ResponseEntity<?> checkDuplicate(@RequestParam String userId) {
+        Optional<User> checkUser = userDatabase.getUserById(userId);
+
+        if(checkUser.isPresent()) { // 중복된 아이디 있음
+            return ResponseEntity.ok().body("{\"duplicate\": true}");
+        }
+        return ResponseEntity.ok().body("{\"duplicate\": false}"); // 중복 없음
     }
 
 }

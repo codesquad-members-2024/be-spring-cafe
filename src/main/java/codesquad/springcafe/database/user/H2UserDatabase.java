@@ -25,6 +25,7 @@ public class H2UserDatabase implements UserDatabase{
     // RowMapper
     private RowMapper<User> userRowMapper(){
         return (rs, rowNum) -> new User(
+                rs.getInt("id"),
                 rs.getString("user_id"),
                 rs.getString("user_nickname"),
                 rs.getString("user_email"),
@@ -34,10 +35,10 @@ public class H2UserDatabase implements UserDatabase{
     @Override
     public void saveUser(User user) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-        jdbcInsert.withTableName("users");
+        jdbcInsert.withTableName("users").usingGeneratedKeyColumns(  "id");
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("user_id", user.getId());
+        parameters.put("user_id", user.getUserId());
         parameters.put("user_password", user.getPassword());
         parameters.put("user_nickname", user.getNickname());
         parameters.put("user_email", user.getEmail());
@@ -46,10 +47,9 @@ public class H2UserDatabase implements UserDatabase{
     }
 
     @Override
-    public void updateUser(String id, UpdatedUser updatedUser) {
+    public void updateUser(String userId, UpdatedUser updatedUser) {
         jdbcTemplate.update("update users set user_password = ?, user_nickname = ?, user_email = ? where user_id = ?",
-        updatedUser.getNewPassword(), updatedUser.getNewNickname(), updatedUser.getNewEmail(), id);
-
+        updatedUser.getNewPassword(), updatedUser.getNewNickname(), updatedUser.getNewEmail(), userId);
     }
 
     @Override
@@ -60,7 +60,11 @@ public class H2UserDatabase implements UserDatabase{
     @Override
     public Optional<User> getUserById(String userId) { // userId로 회원 찾기
         List<User> userList = jdbcTemplate.query("select * from users where user_id = ?", userRowMapper(), userId);
-        return Optional.ofNullable(userList.get(0));
+        try {
+            return Optional.ofNullable(userList.get(0));
+        } catch (IndexOutOfBoundsException e){
+            return Optional.empty();
+        }
     }
 
     @Override
