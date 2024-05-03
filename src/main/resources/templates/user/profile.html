@@ -3,7 +3,9 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>kakao Java Web Programming</title>
+    <title>SPACE NYANCAT CAFE 🐈</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/Dalgona/neodgm-webfont@1.510/neodgm_code/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link href="/css/reset.css" rel="stylesheet">
     <link href="/css/user/profile.css" rel="stylesheet">
@@ -34,7 +36,7 @@
             </div>
             <div th:fragment="profile" class="buttons">
                 <a th:if="${my}" class="edit-button" href="/profile/my/edit">정보 수정</a>
-                <a th:if="${my}" class="delete-button">회원 탈퇴</a>
+                <a th:if="${my}" class="delete-button" th:href="'/user/withdraw/' + ${user.getLoginId()}">회원 탈퇴</a>
             </div>
         </div>
     </div>

@@ -1,5 +1,6 @@
 package codesquad.springcafe.domain.user.controller;
 
+import codesquad.springcafe.domain.user.data.UserCredentials;
 import codesquad.springcafe.domain.user.data.UserJoinRequest;
 import codesquad.springcafe.domain.user.data.UserListResponse;
 import codesquad.springcafe.domain.user.data.UserResponse;
@@ -50,7 +51,7 @@ class UserControllerTest {
         final String url = "/user";
 
         given(userService.join(new UserJoinRequest(loginId, email, name, password)))
-                .willReturn(1L);
+                .willReturn(new UserCredentials(1L, name));
 
         //when
         final ResultActions result = mockMvc.perform(
@@ -61,13 +62,8 @@ class UserControllerTest {
                         .param("password", password)); // POST
 
         //then
-        result.andExpect(status().isOk())
-                .andExpect(view().name("/user/registration_success"))
-                .andExpect(model().attribute("user", allOf( // userJoinData에는 getPwd가 없다. email, name만 확인
-                        hasProperty("loginId", equalTo(loginId)),
-                        hasProperty("email", equalTo(email)),
-                        hasProperty("name", equalTo(name))
-                )));
+        result.andExpect(status().isFound())
+                .andExpect(redirectedUrl("/welcome"));
     }
 
     @Test
@@ -85,7 +81,7 @@ class UserControllerTest {
         given(userService.getUsers()).willReturn(new UserListResponse(userList));
 
         MockHttpSession httpSession = new MockHttpSession();
-        httpSession.setAttribute("userId", 1);
+        httpSession.setAttribute("userCredentials", new UserCredentials(1L, "홍길동"));
 
         //when
         final ResultActions result = mockMvc.perform(get(url)
@@ -121,7 +117,7 @@ class UserControllerTest {
         given(userService.getUser(loginId)).willReturn(new UserResponse(loginId, email, name, createdAt));
 
         MockHttpSession session = new MockHttpSession();
-        session.setAttribute("userId", 1);
+        session.setAttribute("userCredentials", new UserCredentials(1L, "홍길동"));
 
         //when
         final ResultActions result = mockMvc.perform(get(url, loginId).session(session));

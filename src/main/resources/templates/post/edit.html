@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>SPACE NYANCAT CAFE 🐈</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/Dalgona/neodgm-webfont@1.510/neodgm_code/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="/css/reset.css" rel="stylesheet">
+    <link href="/css/post/form.css" rel="stylesheet">
+    <script src="/js/global.js"></script>
+</head>
+<body>
+<div class="background">
+    <div th:replace="~{base/part/navbar :: navbar}"></div>
+
+    <div class="container" id="main">
+        <header class="post-header">
+            <p class="title">게시글 수정</p>
+        </header>
+        <form class="submit-write" method="post" th:action="'/question/edit/' + ${question.getQuestionId()}">
+            <input type="hidden" name="CSRF_TOKEN" th:value="${session.CSRF_TOKEN}">
+            <input type="hidden" name="_method" value="PUT"/>
+            <div class="text-box">
+                <div class="comment-writer-container">
+                    <p class="post-title">제목</p>
+                </div>
+                <div class="form-group">
+                    <label for="title">
+                        <textarea class="form-control" id="title" name="title" th:text="${question.getTitle()}" placeholder="제목을 입력하세요" required></textarea>
+                    </label>
+                </div>
+            </div>
+
+            <div class="text-box">
+                <div class="comment-writer-container">
+                    <p class="post-content">내용</p>
+                </div>
+                <div class="form-group">
+                    <label for="content">
+                        <textarea class="form-control" id="content" name="content" th:text="${question.getContent()}" placeholder="내용을 입력하세요" required></textarea>
+                    </label>
+                </div>
+            </div>
+            <input class="post-write-btn" type="submit" value="등록"/>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,19 +1,24 @@
 package codesquad.springcafe.domain.user.model;
 
+import codesquad.springcafe.global.annotation.Table;
 import codesquad.springcafe.global.model.BaseTime;
 
-import java.time.LocalDateTime;
-
 // TODO: 빌더 패턴 사용
+@Table(name = "users")
 public class User extends BaseTime {
     private Long id;
     private String loginId; //unique
     private String name;
     private String email;
     private String password;
+    private Boolean deleted;    // for soft deletion
 
-    public User(String loginId, String name, String email, String password, LocalDateTime createdAt, LocalDateTime modifiedAt) {
-        super(createdAt, modifiedAt);
+    public User() {
+
+    }
+
+    public User(String loginId, String name, String email, String password) {
+        super();
         this.loginId = loginId;
         this.name = name;
         this.email = email;
@@ -45,8 +50,20 @@ public class User extends BaseTime {
         return password;
     }
 
-    public void update(String name, String email) {
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public User update(String name, String email) {
         this.name = name;
         this.email = email;
+        return this;
+    }
+
+    public User withdraw() {
+        this.email = null;
+        this.deleted = true;
+        this.password = null;
+        return this;
     }
 }

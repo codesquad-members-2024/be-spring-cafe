@@ -3,18 +3,20 @@ package codesquad.springcafe.domain.question.data;
 import codesquad.springcafe.domain.question.model.Question;
 import codesquad.springcafe.domain.user.model.User;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.beans.ConstructorProperties;
-import java.time.LocalDateTime;
 
-public class QuestionPostRequest {
+public class QuestionRequest {
+
+    @Size(max = 20, message = "20자까지만 입력할 수 있습니다.")
     @NotBlank(message = "제목은 필수 입력 값입니다.")
     private final String title;
     @NotBlank(message = "내용은 필수 입력 값입니다.")
     private final String content;
 
     @ConstructorProperties({"title", "content"})
-    public QuestionPostRequest(String title, String content) {
+    public QuestionRequest(String title, String content) {
         this.title = title;
         this.content = content;
     }
@@ -28,6 +30,6 @@ public class QuestionPostRequest {
     }
 
     public Question toQuestion(User user) {
-        return new Question(user, this.title, this.content, 0, LocalDateTime.now(), LocalDateTime.now());
+        return new Question(user, this.title, this.content, 0);
     }
 }

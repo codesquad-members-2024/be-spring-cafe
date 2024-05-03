@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static codesquad.springcafe.global.utils.DateUtils.convertCreatedAt;
+import static codesquad.springcafe.global.utils.DateUtils.convertLocalDateTimeToString;
 
 /**
  * UserRepository와 통신하며 회원 관련 비즈니스 로직을 구현하는 클래스
@@ -29,7 +29,7 @@ public class UserService {
 
     // TODO: 예외 클래스 생성해 처리
     // 회원가입
-    public Long join(UserJoinRequest userJoinRequest) {
+    public UserCredentials join(UserJoinRequest userJoinRequest) {
         // 같은 아이디로 가입한 회원 조회
         userRepository.findByLoginId(userJoinRequest.getLoginId())
                 .ifPresent(u -> {
@@ -41,11 +41,11 @@ public class UserService {
         );
         User savedUser = userRepository.save(user);
 
-        return savedUser.getId();
+        return new UserCredentials(savedUser.getId(), savedUser.getName());
     }
 
     // 로그인
-    public Long login(UserLoginRequest userLoginRequest) {
+    public UserCredentials login(UserLoginRequest userLoginRequest) {
         // 회원 존재 여부 확인
         User user = findUserByLoginId(userLoginRequest.getLoginId());
 
@@ -54,25 +54,50 @@ public class UserService {
             throw new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
 
-        // 아이디 반환
-        return user.getId();
+        return new UserCredentials(user.getId(), user.getName());
     }
 
     // 로그아웃
-    public boolean logout(String requestUserId, Object sessionUserId) {
-        if(sessionUserId == null || requestUserId == null) return true;
+    public boolean logout(Object sessionUserId) {
+        if(sessionUserId == null) return true;
 
-        Long ruid = Long.parseLong(requestUserId);
         Long suid = (Long) sessionUserId;
 
-        return ruid.equals(suid) && userRepository.existsById(suid);
+        return userRepository.existsById(suid);
+    }
+
+    // 회원 탈퇴 페이지 접근
+    public void getWithdrawForm(String loginId, Long sessionUserId) {
+        if (sessionUserId == null) {
+            throw new IllegalStateException("세션 또는 요청 사용자 ID가 없습니다.");
+        }
+
+        if (!findUserByLoginId(loginId).getId().equals(sessionUserId)) {
+            throw new IllegalStateException("본인이 아니면 탈퇴할 수 없습니다.");
+        }
+    }
+
+    // 회원 탈퇴
+    public boolean withdraw(String loginId, Long sessionUserId) {
+        if(sessionUserId == null || loginId == null) return false;
+
+        User user = findUserByLoginId(loginId);
+        if (!user.getId().equals(sessionUserId)) {
+            return false;
+        }
+
+        // 유저 정보 지우기
+        User withdraw = user.withdraw();
+        userRepository.softDeleteById(sessionUserId, withdraw);
+
+        return true;
     }
 
     // 회원 목록 조회
     public UserListResponse getUsers() {
         List<UserResponse> users = userRepository.findAll().stream()
                 .map(u -> new UserResponse(u.getLoginId(), u.getEmail(), u.getName(),    // loginId, email, name, createAt만 매핑
-                        convertCreatedAt(u.getCreatedAt())))
+                        convertLocalDateTimeToString(u.getCreatedAt())))
                 .toList();
 
         // UserData 목록을 UserListData에 담아 반환
@@ -83,28 +108,29 @@ public class UserService {
     public UserResponse getUser(String loginId) {
         // loginId로 회원 조회
         User user = findUserByLoginId(loginId);
-        return new UserResponse(user.getLoginId(), user.getEmail(), user.getName(), convertCreatedAt(user.getCreatedAt()));
+        return new UserResponse(user.getLoginId(), user.getEmail(), user.getName(), convertLocalDateTimeToString(user.getCreatedAt()));
     }
 
     // 내 프로필 조회
     public UserResponse getMyProfile(Long userId) {
         User user = findUserById(userId);
-        return new UserResponse(user.getLoginId(), user.getEmail(), user.getName(), DateUtils.convertCreatedAt(user.getCreatedAt()));
+        return new UserResponse(user.getLoginId(), user.getEmail(), user.getName(), DateUtils.convertLocalDateTimeToString(user.getCreatedAt()));
     }
 
-    // 내 프로필 수정 TODO : 테스트 가능하도록 수정
+    // 내 프로필 수정
     public void updateMyProfile(Long userId, UserUpdateRequest userUpdateRequest) {
         User user = findUserById(userId);
-        user.update(userUpdateRequest.getName(), userUpdateRequest.getEmail());
+        User updateUser = user.update(userUpdateRequest.getName(), userUpdateRequest.getEmail());
+        userRepository.update(user.getId(), updateUser);
     }
 
     private User findUserByLoginId(String loginId) {
-        return userRepository.findByLoginId(loginId)
+        return userRepository.findByLoginId(loginId, false)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
     }
 
     private User findUserById(Long id) {
-        return userRepository.findById(id)
+        return userRepository.findById(id, false)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
     }
 }

@@ -3,7 +3,9 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>kakao Java Web Programming</title>
+    <title>SPACE NYANCAT CAFE 🐈</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/Dalgona/neodgm-webfont@1.510/neodgm_code/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link href="/css/reset.css" rel="stylesheet">
     <link href="/css/post/show.css" rel="stylesheet">
@@ -15,7 +17,7 @@
 
     <div class="container" id="main">
         <div class="col-md-12 col-sm-12 col-lg-12">
-            <div class="panel panel-default">
+            <div style="width:100%" class="panel panel-default">
                 <header class="post-header">
                     <p class="post-title" th:text="${question.getTitle()}"></p>
                 </header>
@@ -23,58 +25,78 @@
                     <article class="article">
                         <div class="article-header">
                             <div class="article-header-text">
-                                <p class="article-content" th:text = "${question.getUserName() + ' • ' + question.getUserLoginId()}"></p>
+                                <p th:if="${question.isUserWithdrawn()}" class="article-content" th:text = "${question.getUserName()}"></p>
+                                <a th:unless="${question.isUserWithdrawn()}" th:href = "@{'/profile/' + ${question.getUserLoginId}}" class="article-content" th:text = "${question.getUserName() + ' • ' + question.getUserLoginId()}"></a>
                                 <p class="article-content">
-                                    작성일자:<span th:text="${question.getCreatedAt()}"></span>
+                                    <span th:if="${question.isModified()}" th:text="${question.getCreatedAt()} + ' (수정됨)'"></span>
+                                    <span th:unless="${question.isModified()}" th:text="${question.getCreatedAt()}"></span>
                                 </p>
                                 <p class="article-content">조회 <span th:text = "${question.getViewCnt()}">0</span></p>
+                                <a th:if="${question.isMy()}" class="article-content" th:href="'/question/edit/' + ${question.getQuestionId()}">수정</a>
+                                <a th:if="${question.isMy()}" class="article-content" th:href="'/question/delete/' + ${question.getQuestionId()}">삭제</a>
                             </div>
                         </div>
-                        <div class="article-doc">
-                            <pre class="" th:text="${question.getContent()}"></pre>
+                        <div>
+                            <p class="article-doc" th:text="${question.getContent()}"></p>
                         </div>
                     </article>
 
                     <div class="post-comment">
                         <div class="post-comment-slipp">
-                            <p class="post-comment-count">댓글 2개</p>
+                            <p class="post-comment-count">댓글 <span th:text="${totalCommentCnt}">0</span>개</p>
                             <div class="post-comment-slipp-articles">
+                                <div th:each="comment : ${comments}">
+                                    <article class="comment">
+                                        <div class="article-text">
+                                            <!-- 작성자 정보 표시 -->
+                                            <a th:unless="${comment.isUserWithdrawn}" th:href="'/profile/' + ${comment.userLoginId}" class="comment-content comment-author-name">
+                                                <span th:text="${comment.getUserName} + ' • ' + ${comment.userLoginId}"></span>
+                                            </a>
+                                            <a th:if="${comment.isUserWithdrawn}" class="comment-content comment-author-name">
+                                                <span th:text="${comment.userName}"></span>
+                                            </a>
+                                            <!-- 댓글 내용 표시 -->
+                                            <div class="comment-content">
+                                                <pre class="pre-comment-content" th:text="${comment.content}"></pre>
+                                            </div>
+                                            <!-- 댓글 작성 시간 표시 -->
+                                            <div class="comment-content comment-doc">
+                                                <p class="comment-content comment-time">
+                                                    <span th:if="${comment.modified}" th:text="${comment.modifiedAt} + ' (수정됨)'"></span>
+                                                    <span th:unless="${comment.modified}" th:text="${comment.modifiedAt}"></span>
+                                                </p>
+                                                <!-- 댓글 수정 및 삭제 버튼 표시 -->
+<!--                                                <a th:if="${comment.isMy}" class="comment-content comment-menu" th:href="'/comment/edit/' + ${comment.commentId}">수정</a>-->
+                                                <a th:if="${comment.isMy}" class="comment-content comment-menu" href="#" th:onclick="'submitDeleteForm(' + ${comment.commentId} + '); return false;'" role="button">삭제</a>
+                                                <form th:id="'delete-comment-' + ${comment.commentId}" style="display: none" method="post" th:action="'/comments/' + ${comment.commentId}">
+                                                    <input type="hidden" name="_method" value="DELETE" />
+                                                    <input type="hidden" name="questionId" th:value="${question.questionId}" />
+                                                    <input type="hidden" name="CSRF_TOKEN" th:value="${session.CSRF_TOKEN}">
+                                                    <button type="submit" style="display: none">삭제</button>
+                                                </form>
 
-                                <article class="comment">
-                                    <div class="article-text">
-                                        <p class="comment-content comment-author-name">자바지기</p>
-                                        <div class="comment-content comment-doc">
-                                            <p>이 글만으로는 원인 파악하기 힘들겠다. 소스 코드와 설정을 단순화해서 공유해 주면 같이 디버깅해줄 수도 있겠다.</p>
+                                                <script>
+                                                    function submitDeleteForm(commentId) {
+                                                        document.getElementById('delete-comment-' + commentId).submit();
+                                                    }
+                                                </script>
+                                            </div>
                                         </div>
-                                        <p class="comment-content comment-time">
-                                            2016-01-12 14:06
-                                        </p>
-                                    </div>
-                                </article>
+                                    </article>
+                                </div>
 
-                                <article class="comment" id="answer-1405">
-                                    <div class="article-text">
-                                        <p class="comment-content comment-author-name">자바지기</p>
-                                        <div class="comment-content comment-doc">
-                                            <p>이 글만으로는 원인 파악하기 힘들겠다. 소스 코드와 설정을 단순화해서 공유해 주면 같이 디버깅해줄 수도 있겠다.</p>
-                                        </div>
-                                        <p class="comment-content comment-time">
-                                            2016-01-12 14:06
-                                        </p>
-                                    </div>
-                                </article>
-
-                                <form class="submit-write" method="get" action="/">
+                                <form th:unless="${question.isUserWithdrawn()}" class="submit-write" method="post" action="/comment">
+                                    <input type="hidden" name="CSRF_TOKEN" th:value="${session.CSRF_TOKEN}">
                                     <div class="comment-writer-container">
-                                        <label for="writer">
-                                            <input class="comment-writer" id="writer" name="writer" value="멋진상"
-                                                   readonly/>
+                                        <label for="questionId">
+                                            <input type="hidden" id="questionId" name="questionId" th:value="${question.getQuestionId()}">
+                                            <p class="comment-writer" th:text="${session.userCredentials.username}">
                                         </label>
                                     </div>
                                     <div class="form-group">
-                                        <label for="comment">
-                                            <textarea class="form-control" id="comment" name="comment"
-                                                      placeholder="내용을 입력하세요"></textarea>
+                                        <label for="content">
+                                            <textarea class="form-control" id="content" name="content"
+                                                      placeholder="내용을 입력하세요" required></textarea>
                                         </label>
                                     </div>
                                     <input class="post-write-btn" type="submit" value="등록"/>

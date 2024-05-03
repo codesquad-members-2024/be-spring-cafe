@@ -11,7 +11,7 @@ public class AfterAuthorizeInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
 
-        if (session.getAttribute("userId") != null) {
+        if (session.getAttribute("userCredentials") != null) {
             response.sendRedirect("/");
         }
 

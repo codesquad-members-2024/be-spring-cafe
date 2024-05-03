@@ -1,7 +1,9 @@
 package codesquad.springcafe.domain.question.service;
 
+import codesquad.springcafe.domain.comment.model.Comment;
+import codesquad.springcafe.domain.comment.model.CommentRepository;
 import codesquad.springcafe.domain.question.data.QuestionListResponse;
-import codesquad.springcafe.domain.question.data.QuestionPostRequest;
+import codesquad.springcafe.domain.question.data.QuestionRequest;
 import codesquad.springcafe.domain.question.data.QuestionResponse;
 import codesquad.springcafe.domain.question.model.Question;
 import codesquad.springcafe.domain.question.model.QuestionRepository;
@@ -11,6 +13,7 @@ import codesquad.springcafe.global.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -22,28 +25,34 @@ public class QuestionService {
 
     private final UserRepository userRepository;
     private final QuestionRepository questionRepository;
+    private final CommentRepository commentRepository;
 
     @Autowired
-    public QuestionService(UserRepository userRepository, QuestionRepository questionRepository) {
+    public QuestionService(UserRepository userRepository, QuestionRepository questionRepository, CommentRepository commentRepository) {
         this.userRepository = userRepository;
         this.questionRepository = questionRepository;
+        this.commentRepository = commentRepository;
     }
 
     // 질문 등록
-    public void postQuestion(Long userId, QuestionPostRequest questionPostRequest) {
+    public Long postQuestion(Long userId, QuestionRequest questionRequest) {
         // 사용자 인증
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        User user = userRepository.findById(userId, false).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
 
         // 질문 게시글 등록
-        Question question = questionPostRequest.toQuestion(user);
-        questionRepository.save(question);
+        Question question = questionRequest.toQuestion(user);
+        Question saved = questionRepository.save(question);
+
+        return saved.getId();
     }
 
     // 질문 목록 조회
-    public QuestionListResponse getQuestions() {
+    public QuestionListResponse getQuestions(Object userId) {
         List<QuestionResponse> questions = questionRepository.findAll().stream()
-                .map(q -> new QuestionResponse(q.getId(), q.getUser().getName(), q.getUser().getLoginId(), q.getTitle(),
-                        q.getContent(), DateUtils.convertCreatedAt(q.getCreatedAt()), q.getViewCnt()))
+                .map(q -> new QuestionResponse(q.getId(), q.getUser().getDeleted() ? "탈퇴한 사용자" : q.getUser().getName(),
+                        q.getUser().getDeleted() ? "탈퇴한 사용자" : q.getUser().getLoginId(), q.getTitle(),
+                        q.getContent(), DateUtils.convertLocalDateTimeToString(q.getCreatedAt()), q.getViewCnt(),
+                        q.getModified(), q.getUser().getId().equals(userId), q.getUser().getDeleted()))
                 .toList();
 
         return new QuestionListResponse(questions);
@@ -59,8 +68,93 @@ public class QuestionService {
 
         // 게시글 조회 수 up
         question.viewCntUp();
-        
-        return new QuestionResponse(question.getId(), question.getUser().getName(), question.getUser().getLoginId(), question.getTitle(), question.getContent(),
-                DateUtils.convertCreatedAt(question.getCreatedAt()), question.getViewCnt());
+        questionRepository.viewCntUp(questionId, question);
+
+        return new QuestionResponse(question.getId(), question.getUser().getDeleted() ? "탈퇴한 사용자" : question.getUser().getName(),
+                question.getUser().getDeleted() ? "탈퇴한 사용자" : question.getUser().getLoginId(), question.getTitle(),
+                question.getContent(), DateUtils.convertLocalDateTimeToString(question.getCreatedAt()), question.getViewCnt(),
+                question.getModified(), question.getUser().getId().equals(userId), question.getUser().getDeleted());
+    }
+
+    // 수정할 게시글 조회
+    public QuestionResponse getEditQuestion(Long userId, Long questionId) {
+        // 사용자 인증
+        User user = userRepository.findById(userId, false).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+
+        // 질문 게시글 조회
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문 게시글입니다."));
+
+        if (!question.getUser().getId().equals(userId)) {
+            throw new IllegalStateException("다른 사람의 글을 수정할 수 없습니다.");
+        }
+
+        return new QuestionResponse(questionId, user.getName(), user.getLoginId(), question.getTitle(), question.getContent(),
+                DateUtils.convertLocalDateTimeToString(question.getCreatedAt()), question.getViewCnt(), question.getModified(), true, user.getDeleted());
+    }
+
+    // 질문 수정
+    public void editQuestion(Long userId, Long questionId, QuestionRequest questionUpdateRequest) {
+        User user = userRepository.findById(userId, false).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문 게시글입니다."));
+
+        if (!question.getUser().getId().equals(user.getId())) {
+            throw new IllegalStateException("다른 사람의 글을 수정할 수 없습니다.");
+        }
+
+        Question updateQuestion = question.update(questionUpdateRequest.getTitle(), questionUpdateRequest.getContent());
+        questionRepository.update(questionId, updateQuestion);
+    }
+
+    // 삭제할 게시글 조회
+    public Long getDeleteQuestion(Long userId, Long questionId) {
+        // 사용자 인증
+        userRepository.findById(userId, false).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+
+        // 질문 게시글 조회
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문 게시글입니다."));
+
+        if (!question.getUser().getId().equals(userId)) {
+            throw new IllegalStateException("다른 사람의 글을 삭제할 수 없습니다.");
+        }
+
+        // 댓글 조회
+        Collection<Comment> comments = commentRepository.findByQuestionId(questionId);
+        long count = comments.stream()
+                .filter(comment -> !comment.getUser().getId().equals(question.getUser().getId()))
+                .count();
+
+        if (count != 0) {
+            throw new IllegalStateException("다른 사람의 댓글이 있는 게시글은 삭제할 수 없습니다.");
+        }
+
+        return question.getId();
+    }
+
+    // 질문 삭제
+    public void deleteQuestion(Long userId, Long questionId) {
+        User user = userRepository.findById(userId, false).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문 게시글입니다."));
+
+        if (!question.getUser().getId().equals(user.getId())) {
+            throw new IllegalStateException("다른 사람의 글을 삭제할 수 없습니다.");
+        }
+
+        // 댓글 조회
+        Collection<Comment> comments = commentRepository.findByQuestionId(questionId);
+        long count = comments.stream()
+                .filter(comment -> !comment.getUser().getId().equals(question.getUser().getId()))
+                .count();
+
+        if (count != 0) {
+            throw new IllegalStateException("다른 사람의 댓글이 있는 게시글은 삭제할 수 없습니다.");
+        }
+
+        comments.forEach(c -> {
+            Comment deleteComment = c.delete();
+            commentRepository.softDeleteById(c.getId(), deleteComment);
+        });
+
+        Question deleteQuestion = question.delete();
+        questionRepository.softDeleteById(questionId, deleteQuestion);
     }
 }

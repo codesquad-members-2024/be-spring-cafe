@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 import java.beans.ConstructorProperties;
-import java.time.LocalDateTime;
 
 /**
  * 유저 회원가입 정보를 저장하는 데이터 클래스
@@ -53,7 +52,6 @@ public class UserJoinRequest {
      * @return User 객체 생성해 반환
      */
     public User toUser(String encodedPwd) {
-        return new User(this.loginId, this.name, this.email, encodedPwd,
-                LocalDateTime.now(), LocalDateTime.now());
+        return new User(this.loginId, this.name, this.email, encodedPwd);
     }
 }

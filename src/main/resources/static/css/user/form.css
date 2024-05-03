@@ -34,12 +34,12 @@ li {
     width: 80px;
     height: 30px;
     font-size: 14px;
-    background-color: black;
+    background-color: #013368;
     color: white;
 }
 
 .black-component:hover {
-    background-color: #ffcd00;
+    background-color: hotpink;
     color: black;
 }
 
@@ -133,7 +133,7 @@ li {
     width: 200px;
     height: 30px;
     font-size: 14px;
-    background-color: black;
+    background-color: #013368;
     color: white;
     margin: 20px;
 }
@@ -144,14 +144,14 @@ li {
 }
 
 .btn:hover {
-    background-color: #ffcd00;
+    background-color: hotpink;
     color: black;
 }
 
 .form-group {
     padding: 20px;
     display: flex;
-    border: 1px solid lightgray;
+    border: 1px solid black;
     margin: 20px;
     width: 40%;
 }
@@ -182,4 +182,9 @@ li {
 
 label {
     width: 25%;
+}
+
+
+body{
+    font-family: NeoDunggeunMo Code;
 }

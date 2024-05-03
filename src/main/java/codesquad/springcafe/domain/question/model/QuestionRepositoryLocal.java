@@ -16,25 +16,45 @@ public class QuestionRepositoryLocal implements QuestionRepository{
     private static final AtomicLong sequence = new AtomicLong(0);
 
     public Question save(Question question){
-        long userId = sequence.incrementAndGet();
-        question.setId(userId);
-        questions.put(userId, question);
+        long questionId = sequence.incrementAndGet();
+        question.setId(questionId);
+        questions.put(questionId, question);
         return question;
     }
 
     public Optional<Question> findById(Long id) {
-        return Optional.ofNullable(questions.get(id));
+        return findById(id, null);
+    }
+
+    public Optional<Question> findById(Long id, Boolean deleted) {
+        Question question = questions.get(id);
+        if (question != null) {
+            return question.getDeleted().equals(deleted) ? Optional.of(question) : Optional.empty();
+        }
+        return Optional.empty();
     }
 
     public Collection<Question> findAll() {
         return questions.values();
     }
 
-    public Long countAll() {
-        return sequence.get();
+    @Override
+    public void softDeleteById(Long questionId, Question deleteQuestion) {
+        update(questionId, deleteQuestion);
     }
 
     public void deleteAll() {
         questions.clear();
+    }
+
+    @Override
+    public void update(Long questionId, Question updateQuestion) {
+        questions.put(questionId, updateQuestion);
+    }
+
+    @Override
+    public void viewCntUp(Long questionId, Question question) {
+        question.viewCntUp();
+        update(questionId, question);
     }
 }

@@ -34,13 +34,13 @@ li {
     width: 80px;
     height: 30px;
     font-size: 14px;
-    background-color: black;
+    background-color: #013368;
     color: white;
 }
 
 .black-component:hover {
-    background-color: #ffcd00;
-    color: black;
+    background-color: hotpink;
+    color: black;;
 }
 
 .navbar-right {
@@ -55,6 +55,7 @@ li {
 .article-doc {
     line-height: 30px;
     overflow-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .post-title {
@@ -99,9 +100,22 @@ li {
     color: lightgray;
 }
 
+.comment-menu {
+    color: darkgray;
+}
+
+.comment-doc{
+    display: inline;
+}
+
 .comment-content {
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.pre-comment-content {
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 .post-write-btn {
@@ -115,7 +129,7 @@ li {
     width: 60px;
     height: 30px;
     font-size: 14px;
-    background-color: black;
+    background-color: #013368;
     color: white;
     margin: 20px;
 }
@@ -126,7 +140,7 @@ li {
 }
 
 .post-write-btn:hover {
-    background-color: #ffcd00;
+    background-color: hotpink;
     color: black;
 }
 
@@ -160,4 +174,8 @@ li {
     border: 1px solid lightgray;
     display: flex;
     flex-direction: column;
+}
+
+body{
+    font-family: NeoDunggeunMo Code;
 }
