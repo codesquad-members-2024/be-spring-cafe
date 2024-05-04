@@ -88,16 +88,6 @@ public class H2ReplyRepository implements ReplyRepository {
     }
 
     @Override
-    public Optional<Integer> getReplyCount(String articleId) {
-        String SELECT_REPLY = "SELECT COUNT(*) FROM REPLY WHERE articleId=?";
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_REPLY, Integer.class, articleId));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
     public void delete(String replyId) {
         String DELETE_REPLY = "UPDATE REPLY SET DELETED = true WHERE id=?";
         jdbcTemplate.update(DELETE_REPLY, replyId);
