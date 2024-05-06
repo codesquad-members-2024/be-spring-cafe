@@ -31,7 +31,7 @@ public class User {
         return email;
     }
 
-    public boolean isPasswordCorrect(String password) {
+    public boolean checkPassword(String password) {
         return this.password.equals(password);
     }
 

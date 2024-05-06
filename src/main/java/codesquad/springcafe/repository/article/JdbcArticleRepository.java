@@ -1,6 +1,7 @@
 package codesquad.springcafe.repository.article;
 
 import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.Reply;
 import codesquad.springcafe.model.User;
 import java.sql.Timestamp;
 import java.util.List;
@@ -29,14 +30,15 @@ public class JdbcArticleRepository implements ArticleRepository {
 
     @Override
     public List<Article> getAll() {
-        String sql = "SELECT * FROM `article`";
+        String sql = "SELECT * FROM `article` WHERE deleted = FALSE";
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
             Article article = new Article(
                 resultSet.getLong("id"),
                 resultSet.getTimestamp("timestamp").toLocalDateTime(),
                 resultSet.getString("writer"),
                 resultSet.getString("title"),
-                resultSet.getString("content")
+                resultSet.getString("content"),
+                resultSet.getBoolean("deleted")
             );
             return article;
         });
@@ -44,29 +46,56 @@ public class JdbcArticleRepository implements ArticleRepository {
 
     @Override
     public Optional<Article> getById(Long id) {
-        String sql = "SELECT * FROM `article` WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{id}, (resultSet, rowNum) -> {
+        String sql = "SELECT * FROM `article` WHERE id = ? AND deleted = FALSE";
+        List<Article> articles = jdbcTemplate.query(sql, new Object[]{id}, (resultSet, rowNum) -> {
             Article article = new Article(
                 resultSet.getLong("id"),
                 resultSet.getTimestamp("timestamp").toLocalDateTime(),
                 resultSet.getString("writer"),
                 resultSet.getString("title"),
+                resultSet.getString("content"),
+                resultSet.getBoolean("deleted")
+            );
+            return article;
+        });
+        if (articles.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(articles.get(0));
+    }
+
+    @Override
+    public List<Reply> getRepliesById(Long id) {
+        String sql = "SELECT reply.articleId, reply.index, reply.timestamp, reply.writer, reply.content "
+            + "FROM `article` LEFT JOIN `reply` WHERE article.id = ? AND article.deleted = FALSE AND article.id = reply.articleId";
+        return jdbcTemplate.query(sql, new Object[]{id}, (resultSet, rowNum) -> {
+            Reply reply = new Reply(
+                resultSet.getLong("articleId"),
+                resultSet.getLong("index"),
+                resultSet.getTimestamp("timestamp").toLocalDateTime(),
+                resultSet.getString("writer"),
                 resultSet.getString("content")
             );
-            return Optional.ofNullable(article);
+            return reply;
         });
     }
 
     @Override
     public void modify(Article modifiedArticle) {
-        String sql = "UPDATE `article` SET title = ?, content = ? WHERE id = ?";
+        String sql = "UPDATE `article` SET title = ?, content = ? WHERE id = ? AND deleted = FALSE";
         jdbcTemplate.update(sql,
             modifiedArticle.getTitle(), modifiedArticle.getContent(), modifiedArticle.getId());
     }
 
     @Override
-    public void remove(Long id) {
+    public void removeHard(Long id) {
         String sql = "DELETE FROM `article` WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public void removeSoft(Long id) {
+        String sql = "UPDATE `article` SET deleted = true WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

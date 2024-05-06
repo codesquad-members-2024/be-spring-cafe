@@ -13,7 +13,10 @@ public class ArticleUpdateDTO {
         this.content = content;
     }
 
-    public Article toArticle(Long id, LocalDateTime timestamp, String writer) {
-        return new Article(id, timestamp, writer, title, content);
+    public Article toArticle(Article originalArticle) {
+        Long id = originalArticle.getId();
+        LocalDateTime timestamp = originalArticle.getTimeStamp();
+        String writer = originalArticle.getWriter();
+        return new Article(id, timestamp, writer, title, content, false);
     }
 }

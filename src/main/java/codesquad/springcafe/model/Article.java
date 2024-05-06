@@ -9,13 +9,15 @@ public class Article {
     private final String writer;
     private final String title;
     private final String content;
+    private boolean deleted;
 
-    public Article(Long id, LocalDateTime timestamp, String writer, String title, String content) {
+    public Article(Long id, LocalDateTime timestamp, String writer, String title, String content, boolean deleted) {
         this.id = id;
         this.timestamp = timestamp;
         this.writer = writer;
         this.title = title;
         this.content = content;
+        this.deleted = deleted;
     }
 
     public Long getId() {
@@ -36,6 +38,18 @@ public class Article {
 
     public String getContent() {
         return content;
+    }
+
+    public boolean isValid() {
+        return !deleted;
+    }
+
+    public boolean isWrittenBy(String userId) {
+        return this.writer.equals(userId);
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public ArticleInfoDTO toDTO() {

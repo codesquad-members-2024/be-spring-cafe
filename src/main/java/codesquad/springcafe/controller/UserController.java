@@ -4,10 +4,12 @@ import codesquad.springcafe.dto.user.UserLoginDTO;
 import codesquad.springcafe.dto.user.UserSignupDTO;
 import codesquad.springcafe.dto.user.UserInfoDTO;
 import codesquad.springcafe.dto.user.UserUpdateDTO;
+import codesquad.springcafe.model.User;
 import codesquad.springcafe.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.LongStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,49 +32,50 @@ public class UserController {
     }
 
     @PostMapping
-    public String signUp(@ModelAttribute("user") UserSignupDTO userSignupDTO, Model model) {
-        UserInfoDTO newUser = userService.signUp(userSignupDTO);
-        model.addAttribute("user", newUser);
+    public String signUp(@ModelAttribute("user") UserSignupDTO userSignupDTO) {
+        User newUser = userSignupDTO.toUser();
+        userService.signUp(newUser);
         return "redirect:/users";
     }
 
     @GetMapping
     public String showList(Model model) {
-        List<UserInfoDTO> users = userService.findAll();
-        model.addAttribute("users", users);
+        List<User> users = userService.findAll();
+        List<UserInfoDTO> orderedUsers = LongStream.rangeClosed(1, users.size())
+            .mapToObj(order -> users.get((int)order - 1).toDTO(order)).toList();
+        model.addAttribute("users", orderedUsers);
         return "/user/list";
     }
 
     @GetMapping("/{userId}")
     public String showProfile(@PathVariable("userId") String userId, Model model) {
-        UserInfoDTO targetUser = userService.findById(userId);
+        UserInfoDTO targetUser = userService.findById(userId).toDTO();
         model.addAttribute("user", targetUser);
         return "/user/profile";
     }
 
     @GetMapping("/{userId}/form")
-    public String showUpdateInfoForm(@PathVariable("userId") String userId, Model model) {
-        UserInfoDTO targetUser = userService.findById(userId);
+    public String showUpdateForm(@PathVariable("userId") String userId, Model model) {
+        UserInfoDTO targetUser = userService.findById(userId).toDTO();
         model.addAttribute("user", targetUser);
         return "/user/updateForm";
     }
 
     @GetMapping("/{userId}/update")
-    public String tryUpdateInfo(@PathVariable String userId, HttpSession session, Model model) {
-        Object loggedInUser = session.getAttribute("loggedInUser");
+    public String tryUpdate(@PathVariable("userId") String userId, HttpSession session) {
+        String loggedInUser = (String) session.getAttribute("loggedInUser");
         if (loggedInUser == null) {
             return "/user/login_needed";
         }
-        UserInfoDTO user = (UserInfoDTO) loggedInUser;
-        if (!user.getUserId().equals(userId)) {
+        if (!loggedInUser.equals(userId)) {
             return "/user/update_failed";
         }
         return "/user/authenticate";
     }
 
     @PostMapping("/{userId}/authenticate")
-    public String authenticate(@ModelAttribute("user") UserLoginDTO userLoginDTO, @PathVariable String userId) {
-        Optional<UserInfoDTO> loggedInUser = userService.authenticate(userLoginDTO);
+    public String authenticate(@ModelAttribute("user") UserLoginDTO userLoginDTO, @PathVariable("userId") String userId) {
+        Optional<User> loggedInUser = userService.authenticate(userLoginDTO.getUserId(), userLoginDTO.getPassword());
         if (loggedInUser.isEmpty()) {
             return "/user/authenticate_failed";
         }
@@ -80,25 +83,36 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/update")
-    public String updateInfo(@ModelAttribute("user") UserUpdateDTO updateInfo, @PathVariable String userId, Model model) {
-        UserInfoDTO updatedUser = userService.updateInfo(userId, updateInfo);
-        model.addAttribute("user", updatedUser);
+    public String update(@ModelAttribute("user") UserUpdateDTO updateInfo, @PathVariable("userId") String userId, HttpSession session) {
+        String loggedInUser = (String) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "/user/login_needed";
+        }
+        if (!loggedInUser.equals(userId)) {
+            return "/user/update_failed";
+        }
+
+        userService.updateInfo(updateInfo.toUser(userId));
         return "redirect:/users";
     }
 
     @PostMapping("/login")
     public String login(@ModelAttribute("user") UserLoginDTO userLoginDTO, HttpSession session) {
-        Optional<UserInfoDTO> loggedInUser = userService.authenticate(userLoginDTO);
-        if (loggedInUser.isPresent()) {
-            session.setAttribute("loggedInUser", loggedInUser.get());
+        Optional<User> loggedInUser = userService.authenticate(userLoginDTO.getUserId(), userLoginDTO.getPassword());
+        if (loggedInUser.isEmpty()) {
+            return "/user/login_failed";
+        }
+        session.setAttribute("loggedInUser", loggedInUser.get().getUserId());
+        String requestedUrl = (String) session.getAttribute("requestedUrl");
+        if (requestedUrl == null || requestedUrl.isEmpty()) {
             return "redirect:/";
         }
-        return "/user/login_failed";
+        return "redirect:" + requestedUrl;
     }
 
     @PostMapping("/logout")
     public String logout(HttpSession session) {
-        session.removeAttribute("loggedInUser");
+        session.invalidate();
         return "redirect:/";
     }
 }

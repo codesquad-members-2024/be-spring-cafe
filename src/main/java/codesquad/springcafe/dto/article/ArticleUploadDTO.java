@@ -15,6 +15,6 @@ public class ArticleUploadDTO {
     }
 
     public Article toArticle(Long id) {
-        return new Article(id, LocalDateTime.now(), writer, title, content);
+        return new Article(id, LocalDateTime.now(), writer, title, content, false);
     }
 }

@@ -3,7 +3,9 @@ package codesquad.springcafe.controller;
 import codesquad.springcafe.dto.article.ArticleInfoDTO;
 import codesquad.springcafe.dto.article.ArticleUploadDTO;
 import codesquad.springcafe.dto.article.ArticleUpdateDTO;
-import codesquad.springcafe.dto.user.UserInfoDTO;
+import codesquad.springcafe.dto.reply.ReplyInfoDTO;
+import codesquad.springcafe.model.Article;
+import codesquad.springcafe.model.Reply;
 import codesquad.springcafe.service.ArticleService;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
@@ -28,31 +30,40 @@ public class ArticleController {
     }
 
     @PostMapping("articles")
-    public String upload(@ModelAttribute("article") ArticleUploadDTO articleUploadDTO, Model model) {
-        ArticleInfoDTO newArticle = articleService.upload(articleUploadDTO);
-        model.addAttribute("article", newArticle);
+    public String upload(@ModelAttribute("article") ArticleUploadDTO articleUploadDTO, HttpSession session) {
+        Long lastId = getLastId();
+        Article newArticle = articleUploadDTO.toArticle(++lastId);
+        String loggedInUser = (String) session.getAttribute("loggedInUser");
+        if (newArticle.isWrittenBy(loggedInUser)) {
+            return "/article/update_failed";
+        }
+        articleService.upload(newArticle);
         return "redirect:/";
     }
 
     @GetMapping("")
     public String showList(Model model) {
-        List<ArticleInfoDTO> articles = articleService.findAll();
+        List<ArticleInfoDTO> articles = articleService.findAll().stream().map(Article::toDTO).toList();
         model.addAttribute("articles", articles);
         return "index";
     }
 
     @GetMapping("articles/{id}")
     public String showArticle(@PathVariable("id") Long id, Model model) {
-        ArticleInfoDTO targetArticle = articleService.findById(id);
+        ArticleInfoDTO targetArticle = articleService.findById(id).toDTO();
+        List<ReplyInfoDTO> repliesOfArticle = articleService.findRepliesById(id)
+            .stream().map(Reply::toDTO).toList();
         model.addAttribute("article", targetArticle);
+        model.addAttribute("replies", repliesOfArticle);
+        model.addAttribute("numberOfReplies", repliesOfArticle.size());
         return "/article/show";
     }
 
     @GetMapping("articles/{id}/update")
-    public String tryUpdate(@PathVariable Long id, HttpSession session, Model model) {
-        ArticleInfoDTO article = articleService.findById(id);
-        UserInfoDTO user = (UserInfoDTO) session.getAttribute("loggedInUser");
-        if (!article.isWriter(user.getUserId())) {
+    public String tryUpdate(@PathVariable Long id, HttpSession session) {
+        Article targetArticle = articleService.findById(id);
+        String loggedInUser = (String) session.getAttribute("loggedInUser");
+        if (targetArticle.isWrittenBy(loggedInUser)) {
             return "/article/update_failed";
         }
         return "redirect:/articles/" + id + "/form";
@@ -60,26 +71,46 @@ public class ArticleController {
 
     @GetMapping("articles/{id}/form")
     public String showUpdateForm(@PathVariable Long id, Model model) {
-        ArticleInfoDTO article = articleService.findById(id);
-        model.addAttribute("article", article);
+        ArticleInfoDTO originalArticle = articleService.findById(id).toDTO();
+        model.addAttribute("article", originalArticle);
         return "/article/updateForm";
     }
 
     @PutMapping("articles/{id}/update")
-    public String updateInfo(@ModelAttribute("article") ArticleUpdateDTO updateInfo, @PathVariable Long id, Model model) {
-        ArticleInfoDTO updatedArticle = articleService.updateInfo(id, updateInfo);
-        model.addAttribute("article", updatedArticle);
-        return "redirect:/";
+    public String update(@ModelAttribute("article") ArticleUpdateDTO updateDTO, @PathVariable Long id, HttpSession session) {
+        Article originalArticle = articleService.findById(id);
+        Article updatedArticle = updateDTO.toArticle(originalArticle);
+        String loggedInUser = (String) session.getAttribute("loggedInUser");
+
+        if (!updatedArticle.isWrittenBy(loggedInUser))  {
+            return "/article/update_failed";
+        }
+        articleService.update(updatedArticle);
+        return "redirect:/articles/{id}";
     }
 
     @DeleteMapping("articles/{id}")
     public String delete(@PathVariable Long id, HttpSession session) {
-        ArticleInfoDTO article = articleService.findById(id);
-        UserInfoDTO user = (UserInfoDTO) session.getAttribute("loggedInUser");
-        if (!article.isWriter(user.getUserId())) {
-            return "/article/delete_failed";
+        Article targetArticle = articleService.findById(id);
+        List<Reply> replies = articleService.findRepliesById(id);
+        String loggedInUser = (String) session.getAttribute("loggedInUser");
+
+        if (!targetArticle.isWrittenBy(loggedInUser)) {
+            return "/article/delete_failed_user";
+        }
+        if (hasExternalReplies(replies, loggedInUser)) {
+            return "/article/delete_failed_reply";
         }
         articleService.delete(id);
-        return "redirect:/";
+        return "redirect:/articles/{id}";
+    }
+
+    private Long getLastId() {
+        return articleService.findAll().stream()
+            .mapToLong(Article::getId).max().orElse(0L);
+    }
+
+    private boolean hasExternalReplies(List<Reply> replies, String loggedInUser) {
+        return !replies.isEmpty() && !replies.stream().allMatch(reply -> reply.isWrittenBy(loggedInUser));
     }
 }
