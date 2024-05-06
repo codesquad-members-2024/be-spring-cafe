@@ -2,7 +2,7 @@ package codesquad.springcafe.ArticleTest;
 
 import codesquad.springcafe.Article.Article;
 import codesquad.springcafe.Article.ArticleController;
-import codesquad.springcafe.Article.ArticleRepository;
+import codesquad.springcafe.Article.MemoryArticleRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +30,7 @@ public class ArticleControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ArticleRepository articleRepository;
+    private MemoryArticleRepository memoryArticleRepository;
 
     @Test
     @DisplayName("게시글 작성 폼 요청")
@@ -54,7 +54,7 @@ public class ArticleControllerTest {
     @Test
     @DisplayName("게시글 목록 조회")
     void listArticles() throws Exception {
-        given(articleRepository.findAll()).willReturn(Arrays.asList(
+        given(memoryArticleRepository.findAll()).willReturn(Arrays.asList(
                 new Article("작성자1", "제목1", "내용1"),
                 new Article("작성자2", "제목2", "내용2")
         ));
@@ -69,7 +69,7 @@ public class ArticleControllerTest {
     @DisplayName("게시글 상세 조회")
     void detailArticle() throws Exception {
         int articleNumber = 1;
-        given(articleRepository.findByIndex(articleNumber)).willReturn(java.util.Optional.of(new Article("작성자", "제목", "내용")));
+        given(memoryArticleRepository.findByIndex(articleNumber)).willReturn(java.util.Optional.of(new Article("작성자", "제목", "내용")));
 
         mockMvc.perform(get("/article/{articleNumber}", articleNumber))
                 .andExpect(status().isOk())

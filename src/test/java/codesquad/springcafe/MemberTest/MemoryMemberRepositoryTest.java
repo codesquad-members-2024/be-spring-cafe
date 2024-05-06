@@ -1,69 +1,77 @@
 package codesquad.springcafe.MemberTest;
 
 import codesquad.springcafe.Member.Member;
-import codesquad.springcafe.Member.MemberRepository;
+import codesquad.springcafe.Member.MemoryMemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(SpringExtension.class)
+public class MemoryMemberRepositoryTest {
 
-public class MemberRepositoryTest {
-
-    private MemberRepository memberRepository;
+    private MemoryMemberRepository memoryMemberRepository;
 
     @BeforeEach
     void setUp() {
-        memberRepository = new MemberRepository();
+        memoryMemberRepository = new MemoryMemberRepository();
     }
 
     @AfterEach
-    void tearDown() { memberRepository.clear();}
+    void tearDown() {
+        memoryMemberRepository.clear();
+    }
+
     @Test
     @DisplayName("유저 추가 테스트")
     void addMemberTest() {
         Member member = new Member("user1", "user1Name", "user1@example.com", "password1");
-        memberRepository.addMember(member);
-        assertThat(memberRepository.getAllMembers()).contains(member);
+        memoryMemberRepository.addMember(member);
+        assertThat(memoryMemberRepository.getAllMembers()).contains(member);
     }
 
     @Test
     @DisplayName("멤버 조회 테스트")
     void getMemberTest() {
         Member member = new Member("user2", "user2Name", "user2@example.com", "password2");
-        memberRepository.addMember(member);
-        Optional<Member> foundMember = memberRepository.findById("user2");
+        memoryMemberRepository.addMember(member);
+        Optional<Member> foundMember = memoryMemberRepository.findById("user2");
 
         assertThat(foundMember.isPresent()).isTrue();
         assertThat(foundMember.get()).isEqualTo(member);
     }
+
     @Test
     @DisplayName("회원 정보 수정 성공 테스트")
     void updateMemberInfoSuccess() {
         Member originalMember = new Member("user3", "user3Name", "user3@example.com", "password3");
-        memberRepository.addMember(originalMember);
+        memoryMemberRepository.addMember(originalMember);
 
         Member updatedMember = new Member("user3", "updatedName", "updated@example.com", "password3");
-        boolean result = memberRepository.updateMemberInfo("user3", updatedMember);
+        memoryMemberRepository.updateMemberInfo(updatedMember);
 
-        assertThat(result).isTrue();
-        assertThat(memberRepository.findById("user3").get().getName()).isEqualTo("updatedName");
-        assertThat(memberRepository.findById("user3").get().getEmail()).isEqualTo("updated@example.com");
+        Member result = memoryMemberRepository.findById("user3").get();
+        assertThat(result.getName()).isEqualTo("updatedName");
+        assertThat(result.getEmail()).isEqualTo("updated@example.com");
     }
 
     @Test
     @DisplayName("비밀번호 불일치로 인한 회원 정보 수정 실패 테스트")
     void updateMemberInfoFail() {
         Member originalMember = new Member("user4", "user4Name", "user4@example.com", "password4");
-        memberRepository.addMember(originalMember);
+        memoryMemberRepository.addMember(originalMember);
 
         Member updatedMember = new Member("user4", "updatedName", "updated@example.com", "wrongPassword");
-        boolean result = memberRepository.updateMemberInfo("user4", updatedMember);
+        memoryMemberRepository.updateMemberInfo(updatedMember);
 
-        assertThat(result).isFalse();
-        assertThat(memberRepository.findById("user4").get().getName()).isEqualTo("user4Name");
-        assertThat(memberRepository.findById("user4").get().getEmail()).isEqualTo("user4@example.com");
+        Member result = memoryMemberRepository.findById("user4").get();
+        assertThat(result.getName()).isEqualTo("user4Name");
+        assertThat(result.getEmail()).isEqualTo("user4@example.com");
     }
 }
