@@ -33,8 +33,12 @@ public class MemoryReplyRepository implements ReplyRepository {
     }
 
     @Override
-    public void remove(Long articleId, Long index) {
+    public boolean remove(Long articleId, Long index) {
         Optional<Reply> targetReply = getByArticleIdAndIndex(articleId, index);
-        targetReply.ifPresent(replies::remove);
+        if (targetReply.isPresent()) {
+            replies.remove(targetReply.get());
+            return true;
+        }
+        return false;
     }
 }

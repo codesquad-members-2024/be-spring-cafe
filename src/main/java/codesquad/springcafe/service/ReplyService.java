@@ -29,7 +29,7 @@ public class ReplyService {
         return targetReply.orElse(null);
     }
 
-    public void delete(Long articleId, Long index) {
-        replyRepository.remove(articleId, index);
+    public boolean delete(Long articleId, Long index) {
+        return replyRepository.remove(articleId, index);
     }
 }

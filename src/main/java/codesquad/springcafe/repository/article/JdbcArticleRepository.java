@@ -4,6 +4,7 @@ import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.Reply;
 import codesquad.springcafe.model.User;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
@@ -62,22 +63,6 @@ public class JdbcArticleRepository implements ArticleRepository {
             return Optional.empty();
         }
         return Optional.of(articles.get(0));
-    }
-
-    @Override
-    public List<Reply> getRepliesById(Long id) {
-        String sql = "SELECT reply.articleId, reply.index, reply.timestamp, reply.writer, reply.content "
-            + "FROM `article` LEFT JOIN `reply` WHERE article.id = ? AND article.deleted = FALSE AND article.id = reply.articleId";
-        return jdbcTemplate.query(sql, new Object[]{id}, (resultSet, rowNum) -> {
-            Reply reply = new Reply(
-                resultSet.getLong("articleId"),
-                resultSet.getLong("index"),
-                resultSet.getTimestamp("timestamp").toLocalDateTime(),
-                resultSet.getString("writer"),
-                resultSet.getString("content")
-            );
-            return reply;
-        });
     }
 
     @Override

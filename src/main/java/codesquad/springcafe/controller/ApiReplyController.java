@@ -1,28 +1,33 @@
 package codesquad.springcafe.controller;
 
+import codesquad.springcafe.dto.reply.ReplyInfoDTO;
 import codesquad.springcafe.dto.reply.ReplyUploadDTO;
 import codesquad.springcafe.model.Reply;
+import codesquad.springcafe.model.Result;
 import codesquad.springcafe.service.ReplyService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-public class ReplyController {
+@RestController
+@RequestMapping("/api/articles/{articleId}/replies")
+public class ApiReplyController {
 
     private final ReplyService replyService;
 
     @Autowired
-    public ReplyController(ReplyService replyService) {
+    public ApiReplyController(ReplyService replyService) {
         this.replyService = replyService;
     }
 
-    @PostMapping("articles/{articleId}/replies")
-    public String upload(@ModelAttribute("reply") ReplyUploadDTO replyUploadDTO, HttpSession session) {
+    @PostMapping("")
+    public ReplyInfoDTO upload(@ModelAttribute ReplyUploadDTO replyUploadDTO, HttpSession session) {
         Long lastIndex = getLastIndex(replyUploadDTO.getArticleId());
         Reply newReply = replyUploadDTO.toReply(++lastIndex);
         String loggedInUser = (String) session.getAttribute("loggedInUser");
@@ -30,18 +35,23 @@ public class ReplyController {
             return null;
         }
         replyService.upload(newReply);
-        return "redirect:/articles/{articleId}";
+        return newReply.toDTO();
     }
 
-    @DeleteMapping("articles/{articleId}/replies/{index}")
-    public String delete(@PathVariable Long articleId, @PathVariable Long index, HttpSession session) {
-        Reply reply = replyService.findByArticleIdAndIndex(articleId, index);
+    @GetMapping("/count")
+    public Long getTotalCount(@PathVariable Long articleId) {
+        return (long) replyService.findAllByArticleId(articleId).size();
+    }
+
+    @DeleteMapping("/{index}")
+    public Result delete(@PathVariable("articleId") Long articleId, @PathVariable("index") Long index, HttpSession session) {
+        Reply targetReply = replyService.findByArticleIdAndIndex(articleId, index);
         String loggedInUser = (String) session.getAttribute("loggedInUser");
-        if (!reply.isWrittenBy(loggedInUser)) {
-            return "/reply/delete_failed";
+        boolean success = loggedInUser != null && targetReply.isWrittenBy(loggedInUser) && replyService.delete(articleId, index);
+        if (success) {
+            return Result.ok();
         }
-        replyService.delete(articleId, index);
-        return "redirect:/articles/{articleId}";
+        return Result.fail("다른 사용자의 댓글을 삭제할 수 없습니다.");
     }
 
     private Long getLastIndex(Long articleId) {

@@ -31,10 +31,6 @@ public class ArticleService {
         return targetArticle.orElse(null);
     }
 
-    public List<Reply> findRepliesById(Long id) {
-        return articleRepository.getRepliesById(id);
-    }
-
     public void update(Article modifiedArticle) {
         articleRepository.modify(modifiedArticle);
     }

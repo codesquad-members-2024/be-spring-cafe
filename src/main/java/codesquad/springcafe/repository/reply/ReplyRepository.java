@@ -11,5 +11,5 @@ public interface ReplyRepository {
 
     List<Reply> getAllByArticleId(Long articleId);
 
-    void remove(Long articleId, Long index);
+    boolean remove(Long articleId, Long index);
 }

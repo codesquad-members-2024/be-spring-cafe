@@ -10,8 +10,6 @@
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link href="/css/styles.css" rel="stylesheet">
-    <script src="/js/addReply.js"></script>
-    <script src="/js/deleteReply.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-fixed-top header">
@@ -97,7 +95,7 @@
                       <div class="article-header-text">
                           <a href="/users/{{writer}}" class="article-author-name">{{writer}}</a>
                           <a href="/articles/{{id}}" class="article-header-time" title="퍼머링크">
-                              {{getFormattedTimeStamp}}
+                              {{getFormattedTimestamp}}
                               <i class="icon-link"></i>
                           </a>
                       </div>
@@ -126,51 +124,50 @@
 
               <div class="qna-comment">
                     <div class="qna-comment-slipp">
-                      <p class="qna-comment-count"><strong>{{numberOfReplies}}</strong>개의 의견</p>
-                      <div class="qna-comment-slipp-articles">
-                          {{#replies}}
-                          <article class="article" id="answer-1405">
-                              <div class="article-header">
-                                  <div class="article-header-thumb">
-                                      <img src="https://graph.facebook.com/v2.3/1324855987/picture" class="article-author-thumb" alt="">
+                        <p id="numberOfReplies" class="qna-comment-count">댓글 <strong>{{numberOfReplies}}</strong></p>
+                          <div class="qna-comment-slipp-articles">
+                              {{#replies}}
+                              <article class="article">
+                                  <div class="article-header">
+                                      <div class="article-header-thumb">
+                                          <img src="https://graph.facebook.com/v2.3/1324855987/picture" class="article-author-thumb" alt="">
+                                      </div>
+                                      <div class="article-header-text">
+                                          <a href="/users/{{writer}}" class="article-author-name">{{writer}}</a>
+                                          <a href="#" class="article-header-time" title="퍼머링크">{{getFormattedTimestamp}}</a>
+                                      </div>
                                   </div>
-                                  <div class="article-header-text">
-                                      <a href="/users/{{writer}}" class="article-author-name">{{writer}}</a>
-                                      <a href="#" class="article-header-time" title="퍼머링크">{{getFormattedTimeStamp}}</a>
+                                  <div class="article-doc comment-doc">
+                                      <p>{{content}}</p>
                                   </div>
-                              </div>
-                              <div class="article-doc comment-doc">
-                                  <p>{{content}}</p>
-                              </div>
-                              <div class="article-util">
-                                  <ul class="article-util-list">
-                                      <li>
-                                          <a class="link-modify-article" href="/articles/{{articleId}}/replies/{{index}}/form">수정</a>
-                                      </li>
-                                      <li>
-                                          <form class="delete-answer-form" action="/articles/{{articleId}}/replies/{{index}}" method="POST">
-                                              <input type="hidden" name="_method" value="DELETE">
-                                              <button type="submit" class="delete-answer-button">삭제</button>
-                                          </form>
-                                      </li>
-                                  </ul>
-                              </div>
-                          </article>
-                          {{/replies}}
-
-                          {{#article}}
-                          <form class="submit-write" action="/articles/{{id}}/replies" method="post">
-                              <input type="hidden" class="form-control" id="articleId" name="articleId" value={{id}} />
-                              {{/article}}
-                              <input type="hidden" class="form-control" id="writer" name="writer" value={{loggedInUser}} />
-                              <div class="form-group" style="padding:14px;">
-                                  <label for="content">{{loggedInUser}}</label>
-                                  <textarea name="content" id="content" class="form-control" placeholder="Update your status"></textarea>
-                              </div>
-                              <button type="submit" class="btn btn-success clearfix pull-right">답변하기</button>
-                              <div class="clearfix" />
-                          </form>
-                      </div>
+                                  <div class="article-util">
+                                      <ul class="article-util-list">
+                                          <li>
+                                              <a class="link-modify-article" href="/articles/{{articleId}}/replies/{{index}}/form">수정</a>
+                                          </li>
+                                          <li>
+                                              <form class="delete-answer-form" action="/api/articles/{{articleId}}/replies/{{index}}" method="POST">
+                                                  <input type="hidden" name="_method" value="DELETE">
+                                                  <button type="submit" class="delete-answer-button">삭제</button>
+                                              </form>
+                                          </li>
+                                      </ul>
+                                  </div>
+                              </article>
+                              {{/replies}}
+                          </div>
+                        <form class="submit-write" action="/api/articles/{{id}}/replies" method="post">
+                            {{#article}}
+                            <input type="hidden" class="form-control" id="articleId" name="articleId" value={{id}} />
+                            {{/article}}
+                            <input type="hidden" class="form-control" id="writer" name="writer" value={{loggedInUser}} />
+                            <div class="form-group" style="padding:14px;">
+                                <label for="content">{{loggedInUser}}</label>
+                                <textarea name="content" id="content" class="form-control" placeholder="Update your status"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success clearfix pull-right">답변하기</button>
+                            <div class="clearfix"></div>
+                        </form>
                   </div>
               </div>
           </div>
@@ -179,27 +176,28 @@
     </div>
 </div>
 
-<script type="text/template" id="answerTemplate">
+
+<script type="text/template" id="replyTemplate">
 	<article class="article">
 		<div class="article-header">
 			<div class="article-header-thumb">
 				<img src="https://graph.facebook.com/v2.3/1324855987/picture" class="article-author-thumb" alt="">
 			</div>
-			<div class="article-header-text">
-				<a href="#" class="article-author-name">{0}</a>
-				<div class="article-header-time">{1}</div>
-			</div>
+        <div class="article-header-text">
+            <a href="/users/{2}" class="article-author-name">{2}</a>
+            <a href="#" class="article-header-time" title="퍼머링크">{4}</a>
+        </div>
 		</div>
 		<div class="article-doc comment-doc">
-			{2}
+        <p>{3}</p>
 		</div>
 		<div class="article-util">
 		<ul class="article-util-list">
 			<li>
-				<a class="link-modify-article" href="/api/qna/updateAnswer/{3}">수정</a>
+				<a class="link-modify-article" href="/articles/{0}/replies/{1}/form">수정</a>
 			</li>
 			<li>
-				<form class="delete-answer-form" action="/api/articles/{3}/answers/{4}" method="POST">
+				<form class="delete-answer-form" action="/api/articles/{0}/replies/{1}" method="POST">
 					<input type="hidden" name="_method" value="DELETE">
                      <button type="submit" class="delete-answer-button">삭제</button>
 				</form>
@@ -210,8 +208,11 @@
 </script>
 
 <!-- script references -->
-<script src="../js/jquery-2.2.0.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="../js/scripts.js"></script>
-	</body>
+
+<script src="/js/jquery-2.2.0.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/scripts.js"></script>
+<script src="/js/addReply.js"></script>
+<script src="/js/deleteReply.js"></script>
+</body>
 </html>

@@ -10,8 +10,6 @@ public interface ArticleRepository {
 
     Optional<Article> getById(Long id);
 
-    List<Reply> getRepliesById(Long id);
-
     List<Article> getAll();
 
     void modify(Article modifiedArticle);
