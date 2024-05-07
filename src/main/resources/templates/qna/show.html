@@ -19,7 +19,7 @@
                           <img src="https://graph.facebook.com/v2.3/100000059371774/picture" class="article-author-thumb" alt="">
                       </div>
                       <div class="article-header-text">
-                          <a href="/users/92/kimmunsu" class="article-author-name">작성자</a>
+                          <a href="/users/92/kimmunsu" class="article-author-name" th:text="${article.getWriter()}">작성자</a>
                           <a href="/questions/413" class="article-header-time" title="퍼머링크" th:text="${#temporals.format(article.getCurrentTime(), 'yyyy-MM-dd HH:mm:ss')}">
                               currentTime
                               <i class="icon-link"></i>
@@ -29,12 +29,11 @@
                   <div class="article-doc" th:utext="${#strings.replace(article.getContents(), nlString, '&lt;br /&gt;')}">contents</div>
                   <div class="article-util">
                       <ul class="article-util-list">
-                          <li>
-                              <a class="link-modify-article" href="/questions/423/form">수정</a>
+                          <li th:if="${session.loginUser.getId() == article.getUserId()}">
+                              <a class="link-modify-article" th:href="@{/articles/{id}/update(id=${article.getId()})}">수정</a>
                           </li>
-                          <li>
-                              <form class="form-delete" action="/questions/423" method="POST">
-                                  <input type="hidden" name="_method" value="DELETE">
+                          <li th:if="${session.loginUser.getId() == article.getUserId()}">
+                              <form class="form-delete" th:action="@{/articles/{id}/delete(id=${article.getId()})}" th:method="delete">
                                   <button class="link-delete-article" type="submit">삭제</button>
                               </form>
                           </li>

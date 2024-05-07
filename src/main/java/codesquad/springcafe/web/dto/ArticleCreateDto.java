@@ -4,21 +4,12 @@ import java.time.LocalDateTime;
 
 public class ArticleCreateDto {
 
-    private String writer;
     private String title;
     private String contents;
     private LocalDateTime currentTime;
 
     public ArticleCreateDto() {
         this.currentTime = LocalDateTime.now();
-    }
-
-    public String getWriter() {
-        return writer;
-    }
-
-    public void setWriter(String writer) {
-        this.writer = writer;
     }
 
     public String getTitle() {
@@ -39,9 +30,5 @@ public class ArticleCreateDto {
 
     public LocalDateTime getCurrentTime() {
         return currentTime;
-    }
-
-    public void setCurrentTime(LocalDateTime currentTime) {
-        this.currentTime = currentTime;
     }
 }

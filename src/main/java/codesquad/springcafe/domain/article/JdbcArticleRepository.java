@@ -1,5 +1,6 @@
 package codesquad.springcafe.domain.article;
 
+import codesquad.springcafe.web.dto.ArticleUpdateDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -26,6 +27,7 @@ public class JdbcArticleRepository implements ArticleRepository {
         jdbcInsert.withTableName("article").usingGeneratedKeyColumns("id");
 
         Map<String, Object> parameters = new HashMap<>();
+        parameters.put("user_id", article.getUserId());
         parameters.put("writer", article.getWriter());
         parameters.put("title", article.getTitle());
         parameters.put("contents", article.getContents());
@@ -33,6 +35,17 @@ public class JdbcArticleRepository implements ArticleRepository {
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         article.setId(key.longValue());
+    }
+
+    @Override
+    public void update(Long id, ArticleUpdateDto articleUpdateDto) {
+        jdbcTemplate.update("update article set title = ?, contents = ? where id = ?",
+                articleUpdateDto.getTitle(), articleUpdateDto.getContents(), id);
+    }
+
+    @Override
+    public void delete(Long id) {
+        jdbcTemplate.update("delete from article where id = ?", id);
     }
 
     @Override
@@ -50,6 +63,7 @@ public class JdbcArticleRepository implements ArticleRepository {
     private RowMapper<Article> articleRowMapper() {
         return (rs, rowNum) -> {
             Article article = new Article(
+                    rs.getLong("user_id"),
                     rs.getString("writer"),
                     rs.getString("title"),
                     rs.getString("contents"),

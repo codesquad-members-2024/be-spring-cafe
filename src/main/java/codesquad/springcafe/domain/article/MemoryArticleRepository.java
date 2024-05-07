@@ -1,5 +1,7 @@
 package codesquad.springcafe.domain.article;
 
+import codesquad.springcafe.web.dto.ArticleUpdateDto;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +18,16 @@ public class MemoryArticleRepository implements ArticleRepository {
     @Override
     public void save(Article article) {
         articles.add(article);
+    }
+
+    @Override
+    public void update(Long id, ArticleUpdateDto articleUpdateDto) {
+
+    }
+
+    @Override
+    public void delete(Long id) {
+
     }
 
     @Override

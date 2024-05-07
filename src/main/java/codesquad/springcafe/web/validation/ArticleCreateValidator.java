@@ -18,9 +18,6 @@ public class ArticleCreateValidator implements Validator {
     public void validate(Object target, Errors errors) {
         ArticleCreateDto articleCreateDto = (ArticleCreateDto) target;
 
-        if (!StringUtils.hasText(articleCreateDto.getWriter())) {
-            errors.rejectValue("writer", "temporary", null, "작성자를 입력하세요.");
-        }
         if (!StringUtils.hasText(articleCreateDto.getTitle())) {
             errors.rejectValue("title", "temporary", null, "제목을 입력하세요.");
         }
