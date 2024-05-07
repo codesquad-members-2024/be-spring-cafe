@@ -1,7 +1,6 @@
 package codesquad.springcafe.controller;
 
-import codesquad.springcafe.exception.db.ArticleNotFoundException;
-import codesquad.springcafe.exception.db.UserNotFoundException;
+import codesquad.springcafe.exception.db.NotFoundException;
 import jakarta.servlet.ServletException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,17 +14,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ExceptionController {
     private static final Logger logger = LoggerFactory.getLogger(ExceptionController.class);
 
-    @ExceptionHandler(UserNotFoundException.class)
+    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleUserNotFoundException(UserNotFoundException e, Model model) {
-        logger.error(e.getClass().getSimpleName() + " : " + e.getMessage());
-        model.addAttribute("errorMsg", e.getMessage());
-        return "error/form";
-    }
-
-    @ExceptionHandler(ArticleNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleArticleNotFoundException(ArticleNotFoundException e, Model model) {
+    public String handleNotFoundException(NotFoundException e, Model model) {
         logger.error(e.getClass().getSimpleName() + " : " + e.getMessage());
         model.addAttribute("errorMsg", e.getMessage());
         return "error/form";

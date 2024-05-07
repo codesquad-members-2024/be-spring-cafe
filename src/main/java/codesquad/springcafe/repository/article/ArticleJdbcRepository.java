@@ -42,7 +42,10 @@ public class ArticleJdbcRepository implements ArticleRepository {
         parameters.put("user_id", article.getUserId());
         parameters.put("title", article.getTitle());
         parameters.put("content", article.getContent());
+        parameters.put("is_modified", article.isModified());
+        parameters.put("is_deleted", article.isModified());
         parameters.put("creation_time", Timestamp.valueOf(article.getCreationTime()));
+        parameters.put("modified_time", null);
         parameters.put("view_count", article.getViewCount());
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
@@ -54,7 +57,7 @@ public class ArticleJdbcRepository implements ArticleRepository {
 
     @Override
     public Optional<Article> findArticleById(long id) throws ArticleNotFoundException {
-        String sql = "SELECT id, user_id, title, content, creation_time, view_count FROM article WHERE id = ?";
+        String sql = "SELECT id, user_id, title, content, is_modified, is_deleted, creation_time, modified_time, view_count FROM article WHERE id = ?";
         Long[] params = new Long[]{id};
         int[] paramTypes = new int[]{Types.BIGINT};
 
@@ -66,9 +69,24 @@ public class ArticleJdbcRepository implements ArticleRepository {
     }
 
     @Override
+    public boolean isArticleDeleted(long id) throws ArticleNotFoundException {
+        String sql = "SELECT is_deleted FROM article WHERE id = ?";
+        Long[] params = new Long[]{id};
+        int[] paramTypes = new int[]{Types.BIGINT};
+
+        try {
+            return Boolean.TRUE.equals(
+                    jdbcTemplate.queryForObject(sql, params, paramTypes, (rs, rowNum) -> rs.getBoolean("is_deleted")));
+        } catch (EmptyResultDataAccessException e) {
+            throw new ArticleNotFoundException(id);
+        }
+    }
+
+    @Override
     public long modifyArticle(long id, UpdatedArticle article) throws ArticleNotFoundException {
-        String sql = "UPDATE article SET title = ?, content = ? WHERE id = ?";
-        int rowsUpdated = jdbcTemplate.update(sql, article.getTitle(), article.getContent(), id);
+        String sql = "UPDATE article SET title = ?, content = ?, is_modified = TRUE, modified_time = ? WHERE id = ?";
+        int rowsUpdated = jdbcTemplate.update(sql, article.getTitle(), article.getContent(),
+                Timestamp.valueOf(article.getModifiedTime()), id);
 
         if (rowsUpdated == 0) {
             throw new ArticleNotFoundException(id); // 게시글을 찾지 못한 경우 예외 처리
@@ -78,14 +96,18 @@ public class ArticleJdbcRepository implements ArticleRepository {
 
     @Override
     public long deleteArticle(long id) {
-        String sql = "DELETE FROM article WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        String sql = "UPDATE article SET is_deleted = TRUE WHERE id = ?";
+        int rowsUpdated = jdbcTemplate.update(sql, id);
+
+        if (rowsUpdated == 0) {
+            throw new ArticleNotFoundException(id); // 게시글을 찾지 못한 경우 예외 처리
+        }
         return id;
     }
 
     @Override
     public List<ListArticle> findAllArticle() {
-        String sql = "SELECT id, user_id, title, creation_time, view_count FROM article";
+        String sql = "SELECT id, user_id, title, is_modified, creation_time, modified_time, view_count FROM article WHERE is_deleted = FALSE";
         return jdbcTemplate.query(sql, listArticleRowMapper());
     }
 
@@ -117,7 +139,9 @@ public class ArticleJdbcRepository implements ArticleRepository {
                 rs.getLong("id"),
                 rs.getString("user_id"),
                 rs.getString("title"),
+                rs.getBoolean("is_modified"),
                 rs.getTimestamp("creation_time").toLocalDateTime(),
+                rs.getTimestamp("modified_time") != null ? rs.getTimestamp("modified_time").toLocalDateTime() : null,
                 rs.getLong("view_count")
         );
     }
@@ -128,7 +152,10 @@ public class ArticleJdbcRepository implements ArticleRepository {
                 rs.getString("user_id"),
                 rs.getString("title"),
                 rs.getString("content"),
+                rs.getBoolean("is_modified"),
+                rs.getBoolean("is_deleted"),
                 rs.getTimestamp("creation_time").toLocalDateTime(),
+                rs.getTimestamp("modified_time") != null ? rs.getTimestamp("modified_time").toLocalDateTime() : null,
                 rs.getLong("view_count")
         );
     }

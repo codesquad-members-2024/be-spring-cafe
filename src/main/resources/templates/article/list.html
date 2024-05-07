@@ -38,12 +38,17 @@
                     <tbody>
                     <tr th:each="article: ${articleList}">
                         <td>
-                            <a th:href="@{/article/show/{articleId}(articleId=${article.getId()})}"
+                            <a th:href="@{/article/{articleId}(articleId=${article.getId()})}"
                                th:text="${article.getTitle()}">Title
                             </a>
                         </td>
                         <td th:text="${article.getUserId()}"></td>
-                        <td th:text="${article.getFormattedCreationTime()}"></td>
+                        <td th:if="${article.isModified()}"
+                            th:text="${article.getFormattedModifiedTime()}">>
+                        </td>
+                        <td th:unless="${article.isModified()}"
+                            th:text="${article.getFormattedCreationTime()}">>
+                        </td>
                         <td th:text="${article.getViewCount()}"></td>
                     </tr>
                     </tbody>

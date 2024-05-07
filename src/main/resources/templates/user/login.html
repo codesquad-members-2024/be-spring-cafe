@@ -31,7 +31,7 @@
             </div>
             <span class="error-message" style="margin-top: 10px; color:red" th:errors="*{userPassword}"></span>
             <div class="field-error" th:if="${#fields.hasGlobalErrors()}">
-                <p th:each="err:${#fields.globalErrors()}" th:text="${err}"></p>
+                <p th:each="err:${#fields.globalErrors()}" th:text="${err}" style="color: red"></p>
             </div>
             <button type="submit" class="btn btn-success clearfix pull-right">완료</button>
         </form>

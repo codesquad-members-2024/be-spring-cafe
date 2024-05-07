@@ -18,6 +18,6 @@ public class AppConfig implements WebMvcConfigurer {
         registry.addInterceptor(new UserUpdateInterceptor()).order(2)
                 .addPathPatterns("/users/match-pw/**", "/users/update/**");
         registry.addInterceptor(new ArticlePermissionInterceptor()).order(3)
-                .addPathPatterns("/article/update/**", "/article/delete/**");
+                .addPathPatterns("/article/update/**");
     }
 }

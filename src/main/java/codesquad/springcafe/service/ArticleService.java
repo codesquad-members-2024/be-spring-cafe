@@ -1,13 +1,13 @@
 package codesquad.springcafe.service;
 
-import codesquad.springcafe.exception.service.DuplicateUserIdException;
+import codesquad.springcafe.exception.service.DuplicateArticleIdException;
 import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.ListArticle;
 import codesquad.springcafe.model.UpdatedArticle;
 import java.util.List;
 
 public interface ArticleService {
-    void addArticle(Article article) throws DuplicateUserIdException;
+    void addArticle(Article article) throws DuplicateArticleIdException;
 
     Article findArticleById(long id);
 
