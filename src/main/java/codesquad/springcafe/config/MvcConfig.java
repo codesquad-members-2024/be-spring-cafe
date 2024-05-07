@@ -25,7 +25,7 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(new AuthInterceptor())
             .addPathPatterns("/**")
             .excludePathPatterns("/css/**", "/js/**", "/fonts/**", "/images/**")
-            .excludePathPatterns("/", "/users/form", "/users", "/users/login", "/login");
+            .excludePathPatterns("/", "/users/form", "/users", "/users/login", "/login", "/page/**");
     }
 }
 

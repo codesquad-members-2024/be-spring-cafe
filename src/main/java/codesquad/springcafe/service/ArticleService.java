@@ -1,8 +1,9 @@
 package codesquad.springcafe.service;
 
 import codesquad.springcafe.model.Article;
-import codesquad.springcafe.model.Reply;
 import codesquad.springcafe.repository.article.ArticleRepository;
+import codesquad.springcafe.util.PageRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,11 @@ public class ArticleService {
     }
 
     public List<Article> findAll() {
-        return articleRepository.getAll();
+        return new ArrayList<>(articleRepository.getAll());
+    }
+
+    public List<Article> findAllByPaging(PageRequest pageRequest) {
+        return new ArrayList<>(articleRepository.getAllByPaging(pageRequest));
     }
 
     public Article findById(Long id) {
@@ -37,5 +42,14 @@ public class ArticleService {
 
     public void delete(Long id) {
         articleRepository.removeSoft(id);
+    }
+
+    public Long getTotalCount() {
+        return (long) findAll().size();
+    }
+
+    public Long getLastId() {
+        return findAll().stream()
+            .mapToLong(Article::getId).max().orElse(0L);
     }
 }

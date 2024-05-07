@@ -58,7 +58,7 @@ function onAddReplySuccess(data, status) {
   console.log(data);
   var replyTemplate = $("#replyTemplate").html();
   var template = replyTemplate.format(data.articleId, data.index, data.writer, data.content, data.formattedTimestamp);
-  $(".qna-comment-slipp-articles").append(template)
+  $(".qna-comment-slipp-articles").prepend(template);
   $("textarea[name=content]").val("");
   updateReplyCount(data.articleId);
 }
@@ -74,7 +74,6 @@ function updateReplyCount(articleId) {
     dataType: 'json',
     error: onError,
     success: function(response) {
-      // 서버로부터의 응답에서 새로운 댓글 수를 가져옵니다.
       var newCommentCount = response;
       $("#numberOfReplies strong").text(newCommentCount);
     }

@@ -64,6 +64,6 @@ public class Reply implements Comparable<Reply> {
 
     @Override
     public int compareTo(Reply other) {
-        return Long.compare(index, other.index);
+        return Long.compare(other.index, index);
     }
 }

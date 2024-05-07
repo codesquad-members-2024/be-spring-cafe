@@ -8,6 +8,8 @@ import codesquad.springcafe.model.Article;
 import codesquad.springcafe.model.Reply;
 import codesquad.springcafe.service.ArticleService;
 import codesquad.springcafe.service.ReplyService;
+import codesquad.springcafe.util.ArticlePage;
+import codesquad.springcafe.util.PageRequest;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,7 @@ public class ArticleController {
 
     @PostMapping("articles")
     public String upload(@ModelAttribute("article") ArticleUploadDTO articleUploadDTO, HttpSession session) {
-        Long lastId = getLastId();
+        Long lastId = articleService.getLastId();
         Article newArticle = articleUploadDTO.toArticle(++lastId);
         String loggedInUser = (String) session.getAttribute("loggedInUser");
         if (!newArticle.isWrittenBy(loggedInUser)) {
@@ -44,10 +46,17 @@ public class ArticleController {
         return "redirect:/";
     }
 
-    @GetMapping("")
-    public String showList(Model model) {
-        List<ArticleInfoDTO> articles = articleService.findAll().stream().map(Article::toDTO).toList();
+    @GetMapping(value = {"/", "/page/{pageNumber}"})
+    public String showPage(Model model, @PathVariable(required = false) Long pageNumber) {
+        PageRequest pageRequest = getPageRequest(pageNumber);
+
+        List<ArticleInfoDTO> articles = articleService.findAllByPaging(pageRequest).stream()
+            .map(Article::toDTO).toList();
+        ArticlePage targetArticlePage = new ArticlePage(pageRequest, articleService.getTotalCount());
+
         model.addAttribute("articles", articles);
+        model.addAttribute("pageInfo", targetArticlePage);
+
         return "index";
     }
 
@@ -108,12 +117,16 @@ public class ArticleController {
         return "redirect:/articles/{id}";
     }
 
-    private Long getLastId() {
-        return articleService.findAll().stream()
-            .mapToLong(Article::getId).max().orElse(0L);
-    }
-
     private boolean hasExternalReplies(List<Reply> replies, String loggedInUser) {
         return !replies.isEmpty() && !replies.stream().allMatch(reply -> reply.isWrittenBy(loggedInUser));
+    }
+
+    private PageRequest getPageRequest(Long pageNumber) {
+        int pageSize = 15;
+        int buttonCount = 5;
+        if (pageNumber == null) {
+            return new PageRequest(1L, pageSize, buttonCount);
+        }
+        return new PageRequest(pageNumber, pageSize, buttonCount);
     }
 }

@@ -104,7 +104,7 @@ public class UserController {
         }
         session.setAttribute("loggedInUser", loggedInUser.get().getUserId());
         String requestedUrl = (String) session.getAttribute("requestedUrl");
-        if (requestedUrl == null || requestedUrl.isEmpty()) {
+        if (requestedUrl == null || requestedUrl.isEmpty() || requestedUrl.contains(".")) {
             return "redirect:/";
         }
         return "redirect:" + requestedUrl;
