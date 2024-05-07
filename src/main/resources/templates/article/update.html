@@ -21,7 +21,7 @@
             <p class="title">글 수정하기</p>
         </header>
 
-        <form th:action="@{'/articles/' + ${article.getId()} + '/update'}" class="submit-write" method="post">
+        <form th:action="@{'/articles/' + ${article.getArticleId()} + '/update'}" class="submit-write" method="post">
             <input type="hidden" name="_method" value="PUT"/>
 
             <div class="text-box">

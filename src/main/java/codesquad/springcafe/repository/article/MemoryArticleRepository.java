@@ -2,7 +2,6 @@ package codesquad.springcafe.repository.article;
 
 import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.dto.ArticleDto;
-import codesquad.springcafe.error.exception.ArticleNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +16,7 @@ public class MemoryArticleRepository implements ArticleRepository {
     @Override
     public void createArticle(Article article) {
         long id = articles.size() + 1;
-        article.setId(id);
+        article.setArticleId(id);
         articles.put(id, article);
     }
 
@@ -27,25 +26,25 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public Optional<Article> findById(long id) {
-        return Optional.ofNullable(articles.get(id));
+    public Optional<Article> findByArticleId(long articleId) {
+        return Optional.ofNullable(articles.get(articleId));
     }
 
     @Override
-    public void updateViews(long id) {
-        Article article = findById(id).orElseThrow(() -> new ArticleNotFoundException(id + " ID 게시글이 존재하지 않습니다."));
-        article.setViews(article.getViews() + 1);
+    public void updateViews(long articleId) {
+        Optional<Article> optionalArticle = findByArticleId(articleId);
+        optionalArticle.ifPresent(article -> article.setViews(article.getViews() + 1));
     }
 
     @Override
-    public void updateArticle(long id, ArticleDto articleDto) {
-        Article article = findById(id).orElseThrow(() -> new ArticleNotFoundException(id + " ID 게시글이 존재하지 않습니다."));
-        article.update(articleDto);
+    public void updateArticle(long articleId, ArticleDto articleDto) {
+        Optional<Article> optionalArticle = findByArticleId(articleId);
+        optionalArticle.ifPresent(article -> article.update(articleDto));
     }
 
     @Override
-    public void deleteArticle(long id) {
-        Article article = findById(id).orElseThrow(() -> new ArticleNotFoundException(id + " ID 게시글이 존재하지 않습니다."));
-        articles.remove(id);
+    public void deleteArticle(long articleId) {
+        Optional<Article> optionalArticle = findByArticleId(articleId);
+        optionalArticle.ifPresent(article -> articles.remove(articleId));
     }
 }

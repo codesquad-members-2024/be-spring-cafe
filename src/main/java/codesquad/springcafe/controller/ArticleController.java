@@ -1,11 +1,15 @@
 package codesquad.springcafe.controller;
 
 import codesquad.springcafe.domain.Article;
+import codesquad.springcafe.domain.Reply;
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.dto.ArticleDto;
 import codesquad.springcafe.error.exception.AccessDeniedException;
+import codesquad.springcafe.error.exception.UserNotFoundException;
 import codesquad.springcafe.service.ArticleService;
+import codesquad.springcafe.service.ReplyService;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,10 +25,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/articles")
 public class ArticleController {
     private final ArticleService articleService;
+    private final ReplyService replyService;
 
     @Autowired
-    public ArticleController(ArticleService articleService) {
+    public ArticleController(ArticleService articleService, ReplyService replyService) {
         this.articleService = articleService;
+        this.replyService = replyService;
     }
 
     @GetMapping("/create")
@@ -35,61 +41,76 @@ public class ArticleController {
     @PostMapping("/create")
     public String createArticle(@ModelAttribute ArticleDto articleDto, HttpSession session) {
         User loginUser = (User) session.getAttribute("user");
-        String userId = loginUser.getUserId();
+        if (loginUser == null) {
+            throw new UserNotFoundException("로그인 사용자가 존재하지 않습니다.");
+        }
 
-        Article article = new Article(userId, articleDto);
+        Article article = new Article(loginUser.getUserId(), articleDto);
         articleService.createArticle(article);
 
         return "redirect:/";
     }
 
-    @GetMapping("/{id}")
-    public String showArticle(@PathVariable long id, Model model, HttpSession session) {
-        articleService.updateViews(id); // 조회수 먼저 업데이트
+    @GetMapping("/{articleId}")
+    public String showArticle(@PathVariable long articleId, Model model, HttpSession session) {
+        articleService.updateViews(articleId); // 조회수 먼저 업데이트
 
-        Article article = articleService.findById(id);
+        Article article = articleService.findByArticleId(articleId);
         model.addAttribute("article", article);
 
+        List<Reply> replies = replyService.findRepliesByArticleId(articleId);
+        model.addAttribute("replies", replies);
+
         User loginUser = (User) session.getAttribute("user");
-        if (loginUser != null && article.isWriter(loginUser.getUserId())) {
-            model.addAttribute("writer", true);
+        if (loginUser == null) {
+            throw new UserNotFoundException("로그인 사용자가 존재하지 않습니다.");
         }
+
+        if (article.isWriter(loginUser.getUserId())) {
+            model.addAttribute("isWriter", true);
+        }
+        model.addAttribute("user", loginUser);
 
         return "article/page";
     }
 
-    @GetMapping("/{id}/update")
-    public String updateArticleForm(@PathVariable long id, Model model, HttpSession session) {
-        User loginUser = (User) session.getAttribute("user");
+    @GetMapping("/{articleId}/update")
+    public String updateArticleForm(@PathVariable long articleId, Model model, HttpSession session) {
+        validateAuth(session, articleId);
 
-        Article article = articleService.findById(id);
-        if (!article.isWriter(loginUser.getUserId())) {
-            throw new AccessDeniedException("게시글 수정에 대한 권한이 없습니다.");
-        }
-
+        Article article = articleService.findByArticleId(articleId);
         model.addAttribute("article", article);
 
         return "article/update";
     }
 
-    @PutMapping("/{id}/update")
-    public String updateArticle(@PathVariable long id, @ModelAttribute ArticleDto articleDto) {
-        articleService.updateArticle(id, articleDto);
+    @PutMapping("/{articleId}/update")
+    public String updateArticle(@PathVariable long articleId, @ModelAttribute ArticleDto articleDto,
+                                HttpSession session) {
+        validateAuth(session, articleId);
+        articleService.updateArticle(articleId, articleDto);
 
-        return "redirect:/articles/{id}";
+        return "redirect:/articles/{articleId}";
     }
 
-    @DeleteMapping("/{id}")
-    public String deleteArticle(@PathVariable long id, HttpSession session) {
-        User loginUser = (User) session.getAttribute("user");
-
-        Article article = articleService.findById(id);
-        if (!article.isWriter(loginUser.getUserId())) {
-            throw new AccessDeniedException("게시글 삭제에 대한 권한이 없습니다.");
-        }
-
-        articleService.deleteArticle(id);
+    @DeleteMapping("/{articleId}")
+    public String deleteArticle(@PathVariable long articleId, HttpSession session) {
+        validateAuth(session, articleId);
+        articleService.deleteArticle(articleId);
 
         return "redirect:/";
+    }
+
+    private void validateAuth(HttpSession session, long articleId) {
+        User loginUser = (User) session.getAttribute("user");
+        if (loginUser == null) {
+            throw new UserNotFoundException("로그인 사용자가 존재하지 않습니다.");
+        }
+
+        Article article = articleService.findByArticleId(articleId);
+
+        if (!article.isWriter(loginUser.getUserId())) {
+            throw new AccessDeniedException("게시글 접근 권한이 없습니다.");
+        }
     }
 }

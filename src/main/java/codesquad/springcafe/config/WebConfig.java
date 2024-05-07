@@ -1,6 +1,6 @@
 package codesquad.springcafe.config;
 
-import codesquad.springcafe.interceptor.AuthorizationInterceptor;
+import codesquad.springcafe.config.interceptor.AuthorizationInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

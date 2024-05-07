@@ -40,16 +40,19 @@ public class JdbcUserRepository implements UserRepository {
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(SQL, rowMapper(), userId));
         } catch (EmptyResultDataAccessException ex) {
-            throw new UserNotFoundException(userId + "의 사용자가 존재하지 않습니다.");
+            return Optional.empty();
         }
     }
 
     @Override
     public void updateUser(String userId, UserUpdateDto userUpdateDto) {
         String SQL = "UPDATE users SET password = ?, nickname = ?, email = ? WHERE user_id = ?";
-        jdbcTemplate.update(SQL, userUpdateDto.getPassword(), userUpdateDto.getNickname(),
+        int update = jdbcTemplate.update(SQL, userUpdateDto.getPassword(), userUpdateDto.getNickname(),
                 userUpdateDto.getEmail(),
                 userId);
+        if (update == 0) {
+            throw new UserNotFoundException(userId + "의 사용자가 존재하지 않습니다.");
+        }
     }
 
     private RowMapper<User> rowMapper() {

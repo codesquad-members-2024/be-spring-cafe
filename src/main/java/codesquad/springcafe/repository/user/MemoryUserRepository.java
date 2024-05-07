@@ -2,7 +2,6 @@ package codesquad.springcafe.repository.user;
 
 import codesquad.springcafe.domain.User;
 import codesquad.springcafe.dto.UserUpdateDto;
-import codesquad.springcafe.error.exception.UserNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +28,7 @@ public class MemoryUserRepository implements UserRepository {
 
     @Override
     public void updateUser(String userId, UserUpdateDto userUpdateDto) {
-        User user = findByUserId(userId).orElseThrow(() -> new UserNotFoundException(userId + "의 사용자가 존재하지 않습니다."));
-        user.update(userUpdateDto);
+        Optional<User> optionalUser = findByUserId(userId);
+        optionalUser.ifPresent(user -> user.update(userUpdateDto));
     }
 }

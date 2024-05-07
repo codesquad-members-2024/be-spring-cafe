@@ -29,10 +29,11 @@
                                 <p class="article-content" th:text="${article.getWriter()}">작성자</p>
                                 <p class="article-content" th:text="${article.getCreatedDate()}">작성일자</p>
                                 <p class="article-content" th:text="${article.getViews()}">조회수</p>
-                                <div th:if="${writer}" style="display: flex;">
+                                <div th:if="${isWriter}" style="display: flex;">
                                     <a class="black-component" style="margin-left: 10px"
-                                       th:href="@{/articles/{id}/update(id=${article.getId()})}">수정하기</a>
-                                    <form method="post" th:action="@{/articles/{id}(id=${article.getId()})}"
+                                       th:href="@{/articles/{articleId}/update(articleId=${article.getArticleId()})}">수정하기</a>
+                                    <form method="post"
+                                          th:action="@{/articles/{articleId}(articleId=${article.getArticleId()})}"
                                           style="margin-left: 10px;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button type="submit" class="black-component">삭제하기</button>
@@ -48,27 +49,36 @@
 
                     <div class="post-comment">
                         <div class="post-comment-slipp">
-                            <p class="post-comment-count">댓글 1개</p>
+                            <p class="post-comment-count">댓글 <span th:text="${replies.size()}"></span>개</p>
                             <div class="post-comment-slipp-articles">
-
-                                <article class="comment">
-                                    <div class="article-text">
-                                        <p class="comment-content comment-author-name">자바지기</p>
-                                        <div class="comment-content comment-doc">
-                                            <p>이 글만으로는 원인 파악하기 힘들겠다. 소스 코드와 설정을 단순화해서 공유해 주면 같이 디버깅해줄 수도 있겠다.</p>
-                                        </div>
-                                        <p class="comment-content comment-time">
-                                            2016-01-12 14:06
+                                <article class="comment" th:each="reply: ${replies}">
+                                    <div class="article-text" th:inline="text">
+                                        <p class="comment-content comment-author-name"
+                                           th:text="${reply.getWriter()}">
                                         </p>
+                                        <div class="comment-content comment-doc">
+                                            <p th:text="${reply.getContent()}"></p>
+                                        </div>
+                                        <p class="comment-content comment-time" th:text="${reply.getCreatedDate()}">
+                                        </p>
+                                        <form method="post"
+                                              th:action="@{/articles/{articleId}/reply/{replyId}(articleId=${article.getArticleId()}, replyId=${reply.getReplyId()})}"
+                                              style="margin-left: 10px;">
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <button type="submit" class="black-component">삭제하기</button>
+                                        </form>
                                     </div>
                                 </article>
 
-                                <form class="submit-write" method="get" th:action="@{/}">
+                                <form class="submit-write" method="post"
+                                      th:action="@{/articles/{articleId}/reply(articleId=${article.getArticleId()})}">
                                     <div class="comment-writer-container">
-                                        <input class="comment-writer" id="writer" name="writer" value="멋진상" readonly/>
+                                        <input class="comment-writer" id="writer" name="writer"
+                                               th:value="${user.getUserId()}"
+                                               readonly/>
                                     </div>
                                     <div class="form-group">
-                                                            <textarea class="form-control" id="comment" name="comment"
+                                                            <textarea class="form-control" id="content" name="content"
                                                                       placeholder="내용을 입력하세요"></textarea>
                                     </div>
                                     <input class="post-write-btn" type="submit" value="등록"/>
@@ -80,5 +90,6 @@
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

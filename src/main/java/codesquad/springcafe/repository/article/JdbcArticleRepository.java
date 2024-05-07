@@ -3,6 +3,7 @@ package codesquad.springcafe.repository.article;
 import codesquad.springcafe.domain.Article;
 import codesquad.springcafe.dto.ArticleDto;
 import codesquad.springcafe.error.exception.ArticleNotFoundException;
+import codesquad.springcafe.error.exception.ReplyNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -23,65 +24,69 @@ public class JdbcArticleRepository implements ArticleRepository {
 
     @Override
     public void createArticle(Article article) {
-        String SQL = "INSERT INTO article (writer, title, content, views, createdDate, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?)";
+        String SQL = "INSERT INTO article (writer, title, content, views, deleted, createdDate, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(SQL, article.getWriter(), article.getTitle(), article.getContent(), article.getViews(),
-                article.getCreatedDate(), article.getLastModifiedDate());
+                false, article.getCreatedDate(), article.getLastModifiedDate());
     }
 
     @Override
     public List<Article> findAllArticles() {
-        String SQL = "SELECT * FROM article";
+        String SQL = "SELECT * FROM article WHERE deleted = false";
         return jdbcTemplate.query(SQL, rowMapper());
     }
 
     @Override
-    public Optional<Article> findById(long id) {
-        String SQL = "SELECT * FROM article WHERE id = ?";
+    public Optional<Article> findByArticleId(long articleId) {
+        String SQL = "SELECT * FROM article WHERE article_id = ?";
         try {
-            Article article = jdbcTemplate.queryForObject(SQL, rowMapper(), id);
+            Article article = jdbcTemplate.queryForObject(SQL, rowMapper(), articleId);
             return Optional.ofNullable(article);
         } catch (EmptyResultDataAccessException e) {
-            throw new ArticleNotFoundException(id + " ID 게시글이 존재하지 않습니다.");
+            return Optional.empty();
         }
     }
 
     @Override
-    public void updateViews(long id) {
-        String SQL = "UPDATE article SET views = views+1 WHERE id = ?";
-        int update = jdbcTemplate.update(SQL, id);
+    public void updateViews(long articleId) {
+        String SQL = "UPDATE article SET views = views+1 WHERE article_id = ?";
+        int update = jdbcTemplate.update(SQL, articleId);
         if (update == 0) {
-            throw new ArticleNotFoundException(id + " ID 게시글이 존재하지 않습니다.");
+            throw new ArticleNotFoundException(articleId + " ID 게시글이 존재하지 않습니다.");
         }
     }
 
     @Override
-    public void updateArticle(long id, ArticleDto articleDto) {
-        String SQL = "UPDATE article SET title = ?, content = ? WHERE id = ?";
-        int update = jdbcTemplate.update(SQL, articleDto.getTitle(), articleDto.getContent(), id);
+    public void updateArticle(long articleId, ArticleDto articleDto) {
+        String SQL = "UPDATE article SET title = ?, content = ? WHERE article_id = ?";
+        int update = jdbcTemplate.update(SQL, articleDto.getTitle(), articleDto.getContent(), articleId);
         if (update == 0) {
-            throw new ArticleNotFoundException(id + " ID 게시글이 존재하지 않습니다.");
+            throw new ArticleNotFoundException(articleId + " ID 게시글이 존재하지 않습니다.");
         }
     }
 
     @Override
-    public void deleteArticle(long id) {
-        String SQL = "DELETE FROM article WHERE id = ?";
-        int update = jdbcTemplate.update(SQL, id);
+    public void deleteArticle(long articleId) {
+        String SQL = "UPDATE article SET deleted = true WHERE article_id = ?";
+        int update = jdbcTemplate.update(SQL, articleId);
         if (update == 0) {
-            throw new ArticleNotFoundException(id + " ID 게시글이 존재하지 않습니다.");
+            throw new ArticleNotFoundException(articleId + " ID 게시글이 존재하지 않습니다.");
         }
+
+        String SQL2 = "UPDATE reply SET deleted = true WHERE article_Id = ?";
+        jdbcTemplate.update(SQL2, articleId);
     }
 
     private RowMapper<Article> rowMapper() {
         return (rs, rowNum) -> {
-            long id = rs.getLong("id");
+            long articleId = rs.getLong("article_Id");
             String writer = rs.getString("writer");
             String title = rs.getString("title");
             String content = rs.getString("content");
             long views = rs.getLong("views");
+            boolean deleted = rs.getBoolean("deleted");
             LocalDateTime createdDate = rs.getTimestamp("createdDate").toLocalDateTime();
             LocalDateTime lastModifiedDate = rs.getTimestamp("lastModifiedDate").toLocalDateTime();
-            return new Article(id, writer, title, content, views, createdDate, lastModifiedDate);
+            return new Article(articleId, writer, title, content, views, deleted, createdDate, lastModifiedDate);
         };
     }
 }

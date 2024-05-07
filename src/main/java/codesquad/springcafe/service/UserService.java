@@ -1,7 +1,9 @@
 package codesquad.springcafe.service;
 
 import codesquad.springcafe.domain.User;
+import codesquad.springcafe.dto.UserLoginDto;
 import codesquad.springcafe.dto.UserUpdateDto;
+import codesquad.springcafe.error.exception.AccessDeniedException;
 import codesquad.springcafe.error.exception.UserNotFoundException;
 import codesquad.springcafe.repository.user.UserRepository;
 import java.util.List;
@@ -31,13 +33,33 @@ public class UserService {
 
     public User findByUserId(String userId) {
         User user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId + "의 사용자가 존재하지 않습니다."));
+                .orElseThrow(() -> new UserNotFoundException(userId + " 사용자가 존재하지 않습니다."));
+
         logger.debug("ID {} 사용자 조회", userId);
         return user;
     }
 
-    public void updateUser(String userId, UserUpdateDto userUpdateDto) {
-        userRepository.updateUser(userId, userUpdateDto);
-        logger.debug("ID {} 사용자 정보 수정", userId);
+    public User loginUser(UserLoginDto userLoginDto) {
+        User user = findByUserId(userLoginDto.getUserId());
+
+        if (!user.matchPassword(userLoginDto.getPassword())) {
+            throw new AccessDeniedException(user.getUserId() + " 사용자의 비밀번호가 틀렸습니다.");
+        }
+
+        logger.debug("ID {} 사용자 로그인", user.getUserId());
+        return user;
+    }
+
+    public void updateUser(User loginUser, UserUpdateDto userUpdateDto) {
+        if (loginUser == null) {
+            throw new UserNotFoundException("로그인 사용자가 존재하지 않습니다.");
+        }
+
+        if (!loginUser.matchPassword(userUpdateDto.getOldPassword())) {
+            throw new AccessDeniedException(loginUser.getUserId() + " 사용자의 비밀번호가 틀렸습니다.");
+        }
+
+        userRepository.updateUser(loginUser.getUserId(), userUpdateDto);
+        logger.debug("ID {} 사용자 정보 수정", loginUser.getUserId());
     }
 }
