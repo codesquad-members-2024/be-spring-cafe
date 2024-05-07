@@ -1,26 +1,27 @@
-package codesquad.springcafe.articles.model;
+package codesquad.springcafe.replies.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Reply {
     private long replyId;
     private final long articleId;
     private final String userId;
     private final String comment;
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
 
     public Reply(long articleId, String userId, String comment) {
         this.articleId = articleId;
         this.userId = userId;
         this.comment = comment;
-        this.creationDate = LocalDate.now();
+        this.creationDate = LocalDateTime.now();
     }
 
     public void setReplyId(long replyId) {
         this.replyId = replyId;
     }
 
-    public void setCreationDate(LocalDate creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -40,7 +41,8 @@ public class Reply {
         return comment;
     }
 
-    public LocalDate getCreationDate() {
-        return creationDate;
+    public String getCreationDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return this.creationDate.format(formatter);
     }
 }

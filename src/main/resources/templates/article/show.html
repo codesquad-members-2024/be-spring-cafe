@@ -9,6 +9,8 @@
     <!--[if lt IE 9]>
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/reply/reply-script.js"></script>
     <link href="/css/post/show.css" rel="stylesheet">
 </head>
 <body>
@@ -21,6 +23,7 @@
     </nav>
 
     <div class="container" id="main">
+        <div class="my"></div>
         <div class="col-md-12 col-sm-12 col-lg-12">
             <div class="panel panel-default">
                 <header class="post-header">
@@ -40,7 +43,7 @@
                                 <button class="article-button adjust-btn-color"
                                         onclick=window.location.href='/articles/update/{{article.getArticleId}}'>수정
                                 </button>
-                                <form id="deleteForm" method="POST" action="/articles/delete/{{article.getArticleId}}">
+                                <form id="deleteForm" method="POST" action="/articles/{{article.getArticleId}}">
                                     <input type="hidden" name="_method" value="DELETE">
                                     <button type="submit" class="article-button delete-btn-color">삭제</button>
                                 </form>
@@ -54,23 +57,26 @@
                     <div class="post-comment">
                         <div class="post-comment-slipp">
                             <p class="post-comment-count">댓글 {{totalReplies}}개</p>
+
                             <div class="post-comment-slipp-articles">
-
+                                {{#replies}}
                                 {{ >base/replyList}}
+                                {{/replies}}
+                                {{ >base/replyPartial}}
+                            </div>
 
-                                <form class="submit-write" method="post"
-                                      action="/articles/{{article.getArticleId}}/answers">
-                                    <div class="comment-writer-container">
-                                        <input class="comment-writer" id="writer" name="writer"
-                                               value="{{ sessionedUser.getUserId}}" readonly/>
-                                    </div>
-                                    <div class="form-group">
+                            <form class="submit-write" id="reply-form" method="post"
+                                  action="/api/articles/{{article.getArticleId}}/replies">
+                                <div class="comment-writer-container">
+                                    <input class="comment-writer" id="writer" name="writer"
+                                           value="{{ sessionedUser.getUserId}}" readonly/>
+                                </div>
+                                <div class="form-group">
                                         <textarea class="form-control" id="comment" name="comment"
                                                   placeholder="내용을 입력하세요"></textarea>
-                                    </div>
-                                    <input class="post-write-btn" type="submit" value="등록"/>
-                                </form>
-                            </div>
+                                </div>
+                                <input class="post-write-btn" type="submit" value="등록"/>
+                            </form>
                         </div>
                     </div>
                 </div>

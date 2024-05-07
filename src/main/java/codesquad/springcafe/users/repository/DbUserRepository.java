@@ -4,7 +4,6 @@ import codesquad.springcafe.users.model.User;
 import codesquad.springcafe.users.model.data.UserCredentialData;
 import codesquad.springcafe.users.model.dto.UserPreviewDto;
 import codesquad.springcafe.users.model.dto.UserUpdateDto;
-import codesquad.springcafe.users.model.dto.UserUpdateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +13,15 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 
 
 @Primary
 @Repository
-public class H2UserRepository implements UserRepository {
-    private static final Logger logger = LoggerFactory.getLogger(H2UserRepository.class);
+public class DbUserRepository implements UserRepository {
+    private static final Logger logger = LoggerFactory.getLogger(DbUserRepository.class);
     private static final String USERID = "USERID";
     private static final String NAME = "NAME";
     private static final String EMAIL = "EMAIL";
@@ -31,14 +31,14 @@ public class H2UserRepository implements UserRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public H2UserRepository(JdbcTemplate jdbcTemplate) {
+    public DbUserRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public void createUser(User user) {
         String sql = "INSERT INTO USERS (USERID, EMAIL, NAME, HASHEDPASSWORD, CREATIONDATE) VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, user.getUserId(), user.getEmail(), user.getName(), user.getHashedPassword(), user.getCreationDate().toString());
+        jdbcTemplate.update(sql, user.getUserId(), user.getEmail(), user.getName(), user.getHashedPassword(), user.getCreationDate());
     }
 
     @Override
@@ -55,7 +55,7 @@ public class H2UserRepository implements UserRepository {
             if (rs.next()) {
                 String name = rs.getString(NAME);
                 String email = rs.getString(EMAIL);
-                String creationDate = rs.getString(CREATIONDATE);
+                LocalDateTime creationDate = rs.getTimestamp(CREATIONDATE).toLocalDateTime();
                 return Optional.of(new UserPreviewDto(userId, name, email, creationDate));
             }
             return Optional.empty();
@@ -85,7 +85,7 @@ public class H2UserRepository implements UserRepository {
             String userId = rs.getString(USERID);
             String name = rs.getString(NAME);
             String email = rs.getString(EMAIL);
-            String creationDate = rs.getString(CREATIONDATE);
+            LocalDateTime creationDate = rs.getTimestamp(CREATIONDATE).toLocalDateTime();
             return new UserPreviewDto(userId, name, email, creationDate);
         }
     }

@@ -1,26 +1,25 @@
 package codesquad.springcafe.articles.model;
 
-import org.springframework.cglib.core.Local;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Article {
     private long articleId;
     private String userId;
     private String title;
     private String content;
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
     private long pageViews;
 
     public Article(String userId, String title, String content) {
         this.userId = userId;
         this.title = title;
         this.content = content;
-        this.creationDate = LocalDate.now();
+        this.creationDate = LocalDateTime.now();
         this.pageViews = 0;
     }
 
-    public void setCreationDate(LocalDate creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -45,7 +44,6 @@ public class Article {
         return "userId : " + userId + ", title : " + title + ", content : " + content + ", creatinDate : " + creationDate;
     }
 
-
     public long getArticleId() {
         return articleId;
     }
@@ -62,8 +60,9 @@ public class Article {
         return content;
     }
 
-    public LocalDate getCreationDate() {
-        return creationDate;
+    public String getCreationDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return this.creationDate.format(formatter);
     }
 
     public long getPageViews() {

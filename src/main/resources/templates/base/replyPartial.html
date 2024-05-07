@@ -1,0 +1,20 @@
+<div id="comment-template" style="display: none">
+    <article class="comment">
+        <div class="article-text">
+        <span class="article-content-header">
+            <p class="comment-content comment-author-name">{userId}</p>
+            <button class="reply-btn adjust-btn-color">수정</button>
+                <form id="deleteForm" method="POST" action="/api/articles/{articleId}/replies/{replyId}">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="reply-btn delete-btn-color" id="reply-delete-btn">삭제</button>
+                </form>
+        </span>
+            <div class="comment-content comment-doc">
+                <p>{comment}</p>
+            </div>
+            <p class="comment-content comment-time">
+                {creationDate}
+            </p>
+        </div>
+    </article>
+</div>

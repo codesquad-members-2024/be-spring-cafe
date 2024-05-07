@@ -1,4 +1,4 @@
-package codesquad.springcafe.articles.model.dto;
+package codesquad.springcafe.replies.model.dto;
 
 public class ReplyCreationRequest {
     private final String writer;    // 작성자 [userId]

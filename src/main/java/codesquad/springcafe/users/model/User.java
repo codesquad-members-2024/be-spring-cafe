@@ -5,6 +5,7 @@ import codesquad.springcafe.users.model.dto.UserUpdateRequest;
 
 import java.security.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Base64;
 
 public class User {
@@ -12,18 +13,14 @@ public class User {
     private String email;   // 이메일
     private String name;  // 닉네임
     private String hashedPassword;    // 해싱된 비밀번호
-    private LocalDate creationDate; // 생성일 -> 외부에서 생성한 시간을 수정하지못하도록 내부에서 생성
+    private LocalDateTime creationDate; // 생성일 -> 외부에서 생성한 시간을 수정하지못하도록 내부에서 생성
 
     public User(String userId, String email, String name, String password) {
         this.userId = userId;
         this.email = email;
         this.name = name;
         this.hashedPassword = password;
-        this.creationDate = LocalDate.now(); // 현재 날짜를 사용하여 초기화
-    }
-
-    public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
+        this.creationDate = LocalDateTime.now(); // 현재 날짜를 사용하여 초기화
     }
 
     @Override
@@ -48,15 +45,7 @@ public class User {
         return hashedPassword;
     }
 
-    public LocalDate getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
-
-    public void updateUser(UserUpdateDto updateDto) {
-        this.name = updateDto.getNewName();
-        this.email = updateDto.getNewEmail();
-        this.hashedPassword = updateDto.getNewPassword();
-    }
-
-
 }
