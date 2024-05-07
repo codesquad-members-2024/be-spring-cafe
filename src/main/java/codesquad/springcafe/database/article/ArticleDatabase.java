@@ -24,7 +24,15 @@ public interface ArticleDatabase {
 
     void clear();
 
-    List<Long> findAllId();
-
     Long countTotalArticles();
+
+    String findWriter(Long id);
+
+    Long countSearchedArticlesByTitleContent(String keyword);
+
+    List<Article> findSearchedPageArticlesByTitleContent(String keyword, Long offset, int articlesPerPage);
+
+    Long countSearchedArticlesByWriter(String keyword);
+
+    List<Article> findSearchedPageArticlesByWriter(String keyword, Long offset, int articlesPerPage);
 }

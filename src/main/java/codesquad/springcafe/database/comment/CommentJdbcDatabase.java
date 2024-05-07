@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -16,8 +15,8 @@ import org.springframework.stereotype.Repository;
 public class CommentJdbcDatabase implements CommentDatabase {
     private final JdbcTemplate jdbcTemplate;
 
-    public CommentJdbcDatabase(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public CommentJdbcDatabase(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -76,17 +75,29 @@ public class CommentJdbcDatabase implements CommentDatabase {
         String sql = "SELECT COUNT(*) FROM comments WHERE article_id = ? AND is_deleted = false";
         return jdbcTemplate.queryForObject(sql, Long.class, articleId);
     }
-//
-//    @Override
-//    public void deleteArticle(Long id) {
-//        String sql = "DELETE FROM comments WHERE id = ?";
-//        jdbcTemplate.updateArticle(sql, id);
-//    }
 
     @Override
     public void clear() {
         String sql = "DELETE FROM comments";
         jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public String findWriter(Long id) {
+        String sql = "SELECT writer FROM comments WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, id);
+    }
+
+    @Override
+    public void softDeleteComments(Long articleId) {
+        String sql = "UPDATE comments SET is_deleted = true WHERE article_id = ?";
+        jdbcTemplate.update(sql, articleId);
+    }
+
+    @Override
+    public List<String> findWriters(Long articleId) {
+        String sql = "SELECT writer FROM comments WHERE article_id = ?";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getString("writer"), articleId);
     }
 
     private RowMapper<Comment> commentRowMapper() {

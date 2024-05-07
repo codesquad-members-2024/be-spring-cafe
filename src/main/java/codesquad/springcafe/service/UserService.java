@@ -1,6 +1,7 @@
 package codesquad.springcafe.service;
 
 import codesquad.springcafe.database.user.UserDatabase;
+import codesquad.springcafe.exception.UserAccessException;
 import codesquad.springcafe.exception.UserNotFoundException;
 import codesquad.springcafe.form.user.UserAddForm;
 import codesquad.springcafe.form.user.UserEditForm;
@@ -30,15 +31,23 @@ public class UserService {
         return user;
     }
 
-    public User getUserByNickname(String nickname) {
+    public User findUserByNickname(String nickname) {
         return userDatabase.findByNickname(nickname).orElseThrow(() -> new UserNotFoundException(nickname));
     }
 
-    public User updateUser(User targetUser, UserEditForm userEditForm) {
+    public User updateUser(String accessNickname, User targetUser, UserEditForm userEditForm) {
+        validateAccess(targetUser, accessNickname);
+
         User updateUser = targetUser.update(userEditForm.getNickname(), userEditForm.getNewPassword());
         userDatabase.update(updateUser);
         logger.info("유저정보가 업데이트 되었습니다. {}", updateUser);
         return updateUser;
+    }
+
+    public void validateAccess(User targetUser, String accessNickname) {
+        if (!accessNickname.equals(targetUser.getNickname())) {
+            throw new UserAccessException();
+        }
     }
 
 
@@ -65,8 +74,9 @@ public class UserService {
         return userDatabase.findAll();
     }
 
-    public UserEditForm getUserEditForm(String nickname) {
-        User user = getUserByNickname(nickname);
+    public UserEditForm getUserEditForm(String nickname, String accessNickname) {
+        User user = findUserByNickname(nickname);
+        validateAccess(user, accessNickname);
         return new UserEditForm(user.getEmail(), user.getNickname(), null, null);
     }
 

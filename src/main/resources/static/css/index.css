@@ -164,3 +164,43 @@ td {
 .pagination li a:hover {
     background-color: #e9e9e9;
 }
+
+.search-container {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.search-container input[type="text"] {
+    width: 250px;
+    height: 35px;
+    padding: 5px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-container select {
+    width: 100px;
+    height: 35px;
+    padding: 5px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.search-container button {
+    height: 35px;
+    border: none;
+    background-color: #ffcd00;
+    color: black;
+    padding: 0 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-container input[type="text"]:focus {
+    border: 1px solid #ffcd00; /* 예시로 노란색으로 설정 */
+    outline: none; /* 기본 브라우저 포커스 스타일을 제거 */
+}
+

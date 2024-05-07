@@ -26,3 +26,10 @@ create table comments (
                           is_deleted boolean,
                           foreign key (writer) references users (nickname)
 )
+CREATE TABLE files(
+                      id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                      article_id BIGINT,
+                      upload_file_name VARCHAR(255),
+                      store_file_name VARCHAR(255),
+                      FOREIGN KEY (article_id) REFERENCES articles(id)
+)

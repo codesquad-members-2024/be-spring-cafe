@@ -73,7 +73,7 @@ public class UserController {
      */
     @GetMapping("/profile/{nickname}")
     public String userProfile(@PathVariable String nickname, Model model) {
-        User user = userService.getUserByNickname(nickname);
+        User user = userService.findUserByNickname(nickname);
         model.addAttribute("user", user);
         return "user/profile";
     }
@@ -85,8 +85,9 @@ public class UserController {
      * @return 데이터베이스에 일치하는 유저가 없으면 유저 리스트 화면으로 리다이렉트하고, 아니라면 업데이트 폼 화면을 보여줍니다.
      */
     @GetMapping("/edit/{nickname}")
-    public String updateForm(@PathVariable String nickname, Model model) {
-        UserEditForm userEditForm = userService.getUserEditForm(nickname);
+    public String updateForm(@PathVariable String nickname, Model model,
+                             @SessionAttribute(LoginController.LOGIN_SESSION_NAME) LoginUser loginUser) {
+        UserEditForm userEditForm = userService.getUserEditForm(nickname, loginUser.getNickname());
         model.addAttribute("userEditForm", userEditForm);
 
         return "user/update";
@@ -103,7 +104,7 @@ public class UserController {
     public String updateUser(@PathVariable String nickname, @Validated @ModelAttribute UserEditForm userEditForm,
                              BindingResult bindingResult,
                              @SessionAttribute(LoginController.LOGIN_SESSION_NAME) LoginUser loginUser) {
-        User targetUser = userService.getUserByNickname(nickname);
+        User targetUser = userService.findUserByNickname(nickname);
         validateUpdateForm(userEditForm, bindingResult, targetUser);
 
         if (bindingResult.hasErrors()) {
@@ -111,7 +112,7 @@ public class UserController {
             return "user/update";
         }
 
-        User updatedUser = userService.updateUser(targetUser, userEditForm);// 유저 정보 업데이트
+        User updatedUser = userService.updateUser(loginUser.getNickname(), targetUser, userEditForm);// 유저 정보 업데이트
         updateLoginUserNickname(loginUser, updatedUser); // 세션 정보 업데이트
 
         String newNickname = updatedUser.getNickname(); // 유저 닉네임이 수정될 경우를 반영

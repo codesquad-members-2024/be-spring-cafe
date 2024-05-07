@@ -1,13 +1,13 @@
 package codesquad.springcafe.database.article;
 
 import codesquad.springcafe.model.Article;
+import codesquad.springcafe.util.SearchUtils;
 import jakarta.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -17,8 +17,8 @@ import org.springframework.stereotype.Repository;
 public class ArticleJdbcDatabase implements ArticleDatabase {
     private final JdbcTemplate jdbcTemplate;
 
-    public ArticleJdbcDatabase(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public ArticleJdbcDatabase(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -86,14 +86,6 @@ public class ArticleJdbcDatabase implements ArticleDatabase {
         jdbcTemplate.update(sql, id);
     }
 
-//
-//    @Override
-//    public void deleteArticle(Long id) {
-//        String sql = "DELETE FROM articles WHERE id = ?";
-//        jdbcTemplate.updateArticle(sql, id);
-//    }
-
-
     @Override
     public void clear() {
         String sql = "delete from articles";
@@ -101,15 +93,43 @@ public class ArticleJdbcDatabase implements ArticleDatabase {
     }
 
     @Override
-    public List<Long> findAllId() {
-        String sql = "SELECT id FROM articles WHERE is_deleted = false";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"));
-    }
-
-    @Override
     public Long countTotalArticles() {
         String sql = "SELECT COUNT(id) FROM articles WHERE is_deleted = false";
         return jdbcTemplate.queryForObject(sql, Long.class);
+    }
+
+    @Override
+    public String findWriter(Long id) {
+        String sql = "SELECT writer FROM articles WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, id);
+    }
+
+    @Override
+    public Long countSearchedArticlesByTitleContent(String keyword) {
+        String sqlLikeKeyword = SearchUtils.formatForSqlLike(keyword);
+        String sql = "SELECT COUNT(id) FROM articles WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = false";
+        return jdbcTemplate.queryForObject(sql, Long.class, sqlLikeKeyword, sqlLikeKeyword);
+    }
+
+    @Override
+    public List<Article> findSearchedPageArticlesByTitleContent(String keyword, Long offset, int articlesPerPage) {
+        String sqlLikeKeyword = SearchUtils.formatForSqlLike(keyword);
+        String sql = "SELECT id, writer, title, content, write_date, views, is_Deleted FROM articles WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = false ORDER BY id DESC LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(sql, articleRowMapper(), sqlLikeKeyword, sqlLikeKeyword, articlesPerPage, offset);
+    }
+
+    @Override
+    public Long countSearchedArticlesByWriter(String keyword) {
+        String sqlLikeKeyword = SearchUtils.formatForSqlLike(keyword);
+        String sql = "SELECT COUNT(id) FROM articles WHERE writer LIKE ? AND is_deleted = false";
+        return jdbcTemplate.queryForObject(sql, Long.class, sqlLikeKeyword);
+    }
+
+    @Override
+    public List<Article> findSearchedPageArticlesByWriter(String keyword, Long offset, int articlesPerPage) {
+        String sqlLikeKeyword = SearchUtils.formatForSqlLike(keyword);
+        String sql = "SELECT id, writer, title, content, write_date, views, is_Deleted FROM articles WHERE writer LIKE ? AND is_deleted = false ORDER BY id DESC LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(sql, articleRowMapper(), sqlLikeKeyword, articlesPerPage, offset);
     }
 
     private RowMapper<Article> articleRowMapper() {

@@ -1,6 +1,7 @@
 package codesquad.springcafe.service;
 
 import codesquad.springcafe.database.comment.CommentDatabase;
+import codesquad.springcafe.exception.CommentAccessException;
 import codesquad.springcafe.exception.CommentNotFoundException;
 import codesquad.springcafe.form.comment.CommentWriteForm;
 import codesquad.springcafe.model.Article;
@@ -13,7 +14,9 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class CommentService {
     public static final int commentsPerPage = 15;
@@ -32,7 +35,11 @@ public class CommentService {
         return comment;
     }
 
-    public List<Comment> getComments(Long articleId) {
+    public Comment findComment(Long id) {
+        return commentDatabase.findBy(id).orElseThrow(() -> new CommentNotFoundException(id));
+    }
+
+    public List<Comment> findComments(Long articleId) {
         return commentDatabase.findAll(articleId);
     }
 
@@ -40,13 +47,10 @@ public class CommentService {
         return commentDatabase.findPageComments(articleId, offset, commentsPerPage);
     }
 
-    public void deleteComments(Long articleId) {
-        commentDatabase.findAll(articleId)
-                .forEach(comment -> deleteComment(comment.getId()));
-    }
+    public Comment deleteComment(Long id, String userNickname) {
+        Comment comment = findComment(id);
+        validateAccess(id, userNickname);
 
-    public Comment deleteComment(Long id) {
-        Comment comment = getComment(id);
         commentDatabase.softDelete(id);
         comment.delete();
         logger.info("코멘트가 삭제되었습니다. {}", comment);
@@ -63,7 +67,10 @@ public class CommentService {
                 .collect(Collectors.toMap(Function.identity(), commentDatabase::count));
     }
 
-    public Comment getComment(Long id) {
-        return commentDatabase.findBy(id).orElseThrow(() -> new CommentNotFoundException(id));
+    public void validateAccess(Long id, String userNickname) {
+        String writer = commentDatabase.findWriter(id);
+        if (!writer.equals(userNickname)) {
+            throw new CommentAccessException();
+        }
     }
 }

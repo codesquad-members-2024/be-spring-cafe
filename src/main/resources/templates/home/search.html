@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <p class="total_num" th:text="|전체 글 ${totalArticleSize}개|">전체 글 10명</p>
+    <p class="total_num" th:text="|총 검색된 게시물 ${totalArticleSize}개|">전체 글 10명</p>
 
     <div class="container" id="main">
         <div class="col-md-10 col-md-offset-1">
@@ -59,18 +59,19 @@
         <ul class="pagination">
             <!-- 이전 페이지 그룹으로 이동 -->
             <li th:if="${pageGroup.startPage > pageGroup.pageSize}">
-                <a th:href="@{/(page=${pageGroup.startPage - 1})}">&laquo;</a>
+                <a th:href="@{/search(searchType=${search.getSearchType()},keyword=${search.keyword}, page=${pageGroup.startPage - 1})}">&laquo;</a>
             </li>
 
             <!-- 페이지 번호 -->
             <li th:each="pageNum : ${#numbers.sequence(pageGroup.startPage, pageGroup.endPage)}">
-                <a th:href="@{/(page=${pageNum})}" th:text="${pageNum}"
+                <a th:href="@{/search(searchType=${search.getSearchType()},keyword=${search.keyword}, page=${pageNum})}"
+                   th:text="${pageNum}"
                    th:class="${pageNum == pageGroup.currentPage ? 'active-page' : ''}">1</a>
             </li>
 
             <!-- 다음 페이지 그룹으로 이동 -->
             <li th:if="${pageGroup.endPage < pageGroup.totalPages}">
-                <a th:href="@{/(page=${pageGroup.endPage + 1})}">&raquo;</a>
+                <a th:href="@{/search(searchType=${search.getSearchType()},keyword=${search.keyword},page=${pageGroup.endPage + 1})}">&raquo;</a>
             </li>
         </ul>
     </div>
@@ -78,11 +79,10 @@
     <div class="search-container">
         <form th:action="@{/search}" method="get">
             <select name="searchType">
-                <option value="titleContent">제목+내용</option>
-                <option value="writer">작성자</option>
+                <option value="titleContent" th:selected="${search.searchType == 'titleContent'}">제목+내용</option>
+                <option value="writer" th:selected="${search.searchType == 'writer'}">작성자</option>
             </select>
-
-            <input type="text" name="keyword" placeholder="검색어를 입력하세요" required>
+            <input type="text" name="keyword" th:value="${search.keyword}" placeholder="검색어를 입력하세요" required>
             <button type="submit">검색</button>
         </form>
     </div>

@@ -21,4 +21,10 @@ public interface CommentDatabase {
     Long count(Long ArticleId);
 
     void clear();
+
+    void softDeleteComments(Long articleId);
+
+    List<String> findWriters(Long articleId);
+
+    String findWriter(Long id);
 }

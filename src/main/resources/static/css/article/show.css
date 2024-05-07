@@ -89,7 +89,7 @@ li {
 }
 
 .post-comment {
-    margin-top: 60px;
+    margin-top: 20px;
 }
 
 .post-comment-count {
@@ -185,6 +185,39 @@ li {
     margin-top: 5px;
     border-color: #dc3545;
     color: #dc3545;
+}
+
+.file-section {
+    margin-top: 50px;
+    margin-bottom: 1px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.file-list {
+    list-style: none;
+    padding: 0;
+}
+
+.file-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    padding: 5px;
+    transition: background-color 0.3s;
+}
+
+.article-images {
+    margin-top: 20px;
+}
+
+.article-image {
+    max-width: 100%; /* 이미지가 컨테이너 너비를 넘지 않도록 */
+    height: auto; /* 비율 유지 */
+    margin-bottom: 20px; /* 이미지 간 간격 */
 }
 
 
