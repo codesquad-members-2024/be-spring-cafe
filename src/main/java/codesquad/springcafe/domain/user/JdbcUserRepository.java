@@ -31,8 +31,7 @@ public class JdbcUserRepository implements UserRepository {
         parameters.put("name", user.getName());
         parameters.put("email", user.getEmail());
 
-        Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
-        user.setId(key.longValue());
+        jdbcInsert.execute(new MapSqlParameterSource(parameters));
     }
 
     @Override

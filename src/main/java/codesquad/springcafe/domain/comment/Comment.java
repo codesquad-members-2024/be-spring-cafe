@@ -1,22 +1,22 @@
-package codesquad.springcafe.domain.article;
+package codesquad.springcafe.domain.comment;
 
 import java.time.LocalDateTime;
 
-public class Article {
+public class Comment {
 
     private Long id;
     private Long userId;
+    private Long articleId;
     private String writer;
-    private String title;
-    private String contents;
+    private String content;
     private boolean deleted;
     private final LocalDateTime currentTime;
 
-    public Article(Long userId, String writer, String title, String contents, LocalDateTime currentTime) {
+    public Comment(Long userId, Long articleId, String writer, String content, LocalDateTime currentTime) {
         this.userId = userId;
+        this.articleId = articleId;
         this.writer = writer;
-        this.title = title;
-        this.contents = contents;
+        this.content = content;
         this.currentTime = currentTime;
     }
 
@@ -32,16 +32,16 @@ public class Article {
         return userId;
     }
 
+    public Long getArticleId() {
+        return articleId;
+    }
+
     public String getWriter() {
         return writer;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContents() {
-        return contents;
+    public String getContent() {
+        return content;
     }
 
     public boolean isDeleted() {

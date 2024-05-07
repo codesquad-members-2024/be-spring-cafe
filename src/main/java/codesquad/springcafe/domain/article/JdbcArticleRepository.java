@@ -32,9 +32,9 @@ public class JdbcArticleRepository implements ArticleRepository {
         parameters.put("title", article.getTitle());
         parameters.put("contents", article.getContents());
         parameters.put("currentTime", article.getCurrentTime());
+        parameters.put("deleted", article.isDeleted());
 
-        Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
-        article.setId(key.longValue());
+        jdbcInsert.execute(new MapSqlParameterSource(parameters));
     }
 
     @Override
@@ -45,7 +45,7 @@ public class JdbcArticleRepository implements ArticleRepository {
 
     @Override
     public void delete(Long id) {
-        jdbcTemplate.update("delete from article where id = ?", id);
+        jdbcTemplate.update("update article set deleted = ? where id = ?", true, id);
     }
 
     @Override
@@ -70,6 +70,7 @@ public class JdbcArticleRepository implements ArticleRepository {
                     rs.getTimestamp("currentTime").toLocalDateTime()
             );
             article.setId(rs.getLong("id"));
+            article.setDeleted(rs.getBoolean("deleted"));
             return article;
         };
     }
