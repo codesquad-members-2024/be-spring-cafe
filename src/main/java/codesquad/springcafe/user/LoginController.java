@@ -29,7 +29,13 @@ public class LoginController {
         }
         HttpSession session = request.getSession();
         session.setAttribute("loginUserId", userLoginDTO.getUserid());
-        return "redirect:/";
+
+        String redirectUri = (String) session.getAttribute("redirectUri");
+        session.removeAttribute("redirectUri");
+        if (redirectUri == null)
+            return "redirect:/";
+
+        return "redirect:" + redirectUri;
     }
 
     @PostMapping("/user/logout")

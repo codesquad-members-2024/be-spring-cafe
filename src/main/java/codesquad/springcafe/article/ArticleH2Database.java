@@ -15,8 +15,6 @@ public class ArticleH2Database implements ArticleDatabase {
 
     JdbcTemplate jdbcTemplate;
 
-    private static Long sequence = 0L;
-
     @Autowired
     public ArticleH2Database(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -33,7 +31,6 @@ public class ArticleH2Database implements ArticleDatabase {
 
     @Override
     public void addArticle(Article article) {
-        article.setArticleId(++sequence);
         String sql = "INSERT INTO MAIN.ARTICLES (writer, title, content, createdTime) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(sql, article.getWriter(), article.getTitle(), article.getContent(), article.getCreatedTime());
     }
@@ -48,7 +45,7 @@ public class ArticleH2Database implements ArticleDatabase {
     // 인덱스가 있는 PrimaryKey인 ArticleID를 통해 정렬한 뒤 가져오도록 했습니다.
     @Override
     public List<Article> getReversedArticleList() {
-        String sql = "SELECT * FROM MAIN.ARTICLES ORDER BY ARTICLEID DESC LIMIT 10";
+        String sql = "SELECT * FROM MAIN.ARTICLES WHERE ISDELETED = FALSE ORDER BY ARTICLEID DESC LIMIT 10";
         return jdbcTemplate.query(sql, articleRowMapper);
     }
 
@@ -57,5 +54,17 @@ public class ArticleH2Database implements ArticleDatabase {
         String sql = "SELECT * FROM MAIN.ARTICLES WHERE articleId = ?";
         List<Article> articleList = jdbcTemplate.query(sql, articleRowMapper, articleId);
         return articleList.isEmpty() ? null : articleList.get(0);
+    }
+
+    @Override
+    public void updateArticle(Article article) {
+        String sql = "UPDATE MAIN.ARTICLES SET title = ?, content = ? WHERE articleId = ?";
+        jdbcTemplate.update(sql, article.getTitle(), article.getContent(), article.getArticleId());
+    }
+
+    @Override
+    public void deleteArticle(long articleId) {
+        String sql = "UPDATE MAIN.ARTICLES SET isDeleted = TRUE WHERE articleId = ?";
+        jdbcTemplate.update(sql, articleId);
     }
 }

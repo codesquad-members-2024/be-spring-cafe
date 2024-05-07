@@ -11,4 +11,8 @@ public interface ArticleDatabase {
     public List<Article> getReversedArticleList();
 
     public Article getArticle(long articleId);
+
+    public void updateArticle(Article article);
+
+    public void deleteArticle(long articleId);
 }

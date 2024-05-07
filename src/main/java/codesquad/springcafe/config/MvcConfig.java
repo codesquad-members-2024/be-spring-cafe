@@ -1,5 +1,6 @@
 package codesquad.springcafe.config;
 
+import codesquad.springcafe.CheckAuthInterceptor;
 import codesquad.springcafe.CheckLoginInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -16,13 +17,19 @@ public class MvcConfig implements WebMvcConfigurer {
         //registry.addViewController("/").setViewName("index");
         registry.addViewController("/users/form").setViewName("user/form");
         registry.addViewController("/login").setViewName("user/login");
-        registry.addViewController("qna/form").setViewName("qna/form");
+        registry.addViewController("/article/form").setViewName("article/form");
+        registry.addViewController("/error/errorPage").setViewName("error/errorPage");
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new CheckLoginInterceptor())
+                .order(1)
                 .addPathPatterns("/**")
                 .excludePathPatterns();
+
+        registry.addInterceptor(new CheckAuthInterceptor())
+                .order(2)
+                .addPathPatterns("/article/form", "/articles/{articleId:\\d+}/**", "/users/list");
     }
 }

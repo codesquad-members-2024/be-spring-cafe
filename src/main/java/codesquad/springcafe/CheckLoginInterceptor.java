@@ -14,11 +14,6 @@ public class CheckLoginInterceptor implements HandlerInterceptor {
     private static final Logger logger = LoggerFactory.getLogger(CheckLoginInterceptor.class);
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        return true;
-    }
-
-    @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         HttpSession session = request.getSession();
         String viewName = null;
@@ -29,16 +24,11 @@ public class CheckLoginInterceptor implements HandlerInterceptor {
         // Location : localhost:8080/;?loginUserId=dao
         if (viewName != null && !viewName.startsWith("redirect:")) {
             if (session != null) {
-                Object loginUserId = session.getAttribute("loginUserId");
+                String loginUserId = (String) session.getAttribute("loginUserId");
                 if (loginUserId != null) {
                     modelAndView.addObject("loginUserId", loginUserId);
                 }
             }
         }
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-
     }
 }

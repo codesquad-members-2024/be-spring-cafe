@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+{{> part/part_header}}
+<body>
+{{> part/part_nav}}
+{{> part/part_subnav}}
+<div class="container" id="main">
+    <div class="col-md-12 col-sm-12 col-lg-12">
+        <div class="panel panel-default">
+          <header class="qna-header">
+              <h2 class="qna-title">{{article.title}}</h2>
+          </header>
+          <div class="content-main">
+              <article class="article">
+                  <div class="article-header">
+                      <div class="article-header-thumb">
+                          <img src="https://graph.facebook.com/v2.3/100000059371774/picture" class="article-author-thumb" alt="">
+                      </div>
+                      <div class="article-header-text">
+                          <a href="/users/{{article.writer}}" class="article-author-name">{{article.writer}}</a>
+                          <a href="/questions/413" class="article-header-time" title="퍼머링크">
+                              {{article.getFormattedTime}}
+                              <i class="icon-link"></i>
+                          </a>
+                      </div>
+                  </div>
+                  <div class="article-doc">
+                      {{article.content}}
+                  </div>
+                  <div class="article-util">
+                      <ul class="article-util-list">
+                          {{#isWriter}}
+                          <li>
+                              <a class="link-modify-article" href="/articles/{{article.articleId}}/form">수정</a>
+                          </li>
+                          <li>
+                              <form class="form-delete" action="/articles/{{article.articleId}}" method="POST" onsubmit="return confirmDeleteArticle();">
+                                  <input type="hidden" name="_method" value="DELETE">
+                                  <button class="link-delete-article" type="submit">삭제</button>
+                              </form>
+                              {{#hasOtherComment}} 다른 사용자의 댓글이 있는 게시글은 삭제할 수 없습니다. {{/hasOtherComment}}
+                              <script> // 삭제 전 확인 창 띄우기
+                                  function confirmDeleteArticle() {
+                                      return confirm("정말로 이 게시물을 삭제하시겠습니까?");
+                                  }
+                              </script>
+                          </li>
+                          {{/isWriter}}
+                          <li>
+                              <a class="link-modify-article" href="/index.html">목록</a>
+                          </li>
+                      </ul>
+                  </div>
+              </article>
+
+              <div class="qna-comment">
+                  <div class="qna-comment-slipp">
+                      <p class="qna-comment-count"><strong>2</strong>개의 의견</p>
+                      <div class="qna-comment-slipp-articles">
+
+                          {{#commentList}}
+                              <article class="article" id="comment-{commentId}">
+                                  <div class="article-header">
+                                      <div class="article-header-thumb">
+                                          <img src="" class="article-author-thumb" alt="">
+                                      </div>
+                                      <div class="article-header-text">
+                                          <a href="/users/{{writer}}" class="article-author-name">{{writer}}</a>
+                                          <a href="#comment-{commentId}" class="article-header-time" title="퍼머링크">
+                                              {{getFormattedTime}} {{#isEdited}} (수정됨) {{/isEdited}}
+                                          </a>
+                                      </div>
+                                  </div>
+                                  <div class="article-doc comment-doc">
+                                      <p>{{content}}</p>
+                                  </div>
+                                  {{#isLoginUserWriter}}
+                                  <div class="article-util">
+                                      <ul class="article-util-list">
+                                          <li>
+                                              <a href="javascript:void(0);" onclick="toggleEditForm('editForm{{commentId}}')">수정</a>
+                                          </li>
+                                          <li>
+                                              <form class="delete-answer-form" action="/articles/{{article.articleId}}/comments/{{commentId}}" method="POST" onsubmit="return confirmDeleteComment()">
+                                                  <input type="hidden" name="_method" value="DELETE">
+                                                  <button type="submit" class="delete-answer-button">삭제</button>
+                                              </form>
+                                          </li>
+                                          <!-- 수정 폼 -->
+                                          <form id="editForm{{commentId}}" class="submit-write" method="POST" action="/articles/{{article.articleId}}/comments/{{commentId}}" style="display: none;">
+                                              <input name="_method" value="PUT" type="hidden"/>
+                                              <input id="editCommentId" name="commentId" value="{{commentId}}" type="hidden"/>
+                                              <input id="editWriter" name="writer" value="{{writer}}" type="hidden"/>
+                                              <div class="form-group" style="padding:14px;">
+                                                  <label for="editedContent">댓글 수정</label><textarea class="form-control" id="editedContent" name="content" placeholder="Update your status">{{content}}</textarea>
+                                              </div>
+                                              <button class="btn btn-success pull-right" type="submit">수정 완료</button>
+                                              <div class="clearfix"></div>
+                                          </form>
+                                      </ul>
+                                  </div>
+                                  {{/isLoginUserWriter}}
+                              </article>
+                          {{/commentList}}
+
+                          <form class="submit-write" method="POST" action="/articles/{{article.articleId}}/comments">
+                              <input id="articleId" name="articleId" value="{{article.articleId}}" type="hidden"/>
+                              <input id="writer" name="writer" value="{{loginUserId}}" type="hidden"/>
+                              <div class="form-group" style="padding:14px;">
+                                  <textarea class="form-control" id="content" name="content" placeholder="Update your status"></textarea>
+                              </div>
+                              <button class="btn btn-success pull-right" type="submit" >댓글 달기</button>
+                              <div class="clearfix" />
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    // 폼 토글 함수
+    function toggleEditForm(formId) {
+        var form = document.getElementById(formId);
+        if (form.style.display === "none") {
+            form.style.display = "block";  // 폼을 보여줌
+        } else {
+            form.style.display = "none";   // 폼을 숨김
+        }
+    }
+</script>
+
+<script> // 삭제 전 확인 창 띄우기
+function confirmDeleteComment() {
+    return confirm("정말로 이 댓글을 삭제하시겠습니까?");
+}
+</script>
+
+<script type="text/template" id="answerTemplate">
+	<article class="article">
+		<div class="article-header">
+			<div class="article-header-thumb">
+				<img src="https://graph.facebook.com/v2.3/1324855987/picture" class="article-author-thumb" alt="">
+			</div>
+			<div class="article-header-text">
+				<a href="#" class="article-author-name">{0}</a>
+				<div class="article-header-time">{1}</div>
+			</div>
+		</div>
+		<div class="article-doc comment-doc">
+			{2}
+		</div>
+		<div class="article-util">
+		<ul class="article-util-list">
+			<li>
+				<a class="link-modify-article" href="/api/qna/updateAnswer/{3}">수정</a>
+			</li>
+			<li>
+				<form class="delete-answer-form" action="/api/questions/{3}/answers/{4}" method="POST">
+					<input type="hidden" name="_method" value="DELETE">
+                     <button type="submit" class="delete-answer-button">삭제</button>
+				</form>
+			</li>
+		</ul>
+		</div>
+	</article>
+</script>
+
+{{> part/part_script}}
+</body>
+</html>

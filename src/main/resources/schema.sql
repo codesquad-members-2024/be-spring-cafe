@@ -11,5 +11,20 @@ CREATE TABLE IF NOT EXISTS main.articles (
     title varchar(255),
     content varchar(65535),
     createdtime timestamp,
+    hits int default 0,
+    isdeleted boolean default FALSE,
     foreign key (writer) references users(userid)
-)
+);
+
+CREATE TABLE IF NOT EXISTS main.comments (
+    commentId int auto_increment primary key,
+    writer varchar(40),
+    articleId int,
+    content varchar(65535),
+    createdtime timestamp,
+    lastEditTime timestamp,
+    isEdited boolean default FALSE,
+    isdeleted boolean default FALSE,
+    foreign key (writer) references users(userid),
+    foreign key (articleId) references articles(articleId)
+);
