@@ -2,6 +2,7 @@
 <html lang="kr">
 <head>
     <div th:replace="~{fragment/head.html :: fragment-head}"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <div th:replace="~{fragment/navbar.html :: fragment-navbar}"></div>
@@ -61,13 +62,14 @@
                                              class="article-author-thumb" alt="">
                                     </div>
                                     <div class="article-header-text">
-                                        <a th:href="@{'/user/profile/' + ${reply.writerId}}" class="article-author-name" th:text="${reply.writerId}"></a>
+                                        <a th:href="@{'/user/profile/' + ${reply.writerId}}" class="article-author-name"
+                                           th:text="${reply.writerId}"></a>
                                         <a class="article-header-time" th:text="${reply.time}">
                                         </a>
                                     </div>
                                 </div>
                                 <div class="article-doc comment-doc">
-                                    <p th:text="${reply.getContents()}" style="margin-top: 8px"></p>
+                                    <p th:text="${reply.contents}" style="margin-top: 8px"></p>
                                 </div>
                                 <div class="article-util">
                                     <ul class="article-util-list">
@@ -76,19 +78,26 @@
                                                th:href="@{'/reply/' +${article.id} + '/' + ${reply.id}}">수정</a>
                                         </li>
                                         <li th:if="${reply.sameWriter}">
-                                            <form class="form-delete" th:action="@{'/reply/' +${article.id} + '/' + ${reply.id}}"
+                                            <form class="form-delete"
+                                                  th:action="@{'/api/reply/' +${article.id} + '/' + ${reply.id}}"
                                                   method="POST">
                                                 <input type="hidden" name="_method" value="DELETE">
-                                                <button type="submit" class="delete-answer-button">삭제</button>
+                                                <button type="submit" class="delete-answer-button"
+                                                        id="delete-answer-form">삭제
+                                                </button>
                                             </form>
                                         </li>
                                     </ul>
                                 </div>
                             </article>
-                            <form th:action="@{'/reply/' + ${article.id}}" method="post" class="submit-write">
+                            <form th:action="@{'/api/reply/' + ${article.id}}" method="post" class="submit-write">
                                 <div class="form-group" style="padding:14px;">
-                                    <textarea class="form-control" name="contents" placeholder="댓글을 달아 주세요"></textarea>
-                                    <button class="btn btn-success pull-right" type="submit" style="margin-top: 14px">댓글달기</button>
+                                    <textarea class="form-control" name="contents" placeholder="댓글을 달아 주세요"
+                                              id="comment"></textarea>
+                                    <button class="btn btn-success pull-right" type="submit" style="margin-top: 14px"
+                                            id="reply-btn">
+                                        댓글달기
+                                    </button>
                                 </div>
                                 <div class="clearfix"></div>
                             </form>
@@ -118,12 +127,16 @@
         <div class="article-util">
             <ul class="article-util-list">
                 <li>
-                    <a class="link-modify-article" href="/api/qna/updateAnswer/{3}">수정</a>
+                    <a class="link-modify-article"
+                       href={3}>수정</a>
                 </li>
                 <li>
-                    <form class="delete-answer-form" action="/api/questions/{3}/answers/{4}" method="POST">
+                    <form class="form-delete"
+                          action={4}
+                          method="POST">
                         <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="delete-answer-button">삭제</button>
+                        <button type="submit" class="delete-answer-button">삭제
+                        </button>
                     </form>
                 </li>
             </ul>
@@ -131,6 +144,80 @@
     </article>
 </script>
 
+<script>
+    // jquery를 위에 임포트해서
+    // 문서가 모두 로딩되었을 때 안의 코드를 실행한다
+    $(document).ready(function () {
+        $('#reply-btn').on('click', addReply);
+
+        function addReply(e) {
+            e.preventDefault();
+
+            // #은 id 속성을 가리키고, .은 클래스 속성을 가리킨다
+            // comment라는 id를 가진 form에서 값을 가져오거나 값을 설정한다.
+            var contents = $('#comment').val();
+            // submit-write 클래스의 action 속성을 가져온다.
+            var url = $('.submit-write').attr('action');
+
+            // AJAX 요청 보내기
+            $.ajax({
+                type: 'POST',
+                url: url, // 댓글 작성 URL
+                data: JSON.stringify(contents), // 댓글 내용 전송
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (data) {
+                    console.log('댓글이 성공적으로 작성되었습니다.' + data);
+
+                    var answerTemplate = $("#answerTemplate").html();
+                    var editUrl = `/reply/${data.articleId}/${data.id}`;
+                    var deleteUrl = `/api/reply/${data.articleId}/${data.id}`;
+
+                    var template = answerTemplate.format(data.writerId, data.time, data.contents, editUrl, deleteUrl);
+                    $(".submit-write").prepend(template);
+                    $("textarea[name=contents]").val("");
+                    updateCommentCount();
+                },
+                error: function (xhr, status, error) {
+                    console.error('댓글 작성 중 오류가 발생했습니다: ' + error);
+                }
+            });
+        }
+    });
+
+    $(".qna-comment-slipp-articles").on("click", ".delete-answer-button", deleteAnswer);
+
+    function deleteAnswer(e) {
+        e.preventDefault();
+
+        var deleteBtn = $(this);
+        var url = deleteBtn.closest("form").attr("action");
+
+        $.ajax({
+            type : 'delete',
+            url : url,
+            dataType : 'json',
+            success : function (data, status) {
+                console.log(data);
+                if (data.valid) {
+                    deleteBtn.closest("article").remove();
+                    updateCommentCount();
+                } else {
+                    alert(data.message);
+                }
+            },
+            error : function (xhr, status) {
+                console.log("error");
+            }
+        });
+    }
+
+    function updateCommentCount() {
+        var count = $(".qna-comment-slipp-articles").find(".article").length;
+        $(".qna-comment-count").text(count + '개의 의견');
+    }
+
+</script>
 <div th:replace="~{fragment/script.html :: fragment-script}"></div>
 </body>
 </html>

@@ -27,10 +27,11 @@ public class H2UserRepository implements UserRepository {
     }
 
     @Override
-    public void add(User user) {
+    public User add(User user) {
         jdbcTemplate.update("INSERT INTO USERS (userId, name, email, password) VALUES (?, ?, ?, ?)",
                 user.getUserId(), user.getName(), user.getEmail(), user.getPassword());
         logger.debug("{} 유저 회원가입 완료", user);
+        return user;
     }
 
     @Override

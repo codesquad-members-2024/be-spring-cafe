@@ -47,7 +47,7 @@ public class H2ArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public void add(Article article) {
+    public Article add(Article article) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("Articles")
                 .usingGeneratedKeyColumns(ID_KEY);
@@ -63,6 +63,7 @@ public class H2ArticleRepository implements ArticleRepository {
         Long key = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
         article.setId(key);
         logger.debug("게시글 {} 저장 완료", article.getContents());
+        return article;
     }
 
     @Override

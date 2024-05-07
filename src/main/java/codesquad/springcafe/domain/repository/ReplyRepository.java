@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ReplyRepository extends DbRepository<Reply> {
     @Override
-    void add(Reply reply);
+    Reply add(Reply reply);
 
     List<ShowReply> getReplyBy(String articleId);
 

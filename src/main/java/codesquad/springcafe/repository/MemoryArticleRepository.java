@@ -17,8 +17,9 @@ public class MemoryArticleRepository implements ArticleRepository {
     }
 
     @Override
-    public void add(Article article) {
+    public Article add(Article article) {
         database.addArticle(article);
+        return article;
     }
 
     @Override
